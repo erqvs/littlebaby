@@ -1,0 +1,12 @@
+{
+  "name": "@openclaw/mistral-provider",
+  "version": "2026.4.20",
+  "private": true,
+  "description": "OpenClaw Mistral provider plugin",
+  "type": "module",
+  "littlebaby": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
