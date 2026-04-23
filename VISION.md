@@ -10,7 +10,7 @@ Contribution guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 LittleBaby started as a personal playground to learn AI and build something genuinely useful:
 an assistant that can run real tasks on a real computer.
-It evolved through several names and shells: Warelay -> Clawdbot -> Moltbot -> LittleBaby.
+It evolved through several names and shells: Warelay -> Littlebaby -> Moltbot -> LittleBaby.
 
 The goal: a personal assistant that is easy to use, supports a wide range of platforms, and respects privacy and security.
 

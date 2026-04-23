@@ -2,7 +2,7 @@ export type {
   ChannelMessageActionName,
   ChannelMeta,
   ChannelPlugin,
-  ClawdbotConfig,
+  LittlebabyConfig,
 } from "../runtime-api.js";
 
 export { DEFAULT_ACCOUNT_ID } from "littlebaby/plugin-sdk/account-resolution";

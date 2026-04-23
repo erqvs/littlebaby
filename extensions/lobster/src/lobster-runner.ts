@@ -4,7 +4,7 @@ import { Readable, Writable } from "node:stream";
 import {
   resumeToolRequest as embeddedResumeToolRequest,
   runToolRequest as embeddedRunToolRequest,
-} from "@clawdbot/lobster/core";
+} from "@littlebaby/lobster/core";
 
 export type LobsterEnvelope =
   | {

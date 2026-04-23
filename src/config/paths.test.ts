@@ -71,7 +71,7 @@ describe("gateway port resolution", () => {
     expect(
       resolveGatewayPort(
         { gateway: { port: 19002 } },
-        envWith({ CLAWDBOT_GATEWAY_PORT: "127.0.0.1:18789" }),
+        envWith({ LITTLEBABY_GATEWAY_PORT: "127.0.0.1:18789" }),
       ),
     ).toBe(19002);
   });
@@ -143,9 +143,9 @@ describe("state + config path candidates", () => {
     const candidates = resolveDefaultConfigCandidates({} as NodeJS.ProcessEnv, () => home);
     const expected = [
       path.join(resolvedHome, ".littlebaby", "littlebaby.json"),
-      path.join(resolvedHome, ".littlebaby", "clawdbot.json"),
-      path.join(resolvedHome, ".clawdbot", "littlebaby.json"),
-      path.join(resolvedHome, ".clawdbot", "clawdbot.json"),
+      path.join(resolvedHome, ".littlebaby", "littlebaby.json"),
+      path.join(resolvedHome, ".littlebaby", "littlebaby.json"),
+      path.join(resolvedHome, ".littlebaby", "littlebaby.json"),
     ];
     expect(candidates).toEqual(expected);
   });
@@ -161,7 +161,7 @@ describe("state + config path candidates", () => {
 
   it("falls back to existing legacy state dir when ~/.littlebaby is missing", async () => {
     await withTempDir({ prefix: "littlebaby-state-legacy-" }, async (root) => {
-      const legacyDir = path.join(root, ".clawdbot");
+      const legacyDir = path.join(root, ".littlebaby");
       await fs.mkdir(legacyDir, { recursive: true });
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(legacyDir);
