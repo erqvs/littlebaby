@@ -40,7 +40,7 @@ export type {
 export type { ChannelPlugin } from "../channels/plugins/types.plugin.js";
 export { createReplyPrefixContext } from "../channels/reply-prefix.js";
 export { createChannelReplyPipeline } from "./channel-reply-pipeline.js";
-export type { LittleBabyConfig as ClawdbotConfig, LittleBabyConfig } from "../config/config.js";
+export type { LittleBabyConfig as LittlebabyConfig, LittleBabyConfig } from "../config/config.js";
 export { resolveChannelContextVisibilityMode } from "../config/context-visibility.js";
 export {
   resolveAllowlistProviderRuntimeGroupPolicy,

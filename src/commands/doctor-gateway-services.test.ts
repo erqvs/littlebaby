@@ -607,16 +607,16 @@ describe("maybeScanExtraGatewayServices", () => {
     mocks.findExtraGatewayServices.mockResolvedValue([
       {
         platform: "linux",
-        label: "clawdbot-gateway.service",
-        detail: "unit: /home/test/.config/systemd/user/clawdbot-gateway.service",
+        label: "littlebaby-gateway.service",
+        detail: "unit: /home/test/.config/systemd/user/littlebaby-gateway.service",
         scope: "user",
         legacy: true,
       },
     ]);
     mocks.uninstallLegacySystemdUnits.mockResolvedValue([
       {
-        name: "clawdbot-gateway",
-        unitPath: "/home/test/.config/systemd/user/clawdbot-gateway.service",
+        name: "littlebaby-gateway",
+        unitPath: "/home/test/.config/systemd/user/littlebaby-gateway.service",
         enabled: true,
         exists: true,
       },
@@ -648,7 +648,7 @@ describe("maybeScanExtraGatewayServices", () => {
       stdout: process.stdout,
     });
     expect(mocks.note).toHaveBeenCalledWith(
-      expect.stringContaining("clawdbot-gateway.service"),
+      expect.stringContaining("littlebaby-gateway.service"),
       "Legacy gateway removed",
     );
     expect(runtime.log).toHaveBeenCalledWith(

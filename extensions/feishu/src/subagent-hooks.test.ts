@@ -3,14 +3,14 @@ import {
   getRequiredHookHandler,
   registerHookHandlersForTest,
 } from "../../../test/helpers/plugins/subagent-hooks.js";
-import type { ClawdbotConfig, LittleBabyPluginApi } from "../runtime-api.js";
+import type { LittlebabyConfig, LittleBabyPluginApi } from "../runtime-api.js";
 import { registerFeishuSubagentHooks } from "./subagent-hooks.js";
 import {
   createFeishuThreadBindingManager,
   __testing as threadBindingTesting,
 } from "./thread-bindings.js";
 
-const baseConfig: ClawdbotConfig = {
+const baseConfig: LittlebabyConfig = {
   session: { mainKey: "main", scope: "per-sender" },
   channels: { feishu: {} },
 };

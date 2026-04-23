@@ -192,7 +192,7 @@ export function describeChannelPluginCatalogEntriesContract() {
             env: {
               ...process.env,
               LITTLEBABY_STATE_DIR: stateDir,
-              CLAWDBOT_STATE_DIR: undefined,
+              LITTLEBABY_STATE_DIR: undefined,
               LITTLEBABY_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
             },
             expected: {

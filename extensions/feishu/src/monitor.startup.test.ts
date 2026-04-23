@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createNonExitingRuntimeEnv } from "../../../test/helpers/plugins/runtime-env.js";
-import type { ClawdbotConfig } from "../runtime-api.js";
+import type { LittlebabyConfig } from "../runtime-api.js";
 import { monitorFeishuProvider, stopFeishuMonitor } from "./monitor.js";
 
 const probeFeishuMock = vi.hoisted(() => vi.fn());
@@ -18,7 +18,7 @@ vi.mock("./runtime.js", async () => {
   return createFeishuRuntimeMockModule();
 });
 
-function buildMultiAccountWebsocketConfig(accountIds: string[]): ClawdbotConfig {
+function buildMultiAccountWebsocketConfig(accountIds: string[]): LittlebabyConfig {
   return {
     channels: {
       feishu: {
@@ -36,7 +36,7 @@ function buildMultiAccountWebsocketConfig(accountIds: string[]): ClawdbotConfig 
         ),
       },
     },
-  } as ClawdbotConfig;
+  } as LittlebabyConfig;
 }
 
 async function waitForStartedAccount(started: string[], accountId: string) {

@@ -520,7 +520,7 @@ describe("loadCliDotEnv", () => {
     await withIsolatedEnvAndCwd(async () => {
       const base = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-dotenv-legacy-"));
       const cwdDir = path.join(base, "cwd");
-      const legacyStateDir = path.join(base, ".clawdbot");
+      const legacyStateDir = path.join(base, ".littlebaby");
       process.env.HOME = base;
       delete process.env.LITTLEBABY_STATE_DIR;
       delete process.env.LITTLEBABY_TEST_FAST;

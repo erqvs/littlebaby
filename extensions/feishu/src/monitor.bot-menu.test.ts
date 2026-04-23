@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ClawdbotConfig, RuntimeEnv } from "../runtime-api.js";
+import type { LittlebabyConfig, RuntimeEnv } from "../runtime-api.js";
 import { monitorSingleAccount } from "./monitor.account.js";
 import { setFeishuRuntime } from "./runtime.js";
 import type { ResolvedFeishuAccount } from "./types.js";
@@ -98,7 +98,7 @@ async function registerHandlers() {
   createEventDispatcherMock.mockReturnValue({ register });
 
   await monitorSingleAccount({
-    cfg: {} as ClawdbotConfig,
+    cfg: {} as LittlebabyConfig,
     account: buildAccount(),
     runtime: {
       log: vi.fn(),
