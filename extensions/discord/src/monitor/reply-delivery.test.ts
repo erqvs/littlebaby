@@ -246,8 +246,8 @@ describe("deliverDiscordReply", () => {
     await deliverDiscordReply({
       replies: [
         {
-          text: "done — i kicked off a 5s Molty clip",
-          mediaUrls: ["/tmp/molty.mp4"],
+          text: "done — i kicked off a 5s LittleBaby clip",
+          mediaUrls: ["/tmp/littlebaby.mp4"],
         },
       ],
       target: "channel:654",
@@ -262,7 +262,7 @@ describe("deliverDiscordReply", () => {
     expect(sendMessageDiscordMock).toHaveBeenNthCalledWith(
       1,
       "channel:654",
-      "done — i kicked off a 5s Molty clip",
+      "done — i kicked off a 5s LittleBaby clip",
       expect.objectContaining({
         token: "token",
         replyTo: "reply-1",
@@ -274,7 +274,7 @@ describe("deliverDiscordReply", () => {
       "",
       expect.objectContaining({
         token: "token",
-        mediaUrl: "/tmp/molty.mp4",
+        mediaUrl: "/tmp/littlebaby.mp4",
         replyTo: "reply-1",
       }),
     );

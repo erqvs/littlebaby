@@ -134,7 +134,7 @@ To return to latest: `git checkout main && git pull`.
 - Run `littlebaby doctor` again and read the output carefully.
 - For `littlebaby update --channel dev` on source checkouts, the updater auto-bootstraps `pnpm` when needed. If you see a pnpm/corepack bootstrap error, install `pnpm` manually (or re-enable `corepack`) and rerun the update.
 - Check: [Troubleshooting](/gateway/troubleshooting)
-- Ask in Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
+- Ask in Discord: [https://discord.gg/littlebaby](https://discord.gg/littlebaby)
 
 ## Related
 

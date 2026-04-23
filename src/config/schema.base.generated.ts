@@ -681,7 +681,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                     },
                     {
                       type: "string",
-                      const: "clawd",
+                      const: "littlebaby",
                     },
                     {
                       type: "string",
@@ -690,7 +690,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                   ],
                   title: "Browser Profile Driver",
                   description:
-                    'Per-profile browser driver mode. Use "littlebaby" (or legacy "clawd") for CDP-based profiles, or use "existing-session" for Chrome DevTools MCP attachment on the selected host or browser node.',
+                    'Per-profile browser driver mode. Use "littlebaby" (or legacy "littlebaby") for CDP-based profiles, or use "existing-session" for Chrome DevTools MCP attachment on the selected host or browser node.',
                 },
                 attachOnly: {
                   type: "boolean",
@@ -20341,7 +20341,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                         },
                         {
                           type: "string",
-                          const: "clawhub",
+                          const: "littlebabyhub",
                         },
                       ],
                     },
@@ -20378,13 +20378,13 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                     installedAt: {
                       type: "string",
                     },
-                    clawhubUrl: {
+                    littlebabyhubUrl: {
                       type: "string",
                     },
-                    clawhubPackage: {
+                    littlebabyhubPackage: {
                       type: "string",
                     },
-                    clawhubFamily: {
+                    littlebabyhubFamily: {
                       anyOf: [
                         {
                           type: "string",
@@ -20396,7 +20396,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                         },
                       ],
                     },
-                    clawhubChannel: {
+                    littlebabyhubChannel: {
                       anyOf: [
                         {
                           type: "string",
@@ -22581,7 +22581,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                         },
                         {
                           type: "string",
-                          const: "clawhub",
+                          const: "littlebabyhub",
                         },
                       ],
                     },
@@ -22653,13 +22653,13 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                   title: "Plugin Install Time",
                   description: "ISO timestamp of last install/update.",
                 },
-                clawhubUrl: {
+                littlebabyhubUrl: {
                   type: "string",
                 },
-                clawhubPackage: {
+                littlebabyhubPackage: {
                   type: "string",
                 },
-                clawhubFamily: {
+                littlebabyhubFamily: {
                   anyOf: [
                     {
                       type: "string",
@@ -22671,7 +22671,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                     },
                   ],
                 },
-                clawhubChannel: {
+                littlebabyhubChannel: {
                   anyOf: [
                     {
                       type: "string",
@@ -23588,7 +23588,7 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
     },
     "browser.profiles.*.driver": {
       label: "Browser Profile Driver",
-      help: 'Per-profile browser driver mode. Use "littlebaby" (or legacy "clawd") for CDP-based profiles, or use "existing-session" for Chrome DevTools MCP attachment on the selected host or browser node.',
+      help: 'Per-profile browser driver mode. Use "littlebaby" (or legacy "littlebaby") for CDP-based profiles, or use "existing-session" for Chrome DevTools MCP attachment on the selected host or browser node.',
       tags: ["storage"],
     },
     "browser.profiles.*.attachOnly": {

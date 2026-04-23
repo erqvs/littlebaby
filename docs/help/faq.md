@@ -1001,7 +1001,7 @@ for usage/billing and raise limits as needed.
   </Accordion>
 
   <Accordion title="Can I load skills from a custom folder?">
-    Yes. Add extra directories via `skills.load.extraDirs` in `~/.littlebaby/littlebaby.json` (lowest precedence). Default precedence is `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.littlebaby/skills` → bundled → `skills.load.extraDirs`. `clawhub` installs into `./skills` by default, which LittleBaby treats as `<workspace>/skills` on the next session. If the skill should only be visible to certain agents, pair that with `agents.defaults.skills` or `agents.list[].skills`.
+    Yes. Add extra directories via `skills.load.extraDirs` in `~/.littlebaby/littlebaby.json` (lowest precedence). Default precedence is `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.littlebaby/skills` → bundled → `skills.load.extraDirs`. `littlebabyhub` installs into `./skills` by default, which LittleBaby treats as `<workspace>/skills` on the next session. If the skill should only be visible to certain agents, pair that with `agents.defaults.skills` or `agents.list[].skills`.
   </Accordion>
 
   <Accordion title="How can I use different models for different tasks?">
@@ -1146,7 +1146,7 @@ for usage/billing and raise limits as needed.
 
   <Accordion title="How do I install skills on Linux?">
     Use native `littlebaby skills` commands or drop skills into your workspace. The macOS Skills UI isn't available on Linux.
-    Browse skills at [https://clawhub.ai](https://clawhub.ai).
+    Browse skills at [https://littlebabyhub.ai](https://littlebabyhub.ai).
 
     ```bash
     littlebaby skills search "calendar"
@@ -1160,7 +1160,7 @@ for usage/billing and raise limits as needed.
     ```
 
     Native `littlebaby skills install` writes into the active workspace `skills/`
-    directory. Install the separate `clawhub` CLI only if you want to publish or
+    directory. Install the separate `littlebabyhub` CLI only if you want to publish or
     sync your own skills. For shared installs across agents, put the skill under
     `~/.littlebaby/skills` and use `agents.defaults.skills` or
     `agents.list[].skills` if you want to narrow which agents can see it.
@@ -1239,7 +1239,7 @@ for usage/billing and raise limits as needed.
     littlebaby skills update --all
     ```
 
-    Native installs land in the active workspace `skills/` directory. For shared skills across agents, place them in `~/.littlebaby/skills/<name>/SKILL.md`. If only some agents should see a shared install, configure `agents.defaults.skills` or `agents.list[].skills`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills), [Skills config](/tools/skills-config), and [ClawHub](/tools/clawhub).
+    Native installs land in the active workspace `skills/` directory. For shared skills across agents, place them in `~/.littlebaby/skills/<name>/SKILL.md`. If only some agents should see a shared install, configure `agents.defaults.skills` or `agents.list[].skills`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills), [Skills config](/tools/skills-config), and [LittleBabyHub](/tools/littlebabyhub).
 
   </Accordion>
 
@@ -3307,4 +3307,4 @@ Related: [/concepts/oauth](/concepts/oauth) (OAuth flows, token storage, multi-a
 
 ---
 
-Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/littlebaby/littlebaby/discussions).
+Still stuck? Ask in [Discord](https://discord.com/invite/littlebaby) or open a [GitHub discussion](https://github.com/littlebaby/littlebaby/discussions).

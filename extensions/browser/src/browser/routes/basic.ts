@@ -199,11 +199,11 @@ export function registerBrowserBasicRoutes(app: BrowserRouteRegistrar, ctx: Brow
       if (!name) {
         return jsonError(res, 400, "name is required");
       }
-      if (driver && driver !== "littlebaby" && driver !== "clawd" && driver !== "existing-session") {
+      if (driver && driver !== "littlebaby" && driver !== "littlebaby" && driver !== "existing-session") {
         return jsonError(
           res,
           400,
-          `unsupported profile driver "${driver}"; use "littlebaby", "clawd", or "existing-session"`,
+          `unsupported profile driver "${driver}"; use "littlebaby", "littlebaby", or "existing-session"`,
         );
       }
 
@@ -219,7 +219,7 @@ export function registerBrowserBasicRoutes(app: BrowserRouteRegistrar, ctx: Brow
             driver:
               driver === "existing-session"
                 ? "existing-session"
-                : driver === "littlebaby" || driver === "clawd"
+                : driver === "littlebaby" || driver === "littlebaby"
                   ? "littlebaby"
                   : undefined,
           }),

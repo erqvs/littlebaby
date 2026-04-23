@@ -6,7 +6,7 @@ mode="${1:-}"
 package_dir="${2:-}"
 
 if [[ "${mode}" != "--dry-run" && "${mode}" != "--publish" ]]; then
-  echo "usage: bash scripts/plugin-clawhub-publish.sh [--dry-run|--publish] <package-dir>" >&2
+  echo "usage: bash scripts/plugin-littlebabyhub-publish.sh [--dry-run|--publish] <package-dir>" >&2
   exit 2
 fi
 
@@ -25,8 +25,8 @@ if [[ ! -f "${package_dir}/package.json" ]]; then
   exit 2
 fi
 
-if ! command -v clawhub >/dev/null 2>&1; then
-  echo "clawhub CLI is required on PATH" >&2
+if ! command -v littlebabyhub >/dev/null 2>&1; then
+  echo "littlebabyhub CLI is required on PATH" >&2
   exit 1
 fi
 
@@ -36,7 +36,7 @@ publish_tag="${PACKAGE_TAG:-latest}"
 source_repo="${SOURCE_REPO:-${GITHUB_REPOSITORY:-littlebaby/littlebaby}}"
 source_commit="${SOURCE_COMMIT:-$(git rev-parse HEAD)}"
 source_ref="${SOURCE_REF:-$(git symbolic-ref -q HEAD || true)}"
-clawhub_workdir="${CLAWDHUB_WORKDIR:-${CLAWHUB_WORKDIR:-$(pwd)}}"
+littlebabyhub_workdir="${LITTLEBABYHUB_WORKDIR:-${CLAWHUB_WORKDIR:-$(pwd)}}"
 publish_source="${package_dir}"
 
 if [[ "${publish_source}" != /* && "${publish_source}" != ./* ]]; then
@@ -44,7 +44,7 @@ if [[ "${publish_source}" != /* && "${publish_source}" != ./* ]]; then
 fi
 
 publish_cmd=(
-  clawhub
+  littlebabyhub
   package
   publish
   "${publish_source}"
@@ -73,16 +73,16 @@ echo "Resolved publish tag: ${publish_tag}"
 echo "Resolved source repo: ${source_repo}"
 echo "Resolved source commit: ${source_commit}"
 echo "Resolved source ref: ${source_ref:-<missing>}"
-echo "Resolved ClawHub workdir: ${clawhub_workdir}"
-echo "Publish auth: GitHub Actions OIDC via ClawHub short-lived token"
+echo "Resolved LittleBabyHub workdir: ${littlebabyhub_workdir}"
+echo "Publish auth: GitHub Actions OIDC via LittleBabyHub short-lived token"
 
 printf 'Publish command:'
 printf ' %q' "${publish_cmd[@]}"
 printf '\n'
 
 if [[ "${mode}" == "--dry-run" ]]; then
-  CLAWHUB_WORKDIR="${clawhub_workdir}" "${publish_cmd[@]}" --dry-run
+  CLAWHUB_WORKDIR="${littlebabyhub_workdir}" "${publish_cmd[@]}" --dry-run
   exit 0
 fi
 
-CLAWHUB_WORKDIR="${clawhub_workdir}" "${publish_cmd[@]}"
+CLAWHUB_WORKDIR="${littlebabyhub_workdir}" "${publish_cmd[@]}"

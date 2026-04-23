@@ -200,7 +200,7 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
                 "bucket-key": "tlon",
                 "entry-key": key,
                 value: fileValue,
-                desk: "moltbot",
+                desk: "littlebabybot",
               },
             },
           });
@@ -1177,7 +1177,7 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
                                 "bucket-key": "tlon",
                                 "entry-key": "groupChannels",
                                 value: updatedChannels,
-                                desk: "moltbot",
+                                desk: "littlebabybot",
                               },
                             },
                           });
@@ -1223,7 +1223,7 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
                                   "bucket-key": "tlon",
                                   "entry-key": "groupChannels",
                                   value: updatedChannels,
-                                  desk: "moltbot",
+                                  desk: "littlebabybot",
                                 },
                               },
                             });

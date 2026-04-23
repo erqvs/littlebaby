@@ -4,19 +4,19 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import {
-  downloadClawHubPackageArchive,
-  downloadClawHubSkillArchive,
-  normalizeClawHubSha256Integrity,
-  normalizeClawHubSha256Hex,
-  parseClawHubPluginSpec,
-  resolveClawHubAuthToken,
+  downloadLittleBabyHubPackageArchive,
+  downloadLittleBabyHubSkillArchive,
+  normalizeLittleBabyHubSha256Integrity,
+  normalizeLittleBabyHubSha256Hex,
+  parseLittleBabyHubPluginSpec,
+  resolveLittleBabyHubAuthToken,
   resolveLatestVersionFromPackage,
   satisfiesGatewayMinimum,
   satisfiesPluginApiRange,
-  searchClawHubSkills,
-} from "./clawhub.js";
+  searchLittleBabyHubSkills,
+} from "./littlebabyhub.js";
 
-describe("clawhub helpers", () => {
+describe("littlebabyhub helpers", () => {
   const originalHome = process.env.HOME;
 
   afterEach(() => {
@@ -25,7 +25,7 @@ describe("clawhub helpers", () => {
     delete process.env.CLAWHUB_AUTH_TOKEN;
     delete process.env.LITTLEBABY_CLAWHUB_CONFIG_PATH;
     delete process.env.CLAWHUB_CONFIG_PATH;
-    delete process.env.CLAWDHUB_CONFIG_PATH;
+    delete process.env.LITTLEBABYHUB_CONFIG_PATH;
     delete process.env.XDG_CONFIG_HOME;
     if (originalHome == null) {
       delete process.env.HOME;
@@ -34,15 +34,15 @@ describe("clawhub helpers", () => {
     }
   });
 
-  it("parses explicit ClawHub package specs", () => {
-    expect(parseClawHubPluginSpec("clawhub:demo")).toEqual({
+  it("parses explicit LittleBabyHub package specs", () => {
+    expect(parseLittleBabyHubPluginSpec("littlebabyhub:demo")).toEqual({
       name: "demo",
     });
-    expect(parseClawHubPluginSpec("clawhub:demo@1.2.3")).toEqual({
+    expect(parseLittleBabyHubPluginSpec("littlebabyhub:demo@1.2.3")).toEqual({
       name: "demo",
       version: "1.2.3",
     });
-    expect(parseClawHubPluginSpec("@scope/pkg")).toBeNull();
+    expect(parseLittleBabyHubPluginSpec("@scope/pkg")).toBeNull();
   });
 
   it("resolves latest versions from latestVersion before tags", () => {
@@ -94,54 +94,54 @@ describe("clawhub helpers", () => {
     expect(satisfiesGatewayMinimum("unknown", "2026.3.0")).toBe(false);
   });
 
-  it("normalizes raw ClawHub SHA-256 hashes into integrity strings", () => {
+  it("normalizes raw LittleBabyHub SHA-256 hashes into integrity strings", () => {
     const hex = "039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81";
     const integrity = "sha256-A5BYxvLAy0ksUzsKTRTvd8wPeKvMztUofYShogEc+4E=";
     const unpaddedIntegrity = "sha256-A5BYxvLAy0ksUzsKTRTvd8wPeKvMztUofYShogEc+4E";
-    expect(normalizeClawHubSha256Integrity(hex)).toBe(integrity);
-    expect(normalizeClawHubSha256Integrity(`sha256:${hex}`)).toBe(integrity);
-    expect(normalizeClawHubSha256Integrity(integrity)).toBe(integrity);
-    expect(normalizeClawHubSha256Integrity(unpaddedIntegrity)).toBe(integrity);
-    expect(normalizeClawHubSha256Integrity(`sha256=${hex}`)).toBeNull();
-    expect(normalizeClawHubSha256Integrity("sha256-a=")).toBeNull();
-    expect(normalizeClawHubSha256Integrity("not-a-hash")).toBeNull();
+    expect(normalizeLittleBabyHubSha256Integrity(hex)).toBe(integrity);
+    expect(normalizeLittleBabyHubSha256Integrity(`sha256:${hex}`)).toBe(integrity);
+    expect(normalizeLittleBabyHubSha256Integrity(integrity)).toBe(integrity);
+    expect(normalizeLittleBabyHubSha256Integrity(unpaddedIntegrity)).toBe(integrity);
+    expect(normalizeLittleBabyHubSha256Integrity(`sha256=${hex}`)).toBeNull();
+    expect(normalizeLittleBabyHubSha256Integrity("sha256-a=")).toBeNull();
+    expect(normalizeLittleBabyHubSha256Integrity("not-a-hash")).toBeNull();
   });
 
-  it("normalizes ClawHub SHA-256 hex values", () => {
-    expect(normalizeClawHubSha256Hex("AA".repeat(32))).toBe("aa".repeat(32));
-    expect(normalizeClawHubSha256Hex("not-a-hash")).toBeNull();
+  it("normalizes LittleBabyHub SHA-256 hex values", () => {
+    expect(normalizeLittleBabyHubSha256Hex("AA".repeat(32))).toBe("aa".repeat(32));
+    expect(normalizeLittleBabyHubSha256Hex("not-a-hash")).toBeNull();
   });
 
-  it("resolves ClawHub auth token from config.json", async () => {
-    await withTempDir({ prefix: "littlebaby-clawhub-config-" }, async (configRoot) => {
-      const configPath = path.join(configRoot, "clawhub", "config.json");
+  it("resolves LittleBabyHub auth token from config.json", async () => {
+    await withTempDir({ prefix: "littlebaby-littlebabyhub-config-" }, async (configRoot) => {
+      const configPath = path.join(configRoot, "littlebabyhub", "config.json");
       process.env.LITTLEBABY_CLAWHUB_CONFIG_PATH = configPath;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, JSON.stringify({ auth: { token: "cfg-token-123" } }), "utf8");
 
-      await expect(resolveClawHubAuthToken()).resolves.toBe("cfg-token-123");
+      await expect(resolveLittleBabyHubAuthToken()).resolves.toBe("cfg-token-123");
     });
   });
 
-  it("resolves ClawHub auth token from the legacy config path override", async () => {
-    await withTempDir({ prefix: "littlebaby-clawdhub-config-" }, async (configRoot) => {
+  it("resolves LittleBabyHub auth token from the legacy config path override", async () => {
+    await withTempDir({ prefix: "littlebaby-littlebabyhub-config-" }, async (configRoot) => {
       const configPath = path.join(configRoot, "config.json");
-      process.env.CLAWDHUB_CONFIG_PATH = configPath;
+      process.env.LITTLEBABYHUB_CONFIG_PATH = configPath;
       await fs.writeFile(configPath, JSON.stringify({ token: "legacy-token-123" }), "utf8");
 
-      await expect(resolveClawHubAuthToken()).resolves.toBe("legacy-token-123");
+      await expect(resolveLittleBabyHubAuthToken()).resolves.toBe("legacy-token-123");
     });
   });
 
   it.runIf(process.platform === "darwin")(
-    "resolves ClawHub auth token from the macOS Application Support path",
+    "resolves LittleBabyHub auth token from the macOS Application Support path",
     async () => {
-      await withTempDir({ prefix: "littlebaby-clawhub-home-" }, async (fakeHome) => {
+      await withTempDir({ prefix: "littlebaby-littlebabyhub-home-" }, async (fakeHome) => {
         const configPath = path.join(
           fakeHome,
           "Library",
           "Application Support",
-          "clawhub",
+          "littlebabyhub",
           "config.json",
         );
         const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(fakeHome);
@@ -149,7 +149,7 @@ describe("clawhub helpers", () => {
           await fs.mkdir(path.dirname(configPath), { recursive: true });
           await fs.writeFile(configPath, JSON.stringify({ token: "macos-token-123" }), "utf8");
 
-          await expect(resolveClawHubAuthToken()).resolves.toBe("macos-token-123");
+          await expect(resolveLittleBabyHubAuthToken()).resolves.toBe("macos-token-123");
         } finally {
           homedirSpy.mockRestore();
         }
@@ -160,16 +160,16 @@ describe("clawhub helpers", () => {
   it.runIf(process.platform === "darwin")(
     "falls back to XDG_CONFIG_HOME on macOS when Application Support has no config",
     async () => {
-      await withTempDir({ prefix: "littlebaby-clawhub-home-" }, async (fakeHome) => {
-        await withTempDir({ prefix: "littlebaby-clawhub-xdg-" }, async (xdgRoot) => {
-          const configPath = path.join(xdgRoot, "clawhub", "config.json");
+      await withTempDir({ prefix: "littlebaby-littlebabyhub-home-" }, async (fakeHome) => {
+        await withTempDir({ prefix: "littlebaby-littlebabyhub-xdg-" }, async (xdgRoot) => {
+          const configPath = path.join(xdgRoot, "littlebabyhub", "config.json");
           const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(fakeHome);
           process.env.XDG_CONFIG_HOME = xdgRoot;
           try {
             await fs.mkdir(path.dirname(configPath), { recursive: true });
             await fs.writeFile(configPath, JSON.stringify({ token: "xdg-token-123" }), "utf8");
 
-            await expect(resolveClawHubAuthToken()).resolves.toBe("xdg-token-123");
+            await expect(resolveLittleBabyHubAuthToken()).resolves.toBe("xdg-token-123");
           } finally {
             homedirSpy.mockRestore();
           }
@@ -178,7 +178,7 @@ describe("clawhub helpers", () => {
     },
   );
 
-  it("injects resolved auth token into ClawHub requests", async () => {
+  it("injects resolved auth token into LittleBabyHub requests", async () => {
     process.env.LITTLEBABY_CLAWHUB_TOKEN = "env-token-123";
     const fetchImpl = async (input: string | URL | Request, init?: RequestInit) => {
       const url = input instanceof Request ? input.url : String(input);
@@ -190,10 +190,10 @@ describe("clawhub helpers", () => {
       });
     };
 
-    await expect(searchClawHubSkills({ query: "calendar", fetchImpl })).resolves.toEqual([]);
+    await expect(searchLittleBabyHubSkills({ query: "calendar", fetchImpl })).resolves.toEqual([]);
   });
   it("downloads package archives to sanitized temp paths and cleans them up", async () => {
-    const archive = await downloadClawHubPackageArchive({
+    const archive = await downloadLittleBabyHubPackageArchive({
       name: "@hyf/zai-external-alpha",
       version: "0.0.1",
       fetchImpl: async () =>
@@ -215,7 +215,7 @@ describe("clawhub helpers", () => {
   });
 
   it("downloads skill archives to sanitized temp paths and cleans them up", async () => {
-    const archive = await downloadClawHubSkillArchive({
+    const archive = await downloadLittleBabyHubSkillArchive({
       slug: "agentreceipt",
       version: "1.0.0",
       fetchImpl: async () =>

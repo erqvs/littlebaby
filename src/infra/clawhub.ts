@@ -9,26 +9,26 @@ import {
 import { isAtLeast, parseSemver } from "./runtime-guard.js";
 import { compareComparableSemver, parseComparableSemver } from "./semver-compare.js";
 import { createTempDownloadTarget } from "./temp-download.js";
-export { parseClawHubPluginSpec } from "./clawhub-spec.js";
+export { parseLittleBabyHubPluginSpec } from "./littlebabyhub-spec.js";
 
-const DEFAULT_CLAWHUB_URL = "https://clawhub.ai";
+const DEFAULT_CLAWHUB_URL = "https://littlebabyhub.ai";
 const DEFAULT_FETCH_TIMEOUT_MS = 30_000;
 
-export type ClawHubPackageFamily = "skill" | "code-plugin" | "bundle-plugin";
-export type ClawHubPackageChannel = "official" | "community" | "private";
+export type LittleBabyHubPackageFamily = "skill" | "code-plugin" | "bundle-plugin";
+export type LittleBabyHubPackageChannel = "official" | "community" | "private";
 // Keep aligned with @littlebaby/plugin-package-contract ExternalPluginCompatibility.
-export type ClawHubPackageCompatibility = {
+export type LittleBabyHubPackageCompatibility = {
   pluginApiRange?: string;
   builtWithLittleBabyVersion?: string;
   pluginSdkVersion?: string;
   minGatewayVersion?: string;
 };
-export type ClawHubPackageListItem = {
+export type LittleBabyHubPackageListItem = {
   name: string;
   displayName: string;
-  family: ClawHubPackageFamily;
+  family: LittleBabyHubPackageFamily;
   runtimeId?: string | null;
-  channel: ClawHubPackageChannel;
+  channel: LittleBabyHubPackageChannel;
   isOfficial: boolean;
   summary?: string | null;
   ownerHandle?: string | null;
@@ -39,11 +39,11 @@ export type ClawHubPackageListItem = {
   executesCode?: boolean;
   verificationTier?: string | null;
 };
-export type ClawHubPackageDetail = {
+export type LittleBabyHubPackageDetail = {
   package:
-    | (ClawHubPackageListItem & {
+    | (LittleBabyHubPackageListItem & {
         tags?: Record<string, string>;
-        compatibility?: ClawHubPackageCompatibility | null;
+        compatibility?: LittleBabyHubPackageCompatibility | null;
         capabilities?: {
           executesCode?: boolean;
           runtimeId?: string;
@@ -74,11 +74,11 @@ export type ClawHubPackageDetail = {
   } | null;
 };
 
-export type ClawHubPackageVersion = {
+export type LittleBabyHubPackageVersion = {
   package: {
     name: string;
     displayName: string;
-    family: ClawHubPackageFamily;
+    family: LittleBabyHubPackageFamily;
   } | null;
   version: {
     version: string;
@@ -92,13 +92,13 @@ export type ClawHubPackageVersion = {
       contentType?: string;
     }>;
     sha256hash?: string | null;
-    compatibility?: ClawHubPackageCompatibility | null;
-    capabilities?: ClawHubPackageDetail["package"] extends infer T
+    compatibility?: LittleBabyHubPackageCompatibility | null;
+    capabilities?: LittleBabyHubPackageDetail["package"] extends infer T
       ? T extends { capabilities?: infer C }
         ? C
         : never
       : never;
-    verification?: ClawHubPackageDetail["package"] extends infer T
+    verification?: LittleBabyHubPackageDetail["package"] extends infer T
       ? T extends { verification?: infer C }
         ? C
         : never
@@ -106,12 +106,12 @@ export type ClawHubPackageVersion = {
   } | null;
 };
 
-export type ClawHubPackageSearchResult = {
+export type LittleBabyHubPackageSearchResult = {
   score: number;
-  package: ClawHubPackageListItem;
+  package: LittleBabyHubPackageListItem;
 };
 
-export type ClawHubSkillSearchResult = {
+export type LittleBabyHubSkillSearchResult = {
   score: number;
   slug: string;
   displayName: string;
@@ -120,7 +120,7 @@ export type ClawHubSkillSearchResult = {
   updatedAt?: number;
 };
 
-export type ClawHubSkillDetail = {
+export type LittleBabyHubSkillDetail = {
   skill: {
     slug: string;
     displayName: string;
@@ -145,7 +145,7 @@ export type ClawHubSkillDetail = {
   } | null;
 };
 
-export type ClawHubSkillListResponse = {
+export type LittleBabyHubSkillListResponse = {
   items: Array<{
     slug: string;
     displayName: string;
@@ -166,7 +166,7 @@ export type ClawHubSkillListResponse = {
   nextCursor?: string | null;
 };
 
-export type ClawHubDownloadResult = {
+export type LittleBabyHubDownloadResult = {
   archivePath: string;
   integrity: string;
   cleanup: () => Promise<void>;
@@ -174,7 +174,7 @@ export type ClawHubDownloadResult = {
 
 type FetchLike = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
-type ClawHubRequestParams = {
+type LittleBabyHubRequestParams = {
   baseUrl?: string;
   path: string;
   token?: string;
@@ -183,25 +183,25 @@ type ClawHubRequestParams = {
   fetchImpl?: FetchLike;
 };
 
-type ClawHubConfigLike = {
+type LittleBabyHubConfigLike = {
   token?: unknown;
   accessToken?: unknown;
   authToken?: unknown;
   apiToken?: unknown;
-  auth?: ClawHubConfigLike | null;
-  session?: ClawHubConfigLike | null;
-  credentials?: ClawHubConfigLike | null;
-  user?: ClawHubConfigLike | null;
+  auth?: LittleBabyHubConfigLike | null;
+  session?: LittleBabyHubConfigLike | null;
+  credentials?: LittleBabyHubConfigLike | null;
+  user?: LittleBabyHubConfigLike | null;
 };
 
-export class ClawHubRequestError extends Error {
+export class LittleBabyHubRequestError extends Error {
   readonly status: number;
   readonly requestPath: string;
   readonly responseBody: string;
 
   constructor(params: { path: string; status: number; body: string }) {
-    super(`ClawHub ${params.path} failed (${params.status}): ${params.body}`);
-    this.name = "ClawHubRequestError";
+    super(`LittleBabyHub ${params.path} failed (${params.status}): ${params.body}`);
+    this.name = "LittleBabyHubRequestError";
     this.status = params.status;
     this.requestPath = params.path;
     this.responseBody = params.body;
@@ -217,28 +217,28 @@ function normalizeBaseUrl(baseUrl?: string): string {
   return value || DEFAULT_CLAWHUB_URL;
 }
 
-function extractTokenFromClawHubConfig(value: unknown): string | undefined {
+function extractTokenFromLittleBabyHubConfig(value: unknown): string | undefined {
   if (!value || typeof value !== "object") {
     return undefined;
   }
-  const record = value as ClawHubConfigLike;
+  const record = value as LittleBabyHubConfigLike;
   return (
     normalizeOptionalString(record.accessToken) ??
     normalizeOptionalString(record.authToken) ??
     normalizeOptionalString(record.apiToken) ??
     normalizeOptionalString(record.token) ??
-    extractTokenFromClawHubConfig(record.auth) ??
-    extractTokenFromClawHubConfig(record.session) ??
-    extractTokenFromClawHubConfig(record.credentials) ??
-    extractTokenFromClawHubConfig(record.user)
+    extractTokenFromLittleBabyHubConfig(record.auth) ??
+    extractTokenFromLittleBabyHubConfig(record.session) ??
+    extractTokenFromLittleBabyHubConfig(record.credentials) ??
+    extractTokenFromLittleBabyHubConfig(record.user)
   );
 }
 
-function resolveClawHubConfigPaths(): string[] {
+function resolveLittleBabyHubConfigPaths(): string[] {
   const explicit =
     normalizeOptionalString(process.env.LITTLEBABY_CLAWHUB_CONFIG_PATH) ||
     normalizeOptionalString(process.env.CLAWHUB_CONFIG_PATH) ||
-    normalizeOptionalString(process.env.CLAWDHUB_CONFIG_PATH); // legacy misspelling from older clawhub CLI builds; keep for back-compat
+    normalizeOptionalString(process.env.LITTLEBABYHUB_CONFIG_PATH); // legacy misspelling from older littlebabyhub CLI builds; keep for back-compat
   if (explicit) {
     return [explicit];
   }
@@ -246,11 +246,11 @@ function resolveClawHubConfigPaths(): string[] {
   const xdgConfigHome = normalizeOptionalString(process.env.XDG_CONFIG_HOME);
   const configHome =
     xdgConfigHome && xdgConfigHome.length > 0 ? xdgConfigHome : path.join(os.homedir(), ".config");
-  const xdgPath = path.join(configHome, "clawhub", "config.json");
+  const xdgPath = path.join(configHome, "littlebabyhub", "config.json");
 
   if (process.platform === "darwin") {
     return [
-      path.join(os.homedir(), "Library", "Application Support", "clawhub", "config.json"),
+      path.join(os.homedir(), "Library", "Application Support", "littlebabyhub", "config.json"),
       xdgPath,
     ];
   }
@@ -258,7 +258,7 @@ function resolveClawHubConfigPaths(): string[] {
   return [xdgPath];
 }
 
-export async function resolveClawHubAuthToken(): Promise<string | undefined> {
+export async function resolveLittleBabyHubAuthToken(): Promise<string | undefined> {
   const envToken =
     normalizeOptionalString(process.env.LITTLEBABY_CLAWHUB_TOKEN) ||
     normalizeOptionalString(process.env.CLAWHUB_TOKEN) ||
@@ -267,10 +267,10 @@ export async function resolveClawHubAuthToken(): Promise<string | undefined> {
     return envToken;
   }
 
-  for (const configPath of resolveClawHubConfigPaths()) {
+  for (const configPath of resolveLittleBabyHubConfigPaths()) {
     try {
       const raw = await fs.readFile(configPath, "utf8");
-      const token = extractTokenFromClawHubConfig(JSON.parse(raw));
+      const token = extractTokenFromLittleBabyHubConfig(JSON.parse(raw));
       if (token) {
         return token;
       }
@@ -352,7 +352,7 @@ function satisfiesSemverRange(version: string, range: string): boolean {
   return tokens.every((token) => satisfiesComparator(version, token));
 }
 
-function buildUrl(params: Pick<ClawHubRequestParams, "baseUrl" | "path" | "search">): URL {
+function buildUrl(params: Pick<LittleBabyHubRequestParams, "baseUrl" | "path" | "search">): URL {
   const url = new URL(params.path, `${normalizeBaseUrl(params.baseUrl)}/`);
   for (const [key, value] of Object.entries(params.search ?? {})) {
     if (!value) {
@@ -363,17 +363,17 @@ function buildUrl(params: Pick<ClawHubRequestParams, "baseUrl" | "path" | "searc
   return url;
 }
 
-async function clawhubRequest(
-  params: ClawHubRequestParams,
+async function littlebabyhubRequest(
+  params: LittleBabyHubRequestParams,
 ): Promise<{ response: Response; url: URL }> {
   const url = buildUrl(params);
-  const token = normalizeOptionalString(params.token) || (await resolveClawHubAuthToken());
+  const token = normalizeOptionalString(params.token) || (await resolveLittleBabyHubAuthToken());
   const controller = new AbortController();
   const timeout = setTimeout(
     () =>
       controller.abort(
         new Error(
-          `ClawHub request timed out after ${params.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS}ms`,
+          `LittleBabyHub request timed out after ${params.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS}ms`,
         ),
       ),
     params.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS,
@@ -398,10 +398,10 @@ async function readErrorBody(response: Response): Promise<string> {
   }
 }
 
-async function fetchJson<T>(params: ClawHubRequestParams): Promise<T> {
-  const { response, url } = await clawhubRequest(params);
+async function fetchJson<T>(params: LittleBabyHubRequestParams): Promise<T> {
+  const { response, url } = await littlebabyhubRequest(params);
   if (!response.ok) {
-    throw new ClawHubRequestError({
+    throw new LittleBabyHubRequestError({
       path: url.pathname,
       status: response.status,
       body: await readErrorBody(response),
@@ -410,7 +410,7 @@ async function fetchJson<T>(params: ClawHubRequestParams): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function resolveClawHubBaseUrl(baseUrl?: string): string {
+export function resolveLittleBabyHubBaseUrl(baseUrl?: string): string {
   return normalizeBaseUrl(baseUrl);
 }
 
@@ -419,7 +419,7 @@ export function formatSha256Integrity(bytes: Uint8Array): string {
   return `sha256-${digest}`;
 }
 
-export function normalizeClawHubSha256Integrity(value: string): string | null {
+export function normalizeLittleBabyHubSha256Integrity(value: string): string | null {
   const trimmed = value.trim();
   if (!trimmed) {
     return null;
@@ -446,7 +446,7 @@ export function normalizeClawHubSha256Integrity(value: string): string | null {
   return null;
 }
 
-export function normalizeClawHubSha256Hex(value: string): string | null {
+export function normalizeLittleBabyHubSha256Hex(value: string): string | null {
   const trimmed = value.trim();
   if (!/^[A-Fa-f0-9]{64}$/.test(trimmed)) {
     return null;
@@ -454,14 +454,14 @@ export function normalizeClawHubSha256Hex(value: string): string | null {
   return normalizeLowercaseStringOrEmpty(trimmed);
 }
 
-export async function fetchClawHubPackageDetail(params: {
+export async function fetchLittleBabyHubPackageDetail(params: {
   name: string;
   baseUrl?: string;
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
-}): Promise<ClawHubPackageDetail> {
-  return await fetchJson<ClawHubPackageDetail>({
+}): Promise<LittleBabyHubPackageDetail> {
+  return await fetchJson<LittleBabyHubPackageDetail>({
     baseUrl: params.baseUrl,
     path: `/api/v1/packages/${encodeURIComponent(params.name)}`,
     token: params.token,
@@ -470,15 +470,15 @@ export async function fetchClawHubPackageDetail(params: {
   });
 }
 
-export async function fetchClawHubPackageVersion(params: {
+export async function fetchLittleBabyHubPackageVersion(params: {
   name: string;
   version: string;
   baseUrl?: string;
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
-}): Promise<ClawHubPackageVersion> {
-  return await fetchJson<ClawHubPackageVersion>({
+}): Promise<LittleBabyHubPackageVersion> {
+  return await fetchJson<LittleBabyHubPackageVersion>({
     baseUrl: params.baseUrl,
     path: `/api/v1/packages/${encodeURIComponent(params.name)}/versions/${encodeURIComponent(
       params.version,
@@ -489,16 +489,16 @@ export async function fetchClawHubPackageVersion(params: {
   });
 }
 
-export async function searchClawHubPackages(params: {
+export async function searchLittleBabyHubPackages(params: {
   query: string;
-  family?: ClawHubPackageFamily;
+  family?: LittleBabyHubPackageFamily;
   baseUrl?: string;
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
   limit?: number;
-}): Promise<ClawHubPackageSearchResult[]> {
-  const result = await fetchJson<{ results: ClawHubPackageSearchResult[] }>({
+}): Promise<LittleBabyHubPackageSearchResult[]> {
+  const result = await fetchJson<{ results: LittleBabyHubPackageSearchResult[] }>({
     baseUrl: params.baseUrl,
     path: "/api/v1/packages/search",
     token: params.token,
@@ -513,15 +513,15 @@ export async function searchClawHubPackages(params: {
   return result.results ?? [];
 }
 
-export async function searchClawHubSkills(params: {
+export async function searchLittleBabyHubSkills(params: {
   query: string;
   baseUrl?: string;
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
   limit?: number;
-}): Promise<ClawHubSkillSearchResult[]> {
-  const result = await fetchJson<{ results: ClawHubSkillSearchResult[] }>({
+}): Promise<LittleBabyHubSkillSearchResult[]> {
+  const result = await fetchJson<{ results: LittleBabyHubSkillSearchResult[] }>({
     baseUrl: params.baseUrl,
     path: "/api/v1/search",
     token: params.token,
@@ -535,14 +535,14 @@ export async function searchClawHubSkills(params: {
   return result.results ?? [];
 }
 
-export async function fetchClawHubSkillDetail(params: {
+export async function fetchLittleBabyHubSkillDetail(params: {
   slug: string;
   baseUrl?: string;
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
-}): Promise<ClawHubSkillDetail> {
-  return await fetchJson<ClawHubSkillDetail>({
+}): Promise<LittleBabyHubSkillDetail> {
+  return await fetchJson<LittleBabyHubSkillDetail>({
     baseUrl: params.baseUrl,
     path: `/api/v1/skills/${encodeURIComponent(params.slug)}`,
     token: params.token,
@@ -551,14 +551,14 @@ export async function fetchClawHubSkillDetail(params: {
   });
 }
 
-export async function listClawHubSkills(params: {
+export async function listLittleBabyHubSkills(params: {
   baseUrl?: string;
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
   limit?: number;
-}): Promise<ClawHubSkillListResponse> {
-  return await fetchJson<ClawHubSkillListResponse>({
+}): Promise<LittleBabyHubSkillListResponse> {
+  return await fetchJson<LittleBabyHubSkillListResponse>({
     baseUrl: params.baseUrl,
     path: "/api/v1/skills",
     token: params.token,
@@ -570,7 +570,7 @@ export async function listClawHubSkills(params: {
   });
 }
 
-export async function downloadClawHubPackageArchive(params: {
+export async function downloadLittleBabyHubPackageArchive(params: {
   name: string;
   version?: string;
   tag?: string;
@@ -578,13 +578,13 @@ export async function downloadClawHubPackageArchive(params: {
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
-}): Promise<ClawHubDownloadResult> {
+}): Promise<LittleBabyHubDownloadResult> {
   const search = params.version
     ? { version: params.version }
     : params.tag
       ? { tag: params.tag }
       : undefined;
-  const { response, url } = await clawhubRequest({
+  const { response, url } = await littlebabyhubRequest({
     baseUrl: params.baseUrl,
     path: `/api/v1/packages/${encodeURIComponent(params.name)}/download`,
     search,
@@ -593,7 +593,7 @@ export async function downloadClawHubPackageArchive(params: {
     fetchImpl: params.fetchImpl,
   });
   if (!response.ok) {
-    throw new ClawHubRequestError({
+    throw new LittleBabyHubRequestError({
       path: url.pathname,
       status: response.status,
       body: await readErrorBody(response),
@@ -601,7 +601,7 @@ export async function downloadClawHubPackageArchive(params: {
   }
   const bytes = new Uint8Array(await response.arrayBuffer());
   const target = await createTempDownloadTarget({
-    prefix: "littlebaby-clawhub-package",
+    prefix: "littlebaby-littlebabyhub-package",
     fileName: `${params.name}.zip`,
     tmpDir: os.tmpdir(),
   });
@@ -613,7 +613,7 @@ export async function downloadClawHubPackageArchive(params: {
   };
 }
 
-export async function downloadClawHubSkillArchive(params: {
+export async function downloadLittleBabyHubSkillArchive(params: {
   slug: string;
   version?: string;
   tag?: string;
@@ -621,8 +621,8 @@ export async function downloadClawHubSkillArchive(params: {
   token?: string;
   timeoutMs?: number;
   fetchImpl?: FetchLike;
-}): Promise<ClawHubDownloadResult> {
-  const { response, url } = await clawhubRequest({
+}): Promise<LittleBabyHubDownloadResult> {
+  const { response, url } = await littlebabyhubRequest({
     baseUrl: params.baseUrl,
     path: "/api/v1/download",
     token: params.token,
@@ -635,7 +635,7 @@ export async function downloadClawHubSkillArchive(params: {
     },
   });
   if (!response.ok) {
-    throw new ClawHubRequestError({
+    throw new LittleBabyHubRequestError({
       path: url.pathname,
       status: response.status,
       body: await readErrorBody(response),
@@ -643,7 +643,7 @@ export async function downloadClawHubSkillArchive(params: {
   }
   const bytes = new Uint8Array(await response.arrayBuffer());
   const target = await createTempDownloadTarget({
-    prefix: "littlebaby-clawhub-skill",
+    prefix: "littlebaby-littlebabyhub-skill",
     fileName: `${params.slug}.zip`,
     tmpDir: os.tmpdir(),
   });
@@ -655,11 +655,11 @@ export async function downloadClawHubSkillArchive(params: {
   };
 }
 
-export function resolveLatestVersionFromPackage(detail: ClawHubPackageDetail): string | null {
+export function resolveLatestVersionFromPackage(detail: LittleBabyHubPackageDetail): string | null {
   return detail.package?.latestVersion ?? detail.package?.tags?.latest ?? null;
 }
 
-export function isClawHubFamilySkill(detail: ClawHubPackageDetail | ClawHubSkillDetail): boolean {
+export function isLittleBabyHubFamilySkill(detail: LittleBabyHubPackageDetail | LittleBabyHubSkillDetail): boolean {
   if ("package" in detail) {
     return detail.package?.family === "skill";
   }

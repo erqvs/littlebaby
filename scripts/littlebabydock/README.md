@@ -1,6 +1,6 @@
-# ClawDock <!-- omit in toc -->
+# LittleBabyDock <!-- omit in toc -->
 
-Stop typing `docker-compose` commands. Just type `clawdock-start`.
+Stop typing `docker-compose` commands. Just type `littlebabyock-start`.
 
 Inspired by Simon Willison's [Running LittleBaby in Docker](https://til.simonwillison.net/llms/littlebaby-docker).
 
@@ -32,53 +32,53 @@ Inspired by Simon Willison's [Running LittleBaby in Docker](https://til.simonwil
 **Install:**
 
 ```bash
-mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
+mkdir -p ~/.littlebabyock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/littlebabyock/littlebabyock-helpers.sh -o ~/.littlebabyock/littlebabyock-helpers.sh
 ```
 
 ```bash
-echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
+echo 'source ~/.littlebabyock/littlebabyock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-Canonical docs page: https://docs.littlebaby.ai/install/clawdock
+Canonical docs page: https://docs.littlebaby.ai/install/littlebabyock
 
-If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helpers.sh`, rerun the install command above. The old raw GitHub path has been removed.
+If you previously installed LittleBabyDock from `scripts/shell-helpers/littlebabyock-helpers.sh`, rerun the install command above. The old raw GitHub path has been removed.
 
 **See what you get:**
 
 ```bash
-clawdock-help
+littlebabyock-help
 ```
 
-On first command, ClawDock auto-detects your LittleBaby directory:
+On first command, LittleBabyDock auto-detects your LittleBaby directory:
 
 - Checks common paths (`~/littlebaby`, `~/workspace/littlebaby`, etc.)
 - If found, asks you to confirm
-- Saves to `~/.clawdock/config`
+- Saves to `~/.littlebabyock/config`
 
 **First time setup:**
 
 ```bash
-clawdock-start
+littlebabyock-start
 ```
 
 ```bash
-clawdock-fix-token
+littlebabyock-fix-token
 ```
 
 ```bash
-clawdock-dashboard
+littlebabyock-dashboard
 ```
 
 If you see "pairing required":
 
 ```bash
-clawdock-devices
+littlebabyock-devices
 ```
 
 And approve the request for the specific device:
 
 ```bash
-clawdock-approve <request-id>
+littlebabyock-approve <request-id>
 ```
 
 ## Available Commands
@@ -87,53 +87,53 @@ clawdock-approve <request-id>
 
 | Command            | Description                     |
 | ------------------ | ------------------------------- |
-| `clawdock-start`   | Start the gateway               |
-| `clawdock-stop`    | Stop the gateway                |
-| `clawdock-restart` | Restart the gateway             |
-| `clawdock-status`  | Check container status          |
-| `clawdock-logs`    | View live logs (follows output) |
+| `littlebabyock-start`   | Start the gateway               |
+| `littlebabyock-stop`    | Stop the gateway                |
+| `littlebabyock-restart` | Restart the gateway             |
+| `littlebabyock-status`  | Check container status          |
+| `littlebabyock-logs`    | View live logs (follows output) |
 
 ### Container Access
 
 | Command                   | Description                                    |
 | ------------------------- | ---------------------------------------------- |
-| `clawdock-shell`          | Interactive shell inside the gateway container |
-| `clawdock-cli <command>`  | Run LittleBaby CLI commands                      |
-| `clawdock-exec <command>` | Execute arbitrary commands in the container    |
+| `littlebabyock-shell`          | Interactive shell inside the gateway container |
+| `littlebabyock-cli <command>`  | Run LittleBaby CLI commands                      |
+| `littlebabyock-exec <command>` | Execute arbitrary commands in the container    |
 
 ### Web UI & Devices
 
 | Command                 | Description                                |
 | ----------------------- | ------------------------------------------ |
-| `clawdock-dashboard`    | Open web UI in browser with authentication |
-| `clawdock-devices`      | List device pairing requests               |
-| `clawdock-approve <id>` | Approve a device pairing request           |
+| `littlebabyock-dashboard`    | Open web UI in browser with authentication |
+| `littlebabyock-devices`      | List device pairing requests               |
+| `littlebabyock-approve <id>` | Approve a device pairing request           |
 
 ### Setup & Configuration
 
 | Command              | Description                                       |
 | -------------------- | ------------------------------------------------- |
-| `clawdock-fix-token` | Configure gateway authentication token (run once) |
+| `littlebabyock-fix-token` | Configure gateway authentication token (run once) |
 
 ### Maintenance
 
 | Command            | Description                                           |
 | ------------------ | ----------------------------------------------------- |
-| `clawdock-update`  | Pull latest, rebuild image, and restart (one command) |
-| `clawdock-rebuild` | Rebuild the Docker image only                         |
-| `clawdock-clean`   | Remove all containers and volumes (destructive!)      |
+| `littlebabyock-update`  | Pull latest, rebuild image, and restart (one command) |
+| `littlebabyock-rebuild` | Rebuild the Docker image only                         |
+| `littlebabyock-clean`   | Remove all containers and volumes (destructive!)      |
 
 ### Utilities
 
 | Command                | Description                               |
 | ---------------------- | ----------------------------------------- |
-| `clawdock-health`      | Run gateway health check                  |
-| `clawdock-token`       | Display the gateway authentication token  |
-| `clawdock-cd`          | Jump to the LittleBaby project directory    |
-| `clawdock-config`      | Open the LittleBaby config directory        |
-| `clawdock-show-config` | Print config files with redacted values   |
-| `clawdock-workspace`   | Open the workspace directory              |
-| `clawdock-help`        | Show all available commands with examples |
+| `littlebabyock-health`      | Run gateway health check                  |
+| `littlebabyock-token`       | Display the gateway authentication token  |
+| `littlebabyock-cd`          | Jump to the LittleBaby project directory    |
+| `littlebabyock-config`      | Open the LittleBaby config directory        |
+| `littlebabyock-show-config` | Print config files with redacted values   |
+| `littlebabyock-workspace`   | Open the workspace directory              |
+| `littlebabyock-help`        | Show all available commands with examples |
 
 ## Configuration & Secrets
 
@@ -147,7 +147,7 @@ The Docker setup uses three config files on the host. The container never stores
 | `docker-compose.yml`       | Defines `littlebaby-gateway` and `littlebaby-cli` services, bind-mounts, ports |
 | `docker-setup.sh`          | First-time setup — builds image, creates `.env` from `.env.example`        |
 | `.env.example`             | Template for `<project>/.env` with all supported vars and docs             |
-| `docker-compose.extra.yml` | Optional overrides — auto-loaded by ClawDock helpers if present            |
+| `docker-compose.extra.yml` | Optional overrides — auto-loaded by LittleBabyDock helpers if present            |
 
 ### Config Files
 
@@ -199,7 +199,7 @@ This means:
 - `~/.littlebaby/.env` is available inside the container at `/home/node/.littlebaby/.env` — LittleBaby loads it automatically as the global env fallback
 - `~/.littlebaby/littlebaby.json` is available at `/home/node/.littlebaby/littlebaby.json` — the gateway watches it and hot-reloads most changes
 - No need to add API keys to `docker-compose.yml` or configure anything inside the container
-- Keys survive `clawdock-update`, `clawdock-rebuild`, and `clawdock-clean` because they live on the host
+- Keys survive `littlebabyock-update`, `littlebabyock-rebuild`, and `littlebabyock-clean` because they live on the host
 
 The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.littlebaby/.env` feeds the LittleBaby process inside the container.
 
@@ -239,10 +239,10 @@ LittleBaby loads env vars in this order (highest wins, never overrides existing)
 
 > **Important:** `littlebaby update` does not work inside Docker.
 > The container runs as a non-root user with a source-built image, so `npm i -g` fails with EACCES.
-> Use `clawdock-update` instead — it pulls, rebuilds, and restarts from the host.
+> Use `littlebabyock-update` instead — it pulls, rebuilds, and restarts from the host.
 
 ```bash
-clawdock-update
+littlebabyock-update
 ```
 
 This runs `git pull` → `docker compose build` → `docker compose down/up` in one step.
@@ -250,7 +250,7 @@ This runs `git pull` → `docker compose build` → `docker compose down/up` in 
 If you only want to rebuild without pulling:
 
 ```bash
-clawdock-rebuild && clawdock-stop && clawdock-start
+littlebabyock-rebuild && littlebabyock-stop && littlebabyock-start
 ```
 
 ### Check Status and Logs
@@ -258,19 +258,19 @@ clawdock-rebuild && clawdock-stop && clawdock-start
 **Restart the gateway:**
 
 ```bash
-clawdock-restart
+littlebabyock-restart
 ```
 
 **Check container status:**
 
 ```bash
-clawdock-status
+littlebabyock-status
 ```
 
 **View live logs:**
 
 ```bash
-clawdock-logs
+littlebabyock-logs
 ```
 
 ### Set Up WhatsApp Bot
@@ -278,7 +278,7 @@ clawdock-logs
 **Shell into the container:**
 
 ```bash
-clawdock-shell
+littlebabyock-shell
 ```
 
 **Inside the container, login to WhatsApp:**
@@ -300,13 +300,13 @@ littlebaby status
 **Check for pending pairing requests:**
 
 ```bash
-clawdock-devices
+littlebabyock-devices
 ```
 
 **Copy the Request ID from the "Pending" table, then approve:**
 
 ```bash
-clawdock-approve <request-id>
+littlebabyock-approve <request-id>
 ```
 
 Then refresh your browser.
@@ -316,7 +316,7 @@ Then refresh your browser.
 If you see "gateway token mismatch" errors:
 
 ```bash
-clawdock-fix-token
+littlebabyock-fix-token
 ```
 
 This will:
@@ -345,11 +345,11 @@ docker ps
 **Test with fresh config (mimics first-time install):**
 
 ```bash
-unset CLAWDOCK_DIR && rm -f ~/.clawdock/config && source scripts/clawdock/clawdock-helpers.sh
+unset LITTLEBABYOCK_DIR && rm -f ~/.littlebabyock/config && source scripts/littlebabyock/littlebabyock-helpers.sh
 ```
 
 Then run any command to trigger auto-detect:
 
 ```bash
-clawdock-start
+littlebabyock-start
 ```

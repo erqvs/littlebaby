@@ -501,7 +501,7 @@ describe("createLittleBabyCodingTools", () => {
           path: "structured-write.js",
           content: [
             { type: "text", text: "const path = require('path');\n" },
-            { type: "input_text", text: "const root = path.join(process.env.HOME, 'clawd');\n" },
+            { type: "input_text", text: "const root = path.join(process.env.HOME, 'littlebaby');\n" },
           ],
         }),
       ).rejects.toThrow(/Missing required parameter: content/);
