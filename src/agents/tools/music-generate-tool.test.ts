@@ -396,13 +396,13 @@ describe("createMusicGenerateTool", () => {
         {
           buffer: Buffer.from("music-bytes"),
           mimeType: "audio/mpeg",
-          fileName: "molty-anthem.mp3",
+          fileName: "littlebaby-anthem.mp3",
         },
       ],
     });
     vi.spyOn(mediaStore, "saveMediaBuffer").mockResolvedValueOnce({
-      path: "/tmp/molty-anthem.mp3",
-      id: "molty-anthem.mp3",
+      path: "/tmp/littlebaby-anthem.mp3",
+      id: "littlebaby-anthem.mp3",
       size: 11,
       contentType: "audio/mpeg",
     });

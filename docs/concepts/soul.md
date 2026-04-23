@@ -54,7 +54,7 @@ OpenAI refs:
 - [Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering)
 - [Message roles and instruction following](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
 
-## The Molty prompt
+## The LittleBaby prompt
 
 Paste this into your agent and let it rewrite `SOUL.md`.
 

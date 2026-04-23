@@ -267,7 +267,7 @@ registerCommand({
 function getConfiguredLogFiles(): string[] {
   const homeDir = getHomeDir();
   const files: string[] = [];
-  for (const cli of ["littlebaby", "littlebaby", "moltbot"]) {
+  for (const cli of ["littlebaby", "littlebaby", "littlebabybot"]) {
     try {
       const cfgPath = path.join(homeDir, `.${cli}`, `${cli}.json`);
       if (!fs.existsSync(cfgPath)) {
@@ -315,12 +315,12 @@ function collectCandidateLogDirs(): string[] {
     if (!value) {
       continue;
     }
-    if (/STATE_DIR$/i.test(key) && /(LITTLEBABY|LITTLEBABY|MOLTBOT)/i.test(key)) {
+    if (/STATE_DIR$/i.test(key) && /(LITTLEBABY|LITTLEBABY|LITTLEBABYBOT)/i.test(key)) {
       pushStateDir(value);
     }
   }
 
-  for (const name of [".littlebaby", ".littlebaby", ".moltbot", "littlebaby", "littlebaby", "moltbot"]) {
+  for (const name of [".littlebaby", ".littlebaby", ".littlebabybot", "littlebaby", "littlebaby", "littlebabybot"]) {
     pushDir(path.join(homeDir, name));
     pushDir(path.join(homeDir, name, "logs"));
   }
@@ -340,7 +340,7 @@ function collectCandidateLogDirs(): string[] {
         if (!entry.isDirectory()) {
           continue;
         }
-        if (!/(littlebaby|littlebaby|moltbot)/i.test(entry.name)) {
+        if (!/(littlebaby|littlebaby|littlebabybot)/i.test(entry.name)) {
           continue;
         }
         const base = path.join(root, entry.name);
@@ -354,7 +354,7 @@ function collectCandidateLogDirs(): string[] {
 
   // Common Linux log directories under /var/log.
   if (!isWindows()) {
-    for (const name of ["littlebaby", "littlebaby", "moltbot"]) {
+    for (const name of ["littlebaby", "littlebaby", "littlebabybot"]) {
       pushDir(path.join("/var/log", name));
     }
   }
@@ -377,7 +377,7 @@ function collectCandidateLogDirs(): string[] {
     tmpRoots.add("/tmp");
   }
   for (const tmpRoot of tmpRoots) {
-    for (const name of ["littlebaby", "littlebaby", "moltbot"]) {
+    for (const name of ["littlebaby", "littlebaby", "littlebabybot"]) {
       pushDir(path.join(tmpRoot, name));
     }
   }
@@ -422,7 +422,7 @@ function collectRecentLogFiles(logDirs: string[]): LogCandidate[] {
     pushFile(path.join(dir, "gateway.err.log"), dir);
     pushFile(path.join(dir, "littlebaby.log"), dir);
     pushFile(path.join(dir, "littlebaby.log"), dir);
-    pushFile(path.join(dir, "moltbot.log"), dir);
+    pushFile(path.join(dir, "littlebabybot.log"), dir);
 
     try {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -433,7 +433,7 @@ function collectRecentLogFiles(logDirs: string[]): LogCandidate[] {
         if (!/\.(log|txt)$/i.test(entry.name)) {
           continue;
         }
-        if (!/(gateway|littlebaby|littlebaby|moltbot)/i.test(entry.name)) {
+        if (!/(gateway|littlebaby|littlebaby|littlebabybot)/i.test(entry.name)) {
           continue;
         }
         pushFile(path.join(dir, entry.name), dir);

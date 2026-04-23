@@ -64,7 +64,7 @@ In the active LittleBaby config file (`$LITTLEBABY_CONFIG_PATH`, default `~/.lit
   "canvasHost": {
     "enabled": true,
     "port": 18793,
-    "root": "/Users/you/clawd/canvas",
+    "root": "/Users/you/littlebaby/canvas",
     "liveReload": true
   },
   "gateway": {
@@ -87,10 +87,10 @@ Great for development!
 
 ### 1. Create HTML content
 
-Place files in the canvas root directory (default `~/clawd/canvas/`):
+Place files in the canvas root directory (default `~/littlebaby/canvas/`):
 
 ```bash
-cat > ~/clawd/canvas/my-game.html << 'HTML'
+cat > ~/littlebaby/canvas/my-game.html << 'HTML'
 <!DOCTYPE html>
 <html>
 <head><title>My Game</title></head>
@@ -184,8 +184,8 @@ If live reload isn't working:
 The canvas host serves from `/__littlebaby__/canvas/` prefix:
 
 ```
-http://<host>:18793/__littlebaby__/canvas/index.html  → ~/clawd/canvas/index.html
-http://<host>:18793/__littlebaby__/canvas/games/snake.html → ~/clawd/canvas/games/snake.html
+http://<host>:18793/__littlebaby__/canvas/index.html  → ~/littlebaby/canvas/index.html
+http://<host>:18793/__littlebaby__/canvas/games/snake.html → ~/littlebaby/canvas/games/snake.html
 ```
 
 The `/__littlebaby__/canvas/` prefix is defined by `CANVAS_HOST_PATH` constant.

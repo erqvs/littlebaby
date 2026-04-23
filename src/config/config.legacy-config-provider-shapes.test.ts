@@ -8,7 +8,7 @@ describe("legacy provider-shaped config snapshots", () => {
     const raw = {
       talk: {
         voiceAliases: {
-          Clawd: "VoiceAlias1234567890",
+          LittleBaby: "VoiceAlias1234567890",
           Roger: "CwhRBWXzGAHq8TQ4Fs17",
         },
       },
@@ -29,7 +29,7 @@ describe("legacy provider-shaped config snapshots", () => {
       };
     };
     expect(next?.talk?.providers?.elevenlabs?.voiceAliases).toEqual({
-      Clawd: "VoiceAlias1234567890",
+      LittleBaby: "VoiceAlias1234567890",
       Roger: "CwhRBWXzGAHq8TQ4Fs17",
     });
   });
@@ -38,7 +38,7 @@ describe("legacy provider-shaped config snapshots", () => {
     const res = LittleBabySchema.safeParse({
       talk: {
         voiceAliases: {
-          Clawd: 123,
+          LittleBaby: 123,
         },
       },
     });

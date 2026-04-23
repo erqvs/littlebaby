@@ -181,7 +181,7 @@ describe("discordPlugin outbound", () => {
       cfg: {} as LittleBabyConfig,
       to: "channel:123",
       text: "done - tiny cyber-lobster clip incoming",
-      mediaUrl: "/tmp/molty.mp4",
+      mediaUrl: "/tmp/littlebaby.mp4",
       accountId: "work",
       replyToId: "reply-123",
       threadId: "thread-123",
@@ -204,7 +204,7 @@ describe("discordPlugin outbound", () => {
       "channel:thread-123",
       "",
       expect.objectContaining({
-        mediaUrl: "/tmp/molty.mp4",
+        mediaUrl: "/tmp/littlebaby.mp4",
       }),
     );
     expect(result).toMatchObject({ channel: "discord", messageId: "video-1" });
@@ -222,7 +222,7 @@ describe("discordPlugin outbound", () => {
         to: "channel:123",
         poll: {
           question: "Best shell?",
-          options: ["molty", "molter"],
+          options: ["littlebaby", "littlebabyer"],
         },
         accountId: "work",
         threadId: "thread-123",
@@ -232,7 +232,7 @@ describe("discordPlugin outbound", () => {
         "channel:thread-123",
         {
           question: "Best shell?",
-          options: ["molty", "molter"],
+          options: ["littlebaby", "littlebabyer"],
         },
         expect.objectContaining({
           accountId: "work",

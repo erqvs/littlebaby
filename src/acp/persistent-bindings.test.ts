@@ -929,11 +929,11 @@ describe("ensureConfiguredAcpBindingSession", () => {
 
   it("reinitializes a matching session when the stored ACP session is in error state", async () => {
     const spec = createDiscordPersistentSpec({
-      cwd: "/home/bob/clawd",
+      cwd: "/home/bob/littlebaby",
     });
     const sessionKey = mockReadySession({
       spec,
-      cwd: "/home/bob/clawd",
+      cwd: "/home/bob/littlebaby",
       state: "error",
     });
 
@@ -1024,7 +1024,7 @@ describe("resetAcpSessionInPlace", () => {
         agent: "claude",
         mode: "persistent",
         backend: "acpx",
-        runtimeOptions: { cwd: "/home/bob/clawd" },
+        runtimeOptions: { cwd: "/home/bob/littlebaby" },
       },
     });
 
