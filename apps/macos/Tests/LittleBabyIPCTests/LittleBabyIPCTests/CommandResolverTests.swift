@@ -22,7 +22,7 @@ import Testing
         return (tmp, pnpmPath)
     }
 
-    @Test func `prefers open claw binary`() throws {
+    @Test func `prefers open littlebaby binary`() throws {
         let defaults = self.makeLocalDefaults()
 
         let tmp = try makeTempDirForTests()
@@ -67,7 +67,7 @@ import Testing
         }
     }
 
-    @Test func `prefers open claw binary over pnpm`() throws {
+    @Test func `prefers open littlebaby binary over pnpm`() throws {
         let defaults = self.makeLocalDefaults()
 
         let tmp = try makeTempDirForTests()
@@ -88,7 +88,7 @@ import Testing
         #expect(cmd.prefix(2).elementsEqual([littlebabyPath.path, "rpc"]))
     }
 
-    @Test func `uses open claw binary without node runtime`() throws {
+    @Test func `uses open littlebaby binary without node runtime`() throws {
         let defaults = self.makeLocalDefaults()
 
         let tmp = try makeTempDirForTests()

@@ -398,7 +398,7 @@ Recommended gate:
 2. Confirm the deployed source includes the ACP lineage acceptance in
    `src/gateway/sessions-patch.ts` (`subagent:* or acp:* sessions`).
 3. Open a temporary ACPX bridge session to a live agent (for example
-   `razor(main)` on `jpclawhq`).
+   `razor(main)` on `littlebabyhq`).
 4. Ask that agent to call `sessions_spawn` with:
    - `runtime: "acp"`
    - `agentId: "codex"`
