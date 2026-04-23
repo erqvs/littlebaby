@@ -38,7 +38,7 @@ import type {
   ChannelMessageActionName,
   ChannelMeta,
   ChannelPlugin,
-  ClawdbotConfig,
+  LittlebabyConfig,
 } from "./channel-runtime-api.js";
 import {
   buildChannelConfigSchema,
@@ -120,7 +120,7 @@ const loadFeishuChannelRuntime = createLazyRuntimeNamedExport(
 );
 
 const collectFeishuSecurityWarnings = createAllowlistProviderGroupPolicyWarningCollector<{
-  cfg: ClawdbotConfig;
+  cfg: LittlebabyConfig;
   accountId?: string | null;
 }>({
   providerConfigPresent: (cfg) => cfg.channels?.feishu !== undefined,
@@ -200,10 +200,10 @@ function describeFeishuMessageTool({
 }
 
 function setFeishuNamedAccountEnabled(
-  cfg: ClawdbotConfig,
+  cfg: LittlebabyConfig,
   accountId: string,
   enabled: boolean,
-): ClawdbotConfig {
+): LittlebabyConfig {
   const feishuCfg = cfg.channels?.feishu as FeishuConfig | undefined;
   return {
     ...cfg,
@@ -237,7 +237,7 @@ const feishuConfigAdapter = createHybridChannelConfigAdapter<
 });
 
 function isFeishuReactionsActionEnabled(params: {
-  cfg: ClawdbotConfig;
+  cfg: LittlebabyConfig;
   account: ResolvedFeishuAccount;
 }): boolean {
   if (!params.account.enabled || !params.account.configured) {
@@ -253,7 +253,7 @@ function isFeishuReactionsActionEnabled(params: {
   return gate("reactions");
 }
 
-function areAnyFeishuReactionActionsEnabled(cfg: ClawdbotConfig): boolean {
+function areAnyFeishuReactionActionsEnabled(cfg: LittlebabyConfig): boolean {
   for (const account of listEnabledFeishuAccounts(cfg)) {
     if (isFeishuReactionsActionEnabled({ cfg, account })) {
       return true;
@@ -597,7 +597,7 @@ export const feishuPlugin: ChannelPlugin<ResolvedFeishuAccount, FeishuProbeResul
 
           if (isDefault) {
             // Delete entire feishu config
-            const next = { ...cfg } as ClawdbotConfig;
+            const next = { ...cfg } as LittlebabyConfig;
             const nextChannels = { ...cfg.channels };
             delete (nextChannels as Record<string, unknown>).feishu;
             if (Object.keys(nextChannels).length > 0) {
@@ -1194,7 +1194,7 @@ export const feishuPlugin: ChannelPlugin<ResolvedFeishuAccount, FeishuProbeResul
     },
     security: {
       collectWarnings: projectConfigAccountIdWarningCollector<{
-        cfg: ClawdbotConfig;
+        cfg: LittlebabyConfig;
         accountId?: string | null;
       }>(collectFeishuSecurityWarnings),
       collectAuditFindings: ({ cfg }) => collectFeishuSecurityAuditFindings({ cfg }),

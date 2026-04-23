@@ -17,7 +17,7 @@ export type {
   PluginRuntime,
   ReplyPayload,
 } from "littlebaby/plugin-sdk/core";
-export type { LittleBabyConfig as ClawdbotConfig } from "littlebaby/plugin-sdk/core";
+export type { LittleBabyConfig as LittlebabyConfig } from "littlebaby/plugin-sdk/core";
 export type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime";
 export type { GroupToolPolicyConfig } from "littlebaby/plugin-sdk/config-runtime";
 export {

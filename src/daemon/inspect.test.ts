@@ -45,12 +45,12 @@ Restart=on-failure
 WantedBy=default.target
 `;
 
-const CLAWDBOT_GATEWAY_CONTENTS = `\
+const LITTLEBABY_GATEWAY_CONTENTS = `\
 [Unit]
-Description=Clawdbot Gateway
+Description=Littlebaby Gateway
 [Service]
-ExecStart=/usr/bin/node /opt/clawdbot/dist/entry.js gateway --port 18789
-Environment=HOME=/home/clawdbot
+ExecStart=/usr/bin/node /opt/littlebaby/dist/entry.js gateway --port 18789
+Environment=HOME=/home/littlebaby
 `;
 
 describe("detectMarkerLineWithGateway", () => {
@@ -62,8 +62,8 @@ describe("detectMarkerLineWithGateway", () => {
     expect(detectMarkerLineWithGateway(GATEWAY_SERVICE_CONTENTS)).toBe("littlebaby");
   });
 
-  it("returns clawdbot for a clawdbot gateway unit", () => {
-    expect(detectMarkerLineWithGateway(CLAWDBOT_GATEWAY_CONTENTS)).toBe("clawdbot");
+  it("returns littlebaby for a littlebaby gateway unit", () => {
+    expect(detectMarkerLineWithGateway(LITTLEBABY_GATEWAY_CONTENTS)).toBe("littlebaby");
   });
 
   it("handles line continuations — marker and gateway split across physical lines", () => {
@@ -111,22 +111,22 @@ describe("findExtraGatewayServices (linux / scanSystemdDir) — real filesystem"
   );
 
   it.skipIf(!isLinux)(
-    "reports a legacy clawdbot-gateway service as an extra gateway service",
+    "reports a legacy littlebaby-gateway service as an extra gateway service",
     async () => {
       const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-test-"));
       const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
-      const unitPath = path.join(systemdDir, "clawdbot-gateway.service");
+      const unitPath = path.join(systemdDir, "littlebaby-gateway.service");
       try {
         await fs.mkdir(systemdDir, { recursive: true });
-        await fs.writeFile(unitPath, CLAWDBOT_GATEWAY_CONTENTS);
+        await fs.writeFile(unitPath, LITTLEBABY_GATEWAY_CONTENTS);
         const result = await findExtraGatewayServices({ HOME: tmpHome });
         expect(result).toEqual([
           {
             platform: "linux",
-            label: "clawdbot-gateway.service",
+            label: "littlebaby-gateway.service",
             detail: `unit: ${unitPath}`,
             scope: "user",
-            marker: "clawdbot",
+            marker: "littlebaby",
             legacy: true,
           },
         ]);
@@ -179,8 +179,8 @@ describe("findExtraGatewayServices (win32)", () => {
         "TaskName: LittleBaby Gateway",
         "Task To Run: C:\\Program Files\\LittleBaby\\littlebaby.exe gateway run",
         "",
-        "TaskName: Clawdbot Legacy",
-        "Task To Run: C:\\clawdbot\\clawdbot.exe run",
+        "TaskName: Littlebaby Legacy",
+        "Task To Run: C:\\littlebaby\\littlebaby.exe run",
         "",
         "TaskName: Other Task",
         "Task To Run: C:\\tools\\helper.exe",
@@ -193,10 +193,10 @@ describe("findExtraGatewayServices (win32)", () => {
     expect(result).toEqual([
       {
         platform: "win32",
-        label: "Clawdbot Legacy",
-        detail: "task: Clawdbot Legacy, run: C:\\clawdbot\\clawdbot.exe run",
+        label: "Littlebaby Legacy",
+        detail: "task: Littlebaby Legacy, run: C:\\littlebaby\\littlebaby.exe run",
         scope: "system",
-        marker: "clawdbot",
+        marker: "littlebaby",
         legacy: true,
       },
     ]);

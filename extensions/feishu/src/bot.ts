@@ -38,7 +38,7 @@ import {
   normalizeAgentId,
   resolveChannelContextVisibilityMode,
 } from "./bot-runtime-api.js";
-import type { ClawdbotConfig, RuntimeEnv } from "./bot-runtime-api.js";
+import type { LittlebabyConfig, RuntimeEnv } from "./bot-runtime-api.js";
 import { type FeishuPermissionError, resolveFeishuSenderName } from "./bot-sender-name.js";
 import { createFeishuClient } from "./client.js";
 import { finalizeFeishuMessageProcessing, tryRecordMessagePersistent } from "./dedup.js";
@@ -139,7 +139,7 @@ const PERMISSION_ERROR_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 // --- Broadcast support ---
 // Resolve broadcast agent list for a given peer (group) ID.
 // Returns null if no broadcast config exists or the peer is not in the broadcast list.
-export function resolveBroadcastAgents(cfg: ClawdbotConfig, peerId: string): string[] | null {
+export function resolveBroadcastAgents(cfg: LittlebabyConfig, peerId: string): string[] | null {
   const broadcast = (cfg as Record<string, unknown>).broadcast;
   if (!broadcast || typeof broadcast !== "object") {
     return null;
@@ -340,7 +340,7 @@ function filterFetchedGroupContextMessages<
 }
 
 export async function handleFeishuMessage(params: {
-  cfg: ClawdbotConfig;
+  cfg: LittlebabyConfig;
   event: FeishuMessageEvent;
   botOpenId?: string;
   botName?: string;

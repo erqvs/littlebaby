@@ -3,7 +3,7 @@ import { resolveFeishuRuntimeAccount } from "./accounts.js";
 import { createFeishuClient } from "./client.js";
 import {
   createReplyPrefixContext,
-  type ClawdbotConfig,
+  type LittlebabyConfig,
   type ReplyPayload,
   type RuntimeEnv,
 } from "./comment-dispatcher-runtime-api.js";
@@ -13,7 +13,7 @@ import { deliverCommentThreadText } from "./drive.js";
 import { getFeishuRuntime } from "./runtime.js";
 
 export type CreateFeishuCommentReplyDispatcherParams = {
-  cfg: ClawdbotConfig;
+  cfg: LittlebabyConfig;
   agentId: string;
   runtime: RuntimeEnv;
   accountId?: string;
