@@ -184,19 +184,19 @@ async function callApi(path, options = {}) {
 }
 
 const server = new McpServer({
-  name: "terminal-littlebaby-api",
+  name: "terminal-claw-api",
   version: "1.0.0",
 });
 
 server.tool(
   "terminal_littlebaby_context",
-  "Read finance context including categories, accounts, and today's date from terminal-littlebaby.",
+  "Read finance context including categories, accounts, and today's date from terminal-claw.",
   async () => callApi("/context"),
 );
 
 server.tool(
   "terminal_littlebaby_recent_transactions",
-  "Read recent transactions from terminal-littlebaby for a recent time window.",
+  "Read recent transactions from terminal-claw for a recent time window.",
   {
     limit: z.number().int().min(1).max(100).optional(),
     days: z.number().int().min(1).max(3650).optional(),
@@ -209,13 +209,13 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_balance",
-  "Read all account balances and net worth summary from terminal-littlebaby.",
+  "Read all account balances and net worth summary from terminal-claw.",
   async () => callApi("/balance"),
 );
 
 server.tool(
   "terminal_littlebaby_course_info",
-  "Read course information for a date/time from terminal-littlebaby. day_of_week uses monday=0, and each returned course also includes weekday_name plus weekday_label for clarity. Use current for the class happening right now, next for the next upcoming class block, today for all classes today, and remaining for the classes still left today including the current class if one is in progress. For requests like '我现在还有课吗' or '今天后面还有课吗', prefer remaining. owner defaults to 'me' (his schedule); use 'partner' for her schedule.",
+  "Read course information for a date/time from terminal-claw. day_of_week uses monday=0, and each returned course also includes weekday_name plus weekday_label for clarity. Use current for the class happening right now, next for the next upcoming class block, today for all classes today, and remaining for the classes still left today including the current class if one is in progress. For requests like '我现在还有课吗' or '今天后面还有课吗', prefer remaining. owner defaults to 'me' (his schedule); use 'partner' for her schedule.",
   {
     date: dateString.optional(),
     time: timeString.optional(),
@@ -243,7 +243,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_create_transaction",
-  "Create a new transaction in terminal-littlebaby and update the linked account balance.",
+  "Create a new transaction in terminal-claw and update the linked account balance.",
   {
     amount: z.number().positive(),
     category_id: positiveInt,
@@ -261,7 +261,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_transactions",
-  "List transactions from terminal-littlebaby with optional filters and summary totals.",
+  "List transactions from terminal-claw with optional filters and summary totals.",
   {
     start_date: dateString.optional(),
     end_date: dateString.optional(),
@@ -279,7 +279,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_update_transaction",
-  "Update an existing transaction in terminal-littlebaby and reconcile account balances.",
+  "Update an existing transaction in terminal-claw and reconcile account balances.",
   {
     id: positiveInt,
     amount: z.number().positive().optional(),
@@ -297,7 +297,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_delete_transaction",
-  "Delete a transaction from terminal-littlebaby and restore the affected account balance.",
+  "Delete a transaction from terminal-claw and restore the affected account balance.",
   {
     id: positiveInt,
   },
@@ -309,7 +309,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_sync_balance",
-  "Set balances for one or more accounts directly in terminal-littlebaby without creating transactions.",
+  "Set balances for one or more accounts directly in terminal-claw without creating transactions.",
   {
     accounts: z
       .array(
@@ -330,7 +330,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_create_account",
-  "Create a new account in terminal-littlebaby.",
+  "Create a new account in terminal-claw.",
   {
     name: z.string().min(1),
     type: accountType.optional(),
@@ -348,7 +348,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_update_account",
-  "Update an existing account in terminal-littlebaby.",
+  "Update an existing account in terminal-claw.",
   {
     id: positiveInt,
     name: z.string().min(1).optional(),
@@ -367,7 +367,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_delete_account",
-  "Delete an account from terminal-littlebaby.",
+  "Delete an account from terminal-claw.",
   {
     id: positiveInt,
   },
@@ -379,7 +379,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_categories",
-  "List categories from terminal-littlebaby. Supports ordinary categories and group categories.",
+  "List categories from terminal-claw. Supports ordinary categories and group categories.",
   {
     type: financeType.optional(),
     kind: categoryKindOrAll.optional(),
@@ -393,7 +393,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_create_category",
-  "Create a new category in terminal-littlebaby. Use kind=group with member_ids to create a grouped category.",
+  "Create a new category in terminal-claw. Use kind=group with member_ids to create a grouped category.",
   {
     name: z.string().min(1),
     type: financeType,
@@ -410,7 +410,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_update_category",
-  "Update an existing category in terminal-littlebaby. Group categories may update member_ids.",
+  "Update an existing category in terminal-claw. Group categories may update member_ids.",
   {
     id: positiveInt,
     name: z.string().min(1).optional(),
@@ -427,7 +427,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_delete_category",
-  "Delete a category from terminal-littlebaby.",
+  "Delete a category from terminal-claw.",
   {
     id: positiveInt,
   },
@@ -439,7 +439,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_budgets",
-  "List monthly budgets from terminal-littlebaby for a given year and month. Defaults to the current month when omitted.",
+  "List monthly budgets from terminal-claw for a given year and month. Defaults to the current month when omitted.",
   {
     year: yearInt.optional(),
     month: monthInt.optional(),
@@ -452,7 +452,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_create_budget",
-  "Create a new monthly budget in terminal-littlebaby.",
+  "Create a new monthly budget in terminal-claw.",
   {
     category_id: positiveInt,
     year: yearInt,
@@ -471,7 +471,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_update_budget",
-  "Update an existing monthly budget in terminal-littlebaby.",
+  "Update an existing monthly budget in terminal-claw.",
   {
     id: positiveInt,
     category_id: positiveInt.optional(),
@@ -491,7 +491,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_delete_budget",
-  "Delete a monthly budget from terminal-littlebaby.",
+  "Delete a monthly budget from terminal-claw.",
   {
     id: positiveInt,
   },
@@ -503,13 +503,13 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_goals",
-  "List all goals from terminal-littlebaby.",
+  "List all goals from terminal-claw.",
   async () => callApi("/goals"),
 );
 
 server.tool(
   "terminal_littlebaby_reorder_goals",
-  "Reorder all goals in terminal-littlebaby. goal_ids must include every goal exactly once in the desired order.",
+  "Reorder all goals in terminal-claw. goal_ids must include every goal exactly once in the desired order.",
   {
     goal_ids: z.array(positiveInt).min(1),
   },
@@ -522,7 +522,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_create_goal",
-  "Create a new goal in terminal-littlebaby.",
+  "Create a new goal in terminal-claw.",
   {
     name: z.string().min(1),
     icon: z.string().optional(),
@@ -540,7 +540,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_update_goal",
-  "Update an existing goal in terminal-littlebaby.",
+  "Update an existing goal in terminal-claw.",
   {
     id: positiveInt,
     name: z.string().min(1).optional(),
@@ -559,7 +559,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_delete_goal",
-  "Delete a goal from terminal-littlebaby.",
+  "Delete a goal from terminal-claw.",
   {
     id: positiveInt,
   },
@@ -571,7 +571,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_check_digest_history",
-  "Check whether digest items have appeared recently in terminal-littlebaby. Use this before sending news, GitHub, or paper briefs to avoid repeats.",
+  "Check whether digest items have appeared recently in terminal-claw. Use this before sending news, GitHub, or paper briefs to avoid repeats.",
   {
     digest_type: digestType,
     items: z.array(digestHistoryItem).min(1),
@@ -590,7 +590,7 @@ server.tool(
 
 server.tool(
   "terminal_littlebaby_record_digest_history",
-  "Record digest items that have just been sent in terminal-littlebaby so future briefs can deduplicate them. This is a write-confirmation tool, not a freshness-check tool. After a successful write, the stored history will naturally show the items as already seen; do not use this response to decide whether they were duplicates before sending.",
+  "Record digest items that have just been sent in terminal-claw so future briefs can deduplicate them. This is a write-confirmation tool, not a freshness-check tool. After a successful write, the stored history will naturally show the items as already seen; do not use this response to decide whether they were duplicates before sending.",
   {
     digest_type: digestType,
     items: z.array(digestHistoryItem).min(1),
