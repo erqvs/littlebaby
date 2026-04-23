@@ -187,18 +187,18 @@ and rolling file logs under `/tmp/littlebaby/`.
 
 ### Shell helpers (optional)
 
-For easier day-to-day Docker management, install `ClawDock`:
+For easier day-to-day Docker management, install `LittleBabyDock`:
 
 ```bash
-mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
-echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
+mkdir -p ~/.littlebabyock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/littlebabyock/littlebabyock-helpers.sh -o ~/.littlebabyock/littlebabyock-helpers.sh
+echo 'source ~/.littlebabyock/littlebabyock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-If you installed ClawDock from the older `scripts/shell-helpers/clawdock-helpers.sh` raw path, rerun the install command above so your local helper file tracks the new location.
+If you installed LittleBabyDock from the older `scripts/shell-helpers/littlebabyock-helpers.sh` raw path, rerun the install command above so your local helper file tracks the new location.
 
-Then use `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Run
-`clawdock-help` for all commands.
-See [ClawDock](/install/clawdock) for the full helper guide.
+Then use `littlebabyock-start`, `littlebabyock-stop`, `littlebabyock-dashboard`, etc. Run
+`littlebabyock-help` for all commands.
+See [LittleBabyDock](/install/littlebabyock) for the full helper guide.
 
 <AccordionGroup>
   <Accordion title="Enable agent sandbox for Docker gateway">
@@ -401,6 +401,6 @@ scripts/sandbox-setup.sh
 
 - [Install Overview](/install) — all installation methods
 - [Podman](/install/podman) — Podman alternative to Docker
-- [ClawDock](/install/clawdock) — Docker Compose community setup
+- [LittleBabyDock](/install/littlebabyock) — Docker Compose community setup
 - [Updating](/install/updating) — keeping LittleBaby up to date
 - [Configuration](/gateway/configuration) — gateway configuration after install

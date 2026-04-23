@@ -68,7 +68,7 @@ describe("resetAcpSessionInPlace", () => {
       agentId: "claude",
       mode: "persistent",
       backend: "acpx",
-      cwd: "/home/bob/clawd",
+      cwd: "/home/bob/littlebaby",
     } as const;
     const sessionKey = buildConfiguredAcpSessionKey(spec);
     resolveMocks.resolveConfiguredAcpBindingSpecBySessionKey.mockReturnValue(spec);
@@ -77,7 +77,7 @@ describe("resetAcpSessionInPlace", () => {
         agent: "claude",
         mode: "persistent",
         backend: "acpx",
-        runtimeOptions: { cwd: "/home/bob/clawd" },
+        runtimeOptions: { cwd: "/home/bob/littlebaby" },
       },
     });
 
@@ -162,7 +162,7 @@ describe("resetAcpSessionInPlace", () => {
       agentId: "claude",
       mode: "persistent",
       backend: "acpx",
-      cwd: "/home/bob/clawd",
+      cwd: "/home/bob/littlebaby",
     } as const;
     const sessionKey = buildConfiguredAcpSessionKey(spec);
     resolveMocks.resolveConfiguredAcpBindingSpecBySessionKey.mockReturnValue(spec);

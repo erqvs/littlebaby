@@ -19,7 +19,7 @@ Use this skill for maintainer-facing GitHub workflow, not for ordinary code chan
   - `r: too-many-prs`
   - `r: testflight`
   - `r: third-party-extension`
-  - `r: moltbook`
+  - `r: littlebabybook`
   - `r: spam`
   - `invalid`
   - `dirty` for PRs only

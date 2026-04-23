@@ -492,22 +492,22 @@ describe("profile CRUD endpoints", () => {
     const createBadRemoteBody = (await createBadRemote.json()) as { error: string };
     expect(createBadRemoteBody.error).toContain("cdpUrl");
 
-    const createClawd = await realFetch(`${base}/profiles/create`, {
+    const createLittleBaby = await realFetch(`${base}/profiles/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "legacyclawd", driver: "clawd" }),
+      body: JSON.stringify({ name: "legacylittlebaby", driver: "littlebaby" }),
     });
-    expect(createClawd.status).toBe(200);
-    const createClawdBody = (await createClawd.json()) as {
+    expect(createLittleBaby.status).toBe(200);
+    const createLittleBabyBody = (await createLittleBaby.json()) as {
       profile?: string;
       transport?: string;
       cdpPort?: number | null;
       userDataDir?: string | null;
     };
-    expect(createClawdBody.profile).toBe("legacyclawd");
-    expect(createClawdBody.transport).toBe("cdp");
-    expect(createClawdBody.cdpPort).toBeTypeOf("number");
-    expect(createClawdBody.userDataDir).toBeNull();
+    expect(createLittleBabyBody.profile).toBe("legacylittlebaby");
+    expect(createLittleBabyBody.transport).toBe("cdp");
+    expect(createLittleBabyBody.cdpPort).toBeTypeOf("number");
+    expect(createLittleBabyBody.userDataDir).toBeNull();
 
     const explicitUserDataDir = "/tmp/littlebaby-brave-profile";
     await fs.promises.mkdir(explicitUserDataDir, { recursive: true });

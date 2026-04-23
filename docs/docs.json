@@ -46,7 +46,7 @@
       },
       {
         "label": "Discord",
-        "href": "https://discord.com/invite/clawd",
+        "href": "https://discord.com/invite/littlebaby",
         "icon": "discord"
       }
     ]
@@ -349,15 +349,15 @@
       "destination": "/nodes/camera"
     },
     {
-      "source": "/clawd",
+      "source": "/littlebaby",
       "destination": "/start/littlebaby"
     },
     {
-      "source": "/start/clawd",
+      "source": "/start/littlebaby",
       "destination": "/start/littlebaby"
     },
     {
-      "source": "/start/clawd/",
+      "source": "/start/littlebaby/",
       "destination": "/start/littlebaby"
     },
     {
@@ -365,16 +365,16 @@
       "destination": "/channels/pairing"
     },
     {
-      "source": "/clawhub",
-      "destination": "/tools/clawhub"
+      "source": "/littlebabyhub",
+      "destination": "/tools/littlebabyhub"
     },
     {
-      "source": "/clawdhub",
-      "destination": "/tools/clawhub"
+      "source": "/littlebabyhub",
+      "destination": "/tools/littlebabyhub"
     },
     {
-      "source": "/tools/clawdhub",
-      "destination": "/tools/clawhub"
+      "source": "/tools/littlebabyhub",
+      "destination": "/tools/littlebabyhub"
     },
     {
       "source": "/configuration",
@@ -968,7 +968,7 @@
                 "pages": [
                   "install/ansible",
                   "install/bun",
-                  "install/clawdock",
+                  "install/littlebabyock",
                   "install/docker",
                   "install/nix",
                   "install/podman"
@@ -1164,7 +1164,7 @@
                   "tools/creating-skills",
                   "tools/skills-config",
                   "tools/slash-commands",
-                  "tools/clawhub",
+                  "tools/littlebabyhub",
                   "prose"
                 ]
               },

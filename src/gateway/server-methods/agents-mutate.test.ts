@@ -785,7 +785,7 @@ describe("agents.update", () => {
               [
                 "# IDENTITY.md - Agent Identity",
                 "",
-                "- **Name:** C-3PO (Clawd's Third Protocol Observer)",
+                "- **Name:** C-3PO (LittleBaby's Third Protocol Observer)",
                 "- **Creature:** Flustered Protocol Droid",
                 "",
                 "## Role",
