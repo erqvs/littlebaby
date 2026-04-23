@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { parseRegistryNpmSpec } from "../infra/npm-registry-spec.js";
 import { CLAWHUB_INSTALL_ERROR_CODE } from "../plugins/clawhub.js";
 import { applyExclusiveSlotSelection } from "../plugins/slots.js";
@@ -36,9 +36,9 @@ export function resolveFileNpmSpecToLocalPath(
 }
 
 export function applySlotSelectionForPlugin(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   pluginId: string,
-): { config: OpenClawConfig; warnings: string[] } {
+): { config: LittleBabyConfig; warnings: string[] } {
   const report = buildPluginDiagnosticsReport({ config });
   const plugin = report.plugins.find((entry) => entry.id === pluginId);
   if (!plugin) {
@@ -74,9 +74,9 @@ export function createHookPackInstallLogger(): {
 }
 
 export function enableInternalHookEntries(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   hookNames: string[],
-): OpenClawConfig {
+): LittleBabyConfig {
   const entries = { ...config.hooks?.internal?.entries } as Record<string, HookInternalEntryLike>;
 
   for (const hookName of hookNames) {

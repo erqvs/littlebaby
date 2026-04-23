@@ -53,7 +53,7 @@ async function withGatewayChatHarness(
   const tempDirs: string[] = [];
   const ws = await harness.openWs();
   const createSessionDir = async () => {
-    const sessionDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gw-"));
+    const sessionDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-gw-"));
     tempDirs.push(sessionDir);
     testState.sessionStorePath = path.join(sessionDir, "sessions.json");
     return sessionDir;
@@ -149,7 +149,7 @@ describe("gateway server chat", () => {
             message: {
               role: "user",
               content:
-                'Sender (untrusted metadata):\n```json\n{"label":"openclaw-control-ui"}\n```\n\n[Thu 2026-03-26 16:29 GMT] hi',
+                'Sender (untrusted metadata):\n```json\n{"label":"littlebaby-control-ui"}\n```\n\n[Thu 2026-03-26 16:29 GMT] hi',
             },
           }),
           JSON.stringify({

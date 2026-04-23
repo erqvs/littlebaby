@@ -43,11 +43,11 @@ describe("root help", () => {
     const config = {
       agents: {
         defaults: {
-          workspace: "/tmp/openclaw-root-help-workspace",
+          workspace: "/tmp/littlebaby-root-help-workspace",
         },
       },
     };
-    const env = { LITTLEBABY_STATE_DIR: "/tmp/openclaw-root-help-state" } as NodeJS.ProcessEnv;
+    const env = { LITTLEBABY_STATE_DIR: "/tmp/littlebaby-root-help-state" } as NodeJS.ProcessEnv;
 
     await renderRootHelpText({ config, env, pluginSdkResolution: "src" });
 

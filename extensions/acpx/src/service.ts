@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
 import type {
   AcpRuntime,
-  OpenClawPluginService,
-  OpenClawPluginServiceContext,
+  LittleBabyPluginService,
+  LittleBabyPluginServiceContext,
   PluginLogger,
 } from "../runtime-api.js";
 import { registerAcpRuntimeBackend, unregisterAcpRuntimeBackend } from "../runtime-api.js";
@@ -84,13 +84,13 @@ function formatDoctorFailureMessage(report: { message: string; details?: string[
 
 export function createAcpxRuntimeService(
   params: CreateAcpxRuntimeServiceParams = {},
-): OpenClawPluginService {
+): LittleBabyPluginService {
   let runtime: AcpxRuntimeLike | null = null;
   let lifecycleRevision = 0;
 
   return {
     id: "acpx-runtime",
-    async start(ctx: OpenClawPluginServiceContext): Promise<void> {
+    async start(ctx: LittleBabyPluginServiceContext): Promise<void> {
       if (process.env.LITTLEBABY_SKIP_ACPX_RUNTIME === "1") {
         ctx.logger.info("skipping embedded acpx runtime backend (LITTLEBABY_SKIP_ACPX_RUNTIME=1)");
         return;
@@ -150,7 +150,7 @@ export function createAcpxRuntimeService(
         }
       })();
     },
-    async stop(_ctx: OpenClawPluginServiceContext): Promise<void> {
+    async stop(_ctx: LittleBabyPluginServiceContext): Promise<void> {
       lifecycleRevision += 1;
       unregisterAcpRuntimeBackend(ACPX_BACKEND_ID);
       runtime = null;

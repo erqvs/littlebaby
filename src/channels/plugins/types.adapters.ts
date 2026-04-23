@@ -1,7 +1,7 @@
 import type { ReplyPayload } from "../../auto-reply/reply-payload.js";
 import type { LegacyConfigRule } from "../../config/legacy.shared.js";
 import type { AgentBinding } from "../../config/types.agents.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import type { GroupToolPolicyConfig } from "../../config/types.tools.js";
 import type { ChannelApprovalNativeRuntimeAdapter } from "../../infra/approval-handler-runtime-types.js";
 import type { ChannelApprovalKind } from "../../infra/approval-types.js";
@@ -75,34 +75,34 @@ type BivariantCallback<T extends (...args: never[]) => unknown> = {
 
 export type ChannelSetupAdapter = {
   resolveAccountId?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string;
     input?: ChannelSetupInput;
   }) => string;
   resolveBindingAccountId?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     agentId: string;
     accountId?: string;
   }) => string | undefined;
   applyAccountName?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId: string;
     name?: string;
-  }) => OpenClawConfig;
+  }) => LittleBabyConfig;
   applyAccountConfig: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId: string;
     input: ChannelSetupInput;
-  }) => OpenClawConfig;
+  }) => LittleBabyConfig;
   afterAccountConfigWritten?: (params: {
-    previousCfg: OpenClawConfig;
-    cfg: OpenClawConfig;
+    previousCfg: LittleBabyConfig;
+    cfg: LittleBabyConfig;
     accountId: string;
     input: ChannelSetupInput;
     runtime: RuntimeEnv;
   }) => Promise<void> | void;
   validateInput?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId: string;
     input: ChannelSetupInput;
   }) => string | null;
@@ -114,38 +114,38 @@ export type ChannelSetupAdapter = {
 };
 
 export type ChannelConfigAdapter<ResolvedAccount> = {
-  listAccountIds: (cfg: OpenClawConfig) => string[];
-  resolveAccount: (cfg: OpenClawConfig, accountId?: string | null) => ResolvedAccount;
-  inspectAccount?: (cfg: OpenClawConfig, accountId?: string | null) => unknown;
-  defaultAccountId?: (cfg: OpenClawConfig) => string;
+  listAccountIds: (cfg: LittleBabyConfig) => string[];
+  resolveAccount: (cfg: LittleBabyConfig, accountId?: string | null) => ResolvedAccount;
+  inspectAccount?: (cfg: LittleBabyConfig, accountId?: string | null) => unknown;
+  defaultAccountId?: (cfg: LittleBabyConfig) => string;
   setAccountEnabled?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId: string;
     enabled: boolean;
-  }) => OpenClawConfig;
-  deleteAccount?: (params: { cfg: OpenClawConfig; accountId: string }) => OpenClawConfig;
-  isEnabled?: BivariantCallback<(account: ResolvedAccount, cfg: OpenClawConfig) => boolean>;
-  disabledReason?: BivariantCallback<(account: ResolvedAccount, cfg: OpenClawConfig) => string>;
+  }) => LittleBabyConfig;
+  deleteAccount?: (params: { cfg: LittleBabyConfig; accountId: string }) => LittleBabyConfig;
+  isEnabled?: BivariantCallback<(account: ResolvedAccount, cfg: LittleBabyConfig) => boolean>;
+  disabledReason?: BivariantCallback<(account: ResolvedAccount, cfg: LittleBabyConfig) => string>;
   isConfigured?: BivariantCallback<
-    (account: ResolvedAccount, cfg: OpenClawConfig) => boolean | Promise<boolean>
+    (account: ResolvedAccount, cfg: LittleBabyConfig) => boolean | Promise<boolean>
   >;
-  unconfiguredReason?: BivariantCallback<(account: ResolvedAccount, cfg: OpenClawConfig) => string>;
+  unconfiguredReason?: BivariantCallback<(account: ResolvedAccount, cfg: LittleBabyConfig) => string>;
   describeAccount?: BivariantCallback<
-    (account: ResolvedAccount, cfg: OpenClawConfig) => ChannelAccountSnapshot
+    (account: ResolvedAccount, cfg: LittleBabyConfig) => ChannelAccountSnapshot
   >;
   resolveAllowFrom?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
   }) => Array<string | number> | undefined;
   formatAllowFrom?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     allowFrom: Array<string | number>;
   }) => string[];
-  hasConfiguredState?: (params: { cfg: OpenClawConfig; env?: NodeJS.ProcessEnv }) => boolean;
-  hasPersistedAuthState?: (params: { cfg: OpenClawConfig; env?: NodeJS.ProcessEnv }) => boolean;
+  hasConfiguredState?: (params: { cfg: LittleBabyConfig; env?: NodeJS.ProcessEnv }) => boolean;
+  hasPersistedAuthState?: (params: { cfg: LittleBabyConfig; env?: NodeJS.ProcessEnv }) => boolean;
   resolveDefaultTo?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
   }) => string | undefined;
 };
@@ -158,7 +158,7 @@ export type ChannelSecretsAdapter = {
     value: unknown;
   }>;
   collectRuntimeConfigAssignments?: (params: {
-    config: OpenClawConfig;
+    config: LittleBabyConfig;
     defaults: SecretDefaults | undefined;
     context: ResolverContext;
   }) => void;
@@ -176,13 +176,13 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
   buildChannelSummary?: BivariantCallback<
     (params: {
       account: ResolvedAccount;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       defaultAccountId: string;
       snapshot: ChannelAccountSnapshot;
     }) => Record<string, unknown> | Promise<Record<string, unknown>>
   >;
   probeAccount?: BivariantCallback<
-    (params: { account: ResolvedAccount; timeoutMs: number; cfg: OpenClawConfig }) => Promise<Probe>
+    (params: { account: ResolvedAccount; timeoutMs: number; cfg: LittleBabyConfig }) => Promise<Probe>
   >;
   formatCapabilitiesProbe?: BivariantCallback<
     (params: { probe: Probe }) => ChannelCapabilitiesDisplayLine[]
@@ -191,7 +191,7 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
     (params: {
       account: ResolvedAccount;
       timeoutMs: number;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       probe?: Probe;
     }) => Promise<Audit>
   >;
@@ -199,7 +199,7 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
     (params: {
       account: ResolvedAccount;
       timeoutMs: number;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       probe?: Probe;
       audit?: Audit;
       target?: string;
@@ -208,7 +208,7 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
   buildAccountSnapshot?: BivariantCallback<
     (params: {
       account: ResolvedAccount;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       runtime?: ChannelAccountSnapshot;
       probe?: Probe;
       audit?: Audit;
@@ -217,7 +217,7 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
   logSelfId?: BivariantCallback<
     (params: {
       account: ResolvedAccount;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       runtime: RuntimeEnv;
       includeChannelPrefix?: boolean;
     }) => void
@@ -225,7 +225,7 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
   resolveAccountState?: BivariantCallback<
     (params: {
       account: ResolvedAccount;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       configured: boolean;
       enabled: boolean;
     }) => ChannelAccountState
@@ -234,7 +234,7 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
 };
 
 export type ChannelGatewayContext<ResolvedAccount = unknown> = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   account: ResolvedAccount;
   runtime: RuntimeEnv;
@@ -303,7 +303,7 @@ export type ChannelGatewayContext<ResolvedAccount = unknown> = {
    *   partial stubs are not supported
    *
    * @since Plugin SDK 2026.2.19
-   * @see {@link https://docs.openclaw.ai/plugins/building-plugins | Plugin SDK documentation}
+   * @see {@link https://docs.littlebaby.ai/plugins/building-plugins | Plugin SDK documentation}
    */
   channelRuntime?: ChannelRuntimeSurface;
 };
@@ -326,7 +326,7 @@ export type ChannelLoginWithQrWaitResult = {
 };
 
 export type ChannelLogoutContext<ResolvedAccount = unknown> = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   account: ResolvedAccount;
   runtime: RuntimeEnv;
@@ -337,7 +337,7 @@ export type ChannelGatewayAdapter<ResolvedAccount = unknown> = {
   startAccount?: (ctx: ChannelGatewayContext<ResolvedAccount>) => Promise<unknown>;
   stopAccount?: (ctx: ChannelGatewayContext<ResolvedAccount>) => Promise<void>;
   /** Keep gateway auth bypass resolution mirrored through a lightweight top-level `gateway-auth-api.ts` artifact. */
-  resolveGatewayAuthBypassPaths?: (params: { cfg: OpenClawConfig }) => string[];
+  resolveGatewayAuthBypassPaths?: (params: { cfg: LittleBabyConfig }) => string[];
   loginWithQrStart?: (params: {
     accountId?: string;
     force?: boolean;
@@ -353,7 +353,7 @@ export type ChannelGatewayAdapter<ResolvedAccount = unknown> = {
 
 export type ChannelAuthAdapter = {
   login?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     runtime: RuntimeEnv;
     verbose?: boolean;
@@ -363,12 +363,12 @@ export type ChannelAuthAdapter = {
 
 export type ChannelHeartbeatAdapter = {
   checkReady?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     deps?: ChannelHeartbeatDeps;
   }) => Promise<{ ok: boolean; reason: string }>;
   resolveRecipients?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     opts?: { to?: string; all?: boolean; accountId?: string };
   }) => {
     recipients: string[];
@@ -377,13 +377,13 @@ export type ChannelHeartbeatAdapter = {
 };
 
 type ChannelDirectorySelfParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   runtime: RuntimeEnv;
 };
 
 type ChannelDirectoryListParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   query?: string | null;
   limit?: number | null;
@@ -391,7 +391,7 @@ type ChannelDirectoryListParams = {
 };
 
 type ChannelDirectoryListGroupMembersParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   groupId: string;
   limit?: number | null;
@@ -421,7 +421,7 @@ export type ChannelResolveResult = {
 
 export type ChannelResolverAdapter = {
   resolveTargets: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     inputs: string[];
     kind: ChannelResolveKind;
@@ -431,7 +431,7 @@ export type ChannelResolverAdapter = {
 
 export type ChannelElevatedAdapter = {
   allowFromFallback?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
   }) => Array<string | number> | undefined;
 };
@@ -467,7 +467,7 @@ export type ChannelCommandAdapter = {
 };
 
 export type ChannelDoctorConfigMutation = {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   changes: string[];
   warnings?: string[];
 };
@@ -494,25 +494,25 @@ export type ChannelDoctorAdapter = {
   groupAllowFromFallbackToAllowFrom?: boolean;
   warnOnEmptyGroupSenderAllowlist?: boolean;
   legacyConfigRules?: LegacyConfigRule[];
-  normalizeCompatibilityConfig?: (params: { cfg: OpenClawConfig }) => ChannelDoctorConfigMutation;
+  normalizeCompatibilityConfig?: (params: { cfg: LittleBabyConfig }) => ChannelDoctorConfigMutation;
   collectPreviewWarnings?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     doctorFixCommand: string;
   }) => string[] | Promise<string[]>;
   collectMutableAllowlistWarnings?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
   }) => string[] | Promise<string[]>;
   repairConfig?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     doctorFixCommand: string;
   }) => ChannelDoctorConfigMutation | Promise<ChannelDoctorConfigMutation>;
   runConfigSequence?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     env: NodeJS.ProcessEnv;
     shouldRepair: boolean;
   }) => ChannelDoctorSequenceResult | Promise<ChannelDoctorSequenceResult>;
   cleanStaleConfig?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
   }) => ChannelDoctorConfigMutation | Promise<ChannelDoctorConfigMutation>;
   collectEmptyAllowlistExtraWarnings?: (
     params: ChannelDoctorEmptyAllowlistAccountContext,
@@ -524,18 +524,18 @@ export type ChannelDoctorAdapter = {
 
 export type ChannelLifecycleAdapter = {
   onAccountConfigChanged?: (params: {
-    prevCfg: OpenClawConfig;
-    nextCfg: OpenClawConfig;
+    prevCfg: LittleBabyConfig;
+    nextCfg: LittleBabyConfig;
     accountId: string;
     runtime: RuntimeEnv;
   }) => Promise<void> | void;
   onAccountRemoved?: (params: {
-    prevCfg: OpenClawConfig;
+    prevCfg: LittleBabyConfig;
     accountId: string;
     runtime: RuntimeEnv;
   }) => Promise<void> | void;
   runStartupMaintenance?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     env?: NodeJS.ProcessEnv;
     log: {
       info?: (message: string) => void;
@@ -545,7 +545,7 @@ export type ChannelLifecycleAdapter = {
     logPrefix?: string;
   }) => Promise<void> | void;
   detectLegacyStateMigrations?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     env: NodeJS.ProcessEnv;
     stateDir: string;
     oauthDir: string;
@@ -553,9 +553,9 @@ export type ChannelLifecycleAdapter = {
 };
 
 export type ChannelApprovalDeliveryAdapter = {
-  hasConfiguredDmRoute?: (params: { cfg: OpenClawConfig }) => boolean;
+  hasConfiguredDmRoute?: (params: { cfg: LittleBabyConfig }) => boolean;
   shouldSuppressForwardingFallback?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     approvalKind: ChannelApprovalKind;
     target: ChannelApprovalForwardTarget;
     request: ExecApprovalRequest;
@@ -578,26 +578,26 @@ export type {
 export type ChannelApprovalRenderAdapter = {
   exec?: {
     buildPendingPayload?: (params: {
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       request: ExecApprovalRequest;
       target: ChannelApprovalForwardTarget;
       nowMs: number;
     }) => ReplyPayload | null;
     buildResolvedPayload?: (params: {
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       resolved: ExecApprovalResolved;
       target: ChannelApprovalForwardTarget;
     }) => ReplyPayload | null;
   };
   plugin?: {
     buildPendingPayload?: (params: {
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       request: PluginApprovalRequest;
       target: ChannelApprovalForwardTarget;
       nowMs: number;
     }) => ReplyPayload | null;
     buildResolvedPayload?: (params: {
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       resolved: PluginApprovalResolved;
       target: ChannelApprovalForwardTarget;
     }) => ReplyPayload | null;
@@ -618,7 +618,7 @@ export type ChannelApprovalAdapter = {
 
 export type ChannelApprovalCapability = ChannelApprovalAdapter & {
   authorizeActorAction?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     senderId?: string | null;
     action: "approve";
@@ -628,19 +628,19 @@ export type ChannelApprovalCapability = ChannelApprovalAdapter & {
     reason?: string;
   };
   getActionAvailabilityState?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     action: "approve";
     approvalKind?: ChannelApprovalKind;
   }) => ChannelActionAvailabilityState;
   /** Exec-native client availability for the initiating surface; distinct from same-chat auth. */
   getExecInitiatingSurfaceState?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     action: "approve";
   }) => ChannelActionAvailabilityState;
   resolveApproveCommandBehavior?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     senderId?: string | null;
     approvalKind: ChannelApprovalKind;
@@ -649,7 +649,7 @@ export type ChannelApprovalCapability = ChannelApprovalAdapter & {
 
 export type ChannelAllowlistAdapter = {
   applyConfigEdit?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     parsedConfig: Record<string, unknown>;
     accountId?: string | null;
     scope: "dm" | "group";
@@ -677,7 +677,7 @@ export type ChannelAllowlistAdapter = {
           }
       >
     | null;
-  readConfig?: (params: { cfg: OpenClawConfig; accountId?: string | null }) =>
+  readConfig?: (params: { cfg: LittleBabyConfig; accountId?: string | null }) =>
     | {
         dmAllowFrom?: Array<string | number>;
         groupAllowFrom?: Array<string | number>;
@@ -693,7 +693,7 @@ export type ChannelAllowlistAdapter = {
         groupOverrides?: Array<{ label: string; entries: Array<string | number> }>;
       }>;
   resolveNames?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     accountId?: string | null;
     scope: "dm" | "group";
     entries: string[];
@@ -807,7 +807,7 @@ export type ChannelConversationBindingSupport = {
     idleTimeoutMs?: number;
     maxAgeMs?: number;
   }>;
-  createManager?: (params: { cfg: OpenClawConfig; accountId?: string | null }) =>
+  createManager?: (params: { cfg: LittleBabyConfig; accountId?: string | null }) =>
     | {
         stop: () => void | Promise<void>;
       }
@@ -818,7 +818,7 @@ export type ChannelConversationBindingSupport = {
 
 export type ChannelSecurityAdapter<ResolvedAccount = unknown> = {
   applyConfigFixes?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     env: NodeJS.ProcessEnv;
   }) => ChannelDoctorConfigMutation | Promise<ChannelDoctorConfigMutation>;
   resolveDmPolicy?: BivariantCallback<
@@ -830,7 +830,7 @@ export type ChannelSecurityAdapter<ResolvedAccount = unknown> = {
   collectAuditFindings?: BivariantCallback<
     (
       ctx: ChannelSecurityContext<ResolvedAccount> & {
-        sourceConfig: OpenClawConfig;
+        sourceConfig: LittleBabyConfig;
         orderedAccountIds: string[];
         hasExplicitAccountPath: boolean;
       },

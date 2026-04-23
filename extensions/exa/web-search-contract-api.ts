@@ -1,7 +1,7 @@
 import {
   createWebSearchProviderContractFields,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search-contract";
+} from "littlebaby/plugin-sdk/provider-web-search-contract";
 
 export function createExaWebSearchProvider(): WebSearchProviderPlugin {
   const credentialPath = "plugins.entries.exa.config.webSearch.apiKey";
@@ -15,7 +15,7 @@ export function createExaWebSearchProvider(): WebSearchProviderPlugin {
     envVars: ["EXA_API_KEY"],
     placeholder: "exa-...",
     signupUrl: "https://exa.ai/",
-    docsUrl: "https://docs.openclaw.ai/tools/web",
+    docsUrl: "https://docs.littlebaby.ai/tools/web",
     autoDetectOrder: 65,
     credentialPath,
     ...createWebSearchProviderContractFields({

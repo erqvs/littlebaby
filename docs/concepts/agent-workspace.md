@@ -26,7 +26,7 @@ inside a sandbox workspace under `~/.littlebaby/sandboxes`, not your host worksp
 - Default: `~/.littlebaby/workspace`
 - If `LITTLEBABY_PROFILE` is set and not `"default"`, the default becomes
   `~/.littlebaby/workspace-<profile>`.
-- Override in `~/.littlebaby/openclaw.json`:
+- Override in `~/.littlebaby/littlebaby.json`:
 
 ```json5
 {
@@ -36,7 +36,7 @@ inside a sandbox workspace under `~/.littlebaby/sandboxes`, not your host worksp
 }
 ```
 
-`openclaw onboard`, `openclaw configure`, or `openclaw setup` will create the
+`littlebaby onboard`, `littlebaby configure`, or `littlebaby setup` will create the
 workspace and seed the bootstrap files if they are missing.
 Sandbox seed copies only accept regular in-workspace files; symlink/hardlink
 aliases that resolve outside the source workspace are ignored.
@@ -50,20 +50,20 @@ file creation:
 
 ## Extra workspace folders
 
-Older installs may have created `~/openclaw`. Keeping multiple workspace
+Older installs may have created `~/littlebaby`. Keeping multiple workspace
 directories around can cause confusing auth or state drift, because only one
 workspace is active at a time.
 
 **Recommendation:** keep a single active workspace. If you no longer use the
-extra folders, archive or move them to Trash (for example `trash ~/openclaw`).
+extra folders, archive or move them to Trash (for example `trash ~/littlebaby`).
 If you intentionally keep multiple workspaces, make sure
 `agents.defaults.workspace` points to the active one.
 
-`openclaw doctor` warns when it detects extra workspace directories.
+`littlebaby doctor` warns when it detects extra workspace directories.
 
 ## Workspace file map (what each file means)
 
-These are the standard files OpenClaw expects inside the workspace:
+These are the standard files LittleBaby expects inside the workspace:
 
 - `AGENTS.md`
   - Operating instructions for the agent and how it should use memory.
@@ -118,18 +118,18 @@ See [Memory](/concepts/memory) for the workflow and automatic memory flush.
 - `canvas/` (optional)
   - Canvas UI files for node displays (for example `canvas/index.html`).
 
-If any bootstrap file is missing, OpenClaw injects a "missing file" marker into
+If any bootstrap file is missing, LittleBaby injects a "missing file" marker into
 the session and continues. Large bootstrap files are truncated when injected;
 adjust limits with `agents.defaults.bootstrapMaxChars` (default: 12000) and
 `agents.defaults.bootstrapTotalMaxChars` (default: 60000).
-`openclaw setup` can recreate missing defaults without overwriting existing
+`littlebaby setup` can recreate missing defaults without overwriting existing
 files.
 
 ## What is NOT in the workspace
 
 These live under `~/.littlebaby/` and should NOT be committed to the workspace repo:
 
-- `~/.littlebaby/openclaw.json` (config)
+- `~/.littlebaby/littlebaby.json` (config)
 - `~/.littlebaby/agents/<agentId>/agent/auth-profiles.json` (model auth profiles: OAuth + API keys)
 - `~/.littlebaby/credentials/` (channel/provider state plus legacy OAuth import data)
 - `~/.littlebaby/agents/<agentId>/sessions/` (session transcripts + metadata)
@@ -177,7 +177,7 @@ Option B: GitHub CLI (`gh`)
 
 ```bash
 gh auth login
-gh repo create openclaw-workspace --private --source . --remote origin --push
+gh repo create littlebaby-workspace --private --source . --remote origin --push
 ```
 
 Option C: GitLab web UI
@@ -226,8 +226,8 @@ Suggested `.gitignore` starter:
 ## Moving the workspace to a new machine
 
 1. Clone the repo to the desired path (default `~/.littlebaby/workspace`).
-2. Set `agents.defaults.workspace` to that path in `~/.littlebaby/openclaw.json`.
-3. Run `openclaw setup --workspace <path>` to seed any missing files.
+2. Set `agents.defaults.workspace` to that path in `~/.littlebaby/littlebaby.json`.
+3. Run `littlebaby setup --workspace <path>` to seed any missing files.
 4. If you need sessions, copy `~/.littlebaby/agents/<agentId>/sessions/` from the
    old machine separately.
 

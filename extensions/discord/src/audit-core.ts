@@ -1,9 +1,9 @@
 import type {
   DiscordGuildChannelConfig,
   DiscordGuildEntry,
-} from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { isRecord, normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { isRecord, normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 
 export type DiscordChannelPermissionsAuditEntry = {
   channelId: string;

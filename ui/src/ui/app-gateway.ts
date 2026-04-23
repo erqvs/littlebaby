@@ -259,7 +259,7 @@ export function connectGateway(host: GatewayHost, options?: ConnectGatewayOption
     url: host.settings.gatewayUrl,
     token: host.settings.token.trim() ? host.settings.token : undefined,
     password: host.password.trim() ? host.password : undefined,
-    clientName: "openclaw-control-ui",
+    clientName: "littlebaby-control-ui",
     clientVersion,
     mode: "webchat",
     instanceId: host.clientInstanceId,

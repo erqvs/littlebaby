@@ -1,5 +1,5 @@
 import type { SessionEntry } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import {
   ensureAuthProfileStore,
   loadAuthProfileStoreWithoutExternalProfiles,
@@ -11,7 +11,7 @@ import { normalizeProviderId } from "./model-selection.js";
 
 export function resolveModelAuthLabel(params: {
   provider?: string;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   sessionEntry?: Partial<Pick<SessionEntry, "authProfileOverride">>;
   agentDir?: string;
   includeExternalProfiles?: boolean;

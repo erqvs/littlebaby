@@ -2,4 +2,4 @@ export {
   buildPassiveChannelStatusSummary,
   buildPassiveProbedChannelStatusSummary,
   buildTrafficStatusSummary,
-} from "openclaw/plugin-sdk/extension-shared";
+} from "littlebaby/plugin-sdk/extension-shared";

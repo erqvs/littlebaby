@@ -3,14 +3,14 @@ import {
   captureWsEvent,
   createDebugProxyWebSocketAgent,
   resolveDebugProxySettings,
-} from "openclaw/plugin-sdk/proxy-capture";
+} from "littlebaby/plugin-sdk/proxy-capture";
 import type {
   RealtimeTranscriptionProviderConfig,
   RealtimeTranscriptionProviderPlugin,
   RealtimeTranscriptionSession,
   RealtimeTranscriptionSessionCreateRequest,
-} from "openclaw/plugin-sdk/realtime-transcription";
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+} from "littlebaby/plugin-sdk/realtime-transcription";
+import { normalizeResolvedSecretInputString } from "littlebaby/plugin-sdk/secret-input";
 import WebSocket from "ws";
 import {
   asFiniteNumber,

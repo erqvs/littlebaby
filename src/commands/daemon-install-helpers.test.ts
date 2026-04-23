@@ -48,11 +48,11 @@ afterEach(() => {
 
 describe("resolveGatewayDevMode", () => {
   it("detects dev mode for src ts entrypoints", () => {
-    expect(resolveGatewayDevMode(["node", "/Users/me/openclaw/src/cli/index.ts"])).toBe(true);
-    expect(resolveGatewayDevMode(["node", "C:\\Users\\me\\openclaw\\src\\cli\\index.ts"])).toBe(
+    expect(resolveGatewayDevMode(["node", "/Users/me/littlebaby/src/cli/index.ts"])).toBe(true);
+    expect(resolveGatewayDevMode(["node", "C:\\Users\\me\\littlebaby\\src\\cli\\index.ts"])).toBe(
       true,
     );
-    expect(resolveGatewayDevMode(["node", "/Users/me/openclaw/dist/cli/index.js"])).toBe(false);
+    expect(resolveGatewayDevMode(["node", "/Users/me/littlebaby/dist/cli/index.js"])).toBe(false);
   });
 });
 
@@ -336,7 +336,7 @@ describe("buildGatewayInstallPlan — dotenv merge", () => {
     await writeStateDirDotEnv(
       "BRAVE_API_KEY=BSA-from-env\nOPENROUTER_API_KEY=or-key\nMY_KEY=from-dotenv\nHOME=/from-dotenv\n",
       {
-        stateDir: path.join(tmpDir, ".openclaw"),
+        stateDir: path.join(tmpDir, ".littlebaby"),
       },
     );
     mockNodeGatewayPlanFixture({
@@ -445,7 +445,7 @@ describe("gatewayInstallErrorHint", () => {
     expect(gatewayInstallErrorHint("win32")).toContain("Startup-folder login item");
     expect(gatewayInstallErrorHint("win32")).toContain("elevated PowerShell");
     expect(gatewayInstallErrorHint("linux")).toMatch(
-      /(?:openclaw|openclaw)( --profile isolated)? gateway install/,
+      /(?:littlebaby|littlebaby)( --profile isolated)? gateway install/,
     );
   });
 });

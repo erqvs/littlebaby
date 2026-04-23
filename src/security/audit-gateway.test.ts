@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { collectGatewayConfigFindings } from "./audit.js";
 
@@ -43,7 +43,7 @@ describe("security audit gateway config findings", () => {
         },
       ),
       (async () => {
-        const cfg: OpenClawConfig = {
+        const cfg: LittleBabyConfig = {
           gateway: {
             bind: "lan",
             auth: {
@@ -59,7 +59,7 @@ describe("security audit gateway config findings", () => {
         expect(hasFinding("gateway.bind_no_auth", findings)).toBe(false);
       })(),
       (async () => {
-        const sourceConfig: OpenClawConfig = {
+        const sourceConfig: LittleBabyConfig = {
           gateway: {
             bind: "lan",
             auth: {
@@ -76,7 +76,7 @@ describe("security audit gateway config findings", () => {
             },
           },
         };
-        const resolvedConfig: OpenClawConfig = {
+        const resolvedConfig: LittleBabyConfig = {
           gateway: {
             bind: "lan",
             auth: {},
@@ -87,7 +87,7 @@ describe("security audit gateway config findings", () => {
         expect(hasFinding("gateway.bind_no_auth", findings)).toBe(false);
       })(),
       (async () => {
-        const cfg: OpenClawConfig = {
+        const cfg: LittleBabyConfig = {
           gateway: {
             bind: "lan",
             auth: { token: "secret" },
@@ -97,7 +97,7 @@ describe("security audit gateway config findings", () => {
         expect(hasFindingWithSeverity("gateway.auth_no_rate_limit", "warn", findings)).toBe(true);
       })(),
       (async () => {
-        const cfg: OpenClawConfig = {
+        const cfg: LittleBabyConfig = {
           gateway: {
             bind: "lan",
             auth: {

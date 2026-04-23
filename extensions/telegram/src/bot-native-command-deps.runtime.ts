@@ -1,8 +1,8 @@
-import { loadConfig } from "openclaw/plugin-sdk/config-runtime";
-import { readChannelAllowFromStore } from "openclaw/plugin-sdk/conversation-runtime";
-import { getPluginCommandSpecs } from "openclaw/plugin-sdk/plugin-runtime";
-import { dispatchReplyWithBufferedBlockDispatcher } from "openclaw/plugin-sdk/reply-dispatch-runtime";
-import { listSkillCommandsForAgents } from "openclaw/plugin-sdk/skill-commands-runtime";
+import { loadConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { readChannelAllowFromStore } from "littlebaby/plugin-sdk/conversation-runtime";
+import { getPluginCommandSpecs } from "littlebaby/plugin-sdk/plugin-runtime";
+import { dispatchReplyWithBufferedBlockDispatcher } from "littlebaby/plugin-sdk/reply-dispatch-runtime";
+import { listSkillCommandsForAgents } from "littlebaby/plugin-sdk/skill-commands-runtime";
 import type { TelegramBotDeps } from "./bot-deps.js";
 import { syncTelegramMenuCommands } from "./bot-native-command-menu.js";
 

@@ -1,1 +1,1 @@
-export { resolveRequestClientIp } from "openclaw/plugin-sdk/webhook-ingress";
+export { resolveRequestClientIp } from "littlebaby/plugin-sdk/webhook-ingress";

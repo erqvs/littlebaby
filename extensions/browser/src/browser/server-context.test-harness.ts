@@ -56,14 +56,14 @@ export function makeBrowserServerState(params?: {
 }
 
 export function mockLaunchedChrome(
-  launchOpenClawChrome: { mockResolvedValue: (value: RunningChrome) => unknown },
+  launchLittleBabyChrome: { mockResolvedValue: (value: RunningChrome) => unknown },
   pid: number,
 ) {
   const proc = new EventEmitter() as unknown as ChildProcessWithoutNullStreams;
-  launchOpenClawChrome.mockResolvedValue({
+  launchLittleBabyChrome.mockResolvedValue({
     pid,
     exe: { kind: "chromium", path: "/usr/bin/chromium" },
-    userDataDir: "/tmp/openclaw-test",
+    userDataDir: "/tmp/littlebaby-test",
     cdpPort: 18800,
     startedAt: Date.now(),
     proc,

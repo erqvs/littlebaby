@@ -3,11 +3,11 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-logs.sh"
-IMAGE_NAME="${LITTLEBABY_IMAGE:-openclaw-mcp-channels-e2e}"
+IMAGE_NAME="${LITTLEBABY_IMAGE:-littlebaby-mcp-channels-e2e}"
 PORT="18789"
 TOKEN="mcp-e2e-$(date +%s)-$$"
-CONTAINER_NAME="openclaw-mcp-e2e-$$"
-CLIENT_LOG="$(mktemp -t openclaw-mcp-client-log.XXXXXX)"
+CONTAINER_NAME="littlebaby-mcp-e2e-$$"
+CLIENT_LOG="$(mktemp -t littlebaby-mcp-client-log.XXXXXX)"
 
 cleanup() {
   docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
@@ -27,8 +27,8 @@ docker run --rm \
   -e "LITTLEBABY_SKIP_GMAIL_WATCHER=1" \
   -e "LITTLEBABY_SKIP_CRON=1" \
   -e "LITTLEBABY_SKIP_CANVAS_HOST=1" \
-  -e "LITTLEBABY_STATE_DIR=/tmp/openclaw-state" \
-  -e "LITTLEBABY_CONFIG_PATH=/tmp/openclaw-state/openclaw.json" \
+  -e "LITTLEBABY_STATE_DIR=/tmp/littlebaby-state" \
+  -e "LITTLEBABY_CONFIG_PATH=/tmp/littlebaby-state/littlebaby.json" \
   -e "GW_URL=ws://127.0.0.1:$PORT" \
   -e "GW_TOKEN=$TOKEN" \
   -e "LITTLEBABY_ALLOW_INSECURE_PRIVATE_WS=1" \

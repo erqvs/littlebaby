@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { describe, expect, it } from "vitest";
 import { createDiscordSetupWizardBase } from "./setup-core.js";
 
@@ -33,7 +33,7 @@ describe("discordSetupWizard.dmPolicy", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
         "alerts",
       ),
     ).toBe("allowlist");
@@ -59,7 +59,7 @@ describe("discordSetupWizard.dmPolicy", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       "open",
       "alerts",
     );
@@ -88,7 +88,7 @@ describe("discordSetupWizard.status", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
     });
 
     expect(configured).toBe(false);

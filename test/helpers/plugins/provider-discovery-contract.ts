@@ -1,6 +1,6 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthProfileStore } from "../../../src/agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../../../src/config/config.js";
+import type { LittleBabyConfig } from "../../../src/config/config.js";
 import {
   resolveBundledPluginPublicModulePath,
   resolveRelativeBundledPluginPublicModuleId,
@@ -109,7 +109,7 @@ function runCatalog(
   state: DiscoveryState,
   params: {
     provider: ProviderHandle;
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     env?: NodeJS.ProcessEnv;
     resolveProviderApiKey?: () => { apiKey: string | undefined };
     resolveProviderAuth?: (
@@ -150,16 +150,16 @@ function installDiscoveryHooks(
 ) {
   beforeAll(async () => {
     vi.resetModules();
-    vi.doMock("openclaw/plugin-sdk/agent-runtime", () => {
+    vi.doMock("littlebaby/plugin-sdk/agent-runtime", () => {
       return {
         ensureAuthProfileStore: ensureAuthProfileStoreMock,
         listProfilesForProvider: listProfilesForProviderMock,
       };
     });
-    vi.doMock("openclaw/plugin-sdk/provider-auth", () => {
+    vi.doMock("littlebaby/plugin-sdk/provider-auth", () => {
       return {
         MINIMAX_OAUTH_MARKER: "minimax-oauth",
-        applyAuthProfileConfig: (config: OpenClawConfig) => config,
+        applyAuthProfileConfig: (config: LittleBabyConfig) => config,
         buildApiKeyCredential: (
           provider: string,
           key: unknown,

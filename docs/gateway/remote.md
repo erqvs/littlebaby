@@ -36,7 +36,7 @@ This is ideal when your laptop sleeps often but you want the agent always-on.
 
 The laptop does **not** run the agent. It connects remotely:
 
-- Use the macOS app’s **Remote over SSH** mode (Settings → General → “OpenClaw runs”).
+- Use the macOS app’s **Remote over SSH** mode (Settings → General → “LittleBaby runs”).
 - The app opens and manages the tunnel, so WebChat + health checks “just work.”
 
 Runbook: [macOS remote access](/platforms/mac/remote).
@@ -76,8 +76,8 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 With the tunnel up:
 
-- `openclaw health` and `openclaw status --deep` now reach the remote gateway via `ws://127.0.0.1:18789`.
-- `openclaw gateway status`, `openclaw gateway health`, `openclaw gateway probe`, and `openclaw gateway call` can also target the forwarded URL via `--url` when needed.
+- `littlebaby health` and `littlebaby status --deep` now reach the remote gateway via `ws://127.0.0.1:18789`.
+- `littlebaby gateway status`, `littlebaby gateway health`, `littlebaby gateway probe`, and `littlebaby gateway call` can also target the forwarded URL via `--url` when needed.
 
 Note: replace `18789` with your configured `gateway.port` (or `--port`/`LITTLEBABY_GATEWAY_PORT`).
 Note: when you pass `--url`, the CLI does not fall back to config or environment credentials.
@@ -184,12 +184,12 @@ ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 Store the token in config so it persists across restarts:
 
 ```bash
-openclaw config set gateway.remote.token "<your-token>"
+littlebaby config set gateway.remote.token "<your-token>"
 ```
 
 #### Step 4: create the LaunchAgent
 
-Save this as `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
+Save this as `~/Library/LaunchAgents/ai.littlebaby.ssh-tunnel.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -197,7 +197,7 @@ Save this as `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>ai.openclaw.ssh-tunnel</string>
+    <string>ai.littlebaby.ssh-tunnel</string>
     <key>ProgramArguments</key>
     <array>
         <string>/usr/bin/ssh</string>
@@ -215,12 +215,12 @@ Save this as `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
 #### Step 5: load the LaunchAgent
 
 ```bash
-launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
+launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.littlebaby.ssh-tunnel.plist
 ```
 
 The tunnel will start automatically at login, restart on crash, and keep the forwarded port live.
 
-Note: if you have a leftover `com.openclaw.ssh-tunnel` LaunchAgent from an older setup, unload and delete it.
+Note: if you have a leftover `com.littlebaby.ssh-tunnel` LaunchAgent from an older setup, unload and delete it.
 
 #### Troubleshooting
 
@@ -234,13 +234,13 @@ lsof -i :18789
 Restart the tunnel:
 
 ```bash
-launchctl kickstart -k gui/$UID/ai.openclaw.ssh-tunnel
+launchctl kickstart -k gui/$UID/ai.littlebaby.ssh-tunnel
 ```
 
 Stop the tunnel:
 
 ```bash
-launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
+launchctl bootout gui/$UID/ai.littlebaby.ssh-tunnel
 ```
 
 | Config entry                         | What it does                                                 |

@@ -1,6 +1,6 @@
-import OpenClawChatUI
-import OpenClawKit
-import OpenClawProtocol
+import LittleBabyChatUI
+import LittleBabyKit
+import LittleBabyProtocol
 import Observation
 import os
 import Security
@@ -88,14 +88,14 @@ final class NodeAppModel {
         var pendingApprovalIDs: [String]?
     }
 
-    private let deepLinkLogger = Logger(subsystem: "ai.openclaw.ios", category: "DeepLink")
-    private let pushWakeLogger = Logger(subsystem: "ai.openclaw.ios", category: "PushWake")
-    private let pendingActionLogger = Logger(subsystem: "ai.openclaw.ios", category: "PendingAction")
-    private let locationWakeLogger = Logger(subsystem: "ai.openclaw.ios", category: "LocationWake")
-    private let watchReplyLogger = Logger(subsystem: "ai.openclaw.ios", category: "WatchReply")
-    private let watchExecApprovalLogger = Logger(subsystem: "ai.openclaw.ios", category: "WatchExecApproval")
+    private let deepLinkLogger = Logger(subsystem: "ai.littlebaby.ios", category: "DeepLink")
+    private let pushWakeLogger = Logger(subsystem: "ai.littlebaby.ios", category: "PushWake")
+    private let pendingActionLogger = Logger(subsystem: "ai.littlebaby.ios", category: "PendingAction")
+    private let locationWakeLogger = Logger(subsystem: "ai.littlebaby.ios", category: "LocationWake")
+    private let watchReplyLogger = Logger(subsystem: "ai.littlebaby.ios", category: "WatchReply")
+    private let watchExecApprovalLogger = Logger(subsystem: "ai.littlebaby.ios", category: "WatchExecApproval")
     private let execApprovalNotificationLogger = Logger(
-        subsystem: "ai.openclaw.ios",
+        subsystem: "ai.littlebaby.ios",
         category: "ExecApprovalNotification")
     enum CameraHUDKind {
         case photo
@@ -314,7 +314,7 @@ final class NodeAppModel {
         }()
         guard !userAction.isEmpty else { return }
 
-        guard let name = OpenClawCanvasA2UIAction.extractActionName(userAction) else { return }
+        guard let name = LittleBabyCanvasA2UIAction.extractActionName(userAction) else { return }
         let actionId: String = {
             let id = (userAction["id"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             return id.isEmpty ? UUID().uuidString : id
@@ -336,15 +336,15 @@ final class NodeAppModel {
             deviceName: UIDevice.current.name,
             interfaceIdiom: UIDevice.current.userInterfaceIdiom)
         let instanceId = (UserDefaults.standard.string(forKey: "node.instanceId") ?? "ios-node").lowercased()
-        let contextJSON = OpenClawCanvasA2UIAction.compactJSON(userAction["context"])
+        let contextJSON = LittleBabyCanvasA2UIAction.compactJSON(userAction["context"])
         let sessionKey = self.mainSessionKey
 
-        let messageContext = OpenClawCanvasA2UIAction.AgentMessageContext(
+        let messageContext = LittleBabyCanvasA2UIAction.AgentMessageContext(
             actionName: name,
             session: .init(key: sessionKey, surfaceId: surfaceId),
             component: .init(id: sourceComponentId, host: host, instanceId: instanceId),
             contextJSON: contextJSON)
-        let message = OpenClawCanvasA2UIAction.formatAgentMessage(messageContext)
+        let message = LittleBabyCanvasA2UIAction.formatAgentMessage(messageContext)
 
         let ok: Bool
         var errorText: String?
@@ -369,7 +369,7 @@ final class NodeAppModel {
             }
         }
 
-        let js = OpenClawCanvasA2UIAction.jsDispatchA2UIActionStatus(actionId: actionId, ok: ok, error: errorText)
+        let js = LittleBabyCanvasA2UIAction.jsDispatchA2UIActionStatus(actionId: actionId, ok: ok, error: errorText)
         do {
             _ = try await self.screen.eval(javaScript: js)
         } catch {
@@ -588,7 +588,7 @@ final class NodeAppModel {
         }
     }
 
-    func requestLocationPermissions(mode: OpenClawLocationMode) async -> Bool {
+    func requestLocationPermissions(mode: LittleBabyLocationMode) async -> Bool {
         guard mode != .off else { return true }
         let status = await self.locationService.ensureAuthorization(mode: mode)
         switch status {
@@ -771,7 +771,7 @@ final class NodeAppModel {
                         paramsJSON: nil,
                         timeoutSeconds: 6
                     )
-                    guard let decoded = try? JSONDecoder().decode(OpenClawGatewayHealthOK.self, from: data) else {
+                    guard let decoded = try? JSONDecoder().decode(LittleBabyGatewayHealthOK.self, from: data) else {
                         return false
                     }
                     return decoded.ok ?? false
@@ -810,7 +810,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: LittleBabyNodeError(
                     code: .backgroundUnavailable,
                     message: "NODE_BACKGROUND_UNAVAILABLE: canvas/camera/screen commands require foreground"))
         }
@@ -819,7 +819,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: LittleBabyNodeError(
                     code: .unavailable,
                     message: "CAMERA_DISABLED: enable Camera in iOS Settings → Camera → Allow Camera"))
         }
@@ -832,12 +832,12 @@ final class NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                    error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
             case .handlerUnavailable:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(code: .unavailable, message: "node handler unavailable"))
+                    error: LittleBabyNodeError(code: .unavailable, message: "node handler unavailable"))
             }
         } catch {
             if command.hasPrefix("camera.") {
@@ -847,7 +847,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .unavailable, message: error.localizedDescription))
+                error: LittleBabyNodeError(code: .unavailable, message: error.localizedDescription))
         }
     }
 
@@ -862,7 +862,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: LittleBabyNodeError(
                     code: .unavailable,
                     message: "LOCATION_DISABLED: enable Location in Settings"))
         }
@@ -870,12 +870,12 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: LittleBabyNodeError(
                     code: .backgroundUnavailable,
                     message: "LOCATION_BACKGROUND_UNAVAILABLE: background location requires Always"))
         }
-        let params = (try? Self.decodeParams(OpenClawLocationGetParams.self, from: req.paramsJSON)) ??
-            OpenClawLocationGetParams()
+        let params = (try? Self.decodeParams(LittleBabyLocationGetParams.self, from: req.paramsJSON)) ??
+            LittleBabyLocationGetParams()
         let desired = params.desiredAccuracy ??
             (self.isLocationPreciseEnabled() ? .precise : .balanced)
         let status = self.locationService.authorizationStatus()
@@ -883,7 +883,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: LittleBabyNodeError(
                     code: .unavailable,
                     message: "LOCATION_PERMISSION_REQUIRED: grant Location permission"))
         }
@@ -891,7 +891,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: LittleBabyNodeError(
                     code: .unavailable,
                     message: "LOCATION_PERMISSION_REQUIRED: enable Always for background access"))
         }
@@ -901,7 +901,7 @@ final class NodeAppModel {
             maxAgeMs: params.maxAgeMs,
             timeoutMs: params.timeoutMs)
         let isPrecise = self.locationService.accuracyAuthorization() == .fullAccuracy
-        let payload = OpenClawLocationPayload(
+        let payload = LittleBabyLocationPayload(
             lat: location.coordinate.latitude,
             lon: location.coordinate.longitude,
             accuracyMeters: location.horizontalAccuracy,
@@ -917,10 +917,10 @@ final class NodeAppModel {
 
     private func handleCanvasInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawCanvasCommand.present.rawValue:
+        case LittleBabyCanvasCommand.present.rawValue:
             // iOS ignores placement hints; canvas always fills the screen.
-            let params = (try? Self.decodeParams(OpenClawCanvasPresentParams.self, from: req.paramsJSON)) ??
-                OpenClawCanvasPresentParams()
+            let params = (try? Self.decodeParams(LittleBabyCanvasPresentParams.self, from: req.paramsJSON)) ??
+                LittleBabyCanvasPresentParams()
             let url = params.url?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if url.isEmpty {
                 self.screen.showDefaultCanvas()
@@ -931,24 +931,24 @@ final class NodeAppModel {
                     trustA2UIActions: trustedA2UIURL == Self.normalizeURLForTrustComparison(url))
             }
             return BridgeInvokeResponse(id: req.id, ok: true)
-        case OpenClawCanvasCommand.hide.rawValue:
+        case LittleBabyCanvasCommand.hide.rawValue:
             self.screen.showDefaultCanvas()
             return BridgeInvokeResponse(id: req.id, ok: true)
-        case OpenClawCanvasCommand.navigate.rawValue:
-            let params = try Self.decodeParams(OpenClawCanvasNavigateParams.self, from: req.paramsJSON)
+        case LittleBabyCanvasCommand.navigate.rawValue:
+            let params = try Self.decodeParams(LittleBabyCanvasNavigateParams.self, from: req.paramsJSON)
             let trimmedURL = params.url.trimmingCharacters(in: .whitespacesAndNewlines)
             let trustedA2UIURL = await self.resolveA2UIHostURL()
             self.screen.navigate(
                 to: trimmedURL,
                 trustA2UIActions: trustedA2UIURL == Self.normalizeURLForTrustComparison(trimmedURL))
             return BridgeInvokeResponse(id: req.id, ok: true)
-        case OpenClawCanvasCommand.evalJS.rawValue:
-            let params = try Self.decodeParams(OpenClawCanvasEvalParams.self, from: req.paramsJSON)
+        case LittleBabyCanvasCommand.evalJS.rawValue:
+            let params = try Self.decodeParams(LittleBabyCanvasEvalParams.self, from: req.paramsJSON)
             let result = try await self.screen.eval(javaScript: params.javaScript)
             let payload = try Self.encodePayload(["result": result])
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: payload)
-        case OpenClawCanvasCommand.snapshot.rawValue:
-            let params = try? Self.decodeParams(OpenClawCanvasSnapshotParams.self, from: req.paramsJSON)
+        case LittleBabyCanvasCommand.snapshot.rawValue:
+            let params = try? Self.decodeParams(LittleBabyCanvasSnapshotParams.self, from: req.paramsJSON)
             let format = params?.format ?? .jpeg
             let maxWidth: CGFloat? = {
                 if let raw = params?.maxWidth, raw > 0 { return CGFloat(raw) }
@@ -972,14 +972,14 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleCanvasA2UIInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         let command = req.command
         switch command {
-        case OpenClawCanvasA2UICommand.reset.rawValue:
+        case LittleBabyCanvasA2UICommand.reset.rawValue:
             switch await self.ensureA2UIReadyWithCapabilityRefresh(timeoutMs: 5000) {
             case .ready:
                 break
@@ -987,39 +987,39 @@ final class NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: LittleBabyNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_NOT_CONFIGURED: gateway did not advertise canvas host"))
             case .hostUnavailable:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: LittleBabyNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_UNAVAILABLE: A2UI host not reachable"))
             }
             let json = try await self.screen.eval(javaScript: """
             (() => {
-              const host = globalThis.openclawA2UI;
-              if (!host) return JSON.stringify({ ok: false, error: "missing openclawA2UI" });
+              const host = globalThis.littlebabyA2UI;
+              if (!host) return JSON.stringify({ ok: false, error: "missing littlebabyA2UI" });
               return JSON.stringify(host.reset());
             })()
             """)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
 
-        case OpenClawCanvasA2UICommand.push.rawValue, OpenClawCanvasA2UICommand.pushJSONL.rawValue:
-            let messages: [OpenClawKit.AnyCodable]
-            if command == OpenClawCanvasA2UICommand.pushJSONL.rawValue {
-                let params = try Self.decodeParams(OpenClawCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
-                messages = try OpenClawCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
+        case LittleBabyCanvasA2UICommand.push.rawValue, LittleBabyCanvasA2UICommand.pushJSONL.rawValue:
+            let messages: [LittleBabyKit.AnyCodable]
+            if command == LittleBabyCanvasA2UICommand.pushJSONL.rawValue {
+                let params = try Self.decodeParams(LittleBabyCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
+                messages = try LittleBabyCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
             } else {
                 do {
-                    let params = try Self.decodeParams(OpenClawCanvasA2UIPushParams.self, from: req.paramsJSON)
+                    let params = try Self.decodeParams(LittleBabyCanvasA2UIPushParams.self, from: req.paramsJSON)
                     messages = params.messages
                 } catch {
                     // Be forgiving: some clients still send JSONL payloads to `canvas.a2ui.push`.
-                    let params = try Self.decodeParams(OpenClawCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
-                    messages = try OpenClawCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
+                    let params = try Self.decodeParams(LittleBabyCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
+                    messages = try LittleBabyCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
                 }
             }
 
@@ -1030,24 +1030,24 @@ final class NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: LittleBabyNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_NOT_CONFIGURED: gateway did not advertise canvas host"))
             case .hostUnavailable:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: LittleBabyNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_UNAVAILABLE: A2UI host not reachable"))
             }
 
-            let messagesJSON = try OpenClawCanvasA2UIJSONL.encodeMessagesJSONArray(messages)
+            let messagesJSON = try LittleBabyCanvasA2UIJSONL.encodeMessagesJSONArray(messages)
             let js = """
             (() => {
               try {
-                const host = globalThis.openclawA2UI;
-                if (!host) return JSON.stringify({ ok: false, error: "missing openclawA2UI" });
+                const host = globalThis.littlebabyA2UI;
+                if (!host) return JSON.stringify({ ok: false, error: "missing littlebabyA2UI" });
                 const messages = \(messagesJSON);
                 return JSON.stringify(host.applyMessages(messages));
               } catch (e) {
@@ -1061,24 +1061,24 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleCameraInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawCameraCommand.list.rawValue:
+        case LittleBabyCameraCommand.list.rawValue:
             let devices = await self.camera.listDevices()
             struct Payload: Codable {
                 var devices: [CameraController.CameraDeviceInfo]
             }
             let payload = try Self.encodePayload(Payload(devices: devices))
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: payload)
-        case OpenClawCameraCommand.snap.rawValue:
+        case LittleBabyCameraCommand.snap.rawValue:
             self.showCameraHUD(text: "Taking photo…", kind: .photo)
             self.triggerCameraFlash()
-            let params = (try? Self.decodeParams(OpenClawCameraSnapParams.self, from: req.paramsJSON)) ??
-                OpenClawCameraSnapParams()
+            let params = (try? Self.decodeParams(LittleBabyCameraSnapParams.self, from: req.paramsJSON)) ??
+                LittleBabyCameraSnapParams()
             let res = try await self.camera.snap(params: params)
 
             struct Payload: Codable {
@@ -1094,9 +1094,9 @@ final class NodeAppModel {
                 height: res.height))
             self.showCameraHUD(text: "Photo captured", kind: .success, autoHideSeconds: 1.6)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: payload)
-        case OpenClawCameraCommand.clip.rawValue:
-            let params = (try? Self.decodeParams(OpenClawCameraClipParams.self, from: req.paramsJSON)) ??
-                OpenClawCameraClipParams()
+        case LittleBabyCameraCommand.clip.rawValue:
+            let params = (try? Self.decodeParams(LittleBabyCameraClipParams.self, from: req.paramsJSON)) ??
+                LittleBabyCameraClipParams()
 
             let suspended = (params.includeAudio ?? true) ? self.voiceWake.suspendForExternalAudioCapture() : false
             defer { self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: suspended) }
@@ -1121,13 +1121,13 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleScreenRecordInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = (try? Self.decodeParams(OpenClawScreenRecordParams.self, from: req.paramsJSON)) ??
-            OpenClawScreenRecordParams()
+        let params = (try? Self.decodeParams(LittleBabyScreenRecordParams.self, from: req.paramsJSON)) ??
+            LittleBabyScreenRecordParams()
         if let format = params.format, format.lowercased() != "mp4" {
             throw NSError(domain: "Screen", code: 30, userInfo: [
                 NSLocalizedDescriptionKey: "INVALID_REQUEST: screen format must be mp4",
@@ -1163,14 +1163,14 @@ final class NodeAppModel {
     }
 
     private func handleSystemNotify(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = try Self.decodeParams(OpenClawSystemNotifyParams.self, from: req.paramsJSON)
+        let params = try Self.decodeParams(LittleBabySystemNotifyParams.self, from: req.paramsJSON)
         let title = params.title.trimmingCharacters(in: .whitespacesAndNewlines)
         let body = params.body.trimmingCharacters(in: .whitespacesAndNewlines)
         if title.isEmpty, body.isEmpty {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty notification"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty notification"))
         }
 
         let finalStatus = await self.requestNotificationAuthorizationIfNeeded()
@@ -1178,7 +1178,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .unavailable, message: "NOT_AUTHORIZED: notifications"))
+                error: LittleBabyNodeError(code: .unavailable, message: "NOT_AUTHORIZED: notifications"))
         }
 
         let addResult = await self.runNotificationCall(timeoutSeconds: 2.0) { [notificationCenter] in
@@ -1211,19 +1211,19 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
+                error: LittleBabyNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
         }
         return BridgeInvokeResponse(id: req.id, ok: true)
     }
 
     private func handleChatPushInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = try Self.decodeParams(OpenClawChatPushParams.self, from: req.paramsJSON)
+        let params = try Self.decodeParams(LittleBabyChatPushParams.self, from: req.paramsJSON)
         let text = params.text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty chat.push text"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty chat.push text"))
         }
 
         let finalStatus = await self.requestNotificationAuthorizationIfNeeded()
@@ -1231,7 +1231,7 @@ final class NodeAppModel {
         if finalStatus == .authorized || finalStatus == .provisional || finalStatus == .ephemeral {
             let addResult = await self.runNotificationCall(timeoutSeconds: 2.0) { [notificationCenter] in
                 let content = UNMutableNotificationContent()
-                content.title = "OpenClaw"
+                content.title = "LittleBaby"
                 content.body = text
                 content.sound = .default
                 content.userInfo = ["messageId": messageId]
@@ -1245,7 +1245,7 @@ final class NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
+                    error: LittleBabyNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
             }
         }
 
@@ -1256,7 +1256,7 @@ final class NodeAppModel {
             }
         }
 
-        let payload = OpenClawChatPushPayload(messageId: messageId)
+        let payload = LittleBabyChatPushPayload(messageId: messageId)
         let json = try Self.encodePayload(payload)
         return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
     }
@@ -1337,11 +1337,11 @@ final class NodeAppModel {
 
     private func handleDeviceInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawDeviceCommand.status.rawValue:
+        case LittleBabyDeviceCommand.status.rawValue:
             let payload = try await self.deviceStatusService.status()
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawDeviceCommand.info.rawValue:
+        case LittleBabyDeviceCommand.info.rawValue:
             let payload = self.deviceStatusService.info()
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1349,13 +1349,13 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handlePhotosInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = (try? Self.decodeParams(OpenClawPhotosLatestParams.self, from: req.paramsJSON)) ??
-            OpenClawPhotosLatestParams()
+        let params = (try? Self.decodeParams(LittleBabyPhotosLatestParams.self, from: req.paramsJSON)) ??
+            LittleBabyPhotosLatestParams()
         let payload = try await self.photosService.latest(params: params)
         let json = try Self.encodePayload(payload)
         return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1363,14 +1363,14 @@ final class NodeAppModel {
 
     private func handleContactsInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawContactsCommand.search.rawValue:
-            let params = (try? Self.decodeParams(OpenClawContactsSearchParams.self, from: req.paramsJSON)) ??
-                OpenClawContactsSearchParams()
+        case LittleBabyContactsCommand.search.rawValue:
+            let params = (try? Self.decodeParams(LittleBabyContactsSearchParams.self, from: req.paramsJSON)) ??
+                LittleBabyContactsSearchParams()
             let payload = try await self.contactsService.search(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawContactsCommand.add.rawValue:
-            let params = try Self.decodeParams(OpenClawContactsAddParams.self, from: req.paramsJSON)
+        case LittleBabyContactsCommand.add.rawValue:
+            let params = try Self.decodeParams(LittleBabyContactsAddParams.self, from: req.paramsJSON)
             let payload = try await self.contactsService.add(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1378,20 +1378,20 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleCalendarInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawCalendarCommand.events.rawValue:
-            let params = (try? Self.decodeParams(OpenClawCalendarEventsParams.self, from: req.paramsJSON)) ??
-                OpenClawCalendarEventsParams()
+        case LittleBabyCalendarCommand.events.rawValue:
+            let params = (try? Self.decodeParams(LittleBabyCalendarEventsParams.self, from: req.paramsJSON)) ??
+                LittleBabyCalendarEventsParams()
             let payload = try await self.calendarService.events(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawCalendarCommand.add.rawValue:
-            let params = try Self.decodeParams(OpenClawCalendarAddParams.self, from: req.paramsJSON)
+        case LittleBabyCalendarCommand.add.rawValue:
+            let params = try Self.decodeParams(LittleBabyCalendarAddParams.self, from: req.paramsJSON)
             let payload = try await self.calendarService.add(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1399,20 +1399,20 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleRemindersInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawRemindersCommand.list.rawValue:
-            let params = (try? Self.decodeParams(OpenClawRemindersListParams.self, from: req.paramsJSON)) ??
-                OpenClawRemindersListParams()
+        case LittleBabyRemindersCommand.list.rawValue:
+            let params = (try? Self.decodeParams(LittleBabyRemindersListParams.self, from: req.paramsJSON)) ??
+                LittleBabyRemindersListParams()
             let payload = try await self.remindersService.list(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawRemindersCommand.add.rawValue:
-            let params = try Self.decodeParams(OpenClawRemindersAddParams.self, from: req.paramsJSON)
+        case LittleBabyRemindersCommand.add.rawValue:
+            let params = try Self.decodeParams(LittleBabyRemindersAddParams.self, from: req.paramsJSON)
             let payload = try await self.remindersService.add(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1420,21 +1420,21 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleMotionInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawMotionCommand.activity.rawValue:
-            let params = (try? Self.decodeParams(OpenClawMotionActivityParams.self, from: req.paramsJSON)) ??
-                OpenClawMotionActivityParams()
+        case LittleBabyMotionCommand.activity.rawValue:
+            let params = (try? Self.decodeParams(LittleBabyMotionActivityParams.self, from: req.paramsJSON)) ??
+                LittleBabyMotionActivityParams()
             let payload = try await self.motionService.activities(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawMotionCommand.pedometer.rawValue:
-            let params = (try? Self.decodeParams(OpenClawPedometerParams.self, from: req.paramsJSON)) ??
-                OpenClawPedometerParams()
+        case LittleBabyMotionCommand.pedometer.rawValue:
+            let params = (try? Self.decodeParams(LittleBabyPedometerParams.self, from: req.paramsJSON)) ??
+                LittleBabyPedometerParams()
             let payload = try await self.motionService.pedometer(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1442,30 +1442,30 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleTalkInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawTalkCommand.pttStart.rawValue:
+        case LittleBabyTalkCommand.pttStart.rawValue:
             self.pttVoiceWakeSuspended = self.voiceWake.suspendForExternalAudioCapture()
             let payload = try await self.talkMode.beginPushToTalk()
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawTalkCommand.pttStop.rawValue:
+        case LittleBabyTalkCommand.pttStop.rawValue:
             let payload = await self.talkMode.endPushToTalk()
             self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: self.pttVoiceWakeSuspended)
             self.pttVoiceWakeSuspended = false
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawTalkCommand.pttCancel.rawValue:
+        case LittleBabyTalkCommand.pttCancel.rawValue:
             let payload = await self.talkMode.cancelPushToTalk()
             self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: self.pttVoiceWakeSuspended)
             self.pttVoiceWakeSuspended = false
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawTalkCommand.pttOnce.rawValue:
+        case LittleBabyTalkCommand.pttOnce.rawValue:
             self.pttVoiceWakeSuspended = self.voiceWake.suspendForExternalAudioCapture()
             defer {
                 self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: self.pttVoiceWakeSuspended)
@@ -1478,7 +1478,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
@@ -1495,113 +1495,113 @@ private extension NodeAppModel {
             }
         }
 
-        register([OpenClawLocationCommand.get.rawValue]) { [weak self] req in
+        register([LittleBabyLocationCommand.get.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleLocationInvoke(req)
         }
 
         register([
-            OpenClawCanvasCommand.present.rawValue,
-            OpenClawCanvasCommand.hide.rawValue,
-            OpenClawCanvasCommand.navigate.rawValue,
-            OpenClawCanvasCommand.evalJS.rawValue,
-            OpenClawCanvasCommand.snapshot.rawValue,
+            LittleBabyCanvasCommand.present.rawValue,
+            LittleBabyCanvasCommand.hide.rawValue,
+            LittleBabyCanvasCommand.navigate.rawValue,
+            LittleBabyCanvasCommand.evalJS.rawValue,
+            LittleBabyCanvasCommand.snapshot.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCanvasInvoke(req)
         }
 
         register([
-            OpenClawCanvasA2UICommand.reset.rawValue,
-            OpenClawCanvasA2UICommand.push.rawValue,
-            OpenClawCanvasA2UICommand.pushJSONL.rawValue,
+            LittleBabyCanvasA2UICommand.reset.rawValue,
+            LittleBabyCanvasA2UICommand.push.rawValue,
+            LittleBabyCanvasA2UICommand.pushJSONL.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCanvasA2UIInvoke(req)
         }
 
         register([
-            OpenClawCameraCommand.list.rawValue,
-            OpenClawCameraCommand.snap.rawValue,
-            OpenClawCameraCommand.clip.rawValue,
+            LittleBabyCameraCommand.list.rawValue,
+            LittleBabyCameraCommand.snap.rawValue,
+            LittleBabyCameraCommand.clip.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCameraInvoke(req)
         }
 
-        register([OpenClawScreenCommand.record.rawValue]) { [weak self] req in
+        register([LittleBabyScreenCommand.record.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleScreenRecordInvoke(req)
         }
 
-        register([OpenClawSystemCommand.notify.rawValue]) { [weak self] req in
+        register([LittleBabySystemCommand.notify.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleSystemNotify(req)
         }
 
-        register([OpenClawChatCommand.push.rawValue]) { [weak self] req in
+        register([LittleBabyChatCommand.push.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleChatPushInvoke(req)
         }
 
         register([
-            OpenClawDeviceCommand.status.rawValue,
-            OpenClawDeviceCommand.info.rawValue,
+            LittleBabyDeviceCommand.status.rawValue,
+            LittleBabyDeviceCommand.info.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleDeviceInvoke(req)
         }
 
         register([
-            OpenClawWatchCommand.status.rawValue,
-            OpenClawWatchCommand.notify.rawValue,
+            LittleBabyWatchCommand.status.rawValue,
+            LittleBabyWatchCommand.notify.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleWatchInvoke(req)
         }
 
-        register([OpenClawPhotosCommand.latest.rawValue]) { [weak self] req in
+        register([LittleBabyPhotosCommand.latest.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handlePhotosInvoke(req)
         }
 
         register([
-            OpenClawContactsCommand.search.rawValue,
-            OpenClawContactsCommand.add.rawValue,
+            LittleBabyContactsCommand.search.rawValue,
+            LittleBabyContactsCommand.add.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleContactsInvoke(req)
         }
 
         register([
-            OpenClawCalendarCommand.events.rawValue,
-            OpenClawCalendarCommand.add.rawValue,
+            LittleBabyCalendarCommand.events.rawValue,
+            LittleBabyCalendarCommand.add.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCalendarInvoke(req)
         }
 
         register([
-            OpenClawRemindersCommand.list.rawValue,
-            OpenClawRemindersCommand.add.rawValue,
+            LittleBabyRemindersCommand.list.rawValue,
+            LittleBabyRemindersCommand.add.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleRemindersInvoke(req)
         }
 
         register([
-            OpenClawMotionCommand.activity.rawValue,
-            OpenClawMotionCommand.pedometer.rawValue,
+            LittleBabyMotionCommand.activity.rawValue,
+            LittleBabyMotionCommand.pedometer.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleMotionInvoke(req)
         }
 
         register([
-            OpenClawTalkCommand.pttStart.rawValue,
-            OpenClawTalkCommand.pttStop.rawValue,
-            OpenClawTalkCommand.pttCancel.rawValue,
-            OpenClawTalkCommand.pttOnce.rawValue,
+            LittleBabyTalkCommand.pttStart.rawValue,
+            LittleBabyTalkCommand.pttStop.rawValue,
+            LittleBabyTalkCommand.pttCancel.rawValue,
+            LittleBabyTalkCommand.pttOnce.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleTalkInvoke(req)
@@ -1612,9 +1612,9 @@ private extension NodeAppModel {
 
     func handleWatchInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawWatchCommand.status.rawValue:
+        case LittleBabyWatchCommand.status.rawValue:
             let status = await self.watchMessagingService.status()
-            let payload = OpenClawWatchStatusPayload(
+            let payload = LittleBabyWatchStatusPayload(
                 supported: status.supported,
                 paired: status.paired,
                 appInstalled: status.appInstalled,
@@ -1622,8 +1622,8 @@ private extension NodeAppModel {
                 activationState: status.activationState)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawWatchCommand.notify.rawValue:
-            let params = try Self.decodeParams(OpenClawWatchNotifyParams.self, from: req.paramsJSON)
+        case LittleBabyWatchCommand.notify.rawValue:
+            let params = try Self.decodeParams(LittleBabyWatchNotifyParams.self, from: req.paramsJSON)
             let normalizedParams = Self.normalizeWatchNotifyParams(params)
             let title = normalizedParams.title
             let body = normalizedParams.body
@@ -1631,7 +1631,7 @@ private extension NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: LittleBabyNodeError(
                         code: .invalidRequest,
                         message: "INVALID_REQUEST: empty watch notification"))
             }
@@ -1648,7 +1648,7 @@ private extension NodeAppModel {
                             sendResult: result)
                     }
                 }
-                let payload = OpenClawWatchNotifyPayload(
+                let payload = LittleBabyWatchNotifyPayload(
                     deliveredImmediately: result.deliveredImmediately,
                     queuedForDelivery: result.queuedForDelivery,
                     transport: result.transport)
@@ -1658,7 +1658,7 @@ private extension NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: LittleBabyNodeError(
                         code: .unavailable,
                         message: error.localizedDescription))
             }
@@ -1666,13 +1666,13 @@ private extension NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: LittleBabyNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
-    func locationMode() -> OpenClawLocationMode {
+    func locationMode() -> LittleBabyLocationMode {
         let raw = UserDefaults.standard.string(forKey: "location.enabledMode") ?? "off"
-        return OpenClawLocationMode(rawValue: raw) ?? .off
+        return LittleBabyLocationMode(rawValue: raw) ?? .off
     }
 
     func isLocationPreciseEnabled() -> Bool {
@@ -2122,7 +2122,7 @@ private extension NodeAppModel {
                             BridgeInvokeResponse(
                                 id: req.id,
                                 ok: false,
-                                error: OpenClawNodeError(
+                                error: LittleBabyNodeError(
                                     code: .invalidRequest,
                                     message: "INVALID_REQUEST: operator session cannot invoke node commands"))
                         })
@@ -2282,7 +2282,7 @@ private extension NodeAppModel {
                                 return BridgeInvokeResponse(
                                     id: req.id,
                                     ok: false,
-                                    error: OpenClawNodeError(
+                                    error: LittleBabyNodeError(
                                         code: .unavailable,
                                         message: "UNAVAILABLE: node not ready"))
                             }
@@ -2420,7 +2420,7 @@ private extension NodeAppModel {
 
     func legacyClientIdFallback(currentClientId: String, error: Error) -> String? {
         let normalizedClientId = currentClientId.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard normalizedClientId == "openclaw-ios" else { return nil }
+        guard normalizedClientId == "littlebaby-ios" else { return nil }
         let message = error.localizedDescription.lowercased()
         guard message.contains("invalid connect params"), message.contains("/client/id") else {
             return nil
@@ -2512,8 +2512,8 @@ extension NodeAppModel {
         self.recordShareEvent("Share self-test running…")
 
         let payload = SharedContentPayload(
-            title: "OpenClaw Share Self-Test",
-            url: URL(string: "https://openclaw.ai/share-self-test"),
+            title: "LittleBaby Share Self-Test",
+            url: URL(string: "https://littlebaby.ai/share-self-test"),
             text: "Validate iOS share->deep-link->gateway forwarding.")
         guard let deepLink = ShareToAgentDeepLink.buildURL(
             from: payload,
@@ -2791,13 +2791,13 @@ extension NodeAppModel {
         self.persistWatchExecApprovalBridgeState()
     }
 
-    private static func makeWatchExecApprovalItem(from prompt: ExecApprovalPrompt) -> OpenClawWatchExecApprovalItem {
+    private static func makeWatchExecApprovalItem(from prompt: ExecApprovalPrompt) -> LittleBabyWatchExecApprovalItem {
         let decisions = prompt.allowedDecisions.compactMap { decision in
             let normalizedDecision = decision.trimmingCharacters(in: .whitespacesAndNewlines)
-            return OpenClawWatchExecApprovalDecision(rawValue: normalizedDecision)
+            return LittleBabyWatchExecApprovalDecision(rawValue: normalizedDecision)
         }
         let preview = Self.trimmedOrNil(prompt.commandPreview) ?? Self.trimmedOrNil(prompt.commandText)
-        return OpenClawWatchExecApprovalItem(
+        return LittleBabyWatchExecApprovalItem(
             id: prompt.id,
             commandText: prompt.commandText,
             commandPreview: preview,
@@ -2818,7 +2818,7 @@ extension NodeAppModel {
     }
 
     private func publishWatchExecApprovalPrompt(_ prompt: ExecApprovalPrompt, reason: String) async {
-        let message = OpenClawWatchExecApprovalPromptMessage(
+        let message = LittleBabyWatchExecApprovalPromptMessage(
             approval: Self.makeWatchExecApprovalItem(from: prompt),
             sentAtMs: Int(Date().timeIntervalSince1970 * 1000),
             deliveryId: UUID().uuidString,
@@ -2836,13 +2836,13 @@ extension NodeAppModel {
 
     private func publishWatchExecApprovalResolved(
         approvalId: String,
-        decision: OpenClawWatchExecApprovalDecision?,
+        decision: LittleBabyWatchExecApprovalDecision?,
         source: String) async
     {
         let normalizedApprovalID = approvalId.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !normalizedApprovalID.isEmpty else { return }
         self.removeWatchExecApprovalPrompt(normalizedApprovalID)
-        let message = OpenClawWatchExecApprovalResolvedMessage(
+        let message = LittleBabyWatchExecApprovalResolvedMessage(
             approvalId: normalizedApprovalID,
             decision: decision,
             resolvedAtMs: Int(Date().timeIntervalSince1970 * 1000),
@@ -2858,12 +2858,12 @@ extension NodeAppModel {
 
     private func publishWatchExecApprovalExpired(
         approvalId: String,
-        reason: OpenClawWatchExecApprovalCloseReason) async
+        reason: LittleBabyWatchExecApprovalCloseReason) async
     {
         let normalizedApprovalID = approvalId.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !normalizedApprovalID.isEmpty else { return }
         self.removeWatchExecApprovalPrompt(normalizedApprovalID)
-        let message = OpenClawWatchExecApprovalExpiredMessage(
+        let message = LittleBabyWatchExecApprovalExpiredMessage(
             approvalId: normalizedApprovalID,
             reason: reason,
             expiredAtMs: Int(Date().timeIntervalSince1970 * 1000))
@@ -2892,7 +2892,7 @@ extension NodeAppModel {
                 return lhs.id < rhs.id
             }
             .map(Self.makeWatchExecApprovalItem)
-        let message = OpenClawWatchExecApprovalSnapshotMessage(
+        let message = LittleBabyWatchExecApprovalSnapshotMessage(
             approvals: approvals,
             sentAtMs: Int(Date().timeIntervalSince1970 * 1000),
             snapshotId: UUID().uuidString)
@@ -3081,7 +3081,7 @@ extension NodeAppModel {
             self.pushWakeLogger.info("Ignored APNs payload wakeId=\(wakeId, privacy: .public): not silent push")
             return false
         }
-        let pushKind = Self.openclawPushKind(userInfo)
+        let pushKind = Self.littlebabyPushKind(userInfo)
         let receivedMessage =
             "Silent push received wakeId=\(wakeId) "
             + "kind=\(pushKind) "
@@ -3270,14 +3270,14 @@ extension NodeAppModel {
         return String(raw.prefix(8))
     }
 
-    private static func openclawPushKind(_ userInfo: [AnyHashable: Any]) -> String {
-        if let payload = userInfo["openclaw"] as? [String: Any],
+    private static func littlebabyPushKind(_ userInfo: [AnyHashable: Any]) -> String {
+        if let payload = userInfo["littlebaby"] as? [String: Any],
            let kind = payload["kind"] as? String
         {
             let trimmed = kind.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { return trimmed }
         }
-        if let payload = userInfo["openclaw"] as? [AnyHashable: Any],
+        if let payload = userInfo["littlebaby"] as? [AnyHashable: Any],
            let kind = payload["kind"] as? String
         {
             let trimmed = kind.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -3523,7 +3523,7 @@ extension NodeAppModel {
         guard connected else {
             self.execApprovalNotificationLogger.error(
                 "Exec approval action failed id=\(normalizedApprovalID, privacy: .public): operator not connected")
-            return .failed(message: "OpenClaw couldn't connect to the gateway operator session.")
+            return .failed(message: "LittleBaby couldn't connect to the gateway operator session.")
         }
 
         do {
@@ -3539,7 +3539,7 @@ extension NodeAppModel {
             self.clearPendingExecApprovalPromptIfMatches(normalizedApprovalID)
             await self.publishWatchExecApprovalResolved(
                 approvalId: normalizedApprovalID,
-                decision: OpenClawWatchExecApprovalDecision(rawValue: normalizedDecision),
+                decision: LittleBabyWatchExecApprovalDecision(rawValue: normalizedDecision),
                 source: "iphone")
             return .resolved
         } catch {
@@ -3563,7 +3563,7 @@ extension NodeAppModel {
                 "Exec approval action failed id=\(normalizedApprovalID) error=\(error.localizedDescription)"
             self.execApprovalNotificationLogger.error("\(logMessage, privacy: .public)")
             return .failed(
-                message: "OpenClaw couldn't resolve this approval right now. Try again.")
+                message: "LittleBaby couldn't resolve this approval right now. Try again.")
         }
     }
 
@@ -4308,7 +4308,7 @@ extension NodeAppModel {
                 caps: [],
                 commands: [],
                 permissions: [:],
-                clientId: "openclaw-ios",
+                clientId: "littlebaby-ios",
                 clientMode: "node",
                 clientDisplayName: nil),
             sessionBox: nil)

@@ -1,12 +1,12 @@
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import { formatAllowFromLowercase } from "openclaw/plugin-sdk/allow-from";
+import { describeAccountSnapshot } from "littlebaby/plugin-sdk/account-helpers";
+import { formatAllowFromLowercase } from "littlebaby/plugin-sdk/allow-from";
 import {
   adaptScopedAccountAccessor,
   createScopedChannelConfigAdapter,
-} from "openclaw/plugin-sdk/channel-config-helpers";
-import { hasConfiguredSecretInput } from "openclaw/plugin-sdk/secret-input";
-import { patchChannelConfigForAccount } from "openclaw/plugin-sdk/setup-runtime";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+} from "littlebaby/plugin-sdk/channel-config-helpers";
+import { hasConfiguredSecretInput } from "littlebaby/plugin-sdk/secret-input";
+import { patchChannelConfigForAccount } from "littlebaby/plugin-sdk/setup-runtime";
+import { formatDocsLink } from "littlebaby/plugin-sdk/setup-tools";
 import { inspectSlackAccount } from "./account-inspect.js";
 import {
   listSlackAccountIds,
@@ -14,7 +14,7 @@ import {
   resolveSlackAccount,
   type ResolvedSlackAccount,
 } from "./accounts.js";
-import { getChatChannelMeta, type ChannelPlugin, type OpenClawConfig } from "./channel-api.js";
+import { getChatChannelMeta, type ChannelPlugin, type LittleBabyConfig } from "./channel-api.js";
 import { SlackChannelConfigSchema } from "./config-schema.js";
 import { slackDoctor } from "./doctor.js";
 import { isSlackInteractiveRepliesEnabled } from "./interactive-replies.js";
@@ -23,11 +23,11 @@ import { collectRuntimeConfigAssignments, secretTargetRegistryEntries } from "./
 export const SLACK_CHANNEL = "slack" as const;
 
 function buildSlackManifest(botName: string) {
-  const safeName = botName.trim() || "OpenClaw";
+  const safeName = botName.trim() || "LittleBaby";
   const manifest = {
     display_information: {
       name: safeName,
-      description: `${safeName} connector for OpenClaw`,
+      description: `${safeName} connector for LittleBaby`,
     },
     features: {
       bot_user: {
@@ -40,8 +40,8 @@ function buildSlackManifest(botName: string) {
       },
       slash_commands: [
         {
-          command: "/openclaw",
-          description: "Send a message to OpenClaw",
+          command: "/littlebaby",
+          description: "Send a message to LittleBaby",
           should_escape: false,
         },
       ],
@@ -97,7 +97,7 @@ function buildSlackManifest(botName: string) {
   return JSON.stringify(manifest, null, 2);
 }
 
-export function buildSlackSetupLines(botName = "OpenClaw"): string[] {
+export function buildSlackSetupLines(botName = "LittleBaby"): string[] {
   return [
     "1) Slack API -> Create App -> From scratch or From manifest (with the JSON below)",
     "2) Add Socket Mode + enable it to get the app-level token (xapp-...)",
@@ -113,10 +113,10 @@ export function buildSlackSetupLines(botName = "OpenClaw"): string[] {
 }
 
 export function setSlackChannelAllowlist(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId: string,
   channelKeys: string[],
-): OpenClawConfig {
+): LittleBabyConfig {
   const channels = Object.fromEntries(channelKeys.map((key) => [key, { enabled: true }]));
   return patchChannelConfigForAccount({
     cfg,

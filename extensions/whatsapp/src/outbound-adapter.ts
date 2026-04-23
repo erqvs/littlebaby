@@ -2,14 +2,14 @@ import {
   type ChannelOutboundAdapter,
   createAttachedChannelResultAdapter,
   createEmptyChannelResult,
-} from "openclaw/plugin-sdk/channel-send-result";
-import { resolveOutboundSendDep, sanitizeForPlainText } from "openclaw/plugin-sdk/outbound-runtime";
+} from "littlebaby/plugin-sdk/channel-send-result";
+import { resolveOutboundSendDep, sanitizeForPlainText } from "littlebaby/plugin-sdk/outbound-runtime";
 import {
   resolveSendableOutboundReplyParts,
   sendTextMediaPayload,
-} from "openclaw/plugin-sdk/reply-payload";
-import { chunkText } from "openclaw/plugin-sdk/reply-runtime";
-import { shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/reply-payload";
+import { chunkText } from "littlebaby/plugin-sdk/reply-runtime";
+import { shouldLogVerbose } from "littlebaby/plugin-sdk/runtime-env";
 import { WHATSAPP_LEGACY_OUTBOUND_SEND_DEP_KEYS } from "./outbound-send-deps.js";
 import { resolveWhatsAppOutboundTarget } from "./resolve-outbound-target.js";
 

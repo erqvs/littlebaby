@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import type { QaRunnerCliContribution } from "openclaw/plugin-sdk/qa-runner-runtime";
+import type { QaRunnerCliContribution } from "littlebaby/plugin-sdk/qa-runner-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const TEST_QA_RUNNER = {
@@ -64,7 +64,7 @@ const { listQaRunnerCliContributions } = vi.hoisted(() => ({
   ]),
 }));
 
-vi.mock("openclaw/plugin-sdk/qa-runner-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/qa-runner-runtime", () => ({
   listQaRunnerCliContributions,
 }));
 
@@ -120,14 +120,14 @@ describe("qa cli registration", () => {
       "qa",
       "coverage",
       "--repo-root",
-      "/tmp/openclaw-repo",
+      "/tmp/littlebaby-repo",
       "--output",
       ".artifacts/qa-coverage.md",
       "--json",
     ]);
 
     expect(runQaCoverageReportCommand).toHaveBeenCalledWith({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/littlebaby-repo",
       output: ".artifacts/qa-coverage.md",
       json: true,
     });
@@ -232,7 +232,7 @@ describe("qa cli registration", () => {
       "--payload-file",
       "qa/payload.json",
       "--repo-root",
-      "/tmp/openclaw-repo",
+      "/tmp/littlebaby-repo",
       "--note",
       "shared lane",
       "--site-url",
@@ -247,7 +247,7 @@ describe("qa cli registration", () => {
     expect(runQaCredentialsAddCommand).toHaveBeenCalledWith({
       kind: "telegram",
       payloadFile: "qa/payload.json",
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/littlebaby-repo",
       note: "shared lane",
       siteUrl: "https://first-schnauzer-821.convex.site",
       endpointPrefix: "/qa-credentials/v1",

@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw models` (status/list/set/scan, aliases, fallbacks, auth)"
+summary: "CLI reference for `littlebaby models` (status/list/set/scan, aliases, fallbacks, auth)"
 read_when:
   - You want to change default models or view provider auth status
   - You want to scan available models/providers and debug auth profiles
 title: "models"
 ---
 
-# `openclaw models`
+# `littlebaby models`
 
 Model discovery, scanning, and configuration (default model, fallbacks, auth profiles).
 
@@ -18,18 +18,18 @@ Related:
 ## Common commands
 
 ```bash
-openclaw models status
-openclaw models list
-openclaw models set <model-or-alias>
-openclaw models scan
+littlebaby models status
+littlebaby models list
+littlebaby models set <model-or-alias>
+littlebaby models scan
 ```
 
-`openclaw models status` shows the resolved default/fallbacks plus an auth overview.
+`littlebaby models status` shows the resolved default/fallbacks plus an auth overview.
 When provider usage snapshots are available, the OAuth/API-key status section includes
 provider usage windows and quota snapshots.
 Current usage-window providers: Anthropic, GitHub Copilot, Gemini CLI, OpenAI
 Codex, MiniMax, Xiaomi, and z.ai. Usage auth comes from provider-specific hooks
-when available; otherwise OpenClaw falls back to matching OAuth/API-key
+when available; otherwise LittleBaby falls back to matching OAuth/API-key
 credentials from auth profiles, env, or config.
 In `--json` output, `auth.providers` is the env/config/store-aware provider
 overview, while `auth.oauth` is auth-store profile health only.
@@ -44,10 +44,10 @@ Notes:
 
 - `models set <model-or-alias>` accepts `provider/model` or an alias.
 - Model refs are parsed by splitting on the **first** `/`. If the model ID includes `/` (OpenRouter-style), include the provider prefix (example: `openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, OpenClaw resolves the input as an alias first, then
+- If you omit the provider, LittleBaby resolves the input as an alias first, then
   as a unique configured-provider match for that exact model id, and only then
   falls back to the configured default provider with a deprecation warning.
-  If that provider no longer exposes the configured default model, OpenClaw
+  If that provider no longer exposes the configured default model, LittleBaby
   falls back to the first configured provider/model instead of surfacing a
   stale removed-provider default.
 - `models status` may show `marker(<value>)` in auth output for non-secret placeholders (for example `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `oauth:chutes`, `ollama-local`) instead of masking them as secrets.
@@ -85,23 +85,23 @@ Probe detail/reason-code cases to expect:
   trying it.
 - `missing_credential`, `invalid_expires`, `expired`, `unresolved_ref`:
   profile is present but not eligible/resolvable.
-- `no_model`: provider auth exists, but OpenClaw could not resolve a probeable
+- `no_model`: provider auth exists, but LittleBaby could not resolve a probeable
   model candidate for that provider.
 
 ## Aliases + fallbacks
 
 ```bash
-openclaw models aliases list
-openclaw models fallbacks list
+littlebaby models aliases list
+littlebaby models fallbacks list
 ```
 
 ## Auth profiles
 
 ```bash
-openclaw models auth add
-openclaw models auth login --provider <id>
-openclaw models auth setup-token --provider <id>
-openclaw models auth paste-token
+littlebaby models auth add
+littlebaby models auth login --provider <id>
+littlebaby models auth setup-token --provider <id>
+littlebaby models auth paste-token
 ```
 
 `models auth add` is the interactive auth helper. It can launch a provider auth
@@ -109,12 +109,12 @@ flow (OAuth/API key) or guide you into manual token paste, depending on the
 provider you choose.
 
 `models auth login` runs a provider plugin’s auth flow (OAuth/API key). Use
-`openclaw plugins list` to see which providers are installed.
+`littlebaby plugins list` to see which providers are installed.
 
 Examples:
 
 ```bash
-openclaw models auth login --provider openai-codex --set-default
+littlebaby models auth login --provider openai-codex --set-default
 ```
 
 Notes:
@@ -130,5 +130,5 @@ Notes:
   `--profile-id`.
 - `paste-token --expires-in <duration>` stores an absolute token expiry from a
   relative duration such as `365d` or `12h`.
-- Anthropic note: Anthropic staff told us OpenClaw-style Claude CLI usage is allowed again, so OpenClaw treats Claude CLI reuse and `claude -p` usage as sanctioned for this integration unless Anthropic publishes a new policy.
-- Anthropic `setup-token` / `paste-token` remain available as a supported OpenClaw token path, but OpenClaw now prefers Claude CLI reuse and `claude -p` when available.
+- Anthropic note: Anthropic staff told us LittleBaby-style Claude CLI usage is allowed again, so LittleBaby treats Claude CLI reuse and `claude -p` usage as sanctioned for this integration unless Anthropic publishes a new policy.
+- Anthropic `setup-token` / `paste-token` remain available as a supported LittleBaby token path, but LittleBaby now prefers Claude CLI reuse and `claude -p` when available.

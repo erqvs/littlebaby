@@ -10,7 +10,7 @@ import {
 import { buildQaGatewayConfig } from "./qa-gateway-config.js";
 
 const QA_LAB_INTERNAL_PORT = 43123;
-const QA_LAB_UI_OVERLAY_DIR = "/opt/openclaw-qa-lab-ui";
+const QA_LAB_UI_OVERLAY_DIR = "/opt/littlebaby-qa-lab-ui";
 
 function toPosixRelative(fromDir: string, toPath: string): string {
   return path.relative(fromDir, toPath).split(path.sep).join("/");
@@ -106,7 +106,7 @@ ${params.bindUiDist ? `    volumes:\n      - ${qaLabUiMount}:${QA_LAB_UI_OVERLAY
       - --control-ui-url
       - "http://127.0.0.1:${params.gatewayPort}/"
       - --control-ui-proxy-target
-      - "http://openclaw-qa-gateway:18789/"
+      - "http://littlebaby-qa-gateway:18789/"
       - --control-ui-token
       - "${params.gatewayToken}"
 ${params.bindUiDist ? `      - --ui-dist-dir\n      - "${QA_LAB_UI_OVERLAY_DIR}"\n` : ""}      - --auto-kickoff-target
@@ -119,23 +119,23 @@ ${params.bindUiDist ? `      - --ui-dist-dir\n      - "${QA_LAB_UI_OVERLAY_DIR}"
         condition: service_healthy
 `
     : ""
-}  openclaw-qa-gateway:
+}  littlebaby-qa-gateway:
 ${imageBlock}    pull_policy: never
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
       - "${params.gatewayPort}:18789"
     environment:
-      LITTLEBABY_CONFIG_PATH: /tmp/openclaw/openclaw.json
-      LITTLEBABY_STATE_DIR: /tmp/openclaw/state
+      LITTLEBABY_CONFIG_PATH: /tmp/littlebaby/littlebaby.json
+      LITTLEBABY_STATE_DIR: /tmp/littlebaby/state
       LITTLEBABY_NO_RESPAWN: "1"
       LITTLEBABY_SKIP_GMAIL_WATCHER: "1"
       LITTLEBABY_SKIP_BROWSER_CONTROL_SERVER: "1"
       LITTLEBABY_SKIP_CANVAS_HOST: "1"
       LITTLEBABY_PROFILE: ""
     volumes:
-      - ./state:/opt/openclaw-scaffold:ro
-      - ${repoMount}:/opt/openclaw-repo:ro
+      - ./state:/opt/littlebaby-scaffold:ro
+      - ${repoMount}:/opt/littlebaby-repo:ro
     healthcheck:
       test:
         - CMD
@@ -158,7 +158,7 @@ ${
     command:
       - sh
       - -lc
-      - mkdir -p /tmp/openclaw/workspace /tmp/openclaw/state && cp /opt/openclaw-scaffold/openclaw.json /tmp/openclaw/openclaw.json && cp -R /opt/openclaw-scaffold/seed-workspace/. /tmp/openclaw/workspace/ && ln -snf /opt/openclaw-repo /tmp/openclaw/workspace/repo && exec node dist/index.js gateway run --port 18789 --bind lan --allow-unconfigured
+      - mkdir -p /tmp/littlebaby/workspace /tmp/littlebaby/state && cp /opt/littlebaby-scaffold/littlebaby.json /tmp/littlebaby/littlebaby.json && cp -R /opt/littlebaby-scaffold/seed-workspace/. /tmp/littlebaby/workspace/ && ln -snf /opt/littlebaby-repo /tmp/littlebaby/workspace/repo && exec node dist/index.js gateway run --port 18789 --bind lan --allow-unconfigured
 `;
 }
 
@@ -193,12 +193,12 @@ Files:
 
 - \`docker-compose.qa.yml\`
 - \`.env.example\`
-- \`state/openclaw.json\`
+- \`state/littlebaby.json\`
 
 Suggested flow:
 
 1. Build the prebaked image once:
-   - \`docker build -t openclaw:qa-local-prebaked --build-arg LITTLEBABY_EXTENSIONS="qa-channel qa-lab" -f Dockerfile .\`
+   - \`docker build -t littlebaby:qa-local-prebaked --build-arg LITTLEBABY_EXTENSIONS="qa-channel qa-lab" -f Dockerfile .\`
 2. Start the stack:
    - \`docker compose -f docker-compose.qa.yml up${params.usePrebuiltImage ? "" : " --build"} -d\`
 3. Open the QA dashboard:
@@ -246,7 +246,7 @@ export async function writeQaDockerHarnessFiles(params: {
   const gatewayToken = params.gatewayToken ?? `qa-token-${randomUUID()}`;
   const providerBaseUrl = params.providerBaseUrl ?? "http://qa-mock-openai:44080/v1";
   const qaBusBaseUrl = params.qaBusBaseUrl ?? "http://qa-lab:43123";
-  const imageName = params.imageName ?? "openclaw:qa-local-prebaked";
+  const imageName = params.imageName ?? "littlebaby:qa-local-prebaked";
   const usePrebuiltImage = params.usePrebuiltImage ?? false;
   const bindUiDist = params.bindUiDist ?? false;
   const includeQaLabUi = params.includeQaLabUi ?? true;
@@ -262,7 +262,7 @@ export async function writeQaDockerHarnessFiles(params: {
     gatewayPort: 18789,
     gatewayToken,
     providerBaseUrl,
-    workspaceDir: "/tmp/openclaw/workspace",
+    workspaceDir: "/tmp/littlebaby/workspace",
     controlUiRoot: "/app/dist/control-ui",
     transportPluginIds: QA_CHANNEL_REQUIRED_PLUGIN_IDS,
     transportConfig: createQaChannelGatewayConfig({
@@ -274,7 +274,7 @@ export async function writeQaDockerHarnessFiles(params: {
     path.join(params.outputDir, "docker-compose.qa.yml"),
     path.join(params.outputDir, ".env.example"),
     path.join(params.outputDir, "README.md"),
-    path.join(params.outputDir, "state", "openclaw.json"),
+    path.join(params.outputDir, "state", "littlebaby.json"),
   ];
 
   await Promise.all([
@@ -317,7 +317,7 @@ export async function writeQaDockerHarnessFiles(params: {
       "utf8",
     ),
     fs.writeFile(
-      path.join(params.outputDir, "state", "openclaw.json"),
+      path.join(params.outputDir, "state", "littlebaby.json"),
       `${JSON.stringify(config, null, 2)}\n`,
       "utf8",
     ),
@@ -349,7 +349,7 @@ export async function buildQaDockerHarnessImage(
     ) => Promise<{ stdout: string; stderr: string }>;
   },
 ) {
-  const imageName = params.imageName ?? "openclaw:qa-local-prebaked";
+  const imageName = params.imageName ?? "littlebaby:qa-local-prebaked";
   const runCommand =
     deps?.runCommand ??
     (async (command: string, args: string[], cwd: string) => {

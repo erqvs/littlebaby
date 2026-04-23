@@ -1,9 +1,9 @@
-import { callGatewayTool, type EmbeddedRunAttemptParams } from "openclaw/plugin-sdk/agent-harness";
+import { callGatewayTool, type EmbeddedRunAttemptParams } from "littlebaby/plugin-sdk/agent-harness";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { buildApprovalResponse, handleCodexAppServerApprovalRequest } from "./approval-bridge.js";
 
-vi.mock("openclaw/plugin-sdk/agent-harness", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("openclaw/plugin-sdk/agent-harness")>()),
+vi.mock("littlebaby/plugin-sdk/agent-harness", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("littlebaby/plugin-sdk/agent-harness")>()),
   callGatewayTool: vi.fn(),
 }));
 
@@ -54,7 +54,7 @@ describe("Codex app-server approval bridge", () => {
       "plugin.approval.request",
       expect.any(Object),
       expect.objectContaining({
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "littlebaby-codex-app-server",
         title: "Codex app-server command approval",
         twoPhase: true,
         turnSourceChannel: "telegram",

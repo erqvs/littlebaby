@@ -1,6 +1,6 @@
 import path from "node:path";
-import { buildPluginConfigSchema, type OpenClawPluginConfigSchema } from "openclaw/plugin-sdk/core";
-import { z } from "openclaw/plugin-sdk/zod";
+import { buildPluginConfigSchema, type LittleBabyPluginConfigSchema } from "littlebaby/plugin-sdk/core";
+import { z } from "littlebaby/plugin-sdk/zod";
 
 export type OpenShellPluginConfig = {
   mode?: "mirror" | "remote";
@@ -128,7 +128,7 @@ export function normalizeOpenShellRemotePath(
   return normalized;
 }
 
-export function createOpenShellPluginConfigSchema(): OpenClawPluginConfigSchema {
+export function createOpenShellPluginConfigSchema(): LittleBabyPluginConfigSchema {
   return buildPluginConfigSchema(OpenShellPluginConfigSchema, {
     safeParse(value) {
       if (value === undefined) {

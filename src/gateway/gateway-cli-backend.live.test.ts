@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { resolveCliBackendConfig, resolveCliBackendLiveTest } from "../agents/cli-backends.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import { parseModelRef } from "../agents/model-selection.js";
-import { clearRuntimeConfigSnapshot, type OpenClawConfig } from "../config/config.js";
+import { clearRuntimeConfigSnapshot, type LittleBabyConfig } from "../config/config.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import {
   applyCliBackendLiveEnv,
@@ -138,7 +138,7 @@ describeLive("gateway live (cli backend)", () => {
         );
       }
 
-      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-cli-"));
+      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-live-cli-"));
       const stateDir = path.join(tempDir, "state");
       await fs.mkdir(stateDir, { recursive: true });
       process.env.LITTLEBABY_STATE_DIR = stateDir;
@@ -159,8 +159,8 @@ describeLive("gateway live (cli backend)", () => {
         cliArgs = withClaudeMcpConfigOverrides(baseCliArgs, mcpConfigPath);
       }
 
-      const cfg: OpenClawConfig = {};
-      const cfgWithCliBackends = cfg as OpenClawConfig & {
+      const cfg: LittleBabyConfig = {};
+      const cfgWithCliBackends = cfg as LittleBabyConfig & {
         agents?: {
           defaults?: {
             cliBackends?: Record<string, Record<string, unknown>>;
@@ -202,7 +202,7 @@ describeLive("gateway live (cli backend)", () => {
           },
         },
       };
-      const tempConfigPath = path.join(tempDir, "openclaw.json");
+      const tempConfigPath = path.join(tempDir, "littlebaby.json");
       await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
       process.env.LITTLEBABY_CONFIG_PATH = tempConfigPath;
       const deviceIdentity = await ensurePairedTestGatewayClientIdentity();

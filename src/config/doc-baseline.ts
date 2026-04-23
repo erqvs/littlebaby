@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveOpenClawPackageRootSync } from "../infra/openclaw-root.js";
+import { resolveLittleBabyPackageRootSync } from "../infra/littlebaby-root.js";
 import { FIELD_HELP } from "./schema.help.js";
 import type { ConfigSchemaResponse } from "./schema.js";
 import { schemaHasChildren } from "./schema.shared.js";
@@ -107,7 +107,7 @@ function logConfigDocBaselineDebug(message: string): void {
 }
 
 function resolveRepoRoot(): string {
-  const fromPackage = resolveOpenClawPackageRootSync({
+  const fromPackage = resolveLittleBabyPackageRootSync({
     cwd: path.dirname(fileURLToPath(import.meta.url)),
     moduleUrl: import.meta.url,
   });
@@ -360,7 +360,7 @@ async function loadBundledConfigSchemaResponse(): Promise<ConfigSchemaResponse> 
   const env = {
     ...process.env,
     HOME: os.tmpdir(),
-    LITTLEBABY_STATE_DIR: path.join(os.tmpdir(), "openclaw-config-doc-baseline-state"),
+    LITTLEBABY_STATE_DIR: path.join(os.tmpdir(), "littlebaby-config-doc-baseline-state"),
     LITTLEBABY_BUNDLED_PLUGINS_DIR: path.join(repoRoot, "extensions"),
   };
 

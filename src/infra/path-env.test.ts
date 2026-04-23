@@ -1,6 +1,6 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ensureOpenClawCliOnPath } from "./path-env.js";
+import { ensureLittleBabyCliOnPath } from "./path-env.js";
 
 const state = vi.hoisted(() => ({
   dirs: new Set<string>(),
@@ -44,7 +44,7 @@ vi.mock("./env.js", () => ({
   isTruthyEnvValue: (value?: string) => value === "1" || value === "true",
 }));
 
-describe("ensureOpenClawCliOnPath", () => {
+describe("ensureLittleBabyCliOnPath", () => {
   const envKeys = [
     "PATH",
     "LITTLEBABY_PATH_BOOTSTRAPPED",
@@ -78,7 +78,7 @@ describe("ensureOpenClawCliOnPath", () => {
   });
 
   function setupAppCliRoot(name: string) {
-    const tmp = abs(`/tmp/openclaw-path/${name}`);
+    const tmp = abs(`/tmp/littlebaby-path/${name}`);
     const appBinDir = path.join(tmp, "AppBin");
     const appCli = path.join(appBinDir, "littlebaby");
     setDir(tmp);
@@ -94,7 +94,7 @@ describe("ensureOpenClawCliOnPath", () => {
     platform: NodeJS.Platform;
     allowProjectLocalBin?: boolean;
   }) {
-    ensureOpenClawCliOnPath(params);
+    ensureLittleBabyCliOnPath(params);
     return (process.env.PATH ?? "").split(path.delimiter);
   }
 
@@ -118,7 +118,7 @@ describe("ensureOpenClawCliOnPath", () => {
     }
   }
 
-  it("prepends the bundled app bin dir when a sibling openclaw exists", () => {
+  it("prepends the bundled app bin dir when a sibling littlebaby exists", () => {
     const { tmp, appBinDir, appCli } = setupAppCliRoot("case-bundled");
     resetBootstrapEnv();
 
@@ -132,7 +132,7 @@ describe("ensureOpenClawCliOnPath", () => {
   });
 
   it("keeps the current runtime directory ahead of system PATH hardening", () => {
-    const tmp = abs("/tmp/openclaw-path/case-runtime-dir");
+    const tmp = abs("/tmp/littlebaby-path/case-runtime-dir");
     const nodeBinDir = path.join(tmp, "node-bin");
     const nodeExec = path.join(nodeBinDir, "node");
     setDir(tmp);
@@ -154,7 +154,7 @@ describe("ensureOpenClawCliOnPath", () => {
   it("is idempotent", () => {
     process.env.PATH = "/bin";
     process.env.LITTLEBABY_PATH_BOOTSTRAPPED = "1";
-    ensureOpenClawCliOnPath({
+    ensureLittleBabyCliOnPath({
       execPath: "/tmp/does-not-matter",
       cwd: "/tmp",
       homeDir: "/tmp",
@@ -317,7 +317,7 @@ describe("ensureOpenClawCliOnPath", () => {
     {
       name: "appends Linuxbrew dirs after system dirs",
       setup: () => {
-        const tmp = abs("/tmp/openclaw-path/case-linuxbrew");
+        const tmp = abs("/tmp/littlebaby-path/case-linuxbrew");
         const execDir = path.join(tmp, "exec");
         setDir(tmp);
         setDir(execDir);

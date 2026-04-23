@@ -1,15 +1,15 @@
-import { resolveAccountWithDefaultFallback } from "openclaw/plugin-sdk/account-core";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/channel-core";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { coerceSecretRef } from "openclaw/plugin-sdk/config-runtime";
-import type { TelegramAccountConfig } from "openclaw/plugin-sdk/config-runtime";
-import { resolveDefaultSecretProviderAlias } from "openclaw/plugin-sdk/provider-auth";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/routing";
+import { resolveAccountWithDefaultFallback } from "littlebaby/plugin-sdk/account-core";
+import { tryReadSecretFileSync } from "littlebaby/plugin-sdk/channel-core";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { coerceSecretRef } from "littlebaby/plugin-sdk/config-runtime";
+import type { TelegramAccountConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { resolveDefaultSecretProviderAlias } from "littlebaby/plugin-sdk/provider-auth";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "littlebaby/plugin-sdk/routing";
 import {
   hasConfiguredSecretInput,
   normalizeSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/secret-input";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import {
   mergeTelegramAccountConfig,
   resolveDefaultTelegramAccountId,
@@ -49,7 +49,7 @@ function inspectTokenFile(pathValue: unknown): {
 }
 
 function canResolveEnvSecretRefInReadOnlyPath(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   provider: string;
   id: string;
 }): boolean {
@@ -64,7 +64,7 @@ function canResolveEnvSecretRefInReadOnlyPath(params: {
   return !allowlist || allowlist.includes(params.id);
 }
 
-function inspectTokenValue(params: { cfg: OpenClawConfig; value: unknown }): {
+function inspectTokenValue(params: { cfg: LittleBabyConfig; value: unknown }): {
   token: string;
   tokenSource: "config" | "env" | "none";
   tokenStatus: TelegramCredentialStatus;
@@ -118,7 +118,7 @@ function inspectTokenValue(params: { cfg: OpenClawConfig; value: unknown }): {
 }
 
 function inspectTelegramAccountPrimary(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   envToken?: string | null;
 }): InspectedTelegramAccount {
@@ -218,7 +218,7 @@ function inspectTelegramAccountPrimary(params: {
 }
 
 export function inspectTelegramAccount(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   envToken?: string | null;
 }): InspectedTelegramAccount {

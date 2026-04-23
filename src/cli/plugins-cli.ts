@@ -3,7 +3,7 @@ import path from "node:path";
 import type { Command } from "commander";
 import { loadConfig, readConfigFileSnapshot, replaceConfigFile } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { enablePluginInConfig } from "../plugins/enable.js";
 import { listMarketplacePlugins } from "../plugins/marketplace.js";
@@ -130,11 +130,11 @@ function formatInstallLines(install: PluginInstallRecord | undefined): string[] 
 export function registerPluginsCli(program: Command) {
   const plugins = program
     .command("plugins")
-    .description("Manage OpenClaw plugins and extensions")
+    .description("Manage LittleBaby plugins and extensions")
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "docs.openclaw.ai/cli/plugins")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "docs.littlebaby.ai/cli/plugins")}\n`,
     );
 
   plugins
@@ -470,9 +470,9 @@ export function registerPluginsCli(program: Command) {
     .argument("<id>", "Plugin id")
     .action(async (id: string) => {
       const snapshot = await readConfigFileSnapshot();
-      const cfg = (snapshot.sourceConfig ?? snapshot.config) as OpenClawConfig;
+      const cfg = (snapshot.sourceConfig ?? snapshot.config) as LittleBabyConfig;
       const enableResult = enablePluginInConfig(cfg, id);
-      let next: OpenClawConfig = enableResult.config;
+      let next: LittleBabyConfig = enableResult.config;
       const slotResult = applySlotSelectionForPlugin(next, id);
       next = slotResult.config;
       await replaceConfigFile({
@@ -497,7 +497,7 @@ export function registerPluginsCli(program: Command) {
     .argument("<id>", "Plugin id")
     .action(async (id: string) => {
       const snapshot = await readConfigFileSnapshot();
-      const cfg = (snapshot.sourceConfig ?? snapshot.config) as OpenClawConfig;
+      const cfg = (snapshot.sourceConfig ?? snapshot.config) as LittleBabyConfig;
       const next = setPluginEnabledInConfig(cfg, id, false);
       await replaceConfigFile({
         nextConfig: next,
@@ -516,7 +516,7 @@ export function registerPluginsCli(program: Command) {
     .option("--dry-run", "Show what would be removed without making changes", false)
     .action(async (id: string, opts: PluginUninstallOptions) => {
       const snapshot = await readConfigFileSnapshot();
-      const cfg = (snapshot.sourceConfig ?? snapshot.config) as OpenClawConfig;
+      const cfg = (snapshot.sourceConfig ?? snapshot.config) as LittleBabyConfig;
       const report = buildPluginDiagnosticsReport({ config: cfg });
       const extensionsDir = path.join(resolveStateDir(process.env, os.homedir), "extensions");
       const keepFiles = Boolean(opts.keepFiles || opts.keepConfig);
@@ -749,7 +749,7 @@ export function registerPluginsCli(program: Command) {
           lines.push(`- ${formatPluginCompatibilityNotice(notice)} [${marker}]`);
         }
       }
-      const docs = formatDocsLink("/plugin", "docs.openclaw.ai/plugin");
+      const docs = formatDocsLink("/plugin", "docs.littlebaby.ai/plugin");
       lines.push("");
       lines.push(`${theme.muted("Docs:")} ${docs}`);
       defaultRuntime.log(lines.join("\n"));

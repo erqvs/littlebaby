@@ -45,10 +45,10 @@ describe("browser config", () => {
     expect(profile?.cdpPort).toBe(18800);
     expect(profile?.cdpUrl).toBe("http://127.0.0.1:18800");
 
-    const openclaw = resolveProfile(resolved, "littlebaby");
-    expect(openclaw?.driver).toBe("littlebaby");
-    expect(openclaw?.cdpPort).toBe(18800);
-    expect(openclaw?.cdpUrl).toBe("http://127.0.0.1:18800");
+    const littlebaby = resolveProfile(resolved, "littlebaby");
+    expect(littlebaby?.driver).toBe("littlebaby");
+    expect(littlebaby?.cdpPort).toBe(18800);
+    expect(littlebaby?.cdpUrl).toBe("http://127.0.0.1:18800");
     const user = resolveProfile(resolved, "user");
     expect(user?.driver).toBe("existing-session");
     expect(user?.cdpPort).toBe(0);
@@ -66,9 +66,9 @@ describe("browser config", () => {
       expect(resolved.controlPort).toBe(19003);
       expect(resolveProfile(resolved, "chrome-relay")).toBe(null);
 
-      const openclaw = resolveProfile(resolved, "littlebaby");
-      expect(openclaw?.cdpPort).toBe(19012);
-      expect(openclaw?.cdpUrl).toBe("http://127.0.0.1:19012");
+      const littlebaby = resolveProfile(resolved, "littlebaby");
+      expect(littlebaby?.cdpPort).toBe(19012);
+      expect(littlebaby?.cdpUrl).toBe("http://127.0.0.1:19012");
     });
   });
 
@@ -78,9 +78,9 @@ describe("browser config", () => {
       expect(resolved.controlPort).toBe(19013);
       expect(resolveProfile(resolved, "chrome-relay")).toBe(null);
 
-      const openclaw = resolveProfile(resolved, "littlebaby");
-      expect(openclaw?.cdpPort).toBe(19022);
-      expect(openclaw?.cdpUrl).toBe("http://127.0.0.1:19022");
+      const littlebaby = resolveProfile(resolved, "littlebaby");
+      expect(littlebaby?.cdpPort).toBe(19022);
+      expect(littlebaby?.cdpUrl).toBe("http://127.0.0.1:19022");
     });
   });
 
@@ -88,10 +88,10 @@ describe("browser config", () => {
     const resolved = resolveBrowserConfig({
       cdpPortRangeStart: 19000,
     });
-    const openclaw = resolveProfile(resolved, "littlebaby");
+    const littlebaby = resolveProfile(resolved, "littlebaby");
     expect(resolved.cdpPortRangeStart).toBe(19000);
-    expect(openclaw?.cdpPort).toBe(19000);
-    expect(openclaw?.cdpUrl).toBe("http://127.0.0.1:19000");
+    expect(littlebaby?.cdpPort).toBe(19000);
+    expect(littlebaby?.cdpUrl).toBe("http://127.0.0.1:19000");
   });
 
   it("rejects cdpPortRangeStart values that overflow the CDP range window", () => {
@@ -414,7 +414,7 @@ describe("browser config", () => {
   });
 
   describe("default profile preference", () => {
-    it("defaults to openclaw profile when defaultProfile is not configured", () => {
+    it("defaults to littlebaby profile when defaultProfile is not configured", () => {
       const resolved = resolveBrowserConfig({
         headless: false,
         noSandbox: false,
@@ -422,21 +422,21 @@ describe("browser config", () => {
       expect(resolved.defaultProfile).toBe("littlebaby");
     });
 
-    it("keeps openclaw default when headless=true", () => {
+    it("keeps littlebaby default when headless=true", () => {
       const resolved = resolveBrowserConfig({
         headless: true,
       });
       expect(resolved.defaultProfile).toBe("littlebaby");
     });
 
-    it("keeps openclaw default when noSandbox=true", () => {
+    it("keeps littlebaby default when noSandbox=true", () => {
       const resolved = resolveBrowserConfig({
         noSandbox: true,
       });
       expect(resolved.defaultProfile).toBe("littlebaby");
     });
 
-    it("keeps openclaw default when both headless and noSandbox are true", () => {
+    it("keeps littlebaby default when both headless and noSandbox are true", () => {
       const resolved = resolveBrowserConfig({
         headless: true,
         noSandbox: true,

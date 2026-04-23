@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import type { ProviderPlugin } from "../../plugins/types.js";
 import type { RuntimeEnv } from "../../runtime.js";
 
@@ -41,7 +41,7 @@ vi.mock("../../agents/auth-profiles/usage.js", () => ({
 
 vi.mock("../../plugins/provider-auth-helpers.js", () => ({
   applyAuthProfileConfig: (
-    cfg: OpenClawConfig,
+    cfg: LittleBabyConfig,
     params: {
       profileId: string;
       provider: string;
@@ -49,7 +49,7 @@ vi.mock("../../plugins/provider-auth-helpers.js", () => ({
       email?: string;
       displayName?: string;
     },
-  ): OpenClawConfig => ({
+  ): LittleBabyConfig => ({
     ...cfg,
     auth: {
       ...cfg.auth,
@@ -154,7 +154,7 @@ vi.mock("../provider-auth-helpers.js", () => {
         null
       );
     }),
-    applyProviderAuthConfigPatch: vi.fn((cfg: OpenClawConfig, patch: unknown) => {
+    applyProviderAuthConfigPatch: vi.fn((cfg: LittleBabyConfig, patch: unknown) => {
       const merged = mergePatch(cfg, patch);
       const patchModels = (patch as { agents?: { defaults?: { models?: unknown } } })?.agents
         ?.defaults?.models;
@@ -171,7 +171,7 @@ vi.mock("../provider-auth-helpers.js", () => {
           }
         : merged;
     }),
-    applyDefaultModel: vi.fn((cfg: OpenClawConfig, model: string) => ({
+    applyDefaultModel: vi.fn((cfg: LittleBabyConfig, model: string) => ({
       ...cfg,
       agents: {
         ...cfg.agents,
@@ -244,8 +244,8 @@ function createProvider(params: {
 
 describe("modelsAuthLoginCommand", () => {
   let restoreStdin: (() => void) | null = null;
-  let currentConfig: OpenClawConfig;
-  let lastUpdatedConfig: OpenClawConfig | null;
+  let currentConfig: LittleBabyConfig;
+  let lastUpdatedConfig: LittleBabyConfig | null;
   let runProviderAuth: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -263,13 +263,13 @@ describe("modelsAuthLoginCommand", () => {
     mocks.upsertAuthProfile.mockReset();
 
     mocks.resolveDefaultAgentId.mockReturnValue("main");
-    mocks.resolveAgentDir.mockReturnValue("/tmp/openclaw/agents/main");
-    mocks.resolveAgentWorkspaceDir.mockReturnValue("/tmp/openclaw/workspace");
-    mocks.resolveDefaultAgentWorkspaceDir.mockReturnValue("/tmp/openclaw/workspace");
+    mocks.resolveAgentDir.mockReturnValue("/tmp/littlebaby/agents/main");
+    mocks.resolveAgentWorkspaceDir.mockReturnValue("/tmp/littlebaby/workspace");
+    mocks.resolveDefaultAgentWorkspaceDir.mockReturnValue("/tmp/littlebaby/workspace");
     mocks.isRemoteEnvironment.mockReturnValue(false);
     mocks.loadValidConfigOrThrow.mockImplementation(async () => currentConfig);
     mocks.updateConfig.mockImplementation(
-      async (mutator: (cfg: OpenClawConfig) => OpenClawConfig) => {
+      async (mutator: (cfg: LittleBabyConfig) => LittleBabyConfig) => {
         lastUpdatedConfig = mutator(currentConfig);
         currentConfig = lastUpdatedConfig;
         return lastUpdatedConfig;
@@ -334,11 +334,11 @@ describe("modelsAuthLoginCommand", () => {
 
     await modelsAuthLoginCommand({ provider: "openai-codex" }, runtime);
 
-    expect(mocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith("/tmp/openclaw/agents/main");
+    expect(mocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith("/tmp/littlebaby/agents/main");
     expect(mocks.clearAuthProfileCooldown).toHaveBeenCalledWith({
       store: fakeStore,
       profileId: "openai-codex:user@example.com",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/littlebaby/agents/main",
     });
     expect(mocks.clearAuthProfileCooldown.mock.invocationCallOrder[0]).toBeLessThan(
       runProviderAuth.mock.invocationCallOrder[0],
@@ -350,7 +350,7 @@ describe("modelsAuthLoginCommand", () => {
         type: "oauth",
         provider: "openai-codex",
       }),
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/littlebaby/agents/main",
     });
     expect(lastUpdatedConfig?.auth?.profiles?.["openai-codex:user@example.com"]).toMatchObject({
       provider: "openai-codex",
@@ -363,7 +363,7 @@ describe("modelsAuthLoginCommand", () => {
       "Default model available: openai-codex/gpt-5.4 (use --set-default to apply)",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "Tip: Codex-capable models can use native Codex web search. Enable it with openclaw configure --section web (recommended mode: cached). Docs: https://docs.openclaw.ai/tools/web",
+      "Tip: Codex-capable models can use native Codex web search. Enable it with littlebaby configure --section web (recommended mode: cached). Docs: https://docs.littlebaby.ai/tools/web",
     );
   });
 
@@ -410,7 +410,7 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.resolvePluginProviders).toHaveBeenCalledWith(
       expect.objectContaining({
         config: {},
-        workspaceDir: "/tmp/openclaw/workspace",
+        workspaceDir: "/tmp/littlebaby/workspace",
         bundledProviderAllowlistCompat: true,
         bundledProviderVitestCompat: true,
         providerRefs: ["anthropic"],
@@ -453,8 +453,8 @@ describe("modelsAuthLoginCommand", () => {
     const runApiKeyAuth = vi.fn();
     const runClaudeCliMigration = vi.fn().mockImplementation(async (ctx) => {
       expect(ctx.config).toEqual(currentConfig);
-      expect(ctx.agentDir).toBe("/tmp/openclaw/agents/main");
-      expect(ctx.workspaceDir).toBe("/tmp/openclaw/workspace");
+      expect(ctx.agentDir).toBe("/tmp/littlebaby/agents/main");
+      expect(ctx.workspaceDir).toBe("/tmp/littlebaby/workspace");
       expect(ctx.prompter).toMatchObject({ note, select: expect.any(Function) });
       expect(ctx.runtime).toBe(runtime);
       expect(ctx.env).toBe(process.env);
@@ -541,12 +541,12 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.clearAuthProfileCooldown).toHaveBeenNthCalledWith(1, {
       store: fakeStore,
       profileId: "anthropic:claude-cli",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/littlebaby/agents/main",
     });
     expect(mocks.clearAuthProfileCooldown).toHaveBeenNthCalledWith(2, {
       store: fakeStore,
       profileId: "anthropic:legacy",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/littlebaby/agents/main",
     });
     expect(
       mocks.clearAuthProfileCooldown.mock.invocationCallOrder.every(
@@ -588,7 +588,7 @@ describe("modelsAuthLoginCommand", () => {
     const runtime = createRuntime();
 
     await expect(modelsAuthLoginCommand({ provider: "anthropic" }, runtime)).rejects.toThrow(
-      'Unknown provider "anthropic". Loaded providers: openai-codex. Verify plugins via `openclaw plugins list --json`.',
+      'Unknown provider "anthropic". Loaded providers: openai-codex. Verify plugins via `littlebaby plugins list --json`.',
     );
   });
 
@@ -629,16 +629,16 @@ describe("modelsAuthLoginCommand", () => {
         provider: "anthropic",
         token: `sk-ant-oat01-${"a".repeat(80)}`,
       },
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/littlebaby/agents/main",
     });
     expect(runtime.log).toHaveBeenCalledWith(
-      "Anthropic setup-token auth is supported in OpenClaw.",
+      "Anthropic setup-token auth is supported in LittleBaby.",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "OpenClaw prefers Claude CLI reuse when it is available on the host.",
+      "LittleBaby prefers Claude CLI reuse when it is available on the host.",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "Anthropic staff told us this OpenClaw path is allowed again.",
+      "Anthropic staff told us this LittleBaby path is allowed again.",
     );
   });
 
@@ -681,7 +681,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "moonshot",
         token: "moonshot-token",
       },
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/littlebaby/agents/main",
     });
   });
 });

@@ -1,5 +1,5 @@
 ---
-summary: "How OpenClaw manages conversation sessions"
+summary: "How LittleBaby manages conversation sessions"
 read_when:
   - You want to understand session routing and isolation
   - You want to configure DM scope for multi-user setups
@@ -8,7 +8,7 @@ title: "Session Management"
 
 # Session Management
 
-OpenClaw organizes conversations into **sessions**. Each message is routed to a
+LittleBaby organizes conversations into **sessions**. Each message is routed to a
 session based on where it came from -- DMs, group chats, cron jobs, etc.
 
 ## How messages are routed
@@ -54,7 +54,7 @@ If the same person contacts you from multiple channels, use
 `session.identityLinks` to link their identities so they share one session.
 </Tip>
 
-Verify your setup with `openclaw security audit`.
+Verify your setup with `littlebaby security audit`.
 
 ## Session lifecycle
 
@@ -79,7 +79,7 @@ session data.
 
 ## Session maintenance
 
-OpenClaw automatically bounds session storage over time. By default, it runs
+LittleBaby automatically bounds session storage over time. By default, it runs
 in `warn` mode (reports what would be cleaned). Set `session.maintenance.mode`
 to `"enforce"` for automatic cleanup:
 
@@ -95,12 +95,12 @@ to `"enforce"` for automatic cleanup:
 }
 ```
 
-Preview with `openclaw sessions cleanup --dry-run`.
+Preview with `littlebaby sessions cleanup --dry-run`.
 
 ## Inspecting sessions
 
-- `openclaw status` -- session store path and recent activity.
-- `openclaw sessions --json` -- all sessions (filter with `--active <minutes>`).
+- `littlebaby status` -- session store path and recent activity.
+- `littlebaby sessions --json` -- all sessions (filter with `--active <minutes>`).
 - `/status` in chat -- context usage, model, and toggles.
 - `/context list` -- what is in the system prompt.
 

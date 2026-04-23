@@ -1,9 +1,9 @@
 import { RequestClient } from "@buape/carbon";
-import { loadConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { RetryConfig, RetryRunner } from "openclaw/plugin-sdk/retry-runtime";
-import { normalizeAccountId } from "openclaw/plugin-sdk/routing";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+import { loadConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { RetryConfig, RetryRunner } from "littlebaby/plugin-sdk/retry-runtime";
+import { normalizeAccountId } from "littlebaby/plugin-sdk/routing";
+import type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import {
   mergeDiscordAccountConfig,
   resolveDiscordAccount,

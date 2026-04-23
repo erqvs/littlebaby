@@ -16,14 +16,14 @@ describe("qa channel transport", () => {
           enabled: true,
           baseUrl: "http://127.0.0.1:43123",
           botUserId: "littlebaby",
-          botDisplayName: "OpenClaw QA",
+          botDisplayName: "LittleBaby QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["\\b@?openclaw\\b"],
+          mentionPatterns: ["\\b@?littlebaby\\b"],
         },
       },
     });

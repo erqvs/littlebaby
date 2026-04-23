@@ -22,13 +22,13 @@ describe("pinIosVersion", () => {
   it("pins an explicit iOS release version and syncs generated artifacts", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# LittleBaby iOS Changelog
 
 ## Unreleased
 
 - Draft release notes.
 `,
-      prefix: "openclaw-ios-pin-",
+      prefix: "littlebaby-ios-pin-",
     });
 
     const result = pinIosVersion({
@@ -61,13 +61,13 @@ describe("pinIosVersion", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
       packageVersion: "2026.4.10-beta.3",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# LittleBaby iOS Changelog
 
 ## Unreleased
 
 - Candidate release notes.
 `,
-      prefix: "openclaw-ios-pin-",
+      prefix: "littlebaby-ios-pin-",
     });
 
     const result = pinIosVersion({
@@ -86,7 +86,7 @@ describe("pinIosVersion", () => {
   it("can skip syncing checked-in artifacts when requested", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# LittleBaby iOS Changelog
 
 ## Unreleased
 
@@ -94,7 +94,7 @@ describe("pinIosVersion", () => {
 `,
       versionXcconfig: "stale\n",
       releaseNotes: "stale\n",
-      prefix: "openclaw-ios-pin-",
+      prefix: "littlebaby-ios-pin-",
     });
 
     const result = pinIosVersion({

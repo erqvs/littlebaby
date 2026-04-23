@@ -1,9 +1,9 @@
 ---
-summary: "Schema-accurate configuration examples for common OpenClaw setups"
+summary: "Schema-accurate configuration examples for common LittleBaby setups"
 read_when:
-  - Learning how to configure OpenClaw
+  - Learning how to configure LittleBaby
   - Looking for configuration examples
-  - Setting up OpenClaw for the first time
+  - Setting up LittleBaby for the first time
 title: "Configuration Examples"
 ---
 
@@ -22,7 +22,7 @@ Examples below are aligned with the current config schema. For the exhaustive re
 }
 ```
 
-Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
+Save to `~/.littlebaby/littlebaby.json` and you can DM the bot from that number.
 
 ### Recommended starter
 
@@ -89,7 +89,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
   // Logging
   logging: {
     level: "info",
-    file: "/tmp/openclaw/openclaw.log",
+    file: "/tmp/littlebaby/littlebaby.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
     redactSensitive: "tools",
@@ -97,7 +97,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
 
   // Message formatting
   messages: {
-    messagePrefix: "[openclaw]",
+    messagePrefix: "[littlebaby]",
     responsePrefix: ">",
     ackReaction: "👀",
     ackReactionScope: "group-mentions",
@@ -106,7 +106,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
   // Routing + queue
   routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "littlebaby"],
+      mentionPatterns: ["@littlebaby", "littlebaby"],
       historyLimit: 50,
     },
     queue: {
@@ -202,7 +202,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
       dm: { enabled: true, allowFrom: ["123456789012345678"] },
       guilds: {
         "123456789012345678": {
-          slug: "friends-of-openclaw",
+          slug: "friends-of-littlebaby",
           requireMention: false,
           channels: {
             general: { allow: true },
@@ -289,7 +289,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
         scope: "session", // preferred over legacy perSession: true
         workspaceRoot: "~/.littlebaby/sandboxes",
         docker: {
-          image: "openclaw-sandbox:bookworm-slim",
+          image: "littlebaby-sandbox:bookworm-slim",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -408,7 +408,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
       },
     ],
     gmail: {
-      account: "openclaw@gmail.com",
+      account: "littlebaby@gmail.com",
       label: "INBOX",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
@@ -427,7 +427,7 @@ Save to `~/.littlebaby/openclaw.json` and you can DM the bot from that number.
     mode: "local",
     port: 18789,
     bind: "loopback",
-    controlUi: { enabled: true, basePath: "/openclaw" },
+    controlUi: { enabled: true, basePath: "/littlebaby" },
     auth: {
       mode: "token",
       token: "gateway-token",
@@ -575,7 +575,7 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
     theme: "professional assistant",
   },
   agent: {
-    workspace: "~/work-openclaw",
+    workspace: "~/work-littlebaby",
     elevated: { enabled: false },
   },
   channels: {

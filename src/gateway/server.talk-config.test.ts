@@ -58,7 +58,7 @@ afterAll(async () => {
 
 async function createFreshOperatorDevice(scopes: string[], nonce: string) {
   const identity = loadOrCreateDeviceIdentity(
-    path.join(os.tmpdir(), `openclaw-talk-config-device-${process.pid}-${talkConfigDeviceSeq++}`),
+    path.join(os.tmpdir(), `littlebaby-talk-config-device-${process.pid}-${talkConfigDeviceSeq++}`),
   );
   const signedAtMs = Date.now();
   const payload = buildDeviceAuthPayload({

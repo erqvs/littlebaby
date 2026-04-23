@@ -5,7 +5,7 @@ import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { Api, Model } from "@mariozechner/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import {
   clearCompactionProviders,
   registerCompactionProvider,
@@ -593,7 +593,7 @@ describe("compaction-safeguard runtime registry", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     buildEmbeddedExtensionFactories({
       cfg,
@@ -2003,7 +2003,7 @@ describe("compaction-safeguard double-compaction guard", () => {
 async function expectWorkspaceSummaryEmptyForAgentsAlias(
   createAlias: (outsidePath: string, agentsPath: string) => void,
 ) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-compaction-summary-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-compaction-summary-"));
   const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(root);
   try {
     const outside = path.join(root, "outside-secret.txt");

@@ -1,4 +1,4 @@
 export {
   getRealtimeTranscriptionProvider,
   listRealtimeTranscriptionProviders,
-} from "openclaw/plugin-sdk/realtime-transcription";
+} from "littlebaby/plugin-sdk/realtime-transcription";

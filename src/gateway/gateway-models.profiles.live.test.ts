@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import type { Api, Model } from "@mariozechner/pi-ai";
 import { afterEach, describe, expect, it } from "vitest";
-import { resolveOpenClawAgentDir } from "../agents/agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../agents/agent-paths.js";
 import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
 import { ensureAuthProfileStore, saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
@@ -28,11 +28,11 @@ import { isLiveProfileKeyModeEnabled, isLiveTestEnabled } from "../agents/live-t
 import { getApiKeyForModel, resolveEnvApiKey } from "../agents/model-auth.js";
 import { normalizeProviderId } from "../agents/model-selection.js";
 import { shouldSuppressBuiltInModel } from "../agents/model-suppression.js";
-import { ensureOpenClawModelsJson } from "../agents/models-config.js";
+import { ensureLittleBabyModelsJson } from "../agents/models-config.js";
 import { isRateLimitErrorMessage } from "../agents/pi-embedded-helpers/errors.js";
 import { discoverAuthStorage, discoverModels } from "../agents/pi-model-discovery.js";
 import { clearRuntimeConfigSnapshot, loadConfig } from "../config/io.js";
-import type { ModelsConfig, ModelProviderConfig, OpenClawConfig } from "../config/types.js";
+import type { ModelsConfig, ModelProviderConfig, LittleBabyConfig } from "../config/types.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { normalizeGoogleModelId } from "../plugin-sdk/google-model-id.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
@@ -1178,7 +1178,7 @@ async function requestGatewayAgentText(params: {
 
 type GatewayModelSuiteParams = {
   label: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   candidates: Array<Model<Api>>;
   allowNotFoundSkip: boolean;
   extraToolProbes: boolean;
@@ -1188,10 +1188,10 @@ type GatewayModelSuiteParams = {
 };
 
 function buildLiveGatewayConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   candidates: Array<Model<Api>>;
   providerOverrides?: Record<string, ModelProviderConfig>;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   const providerOverrides = params.providerOverrides ?? {};
   const lmstudioProvider = params.cfg.models?.providers?.lmstudio;
   const baseProviders = params.cfg.models?.providers ?? {};
@@ -1232,9 +1232,9 @@ function buildLiveGatewayConfig(params: {
 }
 
 async function sanitizeAuthConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentDir: string;
-}): Promise<OpenClawConfig["auth"] | undefined> {
+}): Promise<LittleBabyConfig["auth"] | undefined> {
   const auth = params.cfg.auth;
   if (!auth) {
     return auth;
@@ -1243,7 +1243,7 @@ async function sanitizeAuthConfig(params: {
     allowKeychainPrompt: false,
   });
 
-  let profiles: NonNullable<OpenClawConfig["auth"]>["profiles"] | undefined;
+  let profiles: NonNullable<LittleBabyConfig["auth"]>["profiles"] | undefined;
   if (auth.profiles) {
     profiles = {};
     for (const [profileId, profile] of Object.entries(auth.profiles)) {
@@ -1283,7 +1283,7 @@ async function sanitizeAuthConfig(params: {
 }
 
 function buildMinimaxProviderOverride(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   api: "openai-completions" | "anthropic-messages";
   baseUrl: string;
 }): ModelProviderConfig | null {
@@ -1330,7 +1330,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   process.env.LITTLEBABY_GATEWAY_TOKEN = token;
   const agentId = "dev";
 
-  const hostAgentDir = resolveOpenClawAgentDir();
+  const hostAgentDir = resolveLittleBabyAgentDir();
   const hostStore = ensureAuthProfileStore(hostAgentDir, {
     allowKeychainPrompt: false,
   });
@@ -1343,7 +1343,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     lastGood: hostStore.lastGood ? { ...hostStore.lastGood } : undefined,
     usageStats: hostStore.usageStats ? { ...hostStore.usageStats } : undefined,
   });
-  tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-state-"));
+  tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-live-state-"));
   process.env.LITTLEBABY_STATE_DIR = tempStateDir;
   tempAgentDir = path.join(tempStateDir, "agents", DEFAULT_AGENT_ID, "agent");
   saveAuthProfileStore(sanitizedStore, tempAgentDir);
@@ -1358,11 +1358,11 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   await fs.mkdir(workspaceDir, { recursive: true });
   const nonceA = randomUUID();
   const nonceB = randomUUID();
-  const toolProbePath = path.join(workspaceDir, `.openclaw-live-tool-probe.${nonceA}.txt`);
+  const toolProbePath = path.join(workspaceDir, `.littlebaby-live-tool-probe.${nonceA}.txt`);
   await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
-  const agentDir = resolveOpenClawAgentDir();
-  const sanitizedCfg: OpenClawConfig = {
+  const agentDir = resolveLittleBabyAgentDir();
+  const sanitizedCfg: LittleBabyConfig = {
     ...params.cfg,
     auth: await sanitizeAuthConfig({ cfg: params.cfg, agentDir }),
   };
@@ -1371,8 +1371,8 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     candidates: params.candidates,
     providerOverrides: params.providerOverrides,
   });
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-"));
-  const tempConfigPath = path.join(tempDir, "openclaw.json");
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-live-"));
+  const tempConfigPath = path.join(tempDir, "littlebaby.json");
   await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
   process.env.LITTLEBABY_CONFIG_PATH = tempConfigPath;
 
@@ -1562,10 +1562,10 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
                   idempotencyKey: `idem-${runIdTool}-tool-${toolReadAttempt + 1}`,
                   modelKey,
                   message: strictReply
-                    ? "OpenClaw live tool probe (local, safe): " +
+                    ? "LittleBaby live tool probe (local, safe): " +
                       `use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolProbePath}"}. ` +
                       `Then reply with exactly: ${nonceA} ${nonceB}. No extra text.`
-                    : "OpenClaw live tool probe (local, safe): " +
+                    : "LittleBaby live tool probe (local, safe): " +
                       `use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolProbePath}"}. ` +
                       "Then reply with the two nonce values you read (include both).",
                   thinkingLevel: params.thinkingLevel,
@@ -1629,12 +1629,12 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
                     idempotencyKey: `idem-${runIdTool}-exec-read-${execReadAttempt + 1}`,
                     modelKey,
                     message: strictReply
-                      ? "OpenClaw live tool probe (local, safe): " +
+                      ? "LittleBaby live tool probe (local, safe): " +
                         "use the tool named `exec` (or `Exec`) to run this command: " +
                         `mkdir -p "${tempDir}" && printf '%s' '${nonceC}' > "${toolWritePath}". ` +
                         `Then use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolWritePath}"}. ` +
                         `Then reply with exactly: ${nonceC}. No extra text.`
-                      : "OpenClaw live tool probe (local, safe): " +
+                      : "LittleBaby live tool probe (local, safe): " +
                         "use the tool named `exec` (or `Exec`) to run this command: " +
                         `mkdir -p "${tempDir}" && printf '%s' '${nonceC}' > "${toolWritePath}". ` +
                         `Then use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolWritePath}"}. ` +
@@ -2032,9 +2032,9 @@ describeLive("gateway live (dev agent, profile keys)", () => {
       await withSuppressedGatewayLiveWarnings(async () => {
         clearRuntimeConfigSnapshot();
         const cfg = loadConfig();
-        await ensureOpenClawModelsJson(cfg);
+        await ensureLittleBabyModelsJson(cfg);
 
-        const agentDir = resolveOpenClawAgentDir();
+        const agentDir = resolveLittleBabyAgentDir();
         const authStorage = discoverAuthStorage(agentDir);
         const modelRegistry = discoverModels(authStorage, agentDir);
         const all = modelRegistry.getAll();
@@ -2182,9 +2182,9 @@ describeLive("gateway live (dev agent, profile keys)", () => {
     process.env.LITTLEBABY_GATEWAY_TOKEN = token;
 
     const cfg = loadConfig();
-    await ensureOpenClawModelsJson(cfg);
+    await ensureLittleBabyModelsJson(cfg);
 
-    const agentDir = resolveOpenClawAgentDir();
+    const agentDir = resolveLittleBabyAgentDir();
     const authStorage = discoverAuthStorage(agentDir);
     const modelRegistry = discoverModels(authStorage, agentDir);
     const anthropic = modelRegistry.find("anthropic", "claude-opus-4-6") as Model<Api> | null;
@@ -2213,7 +2213,7 @@ describeLive("gateway live (dev agent, profile keys)", () => {
     await fs.mkdir(workspaceDir, { recursive: true });
     const nonceA = randomUUID();
     const nonceB = randomUUID();
-    const toolProbePath = path.join(workspaceDir, `.openclaw-live-zai-fallback.${nonceA}.txt`);
+    const toolProbePath = path.join(workspaceDir, `.littlebaby-live-zai-fallback.${nonceA}.txt`);
     await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
     let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;

@@ -15,7 +15,7 @@ import {
 const createBackupArchiveMock = vi.hoisted(() =>
   vi.fn(async (_params: unknown) => ({
     createdAt: "2026-03-17T00:00:00.000Z",
-    archiveRoot: "2026-03-17-openclaw-backup",
+    archiveRoot: "2026-03-17-littlebaby-backup",
     archivePath: "/tmp/matrix-migration-snapshot.tar.gz",
     dryRun: false,
     includeWorkspace: false,
@@ -59,7 +59,7 @@ describe("matrix client storage paths", () => {
     createBackupArchiveMock.mockReset();
     createBackupArchiveMock.mockImplementation(async (_params: unknown) => ({
       createdAt: "2026-03-17T00:00:00.000Z",
-      archiveRoot: "2026-03-17-openclaw-backup",
+      archiveRoot: "2026-03-17-littlebaby-backup",
       archivePath: "/tmp/matrix-migration-snapshot.tar.gz",
       dryRun: false,
       includeWorkspace: false,
@@ -86,8 +86,8 @@ describe("matrix client storage paths", () => {
       },
     },
   ): string {
-    const homeDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-matrix-storage-"));
-    const stateDir = path.join(homeDir, ".openclaw");
+    const homeDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-matrix-storage-"));
+    const stateDir = path.join(homeDir, ".littlebaby");
     fs.mkdirSync(stateDir, { recursive: true });
     tempDirs.push(homeDir);
     installMatrixTestRuntime({

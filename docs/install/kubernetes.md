@@ -1,18 +1,18 @@
 ---
-summary: "Deploy OpenClaw Gateway to a Kubernetes cluster with Kustomize"
+summary: "Deploy LittleBaby Gateway to a Kubernetes cluster with Kustomize"
 read_when:
-  - You want to run OpenClaw on a Kubernetes cluster
-  - You want to test OpenClaw in a Kubernetes environment
+  - You want to run LittleBaby on a Kubernetes cluster
+  - You want to test LittleBaby in a Kubernetes environment
 title: "Kubernetes"
 ---
 
-# OpenClaw on Kubernetes
+# LittleBaby on Kubernetes
 
-A minimal starting point for running OpenClaw on Kubernetes — not a production-ready deployment. It covers the core resources and is meant to be adapted to your environment.
+A minimal starting point for running LittleBaby on Kubernetes — not a production-ready deployment. It covers the core resources and is meant to be adapted to your environment.
 
 ## Why not Helm?
 
-OpenClaw is a single container with some config files. The interesting customization is in agent content (markdown files, skills, config overrides), not infrastructure templating. Kustomize handles overlays without the overhead of a Helm chart. If your deployment grows more complex, a Helm chart can be layered on top of these manifests.
+LittleBaby is a single container with some config files. The interesting customization is in agent content (markdown files, skills, config overrides), not infrastructure templating. Kustomize handles overlays without the overhead of a Helm chart. If your deployment grows more complex, a Helm chart can be layered on top of these manifests.
 
 ## What you need
 
@@ -27,7 +27,7 @@ OpenClaw is a single container with some config files. The interesting customiza
 export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 
-kubectl port-forward svc/openclaw 18789:18789 -n openclaw
+kubectl port-forward svc/littlebaby 18789:18789 -n littlebaby
 open http://localhost:18789
 ```
 
@@ -35,7 +35,7 @@ Retrieve the configured shared secret for the Control UI. This deploy script
 creates token auth by default:
 
 ```bash
-kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.LITTLEBABY_GATEWAY_TOKEN}' | base64 -d
+kubectl get secret littlebaby-secrets -n littlebaby -o jsonpath='{.data.LITTLEBABY_GATEWAY_TOKEN}' | base64 -d
 ```
 
 For local debugging, `./scripts/k8s/deploy.sh --show-token` prints the token after deploy.
@@ -78,19 +78,19 @@ Use `--show-token` with either command if you want the token printed to stdout f
 ### 2) Access the gateway
 
 ```bash
-kubectl port-forward svc/openclaw 18789:18789 -n openclaw
+kubectl port-forward svc/littlebaby 18789:18789 -n littlebaby
 open http://localhost:18789
 ```
 
 ## What gets deployed
 
 ```
-Namespace: openclaw (configurable via LITTLEBABY_NAMESPACE)
-├── Deployment/openclaw        # Single pod, init container + gateway
-├── Service/openclaw           # ClusterIP on port 18789
+Namespace: littlebaby (configurable via LITTLEBABY_NAMESPACE)
+├── Deployment/littlebaby        # Single pod, init container + gateway
+├── Service/littlebaby           # ClusterIP on port 18789
 ├── PersistentVolumeClaim      # 10Gi for agent state and config
-├── ConfigMap/openclaw-config  # openclaw.json + AGENTS.md
-└── Secret/openclaw-secrets    # Gateway token + API keys
+├── ConfigMap/littlebaby-config  # littlebaby.json + AGENTS.md
+└── Secret/littlebaby-secrets    # Gateway token + API keys
 ```
 
 ## Customization
@@ -105,7 +105,7 @@ Edit the `AGENTS.md` in `scripts/k8s/manifests/configmap.yaml` and redeploy:
 
 ### Gateway config
 
-Edit `openclaw.json` in `scripts/k8s/manifests/configmap.yaml`. See [Gateway configuration](/gateway/configuration) for the full reference.
+Edit `littlebaby.json` in `scripts/k8s/manifests/configmap.yaml`. See [Gateway configuration](/gateway/configuration) for the full reference.
 
 ### Add providers
 
@@ -123,9 +123,9 @@ Existing provider keys stay in the Secret unless you overwrite them.
 Or patch the Secret directly:
 
 ```bash
-kubectl patch secret openclaw-secrets -n openclaw \
+kubectl patch secret littlebaby-secrets -n littlebaby \
   -p '{"stringData":{"<PROVIDER>_API_KEY":"..."}}'
-kubectl rollout restart deployment/openclaw -n openclaw
+kubectl rollout restart deployment/littlebaby -n littlebaby
 ```
 
 ### Custom namespace
@@ -139,7 +139,7 @@ LITTLEBABY_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 Edit the `image` field in `scripts/k8s/manifests/deployment.yaml`:
 
 ```yaml
-image: ghcr.io/openclaw/openclaw:latest # or pin to a specific version from https://github.com/openclaw/openclaw/releases
+image: ghcr.io/littlebaby/littlebaby:latest # or pin to a specific version from https://github.com/littlebaby/littlebaby/releases
 ```
 
 ### Expose beyond port-forward
@@ -185,7 +185,7 @@ scripts/k8s/
 ├── create-kind.sh              # Local Kind cluster (auto-detects docker/podman)
 └── manifests/
     ├── kustomization.yaml      # Kustomize base
-    ├── configmap.yaml          # openclaw.json + AGENTS.md
+    ├── configmap.yaml          # littlebaby.json + AGENTS.md
     ├── deployment.yaml         # Pod spec with security hardening
     ├── pvc.yaml                # 10Gi persistent storage
     └── service.yaml            # ClusterIP on 18789

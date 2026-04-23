@@ -3,10 +3,10 @@ import {
   listChatCommands,
   maybeResolveTextAlias,
   normalizeCommandBody,
-} from "openclaw/plugin-sdk/command-auth";
-import { parseExecApprovalCommandText } from "openclaw/plugin-sdk/infra-runtime";
-import { isAbortRequestText } from "openclaw/plugin-sdk/reply-runtime";
-import { isBtwRequestText } from "openclaw/plugin-sdk/reply-runtime";
+} from "littlebaby/plugin-sdk/command-auth";
+import { parseExecApprovalCommandText } from "littlebaby/plugin-sdk/infra-runtime";
+import { isAbortRequestText } from "littlebaby/plugin-sdk/reply-runtime";
+import { isBtwRequestText } from "littlebaby/plugin-sdk/reply-runtime";
 import { resolveTelegramForumThreadId } from "./bot/helpers.js";
 
 export type TelegramSequentialKeyContext = {

@@ -109,7 +109,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
     }
     defaultRuntime.error(
       warnText(
-        `Recommendation: run "${formatCliCommand("openclaw doctor")}" (or "${formatCliCommand("openclaw doctor --repair")}").`,
+        `Recommendation: run "${formatCliCommand("littlebaby doctor")}" (or "${formatCliCommand("littlebaby doctor --repair")}").`,
       ),
     );
   }
@@ -143,7 +143,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
       );
       defaultRuntime.error(
         errorText(
-          `Fix: rerun \`${formatCliCommand("openclaw gateway install --force")}\` from the same --profile / LITTLEBABY_STATE_DIR you expect.`,
+          `Fix: rerun \`${formatCliCommand("littlebaby gateway install --force")}\` from the same --profile / LITTLEBABY_STATE_DIR you expect.`,
         ),
       );
     }
@@ -222,7 +222,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
     );
     defaultRuntime.error(
       errorText(
-        `Fix: run ${formatCliCommand("openclaw gateway restart")} and re-check with ${formatCliCommand("openclaw gateway status --deep")}.`,
+        `Fix: run ${formatCliCommand("littlebaby gateway restart")} and re-check with ${formatCliCommand("littlebaby gateway status --deep")}.`,
       ),
     );
     spacer();
@@ -273,7 +273,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
       ),
     );
     defaultRuntime.error(
-      errorText(`Then reinstall: ${formatCliCommand("openclaw gateway install")}`),
+      errorText(`Then reinstall: ${formatCliCommand("littlebaby gateway install")}`),
     );
     spacer();
   }
@@ -349,6 +349,6 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
     spacer();
   }
 
-  defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("openclaw status")}`);
-  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.openclaw.ai/troubleshooting`);
+  defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("littlebaby status")}`);
+  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.littlebaby.ai/troubleshooting`);
 }

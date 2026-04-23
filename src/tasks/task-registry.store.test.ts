@@ -277,7 +277,7 @@ describe("task-registry store runtime", () => {
     if (process.platform === "win32") {
       return;
     }
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-task-store-"));
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "littlebaby-task-store-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
 
     createTaskRecord({
@@ -302,7 +302,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("migrates legacy ownerless cron rows to system scope", () => {
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-task-store-legacy-"));
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "littlebaby-task-store-legacy-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
     const sqlitePath = resolveTaskRegistrySqlitePath(process.env);
     mkdirSync(path.dirname(sqlitePath), { recursive: true });
@@ -384,7 +384,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("keeps legacy requester_session_key rows writable after restore", () => {
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-task-store-legacy-write-"));
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "littlebaby-task-store-legacy-write-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
     const sqlitePath = resolveTaskRegistrySqlitePath(process.env);
     mkdirSync(path.dirname(sqlitePath), { recursive: true });

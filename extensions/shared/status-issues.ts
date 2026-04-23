@@ -1,4 +1,4 @@
 export {
   coerceStatusIssueAccountId,
   readStatusIssueFields,
-} from "openclaw/plugin-sdk/extension-shared";
+} from "littlebaby/plugin-sdk/extension-shared";

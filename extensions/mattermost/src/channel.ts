@@ -1,22 +1,22 @@
 import { Type } from "@sinclair/typebox";
-import { createMessageToolButtonsSchema } from "openclaw/plugin-sdk/channel-actions";
+import { createMessageToolButtonsSchema } from "littlebaby/plugin-sdk/channel-actions";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
   ChannelMessageToolDiscovery,
-} from "openclaw/plugin-sdk/channel-contract";
-import { createChatChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-import { createLoggedPairingApprovalNotifier } from "openclaw/plugin-sdk/channel-pairing";
-import { createRestrictSendersChannelSecurity } from "openclaw/plugin-sdk/channel-policy";
-import { createChannelDirectoryAdapter } from "openclaw/plugin-sdk/directory-runtime";
-import { buildPassiveProbedChannelStatusSummary } from "openclaw/plugin-sdk/extension-shared";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { isPrivateNetworkOptInEnabled } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "littlebaby/plugin-sdk/channel-contract";
+import { createChatChannelPlugin } from "littlebaby/plugin-sdk/channel-core";
+import { createLoggedPairingApprovalNotifier } from "littlebaby/plugin-sdk/channel-pairing";
+import { createRestrictSendersChannelSecurity } from "littlebaby/plugin-sdk/channel-policy";
+import { createChannelDirectoryAdapter } from "littlebaby/plugin-sdk/directory-runtime";
+import { buildPassiveProbedChannelStatusSummary } from "littlebaby/plugin-sdk/extension-shared";
+import { createLazyRuntimeModule } from "littlebaby/plugin-sdk/lazy-runtime";
+import { isPrivateNetworkOptInEnabled } from "littlebaby/plugin-sdk/ssrf-runtime";
 import {
   createComputedAccountStatusAdapter,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/status-helpers";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/status-helpers";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { mattermostApprovalAuth } from "./approval-auth.js";
 import {
   chunkTextForOutbound,
@@ -382,7 +382,7 @@ export const mattermostPlugin: ChannelPlugin<ResolvedMattermostAccount> = create
   pairing: {
     text: {
       idLabel: "mattermostUserId",
-      message: "OpenClaw: your access has been approved.",
+      message: "LittleBaby: your access has been approved.",
       normalizeAllowEntry: (entry) => normalizeAllowEntry(entry),
       notify: createLoggedPairingApprovalNotifier(
         ({ id }) => `[mattermost] User ${id} approved for pairing`,

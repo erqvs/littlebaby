@@ -4,7 +4,7 @@ import path from "node:path";
 import {
   applyProviderConfigWithDefaultModelPreset,
   type ModelDefinitionConfig,
-  type OpenClawConfig,
+  type LittleBabyConfig,
 } from "../../src/plugin-sdk/provider-onboard.ts";
 
 const DOCKER_OPENAI_MODEL_REF = "openai/gpt-5.4";
@@ -25,9 +25,9 @@ const DOCKER_OPENAI_MODEL: ModelDefinitionConfig = {
 };
 
 async function main() {
-  const stateDir = process.env.LITTLEBABY_STATE_DIR?.trim() || path.join(os.homedir(), ".openclaw");
+  const stateDir = process.env.LITTLEBABY_STATE_DIR?.trim() || path.join(os.homedir(), ".littlebaby");
   const configPath =
-    process.env.LITTLEBABY_CONFIG_PATH?.trim() || path.join(stateDir, "openclaw.json");
+    process.env.LITTLEBABY_CONFIG_PATH?.trim() || path.join(stateDir, "littlebaby.json");
   const sessionsDir = path.join(stateDir, "agents", "main", "sessions");
   const sessionFile = path.join(sessionsDir, "sess-main.jsonl");
   const storePath = path.join(sessionsDir, "sessions.json");
@@ -44,7 +44,7 @@ async function main() {
           enabled: false,
         },
       },
-    } satisfies OpenClawConfig,
+    } satisfies LittleBabyConfig,
     {
       providerId: "openai",
       api: "openai-responses",

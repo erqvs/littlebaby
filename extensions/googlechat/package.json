@@ -1,25 +1,25 @@
 {
-  "name": "@openclaw/googlechat",
+  "name": "@littlebaby/googlechat",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Google Chat channel plugin",
+  "description": "LittleBaby Google Chat channel plugin",
   "type": "module",
   "dependencies": {
     "google-auth-library": "^10.6.2"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*",
+    "littlebaby": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.20"
+    "littlebaby": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],
@@ -41,7 +41,7 @@
       "markdownCapable": true
     },
     "install": {
-      "npmSpec": "@openclaw/googlechat",
+      "npmSpec": "@littlebaby/googlechat",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     }

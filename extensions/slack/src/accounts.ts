@@ -4,10 +4,10 @@ import {
   normalizeAccountId,
   normalizeChatType,
   resolveMergedAccountConfig,
-  type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import { isSecretRef, normalizeSecretInputString } from "openclaw/plugin-sdk/secret-input";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+  type LittleBabyConfig,
+} from "littlebaby/plugin-sdk/account-resolution";
+import { isSecretRef, normalizeSecretInputString } from "littlebaby/plugin-sdk/secret-input";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import type { SlackAccountSurfaceFields } from "./account-surface-fields.js";
 import type { SlackAccountConfig } from "./runtime-api.js";
 import { resolveSlackAppToken, resolveSlackBotToken, resolveSlackUserToken } from "./token.js";
@@ -32,7 +32,7 @@ export const listSlackAccountIds = listAccountIds;
 export const resolveDefaultSlackAccountId = resolveDefaultAccountId;
 
 export function mergeSlackAccountConfig(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId: string,
 ): SlackAccountConfig {
   return resolveMergedAccountConfig<SlackAccountConfig>({
@@ -43,7 +43,7 @@ export function mergeSlackAccountConfig(
 }
 
 export function resolveSlackAccount(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   /**
    * When true, account-level credential reads (`botToken`, `appToken`,
@@ -137,7 +137,7 @@ export function resolveSlackAccount(params: {
   };
 }
 
-export function listEnabledSlackAccounts(cfg: OpenClawConfig): ResolvedSlackAccount[] {
+export function listEnabledSlackAccounts(cfg: LittleBabyConfig): ResolvedSlackAccount[] {
   return listSlackAccountIds(cfg)
     .map((accountId) => resolveSlackAccount({ cfg, accountId }))
     .filter((account) => account.enabled);

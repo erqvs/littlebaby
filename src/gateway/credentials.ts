@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import {
   createGatewayCredentialPlan,
   type GatewayCredentialPlan,
@@ -243,7 +243,7 @@ function resolveRemoteGatewayCredentials(params: {
 }
 
 export function resolveGatewayCredentialsFromConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   explicitAuth?: ExplicitGatewayAuth;
   urlOverride?: string;
@@ -310,7 +310,7 @@ export function resolveGatewayCredentialsFromConfig(params: {
 }
 
 export function resolveGatewayProbeCredentialsFromConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   mode: GatewayCredentialMode;
   env?: NodeJS.ProcessEnv;
   explicitAuth?: ExplicitGatewayAuth;
@@ -325,7 +325,7 @@ export function resolveGatewayProbeCredentialsFromConfig(params: {
 }
 
 export function resolveGatewayDriftCheckCredentialsFromConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
 }): ResolvedGatewayCredentials {
   return resolveGatewayCredentialsFromConfig({
     cfg: params.cfg,

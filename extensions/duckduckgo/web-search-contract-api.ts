@@ -1,7 +1,7 @@
 import {
   createWebSearchProviderContractFields,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search-contract";
+} from "littlebaby/plugin-sdk/provider-web-search-contract";
 
 export function createDuckDuckGoWebSearchProvider(): WebSearchProviderPlugin {
   return {
@@ -12,7 +12,7 @@ export function createDuckDuckGoWebSearchProvider(): WebSearchProviderPlugin {
     envVars: [],
     placeholder: "(no key needed)",
     signupUrl: "https://duckduckgo.com/",
-    docsUrl: "https://docs.openclaw.ai/tools/web",
+    docsUrl: "https://docs.littlebaby.ai/tools/web",
     autoDetectOrder: 100,
     credentialPath: "",
     ...createWebSearchProviderContractFields({

@@ -1,20 +1,20 @@
 import { type Block, type KnownBlock, type WebClient } from "@slack/web-api";
-import { loadConfig, type OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/config-runtime";
-import { withTrustedEnvProxyGuardedFetchMode } from "openclaw/plugin-sdk/fetch-runtime";
+import { loadConfig, type LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "littlebaby/plugin-sdk/config-runtime";
+import { withTrustedEnvProxyGuardedFetchMode } from "littlebaby/plugin-sdk/fetch-runtime";
 import {
   chunkMarkdownTextWithMode,
   isSilentReplyText,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from "openclaw/plugin-sdk/reply-chunking";
-import { resolveTextChunksWithFallback } from "openclaw/plugin-sdk/reply-payload";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "littlebaby/plugin-sdk/reply-chunking";
+import { resolveTextChunksWithFallback } from "littlebaby/plugin-sdk/reply-payload";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { fetchWithSsrFGuard } from "littlebaby/plugin-sdk/ssrf-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import type { SlackTokenSource } from "./accounts.js";
 import { resolveSlackAccount } from "./accounts.js";
 import { buildSlackBlocksFallbackText } from "./blocks-fallback.js";
@@ -49,7 +49,7 @@ export type SlackSendIdentity = {
 };
 
 type SlackSendOpts = {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   token?: string;
   accountId?: string;
   mediaUrl?: string;

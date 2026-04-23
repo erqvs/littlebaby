@@ -1,27 +1,27 @@
-# OpenClaw docs i18n assets
+# LittleBaby docs i18n assets
 
 This folder stores translation config for the source docs repo.
 
 Generated locale trees and live translation memory now live in the publish repo:
 
-- repo: `openclaw/docs`
-- local checkout: `~/Projects/openclaw-docs`
+- repo: `littlebaby/docs`
+- local checkout: `~/Projects/littlebaby-docs`
 
 ## Source of truth
 
-- English docs are authored in `openclaw/openclaw`.
+- English docs are authored in `littlebaby/littlebaby`.
 - The source docs tree lives under `docs/`.
 - The source repo no longer keeps committed generated locale trees such as `docs/zh-CN/**`, `docs/ja-JP/**`, `docs/es/**`, `docs/pt-BR/**`, `docs/ko/**`, `docs/de/**`, `docs/fr/**`, `docs/ar/**`, `docs/it/**`, `docs/tr/**`, `docs/uk/**`, `docs/id/**`, or `docs/pl/**`.
 
 ## End-to-end flow
 
-1. Edit English docs in `openclaw/openclaw`.
+1. Edit English docs in `littlebaby/littlebaby`.
 2. Push to `main`.
-3. `openclaw/openclaw/.github/workflows/docs-sync-publish.yml` mirrors the docs tree into `openclaw/docs`.
+3. `littlebaby/littlebaby/.github/workflows/docs-sync-publish.yml` mirrors the docs tree into `littlebaby/docs`.
 4. The sync script rewrites the publish `docs/docs.json` so the generated locale picker blocks exist there even though they are no longer committed in the source repo.
-5. `openclaw/docs/.github/workflows/translate-zh-cn.yml` refreshes `docs/zh-CN/**` once a day, on demand, and after source-repo release dispatches.
-6. `openclaw/docs/.github/workflows/translate-ja-jp.yml` does the same for `docs/ja-JP/**`.
-7. `openclaw/docs/.github/workflows/translate-es.yml`, `translate-pt-br.yml`, `translate-ko.yml`, `translate-de.yml`, `translate-fr.yml`, `translate-ar.yml`, `translate-it.yml`, `translate-tr.yml`, `translate-uk.yml`, `translate-id.yml`, and `translate-pl.yml` do the same for `docs/es/**`, `docs/pt-BR/**`, `docs/ko/**`, `docs/de/**`, `docs/fr/**`, `docs/ar/**`, `docs/it/**`, `docs/tr/**`, `docs/uk/**`, `docs/id/**`, and `docs/pl/**`.
+5. `littlebaby/docs/.github/workflows/translate-zh-cn.yml` refreshes `docs/zh-CN/**` once a day, on demand, and after source-repo release dispatches.
+6. `littlebaby/docs/.github/workflows/translate-ja-jp.yml` does the same for `docs/ja-JP/**`.
+7. `littlebaby/docs/.github/workflows/translate-es.yml`, `translate-pt-br.yml`, `translate-ko.yml`, `translate-de.yml`, `translate-fr.yml`, `translate-ar.yml`, `translate-it.yml`, `translate-tr.yml`, `translate-uk.yml`, `translate-id.yml`, and `translate-pl.yml` do the same for `docs/es/**`, `docs/pt-BR/**`, `docs/ko/**`, `docs/de/**`, `docs/fr/**`, `docs/ar/**`, `docs/it/**`, `docs/tr/**`, `docs/uk/**`, `docs/id/**`, and `docs/pl/**`.
 
 ## Why the split exists
 
@@ -66,7 +66,7 @@ Fields:
 
 ## Operational notes
 
-- Sync metadata is written to `.openclaw-sync/source.json` in the publish repo.
+- Sync metadata is written to `.littlebaby-sync/source.json` in the publish repo.
 - Source repo secret: `LITTLEBABY_DOCS_SYNC_TOKEN`
 - Publish repo secret: `LITTLEBABY_DOCS_I18N_OPENAI_API_KEY`
-- If locale output looks stale, check the matching `Translate <locale>` workflow in `openclaw/docs` first.
+- If locale output looks stale, check the matching `Translate <locale>` workflow in `littlebaby/docs` first.

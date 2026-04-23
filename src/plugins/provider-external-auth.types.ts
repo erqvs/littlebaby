@@ -1,9 +1,9 @@
 import type { AuthProfileStore, OAuthCredential } from "../agents/auth-profiles/types.js";
 import type { ModelProviderAuthMode, ModelProviderConfig } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
 export type ProviderResolveSyntheticAuthContext = {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   provider: string;
   providerConfig?: ModelProviderConfig;
 };
@@ -15,7 +15,7 @@ export type ProviderSyntheticAuthResult = {
 };
 
 export type ProviderResolveExternalOAuthProfilesContext = {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   agentDir?: string;
   workspaceDir?: string;
   env: NodeJS.ProcessEnv;

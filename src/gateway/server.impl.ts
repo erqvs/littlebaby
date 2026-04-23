@@ -5,7 +5,7 @@ import { type ChannelId, listChannelPlugins } from "../channels/plugins/index.js
 import { createDefaultDeps } from "../cli/deps.js";
 import { isRestartEnabled } from "../config/commands.flags.js";
 import {
-  type OpenClawConfig,
+  type LittleBabyConfig,
   applyConfigOverrides,
   getRuntimeConfig,
   isNixMode,
@@ -21,7 +21,7 @@ import { resolveMainSessionKey } from "../config/sessions.js";
 import { clearAgentRunContext } from "../infra/agent-events.js";
 import { isDiagnosticsEnabled } from "../infra/diagnostic-events.js";
 import { isVitestRuntimeEnv, logAcceptedEnvOption } from "../infra/env.js";
-import { ensureOpenClawCliOnPath } from "../infra/path-env.js";
+import { ensureLittleBabyCliOnPath } from "../infra/path-env.js";
 import { setGatewaySigusr1RestartPolicy, setPreRestartDeferralCheck } from "../infra/restart.js";
 import { enqueueSystemEvent } from "../infra/system-events.js";
 import { startDiagnosticHeartbeat, stopDiagnosticHeartbeat } from "../logging/diagnostic.js";
@@ -95,7 +95,7 @@ import { maybeSeedControlUiAllowedOriginsAtStartup } from "./startup-control-ui-
 
 export { __resetModelCatalogCacheForTest } from "./server-model-catalog.js";
 
-ensureOpenClawCliOnPath();
+ensureLittleBabyCliOnPath();
 
 const MAX_MEDIA_TTL_HOURS = 24 * 7;
 
@@ -231,7 +231,7 @@ export async function startGatewayServer(
   const emitSecretsStateEvent = (
     code: "SECRETS_RELOADER_DEGRADED" | "SECRETS_RELOADER_RECOVERED",
     message: string,
-    cfg: OpenClawConfig,
+    cfg: LittleBabyConfig,
   ) => {
     enqueueSystemEvent(`[${code}] ${message}`, {
       sessionKey: resolveMainSessionKey(cfg),
@@ -243,7 +243,7 @@ export async function startGatewayServer(
     emitStateEvent: emitSecretsStateEvent,
   });
 
-  let cfgAtStart: OpenClawConfig;
+  let cfgAtStart: LittleBabyConfig;
   let startupInternalWriteHash: string | null = null;
   let startupLastGoodSnapshot = configSnapshot;
   const startupRuntimeConfig = applyConfigOverrides(configSnapshot.config);
@@ -261,7 +261,7 @@ export async function startGatewayServer(
       );
     } else {
       log.warn(
-        "Gateway auth token was missing. Generated a runtime token for this startup without changing config; restart will generate a different token. Persist one with `openclaw config set gateway.auth.mode token` and `openclaw config set gateway.auth.token <token>`.",
+        "Gateway auth token was missing. Generated a runtime token for this startup without changing config; restart will generate a different token. Persist one with `littlebaby config set gateway.auth.mode token` and `littlebaby config set gateway.auth.token <token>`.",
       );
     }
   }
@@ -359,7 +359,7 @@ export async function startGatewayServer(
       env: process.env,
       tailscaleMode,
     });
-  const resolveSharedGatewaySessionGenerationForConfig = (config: OpenClawConfig) =>
+  const resolveSharedGatewaySessionGenerationForConfig = (config: LittleBabyConfig) =>
     resolveSharedGatewaySessionGeneration(
       resolveGatewayAuth({
         authConfig: config.gateway?.auth,
@@ -661,7 +661,7 @@ export async function startGatewayServer(
       nodeUnsubscribeAll,
       hasConnectedMobileNode: hasMobileNodeConnected,
       clients,
-      enforceSharedGatewayAuthGenerationForConfigWrite: (nextConfig: OpenClawConfig) => {
+      enforceSharedGatewayAuthGenerationForConfigWrite: (nextConfig: LittleBabyConfig) => {
         enforceSharedGatewaySessionGenerationForConfigWrite({
           state: sharedGatewaySessionGenerationState,
           nextConfig,

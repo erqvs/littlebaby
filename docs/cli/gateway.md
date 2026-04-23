@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw Gateway CLI (`openclaw gateway`) — run, query, and discover gateways"
+summary: "LittleBaby Gateway CLI (`littlebaby gateway`) — run, query, and discover gateways"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
@@ -9,9 +9,9 @@ title: "gateway"
 
 # Gateway CLI
 
-The Gateway is OpenClaw’s WebSocket server (channels, nodes, sessions, hooks).
+The Gateway is LittleBaby’s WebSocket server (channels, nodes, sessions, hooks).
 
-Subcommands in this page live under `openclaw gateway …`.
+Subcommands in this page live under `littlebaby gateway …`.
 
 Related docs:
 
@@ -24,19 +24,19 @@ Related docs:
 Run a local Gateway process:
 
 ```bash
-openclaw gateway
+littlebaby gateway
 ```
 
 Foreground alias:
 
 ```bash
-openclaw gateway run
+littlebaby gateway run
 ```
 
 Notes:
 
-- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.littlebaby/openclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
-- `openclaw onboard --mode local` and `openclaw setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
+- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.littlebaby/littlebaby.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
+- `littlebaby onboard --mode local` and `littlebaby setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
 - If the file exists and `gateway.mode` is missing, the Gateway treats that as suspicious config damage and refuses to “guess local” for you.
 - Binding beyond loopback without auth is blocked (safety guardrail).
 - `SIGUSR1` triggers an in-process restart when authorized (`commands.restart` is enabled by default; set `commands.restart: false` to block manual restart, while gateway tool/config apply/update remain allowed).
@@ -87,7 +87,7 @@ Pass `--token` or `--password` explicitly. Missing explicit credentials is an er
 ### `gateway health`
 
 ```bash
-openclaw gateway health --url ws://127.0.0.1:18789
+littlebaby gateway health --url ws://127.0.0.1:18789
 ```
 
 ### `gateway usage-cost`
@@ -95,9 +95,9 @@ openclaw gateway health --url ws://127.0.0.1:18789
 Fetch usage-cost summaries from session logs.
 
 ```bash
-openclaw gateway usage-cost
-openclaw gateway usage-cost --days 7
-openclaw gateway usage-cost --json
+littlebaby gateway usage-cost
+littlebaby gateway usage-cost --days 7
+littlebaby gateway usage-cost --json
 ```
 
 Options:
@@ -109,9 +109,9 @@ Options:
 `gateway status` shows the Gateway service (launchd/systemd/schtasks) plus an optional probe of connectivity/auth capability.
 
 ```bash
-openclaw gateway status
-openclaw gateway status --json
-openclaw gateway status --require-rpc
+littlebaby gateway status
+littlebaby gateway status --json
+littlebaby gateway status --require-rpc
 ```
 
 Options:
@@ -155,8 +155,8 @@ targets as:
 If multiple gateways are reachable, it prints all of them. Multiple gateways are supported when you use isolated profiles/ports (e.g., a rescue bot), but most installs still run a single gateway.
 
 ```bash
-openclaw gateway probe
-openclaw gateway probe --json
+littlebaby gateway probe
+littlebaby gateway probe --json
 ```
 
 Interpretation:
@@ -200,7 +200,7 @@ The macOS app “Remote over SSH” mode uses a local port-forward so the remote
 CLI equivalent:
 
 ```bash
-openclaw gateway probe --ssh user@gateway-host
+littlebaby gateway probe --ssh user@gateway-host
 ```
 
 Options:
@@ -221,8 +221,8 @@ Config (optional, used as defaults):
 Low-level RPC helper.
 
 ```bash
-openclaw gateway call status
-openclaw gateway call logs.tail --params '{"sinceMs": 60000}'
+littlebaby gateway call status
+littlebaby gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
 Options:
@@ -243,11 +243,11 @@ Notes:
 ## Manage the Gateway service
 
 ```bash
-openclaw gateway install
-openclaw gateway start
-openclaw gateway stop
-openclaw gateway restart
-openclaw gateway uninstall
+littlebaby gateway install
+littlebaby gateway start
+littlebaby gateway stop
+littlebaby gateway restart
+littlebaby gateway uninstall
 ```
 
 Command options:
@@ -268,10 +268,10 @@ Notes:
 
 ## Discover gateways (Bonjour)
 
-`gateway discover` scans for Gateway beacons (`_openclaw-gw._tcp`).
+`gateway discover` scans for Gateway beacons (`_littlebaby-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `openclaw.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
+- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `littlebaby.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
 
 Only gateways with Bonjour discovery enabled (default) advertise the beacon.
 
@@ -288,7 +288,7 @@ Wide-Area discovery records include (TXT):
 ### `gateway discover`
 
 ```bash
-openclaw gateway discover
+littlebaby gateway discover
 ```
 
 Options:
@@ -299,8 +299,8 @@ Options:
 Examples:
 
 ```bash
-openclaw gateway discover --timeout 4000
-openclaw gateway discover --json | jq '.beacons[].wsUrl'
+littlebaby gateway discover --timeout 4000
+littlebaby gateway discover --json | jq '.beacons[].wsUrl'
 ```
 
 Notes:

@@ -1,10 +1,10 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { resolveThreadSessionKeys } from "openclaw/plugin-sdk/routing";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { resolveThreadSessionKeys } from "littlebaby/plugin-sdk/routing";
 import { describe, expect, it } from "vitest";
 import { resolveTelegramConversationBaseSessionKey } from "./conversation-route.js";
 
 describe("resolveTelegramConversationBaseSessionKey", () => {
-  const cfg: OpenClawConfig = {};
+  const cfg: LittleBabyConfig = {};
 
   it("keeps the routed session key for the default account", () => {
     expect(

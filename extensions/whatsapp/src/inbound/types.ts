@@ -1,6 +1,6 @@
 import type { AnyMessageContent } from "@whiskeysockets/baileys";
-import type { NormalizedLocation } from "openclaw/plugin-sdk/channel-inbound";
-import type { PollInput } from "openclaw/plugin-sdk/media-runtime";
+import type { NormalizedLocation } from "littlebaby/plugin-sdk/channel-inbound";
+import type { PollInput } from "littlebaby/plugin-sdk/media-runtime";
 import type { WhatsAppIdentity, WhatsAppReplyContext, WhatsAppSelfIdentity } from "../identity.js";
 
 export type WebListenerCloseReason = {

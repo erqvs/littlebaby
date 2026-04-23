@@ -93,18 +93,18 @@ describe("update global helpers", () => {
 
   it("prefers explicit package spec overrides", () => {
     envSnapshot = captureEnv(["LITTLEBABY_UPDATE_PACKAGE_SPEC"]);
-    process.env.LITTLEBABY_UPDATE_PACKAGE_SPEC = "file:/tmp/openclaw.tgz";
+    process.env.LITTLEBABY_UPDATE_PACKAGE_SPEC = "file:/tmp/littlebaby.tgz";
 
     expect(resolveGlobalInstallSpec({ packageName: "littlebaby", tag: "latest" })).toBe(
-      "file:/tmp/openclaw.tgz",
+      "file:/tmp/littlebaby.tgz",
     );
     expect(
       resolveGlobalInstallSpec({
         packageName: "littlebaby",
         tag: "beta",
-        env: { LITTLEBABY_UPDATE_PACKAGE_SPEC: "openclaw@next" },
+        env: { LITTLEBABY_UPDATE_PACKAGE_SPEC: "littlebaby@next" },
       }),
-    ).toBe("openclaw@next");
+    ).toBe("littlebaby@next");
   });
 
   it("resolves global roots and package roots from runner output", async () => {
@@ -135,15 +135,15 @@ describe("update global helpers", () => {
     expect(
       resolveGlobalInstallSpec({
         packageName: "littlebaby",
-        tag: "github:openclaw/openclaw#feature/my-branch",
+        tag: "github:littlebaby/littlebaby#feature/my-branch",
       }),
-    ).toBe("github:openclaw/openclaw#feature/my-branch");
+    ).toBe("github:littlebaby/littlebaby#feature/my-branch");
     expect(
       resolveGlobalInstallSpec({
         packageName: "littlebaby",
-        tag: "https://example.com/openclaw-main.tgz",
+        tag: "https://example.com/littlebaby-main.tgz",
       }),
-    ).toBe("https://example.com/openclaw-main.tgz");
+    ).toBe("https://example.com/littlebaby-main.tgz");
   });
 
   it("defaults corepack download prompts off for global install env", async () => {
@@ -165,19 +165,19 @@ describe("update global helpers", () => {
     expect(isMainPackageTarget(" MAIN ")).toBe(true);
     expect(isMainPackageTarget("beta")).toBe(false);
 
-    expect(isExplicitPackageInstallSpec("github:openclaw/openclaw#main")).toBe(true);
-    expect(isExplicitPackageInstallSpec("https://example.com/openclaw-main.tgz")).toBe(true);
-    expect(isExplicitPackageInstallSpec("file:/tmp/openclaw-main.tgz")).toBe(true);
+    expect(isExplicitPackageInstallSpec("github:littlebaby/littlebaby#main")).toBe(true);
+    expect(isExplicitPackageInstallSpec("https://example.com/littlebaby-main.tgz")).toBe(true);
+    expect(isExplicitPackageInstallSpec("file:/tmp/littlebaby-main.tgz")).toBe(true);
     expect(isExplicitPackageInstallSpec("beta")).toBe(false);
 
     expect(canResolveRegistryVersionForPackageTarget("latest")).toBe(true);
     expect(canResolveRegistryVersionForPackageTarget("2026.3.22")).toBe(true);
     expect(canResolveRegistryVersionForPackageTarget("main")).toBe(false);
-    expect(canResolveRegistryVersionForPackageTarget("github:openclaw/openclaw#main")).toBe(false);
+    expect(canResolveRegistryVersionForPackageTarget("github:littlebaby/littlebaby#main")).toBe(false);
   });
 
   it("detects install managers from resolved roots and on-disk presence", async () => {
-    await withTempDir({ prefix: "openclaw-update-global-" }, async (base) => {
+    await withTempDir({ prefix: "littlebaby-update-global-" }, async (base) => {
       const npmRoot = path.join(base, "npm-root");
       const pnpmRoot = path.join(base, "pnpm-root");
       const bunRoot = path.join(base, ".bun", "install", "global", "node_modules");
@@ -213,7 +213,7 @@ describe("update global helpers", () => {
   it("prefers the owning npm prefix when PATH npm points at a different global root", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("darwin");
     try {
-      await withTempDir({ prefix: "openclaw-update-npm-prefix-" }, async (base) => {
+      await withTempDir({ prefix: "littlebaby-update-npm-prefix-" }, async (base) => {
         const brewPrefix = path.join(base, "opt", "homebrew");
         const brewBin = path.join(brewPrefix, "bin");
         const brewRoot = path.join(brewPrefix, "lib", "node_modules");
@@ -250,20 +250,20 @@ describe("update global helpers", () => {
           globalRoot: brewRoot,
           packageRoot: pkgRoot,
         });
-        expect(globalInstallArgs("npm", "openclaw@latest", pkgRoot)).toEqual([
+        expect(globalInstallArgs("npm", "littlebaby@latest", pkgRoot)).toEqual([
           brewNpm,
           "i",
           "-g",
-          "openclaw@latest",
+          "littlebaby@latest",
           "--no-fund",
           "--no-audit",
           "--loglevel=error",
         ]);
-        expect(globalInstallFallbackArgs("npm", "openclaw@latest", pkgRoot)).toEqual([
+        expect(globalInstallFallbackArgs("npm", "littlebaby@latest", pkgRoot)).toEqual([
           brewNpm,
           "i",
           "-g",
-          "openclaw@latest",
+          "littlebaby@latest",
           "--omit=optional",
           "--no-fund",
           "--no-audit",
@@ -276,7 +276,7 @@ describe("update global helpers", () => {
   });
 
   it("does not infer npm ownership from path shape alone when the owning npm binary is absent", async () => {
-    await withTempDir({ prefix: "openclaw-update-npm-missing-bin-" }, async (base) => {
+    await withTempDir({ prefix: "littlebaby-update-npm-missing-bin-" }, async (base) => {
       const brewRoot = path.join(base, "opt", "homebrew", "lib", "node_modules");
       const pkgRoot = path.join(brewRoot, "littlebaby");
       const pathNpmRoot = path.join(base, "nvm", "lib", "node_modules");
@@ -287,11 +287,11 @@ describe("update global helpers", () => {
       await expect(
         detectGlobalInstallManagerForRoot(runCommand, pkgRoot, 1000),
       ).resolves.toBeNull();
-      expect(globalInstallArgs("npm", "openclaw@latest", pkgRoot)).toEqual([
+      expect(globalInstallArgs("npm", "littlebaby@latest", pkgRoot)).toEqual([
         "npm",
         "i",
         "-g",
-        "openclaw@latest",
+        "littlebaby@latest",
         "--no-fund",
         "--no-audit",
         "--loglevel=error",
@@ -302,7 +302,7 @@ describe("update global helpers", () => {
   it("prefers npm.cmd for win32-style global npm roots", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
     try {
-      await withTempDir({ prefix: "openclaw-update-win32-npm-prefix-" }, async (base) => {
+      await withTempDir({ prefix: "littlebaby-update-win32-npm-prefix-" }, async (base) => {
         const npmPrefix = path.join(base, "Roaming", "npm");
         const npmRoot = path.join(npmPrefix, "node_modules");
         const pkgRoot = path.join(npmRoot, "littlebaby");
@@ -321,11 +321,11 @@ describe("update global helpers", () => {
           "npm",
         );
         await expect(resolveGlobalRoot("npm", runCommand, 1000, pkgRoot)).resolves.toBe(npmRoot);
-        expect(globalInstallArgs("npm", "openclaw@latest", pkgRoot)).toEqual([
+        expect(globalInstallArgs("npm", "littlebaby@latest", pkgRoot)).toEqual([
           npmCmd,
           "i",
           "-g",
-          "openclaw@latest",
+          "littlebaby@latest",
           "--no-fund",
           "--no-audit",
           "--loglevel=error",
@@ -341,49 +341,49 @@ describe("update global helpers", () => {
       manager: "npm",
       command: "npm",
     });
-    expect(globalInstallArgs("npm", "openclaw@latest")).toEqual([
+    expect(globalInstallArgs("npm", "littlebaby@latest")).toEqual([
       "npm",
       "i",
       "-g",
-      "openclaw@latest",
+      "littlebaby@latest",
       "--no-fund",
       "--no-audit",
       "--loglevel=error",
     ]);
-    expect(globalInstallArgs("pnpm", "openclaw@latest")).toEqual([
+    expect(globalInstallArgs("pnpm", "littlebaby@latest")).toEqual([
       "pnpm",
       "add",
       "-g",
-      "openclaw@latest",
+      "littlebaby@latest",
     ]);
-    expect(globalInstallArgs("bun", "openclaw@latest")).toEqual([
+    expect(globalInstallArgs("bun", "littlebaby@latest")).toEqual([
       "bun",
       "add",
       "-g",
-      "openclaw@latest",
+      "littlebaby@latest",
     ]);
 
-    expect(globalInstallFallbackArgs("npm", "openclaw@latest")).toEqual([
+    expect(globalInstallFallbackArgs("npm", "littlebaby@latest")).toEqual([
       "npm",
       "i",
       "-g",
-      "openclaw@latest",
+      "littlebaby@latest",
       "--omit=optional",
       "--no-fund",
       "--no-audit",
       "--loglevel=error",
     ]);
-    expect(globalInstallFallbackArgs("pnpm", "openclaw@latest")).toBeNull();
+    expect(globalInstallFallbackArgs("pnpm", "littlebaby@latest")).toBeNull();
     expect(
-      globalInstallArgs({ manager: "pnpm", command: "/opt/homebrew/bin/pnpm" }, "openclaw@latest"),
-    ).toEqual(["/opt/homebrew/bin/pnpm", "add", "-g", "openclaw@latest"]);
+      globalInstallArgs({ manager: "pnpm", command: "/opt/homebrew/bin/pnpm" }, "littlebaby@latest"),
+    ).toEqual(["/opt/homebrew/bin/pnpm", "add", "-g", "littlebaby@latest"]);
   });
 
   it("cleans only renamed package directories", async () => {
-    await withTempDir({ prefix: "openclaw-update-cleanup-" }, async (root) => {
-      await fs.mkdir(path.join(root, ".openclaw-123"), { recursive: true });
-      await fs.mkdir(path.join(root, ".openclaw-456"), { recursive: true });
-      await fs.writeFile(path.join(root, ".openclaw-file"), "nope", "utf8");
+    await withTempDir({ prefix: "littlebaby-update-cleanup-" }, async (root) => {
+      await fs.mkdir(path.join(root, ".littlebaby-123"), { recursive: true });
+      await fs.mkdir(path.join(root, ".littlebaby-456"), { recursive: true });
+      await fs.writeFile(path.join(root, ".littlebaby-file"), "nope", "utf8");
       await fs.mkdir(path.join(root, "littlebaby"), { recursive: true });
 
       await expect(
@@ -392,15 +392,15 @@ describe("update global helpers", () => {
           packageName: "littlebaby",
         }),
       ).resolves.toEqual({
-        removed: [".openclaw-123", ".openclaw-456"],
+        removed: [".littlebaby-123", ".littlebaby-456"],
       });
       await expect(fs.stat(path.join(root, "littlebaby"))).resolves.toBeDefined();
-      await expect(fs.stat(path.join(root, ".openclaw-file"))).resolves.toBeDefined();
+      await expect(fs.stat(path.join(root, ".littlebaby-file"))).resolves.toBeDefined();
     });
   });
 
   it("checks installed dist against the packaged inventory", async () => {
-    await withTempDir({ prefix: "openclaw-update-global-pkg-" }, async (packageRoot) => {
+    await withTempDir({ prefix: "littlebaby-update-global-pkg-" }, async (packageRoot) => {
       await writeGlobalPackageJson(packageRoot);
       await writeCompatSidecars(packageRoot);
       for (const relativePath of BUNDLED_RUNTIME_SIDECAR_PATHS) {
@@ -429,7 +429,7 @@ describe("update global helpers", () => {
   });
 
   it("falls back to legacy sidecar verification when the inventory is missing", async () => {
-    await withTempDir({ prefix: "openclaw-update-global-legacy-" }, async (packageRoot) => {
+    await withTempDir({ prefix: "littlebaby-update-global-legacy-" }, async (packageRoot) => {
       await writeGlobalPackageJson(packageRoot);
       await writeCompatSidecars(packageRoot);
 
@@ -450,7 +450,7 @@ describe("update global helpers", () => {
 
   it("fails closed on newer installs when the inventory is missing", async () => {
     await withTempDir(
-      { prefix: "openclaw-update-global-missing-inventory-new-" },
+      { prefix: "littlebaby-update-global-missing-inventory-new-" },
       async (packageRoot) => {
         await writeGlobalPackageJson(packageRoot, "2026.4.15");
         await writeCompatSidecars(packageRoot);
@@ -464,7 +464,7 @@ describe("update global helpers", () => {
 
   it("rejects invalid inventory files during global verify", async () => {
     await withTempDir(
-      { prefix: "openclaw-update-global-invalid-inventory-" },
+      { prefix: "littlebaby-update-global-invalid-inventory-" },
       async (packageRoot) => {
         await writeGlobalPackageJson(packageRoot, "2026.4.15");
         await fs.mkdir(path.join(packageRoot, "dist"), { recursive: true });
@@ -482,9 +482,9 @@ describe("update global helpers", () => {
   });
 
   it("verifies legacy sidecars for installed bundled plugins without inventory", async () => {
-    await withTempDir({ prefix: "openclaw-update-global-legacy-plugin-" }, async (packageRoot) => {
+    await withTempDir({ prefix: "littlebaby-update-global-legacy-plugin-" }, async (packageRoot) => {
       await writeGlobalPackageJson(packageRoot);
-      await writeBundledPluginPackageJson(packageRoot, "matrix", "@openclaw/matrix");
+      await writeBundledPluginPackageJson(packageRoot, "matrix", "@littlebaby/matrix");
 
       await expect(collectInstalledGlobalPackageErrors({ packageRoot })).resolves.toContain(
         `missing bundled runtime sidecar ${MATRIX_HELPER_API}`,
@@ -494,11 +494,11 @@ describe("update global helpers", () => {
 
   it("still enforces critical sidecars when the inventory omits them", async () => {
     await withTempDir(
-      { prefix: "openclaw-update-global-critical-sidecars-" },
+      { prefix: "littlebaby-update-global-critical-sidecars-" },
       async (packageRoot) => {
         await writeGlobalPackageJson(packageRoot, "2026.4.15");
         await writeCompatSidecars(packageRoot);
-        await writeBundledPluginPackageJson(packageRoot, "matrix", "@openclaw/matrix");
+        await writeBundledPluginPackageJson(packageRoot, "matrix", "@littlebaby/matrix");
         await writePackageDistInventory(packageRoot);
 
         await expect(collectInstalledGlobalPackageErrors({ packageRoot })).resolves.toContain(
@@ -510,11 +510,11 @@ describe("update global helpers", () => {
 
   it("ignores stale metadata for non-packaged private QA plugins during inventory verify", async () => {
     await withTempDir(
-      { prefix: "openclaw-update-global-stale-private-qa-" },
+      { prefix: "littlebaby-update-global-stale-private-qa-" },
       async (packageRoot) => {
         await writeGlobalPackageJson(packageRoot, "2026.4.15");
         await writeCompatSidecars(packageRoot);
-        await writeBundledPluginPackageJson(packageRoot, "qa-lab", "@openclaw/qa-lab");
+        await writeBundledPluginPackageJson(packageRoot, "qa-lab", "@littlebaby/qa-lab");
         await writePackageDistInventory(packageRoot);
 
         await expect(collectInstalledGlobalPackageErrors({ packageRoot })).resolves.toEqual([]);

@@ -11,7 +11,7 @@ import {
 const tempDirs: string[] = [];
 
 async function makeTempRoot(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-templates-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-templates-"));
   tempDirs.push(root);
   return root;
 }

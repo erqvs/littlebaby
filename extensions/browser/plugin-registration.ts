@@ -1,9 +1,9 @@
 import type {
-  OpenClawPluginApi,
-  OpenClawPluginNodeHostCommand,
-  OpenClawPluginToolContext,
-  OpenClawPluginToolFactory,
-} from "openclaw/plugin-sdk/plugin-entry";
+  LittleBabyPluginApi,
+  LittleBabyPluginNodeHostCommand,
+  LittleBabyPluginToolContext,
+  LittleBabyPluginToolFactory,
+} from "littlebaby/plugin-sdk/plugin-entry";
 import {
   collectBrowserSecurityAuditFindings,
   createBrowserPluginService,
@@ -15,7 +15,7 @@ import {
 
 export const browserPluginReload = { restartPrefixes: ["browser"] };
 
-export const browserPluginNodeHostCommands: OpenClawPluginNodeHostCommand[] = [
+export const browserPluginNodeHostCommands: LittleBabyPluginNodeHostCommand[] = [
   {
     command: "browser.proxy",
     cap: "browser",
@@ -25,13 +25,13 @@ export const browserPluginNodeHostCommands: OpenClawPluginNodeHostCommand[] = [
 
 export const browserSecurityAuditCollectors = [collectBrowserSecurityAuditFindings];
 
-export function registerBrowserPlugin(api: OpenClawPluginApi) {
-  api.registerTool(((ctx: OpenClawPluginToolContext) =>
+export function registerBrowserPlugin(api: LittleBabyPluginApi) {
+  api.registerTool(((ctx: LittleBabyPluginToolContext) =>
     createBrowserTool({
       sandboxBridgeUrl: ctx.browser?.sandboxBridgeUrl,
       allowHostControl: ctx.browser?.allowHostControl,
       agentSessionKey: ctx.sessionKey,
-    })) as OpenClawPluginToolFactory);
+    })) as LittleBabyPluginToolFactory);
   api.registerCli(({ program }) => registerBrowserCli(program), { commands: ["browser"] });
   api.registerGatewayMethod("browser.request", handleBrowserGatewayRequest, {
     scope: "operator.write",

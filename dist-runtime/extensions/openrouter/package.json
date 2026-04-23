@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/openrouter-provider",
+  "name": "@littlebaby/openrouter-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw OpenRouter provider plugin",
+  "description": "LittleBaby OpenRouter provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

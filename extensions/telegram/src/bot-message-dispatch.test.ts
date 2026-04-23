@@ -385,7 +385,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
       expect.objectContaining({
         thread: { id: 777, scope: "dm" },
         mediaLocalRoots: expect.arrayContaining([
-          expect.stringMatching(/[\\/]\.openclaw[\\/]workspace-work$/u),
+          expect.stringMatching(/[\\/]\.littlebaby[\\/]workspace-work$/u),
         ]),
       }),
     );

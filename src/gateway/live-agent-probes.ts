@@ -77,34 +77,34 @@ export function buildLiveCronProbeMessage(params: {
   const family = normalizeLiveAgentFamily(params.agent);
   if (params.attempt === 0) {
     return (
-      "Use the OpenClaw MCP tool named cron. " +
+      "Use the LittleBaby MCP tool named cron. " +
       `Call it with JSON arguments ${params.argsJson}. ` +
-      "Do the actual tool call; I will verify externally with the OpenClaw cron CLI. " +
+      "Do the actual tool call; I will verify externally with the LittleBaby cron CLI. " +
       `After the cron job is created, reply exactly: ${params.exactReply}`
     );
   }
   if (family === "claude") {
     return (
-      "Retry the OpenClaw MCP tool named `cron` now. " +
+      "Retry the LittleBaby MCP tool named `cron` now. " +
       `Use these exact JSON arguments: ${params.argsJson}. ` +
       `If the cron job is created, reply exactly: ${params.exactReply}. ` +
       "If the tool call is cancelled, the job is not created, or you cannot confirm creation, " +
       "reply briefly saying that and ask me to retry. No markdown. " +
-      "I will verify externally with the OpenClaw cron CLI."
+      "I will verify externally with the LittleBaby cron CLI."
     );
   }
   return (
-    "Your previous OpenClaw cron MCP tool call was cancelled before the job was created. " +
-    "Retry the OpenClaw MCP tool named cron now. " +
+    "Your previous LittleBaby cron MCP tool call was cancelled before the job was created. " +
+    "Retry the LittleBaby MCP tool named cron now. " +
     `Use these exact JSON arguments: ${params.argsJson}. ` +
     `If the cron job is created, reply exactly: ${params.exactReply}. ` +
     "If the tool call is cancelled, the job is not created, or you cannot confirm creation, " +
     "reply briefly saying that and ask me to retry. No markdown. " +
-    "I will verify externally with the OpenClaw cron CLI."
+    "I will verify externally with the LittleBaby cron CLI."
   );
 }
 
-export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessEnv): Promise<T> {
+export async function runLittleBabyCliJson<T>(args: string[], env: NodeJS.ProcessEnv): Promise<T> {
   const childEnv = { ...env };
   delete childEnv.VITEST;
   delete childEnv.VITEST_MODE;
@@ -120,7 +120,7 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   if (!trimmed) {
     throw new Error(
       [
-        `openclaw ${args.join(" ")} produced no JSON stdout`,
+        `littlebaby ${args.join(" ")} produced no JSON stdout`,
         stderr.trim() ? `stderr: ${stderr.trim()}` : undefined,
       ]
         .filter(Boolean)
@@ -132,7 +132,7 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   } catch (error) {
     throw new Error(
       [
-        `openclaw ${args.join(" ")} returned invalid JSON`,
+        `littlebaby ${args.join(" ")} returned invalid JSON`,
         `stdout: ${trimmed}`,
         stderr.trim() ? `stderr: ${stderr.trim()}` : undefined,
         error instanceof Error ? `cause: ${error.message}` : undefined,
@@ -151,7 +151,7 @@ export async function assertCronJobVisibleViaCli(params: {
   expectedName: string;
   expectedMessage: string;
 }): Promise<CronListJob | undefined> {
-  const cronList = await runOpenClawCliJson<CronListCliResult>(
+  const cronList = await runLittleBabyCliJson<CronListCliResult>(
     [
       "cron",
       "list",

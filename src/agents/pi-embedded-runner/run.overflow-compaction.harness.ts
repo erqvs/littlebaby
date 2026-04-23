@@ -458,7 +458,7 @@ export async function loadRunOverflowCompactionHarness(): Promise<{
   }));
 
   vi.doMock("../models-config.js", () => ({
-    ensureOpenClawModelsJson: vi.fn(async () => {}),
+    ensureLittleBabyModelsJson: vi.fn(async () => {}),
   }));
 
   vi.doMock("../context-window-guard.js", () => ({
@@ -479,7 +479,7 @@ export async function loadRunOverflowCompactionHarness(): Promise<{
   }));
 
   vi.doMock("../agent-paths.js", () => ({
-    resolveOpenClawAgentDir: vi.fn(() => "/tmp/agent-dir"),
+    resolveLittleBabyAgentDir: vi.fn(() => "/tmp/agent-dir"),
   }));
 
   vi.doMock("../defaults.js", () => ({

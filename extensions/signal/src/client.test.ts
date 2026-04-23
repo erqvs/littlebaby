@@ -3,13 +3,13 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 const fetchWithTimeoutMock = vi.fn();
 const resolveFetchMock = vi.fn();
 
-vi.mock("openclaw/plugin-sdk/fetch-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/fetch-runtime", () => ({
   resolveFetch: (...args: unknown[]) => resolveFetchMock(...args),
 }));
 
-vi.mock("openclaw/plugin-sdk/core", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/core")>(
-    "openclaw/plugin-sdk/core",
+vi.mock("littlebaby/plugin-sdk/core", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/core")>(
+    "littlebaby/plugin-sdk/core",
   );
   return {
     ...actual,
@@ -17,7 +17,7 @@ vi.mock("openclaw/plugin-sdk/core", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/text-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/text-runtime", () => ({
   fetchWithTimeout: (...args: unknown[]) => fetchWithTimeoutMock(...args),
 }));
 

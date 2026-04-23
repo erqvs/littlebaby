@@ -19,7 +19,7 @@ describe("resolveBundledSkillsDir", () => {
   });
 
   it("returns LITTLEBABY_BUNDLED_SKILLS_DIR override when set", async () => {
-    const overrideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-bundled-override-"));
+    const overrideDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-bundled-override-"));
     process.env.LITTLEBABY_BUNDLED_SKILLS_DIR = ` ${overrideDir} `;
     expect(resolveBundledSkillsDir()).toBe(overrideDir);
   });
@@ -27,7 +27,7 @@ describe("resolveBundledSkillsDir", () => {
   it("resolves bundled skills under a flattened dist layout", async () => {
     delete process.env.LITTLEBABY_BUNDLED_SKILLS_DIR;
 
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-bundled-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-bundled-"));
     await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "littlebaby" }));
 
     await writeSkill({

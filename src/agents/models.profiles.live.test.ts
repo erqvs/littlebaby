@@ -3,7 +3,7 @@ import { Type } from "@sinclair/typebox";
 import { describe, expect, it } from "vitest";
 import { loadConfig } from "../config/config.js";
 import { parseLiveCsvFilter } from "../media-generation/live-test-helpers.js";
-import { resolveOpenClawAgentDir } from "./agent-paths.js";
+import { resolveLittleBabyAgentDir } from "./agent-paths.js";
 import {
   collectAnthropicApiKeys,
   isAnthropicBillingError,
@@ -20,7 +20,7 @@ import { createLiveTargetMatcher } from "./live-target-matcher.js";
 import { isLiveProfileKeyModeEnabled, isLiveTestEnabled } from "./live-test-helpers.js";
 import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
 import { shouldSuppressBuiltInModel } from "./model-suppression.js";
-import { ensureOpenClawModelsJson } from "./models-config.js";
+import { ensureLittleBabyModelsJson } from "./models-config.js";
 import {
   isCloudflareOrHtmlErrorPage,
   isRateLimitErrorMessage,
@@ -425,7 +425,7 @@ describeLive("live models (profile keys)", () => {
       );
       logProgress("[live-models] preparing models.json");
       await withLiveStageTimeout(
-        ensureOpenClawModelsJson(cfg),
+        ensureLittleBabyModelsJson(cfg),
         "[live-models] prepare models.json",
       );
       if (!DIRECT_ENABLED) {
@@ -440,7 +440,7 @@ describeLive("live models (profile keys)", () => {
         logProgress(`[live-models] anthropic keys loaded: ${anthropicKeys.length}`);
       }
 
-      const agentDir = resolveOpenClawAgentDir();
+      const agentDir = resolveLittleBabyAgentDir();
       const authStorage = discoverAuthStorage(agentDir);
       logProgress("[live-models] loading model registry");
       const models = await withLiveStageTimeout(

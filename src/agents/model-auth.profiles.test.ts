@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import type { Api, Model } from "@mariozechner/pi-ai";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   clearRuntimeAuthProfileStoreSnapshots,
@@ -22,7 +22,7 @@ async function expectVertexAdcEnvApiKey(params: {
   env?: NodeJS.ProcessEnv;
   tempPrefix?: string;
 }) {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), params.tempPrefix ?? "openclaw-adc-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), params.tempPrefix ?? "littlebaby-adc-"));
   const credentialsPath = path.join(tempDir, "adc.json");
   await fs.writeFile(credentialsPath, params.credentialsJson, "utf8");
 
@@ -234,7 +234,7 @@ function buildDemoLocalStore(keys: string[]) {
   };
 }
 
-function buildDemoLocalProviderCfg(apiKey: string): OpenClawConfig {
+function buildDemoLocalProviderCfg(apiKey: string): LittleBabyConfig {
   return {
     models: {
       providers: {
@@ -267,7 +267,7 @@ async function resolveDemoLocalApiKey(params: {
 
 describe("getApiKeyForModel", () => {
   it("reads oauth auth-profiles entries from auth-profiles.json via explicit profile", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-oauth-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-oauth-"));
 
     try {
       const agentDir = path.join(tempDir, "agent");
@@ -323,7 +323,7 @@ describe("getApiKeyForModel", () => {
   });
 
   it("suggests openai-codex when only Codex OAuth is configured", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-auth-"));
 
     try {
       const agentDir = path.join(tempDir, "agent");
@@ -852,7 +852,7 @@ describe("getApiKeyForModel", () => {
     await expectVertexAdcEnvApiKey({
       provider: "google-vertex",
       credentialsJson: "{}",
-      tempPrefix: "openclaw-google-adc-",
+      tempPrefix: "littlebaby-google-adc-",
       env: {
         GOOGLE_CLOUD_LOCATION: "us-central1",
         GOOGLE_CLOUD_PROJECT: "vertex-project",

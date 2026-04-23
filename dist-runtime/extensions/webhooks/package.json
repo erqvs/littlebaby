@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/webhooks",
+  "name": "@littlebaby/webhooks",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw webhook bridge plugin",
+  "description": "LittleBaby webhook bridge plugin",
   "type": "module",
   "dependencies": {
     "zod": "^4.3.6"
   },
-  "openclaw": {
+  "littlebaby": {
     "bundle": {
       "stageRuntimeDependencies": true
     },

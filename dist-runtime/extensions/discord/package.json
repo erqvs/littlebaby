@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/discord",
+  "name": "@littlebaby/discord",
   "version": "2026.4.20",
-  "description": "OpenClaw Discord channel plugin",
+  "description": "LittleBaby Discord channel plugin",
   "type": "module",
   "dependencies": {
     "@buape/carbon": "0.16.0",
@@ -14,7 +14,7 @@
   "optionalDependencies": {
     "@discordjs/opus": "^0.10.0"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -35,7 +35,7 @@
       }
     },
     "install": {
-      "npmSpec": "@openclaw/discord",
+      "npmSpec": "@littlebaby/discord",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -43,7 +43,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "bundle": {
       "stageRuntimeDependencies": true

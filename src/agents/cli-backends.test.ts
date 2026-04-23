@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import type { CliBackendConfig } from "../config/types.js";
 import type { CliBackendAuthEpochMode, CliBundleMcpMode } from "../plugins/types.js";
 import {
@@ -83,7 +83,7 @@ function createRuntimeBackendEntry(params: Parameters<typeof createBackendEntry>
   } satisfies RuntimeBackendEntry;
 }
 
-function createClaudeCliOverrideConfig(config: CliBackendConfig): OpenClawConfig {
+function createClaudeCliOverrideConfig(config: CliBackendConfig): LittleBabyConfig {
   return {
     agents: {
       defaults: {
@@ -92,7 +92,7 @@ function createClaudeCliOverrideConfig(config: CliBackendConfig): OpenClawConfig
         },
       },
     },
-  } satisfies OpenClawConfig;
+  } satisfies LittleBabyConfig;
 }
 
 const NORMALIZED_CLAUDE_FALLBACK_ARGS = [
@@ -366,7 +366,7 @@ describe("resolveCliBackendConfig reliability merge", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("codex-cli", cfg);
 
@@ -450,7 +450,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -497,7 +497,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -529,7 +529,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -574,7 +574,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -643,7 +643,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -674,7 +674,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -709,7 +709,7 @@ describe("resolveCliBackendConfig claude-cli defaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("claude-cli", cfg);
 
@@ -810,7 +810,7 @@ describe("resolveCliBackendConfig alias precedence", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const resolved = resolveCliBackendConfig("kimi", cfg);
 

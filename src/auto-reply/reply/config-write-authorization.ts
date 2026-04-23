@@ -4,10 +4,10 @@ import {
   formatConfigWriteDeniedMessage,
 } from "../../channels/plugins/config-writes.js";
 import type { ChannelId } from "../../channels/plugins/types.public.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 
 export function resolveConfigWriteDeniedText(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   channel?: string | null;
   channelId: ChannelId | null;
   accountId?: string;

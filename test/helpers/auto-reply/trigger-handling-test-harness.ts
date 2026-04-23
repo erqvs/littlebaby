@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, expect, vi } from "vitest";
 import { clearRuntimeAuthProfileStoreSnapshots } from "../../../src/agents/auth-profiles.js";
 import { withFastReplyConfig } from "../../../src/auto-reply/reply/get-reply-fast-path.js";
-import type { OpenClawConfig } from "../../../src/config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../../src/config/types.littlebaby.js";
 import { resetProviderRuntimeHookCacheForTest } from "../../../src/plugins/provider-runtime.js";
 import { resolveRelativeBundledPluginPublicModuleId } from "../../../src/test-utils/bundled-plugin-public-surface.js";
 
@@ -22,7 +22,7 @@ function getSharedMocks<T>(key: string, create: () => T): T {
   return store[symbol];
 }
 
-const piEmbeddedMocks = getSharedMocks("openclaw.trigger-handling.pi-embedded-mocks", () => ({
+const piEmbeddedMocks = getSharedMocks("littlebaby.trigger-handling.pi-embedded-mocks", () => ({
   abortEmbeddedPiRun: vi.fn().mockReturnValue(false),
   compactEmbeddedPiSession: vi.fn(),
   runEmbeddedPiAgent: vi.fn(),
@@ -85,7 +85,7 @@ export function getProviderUsageMocks(): AnyMocks {
 
 vi.mock("../../../src/infra/provider-usage.js", () => providerUsageMocks);
 
-const modelCatalogMocks = getSharedMocks("openclaw.trigger-handling.model-catalog-mocks", () => ({
+const modelCatalogMocks = getSharedMocks("littlebaby.trigger-handling.model-catalog-mocks", () => ({
   loadModelCatalog: vi.fn().mockResolvedValue([
     {
       provider: "anthropic",
@@ -130,7 +130,7 @@ vi.doMock("../../../src/plugins/provider-runtime.runtime.js", () => ({
   refreshProviderOAuthCredentialWithPlugin: async () => undefined,
 }));
 
-const modelFallbackMocks = getSharedMocks("openclaw.trigger-handling.model-fallback-mocks", () => ({
+const modelFallbackMocks = getSharedMocks("littlebaby.trigger-handling.model-fallback-mocks", () => ({
   runWithModelFallback: vi.fn(
     async (params: {
       provider: string;
@@ -158,7 +158,7 @@ vi.doMock("../../../src/infra/git-commit.js", () => ({
   resolveCommitHash: vi.fn(() => "abcdef0"),
 }));
 
-const webSessionMocks = getSharedMocks("openclaw.trigger-handling.web-session-mocks", () => ({
+const webSessionMocks = getSharedMocks("littlebaby.trigger-handling.web-session-mocks", () => ({
   webAuthExists: vi.fn().mockResolvedValue(true),
   getWebAuthAgeMs: vi.fn().mockReturnValue(120_000),
   readWebSelfId: vi.fn().mockReturnValue({ e164: "+1999" }),
@@ -185,7 +185,7 @@ type TempHomeEnvSnapshot = {
   userProfile: string | undefined;
   homeDrive: string | undefined;
   homePath: string | undefined;
-  openclawHome: string | undefined;
+  littlebabyHome: string | undefined;
   stateDir: string | undefined;
 };
 
@@ -198,7 +198,7 @@ function snapshotTempHomeEnv(): TempHomeEnvSnapshot {
     userProfile: process.env.USERPROFILE,
     homeDrive: process.env.HOMEDRIVE,
     homePath: process.env.HOMEPATH,
-    openclawHome: process.env.LITTLEBABY_HOME,
+    littlebabyHome: process.env.LITTLEBABY_HOME,
     stateDir: process.env.LITTLEBABY_STATE_DIR,
   };
 }
@@ -216,7 +216,7 @@ function restoreTempHomeEnv(snapshot: TempHomeEnvSnapshot): void {
   restoreKey("USERPROFILE", snapshot.userProfile);
   restoreKey("HOMEDRIVE", snapshot.homeDrive);
   restoreKey("HOMEPATH", snapshot.homePath);
-  restoreKey("LITTLEBABY_HOME", snapshot.openclawHome);
+  restoreKey("LITTLEBABY_HOME", snapshot.littlebabyHome);
   restoreKey("LITTLEBABY_STATE_DIR", snapshot.stateDir);
 }
 
@@ -224,7 +224,7 @@ function setTempHomeEnv(home: string): void {
   process.env.HOME = home;
   process.env.USERPROFILE = home;
   delete process.env.LITTLEBABY_HOME;
-  process.env.LITTLEBABY_STATE_DIR = join(home, ".openclaw");
+  process.env.LITTLEBABY_STATE_DIR = join(home, ".littlebaby");
 
   if (process.platform !== "win32") {
     return;
@@ -238,7 +238,7 @@ function setTempHomeEnv(home: string): void {
 }
 
 beforeAll(async () => {
-  suiteTempHomeRoot = await fs.mkdtemp(join(os.tmpdir(), "openclaw-triggers-suite-"));
+  suiteTempHomeRoot = await fs.mkdtemp(join(os.tmpdir(), "littlebaby-triggers-suite-"));
 });
 
 afterAll(async () => {
@@ -257,7 +257,7 @@ afterAll(async () => {
 export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   const home = join(suiteTempHomeRoot, `case-${++suiteTempHomeId}`);
   const snapshot = snapshotTempHomeEnv();
-  await fs.mkdir(join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(join(home, ".littlebaby", "agents", "main", "sessions"), { recursive: true });
   setTempHomeEnv(home);
 
   try {
@@ -275,7 +275,7 @@ export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise
   }
 }
 
-export function makeCfg(home: string): OpenClawConfig {
+export function makeCfg(home: string): LittleBabyConfig {
   return withFastReplyConfig({
     agents: {
       defaults: {
@@ -298,7 +298,7 @@ export function makeCfg(home: string): OpenClawConfig {
       },
     },
     session: { store: join(home, "sessions.json") },
-  } as OpenClawConfig);
+  } as LittleBabyConfig);
 }
 
 export async function loadGetReplyFromConfig() {
@@ -334,7 +334,7 @@ export async function readSessionStore(cfg: {
 export function makeWhatsAppElevatedCfg(
   home: string,
   opts?: { elevatedEnabled?: boolean; requireMentionInGroups?: boolean },
-): OpenClawConfig {
+): LittleBabyConfig {
   const cfg = makeCfg(home);
   cfg.channels ??= {};
   cfg.channels.whatsapp = {
@@ -356,7 +356,7 @@ export function makeWhatsAppElevatedCfg(
 }
 
 export async function runDirectElevatedToggleAndLoadStore(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   getReplyFromConfig: typeof import("../../../src/auto-reply/reply.js").getReplyFromConfig;
   body?: string;
 }): Promise<{

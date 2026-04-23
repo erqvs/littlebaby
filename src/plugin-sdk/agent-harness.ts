@@ -35,7 +35,7 @@ export {
   filterToolResultMediaUrls,
 } from "../agents/pi-embedded-subscribe.tools.js";
 export { normalizeUsage } from "../agents/usage.js";
-export { resolveOpenClawAgentDir } from "../agents/agent-paths.js";
+export { resolveLittleBabyAgentDir } from "../agents/agent-paths.js";
 export { resolveSessionAgentIds } from "../agents/agent-scope.js";
 export { resolveModelAuthMode } from "../agents/model-auth.js";
 export { supportsModelTools } from "../agents/model-tool-support.js";
@@ -49,7 +49,7 @@ export {
 } from "../agents/pi-embedded-runner/runs.js";
 export { disposeRegisteredAgentHarnesses } from "../agents/harness/registry.js";
 export { normalizeProviderToolSchemas } from "../agents/pi-embedded-runner/tool-schema-runtime.js";
-export { createOpenClawCodingTools } from "../agents/pi-tools.js";
+export { createLittleBabyCodingTools } from "../agents/pi-tools.js";
 export { resolveSandboxContext } from "../agents/sandbox.js";
 export { isSubagentSessionKey } from "../routing/session-key.js";
 export { acquireSessionWriteLock } from "../agents/session-write-lock.js";

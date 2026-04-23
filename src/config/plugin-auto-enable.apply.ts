@@ -8,10 +8,10 @@ import type {
   PluginAutoEnableCandidate,
   PluginAutoEnableResult,
 } from "./plugin-auto-enable.types.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { LittleBabyConfig } from "./types.littlebaby.js";
 
 export function materializePluginAutoEnableCandidates(params: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   candidates: readonly PluginAutoEnableCandidate[];
   env?: NodeJS.ProcessEnv;
   manifestRegistry?: PluginManifestRegistry;
@@ -32,7 +32,7 @@ export function materializePluginAutoEnableCandidates(params: {
 }
 
 export function applyPluginAutoEnable(params: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   manifestRegistry?: PluginManifestRegistry;
 }): PluginAutoEnableResult {

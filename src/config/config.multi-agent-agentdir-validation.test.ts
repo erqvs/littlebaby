@@ -7,7 +7,7 @@ import { validateConfigObject } from "./validation.js";
 
 describe("multi-agent agentDir validation", () => {
   it("rejects shared agents.list agentDir", async () => {
-    const shared = path.join(tmpdir(), "openclaw-shared-agentdir");
+    const shared = path.join(tmpdir(), "littlebaby-shared-agentdir");
     const res = validateConfigObject({
       agents: {
         list: [

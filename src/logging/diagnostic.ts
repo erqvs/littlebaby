@@ -1,5 +1,5 @@
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { emitDiagnosticEvent } from "../infra/diagnostic-events.js";
 import {
   diagnosticLogger as diag,
@@ -37,7 +37,7 @@ function loadCommandPollBackoffRuntime() {
   return commandPollBackoffRuntimePromise;
 }
 
-export function resolveStuckSessionWarnMs(config?: OpenClawConfig): number {
+export function resolveStuckSessionWarnMs(config?: LittleBabyConfig): number {
   const raw = config?.diagnostics?.stuckSessionWarnMs;
   if (typeof raw !== "number" || !Number.isFinite(raw)) {
     return DEFAULT_STUCK_SESSION_WARN_MS;
@@ -314,8 +314,8 @@ export function logActiveRuns() {
 let heartbeatInterval: NodeJS.Timeout | null = null;
 
 export function startDiagnosticHeartbeat(
-  config?: OpenClawConfig,
-  opts?: { getConfig?: () => OpenClawConfig },
+  config?: LittleBabyConfig,
+  opts?: { getConfig?: () => LittleBabyConfig },
 ) {
   if (heartbeatInterval) {
     return;

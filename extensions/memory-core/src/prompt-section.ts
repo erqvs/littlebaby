@@ -1,4 +1,4 @@
-import type { MemoryPromptSectionBuilder } from "openclaw/plugin-sdk/memory-core-host-runtime-core";
+import type { MemoryPromptSectionBuilder } from "littlebaby/plugin-sdk/memory-core-host-runtime-core";
 
 export const buildPromptSection: MemoryPromptSectionBuilder = ({
   availableTools,

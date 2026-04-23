@@ -21,7 +21,7 @@ import type {
 } from "../auto-reply/thinking.js";
 import { toAgentModelListLike } from "../config/model-input.js";
 import type { SessionEntry, SessionScope } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
@@ -40,7 +40,7 @@ import {
 } from "../tasks/task-status.js";
 
 export type BuildStatusTextParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   sessionEntry?: SessionEntry;
   sessionKey: string;
   parentSessionKey?: string;

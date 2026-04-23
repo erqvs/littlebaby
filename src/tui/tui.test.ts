@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { getSlashCommands, parseCommand } from "./commands.js";
 import {
   createBackspaceDeduper,
@@ -111,11 +111,11 @@ describe("resolveTuiSessionKey", () => {
 });
 
 describe("resolveInitialTuiAgentId", () => {
-  const cfg: OpenClawConfig = {
+  const cfg: LittleBabyConfig = {
     agents: {
       list: [
-        { id: "main", workspace: "/tmp/openclaw" },
-        { id: "ops", workspace: "/tmp/openclaw/projects/ops" },
+        { id: "main", workspace: "/tmp/littlebaby" },
+        { id: "ops", workspace: "/tmp/littlebaby/projects/ops" },
       ],
     },
   };
@@ -126,7 +126,7 @@ describe("resolveInitialTuiAgentId", () => {
         cfg,
         fallbackAgentId: "main",
         initialSessionInput: "",
-        cwd: "/tmp/openclaw/projects/ops/src",
+        cwd: "/tmp/littlebaby/projects/ops/src",
       }),
     ).toBe("ops");
   });
@@ -137,7 +137,7 @@ describe("resolveInitialTuiAgentId", () => {
         cfg,
         fallbackAgentId: "main",
         initialSessionInput: "agent:main:incident",
-        cwd: "/tmp/openclaw/projects/ops/src",
+        cwd: "/tmp/littlebaby/projects/ops/src",
       }),
     ).toBe("main");
   });
@@ -158,8 +158,8 @@ describe("resolveGatewayDisconnectState", () => {
   it("returns pairing recovery guidance when disconnect reason requires pairing", () => {
     const state = resolveGatewayDisconnectState("gateway closed (1008): pairing required");
     expect(state.connectionStatus).toContain("pairing required");
-    expect(state.activityStatus).toBe("pairing required: run openclaw devices list");
-    expect(state.pairingHint).toContain("openclaw devices list");
+    expect(state.activityStatus).toBe("pairing required: run littlebaby devices list");
+    expect(state.pairingHint).toContain("littlebaby devices list");
   });
 
   it("falls back to idle for generic disconnect reasons", () => {

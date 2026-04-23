@@ -61,7 +61,7 @@ describe("OAuth refresh lock timeout classification", () => {
   let caseIndex = 0;
 
   beforeAll(async () => {
-    tempRoot = await createOAuthTestTempRoot("openclaw-oauth-lock-timeout-");
+    tempRoot = await createOAuthTestTempRoot("littlebaby-oauth-lock-timeout-");
     ({ resolveApiKeyForProfile, resetOAuthRefreshQueuesForTest } = await import("./oauth.js"));
   });
 

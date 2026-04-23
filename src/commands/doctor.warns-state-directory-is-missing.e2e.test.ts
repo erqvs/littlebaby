@@ -91,7 +91,7 @@ describe("doctor command", () => {
   it("warns when the state directory is missing", async () => {
     mockDoctorConfigSnapshot();
 
-    const missingDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-missing-state-"));
+    const missingDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-missing-state-"));
     fs.rmSync(missingDir, { recursive: true, force: true });
     process.env.LITTLEBABY_STATE_DIR = missingDir;
     await doctorCommand(createDoctorRuntime(), {
@@ -319,9 +319,9 @@ describe("doctor command", () => {
     const gatewayAuthNote = terminalNoteMock.mock.calls.find((call) => call[1] === "Gateway auth");
     expect(gatewayAuthNote).toBeTruthy();
     expect(String(gatewayAuthNote?.[0])).toContain("gateway.auth.mode is unset");
-    expect(String(gatewayAuthNote?.[0])).toContain("openclaw config set gateway.auth.mode token");
+    expect(String(gatewayAuthNote?.[0])).toContain("littlebaby config set gateway.auth.mode token");
     expect(String(gatewayAuthNote?.[0])).toContain(
-      "openclaw config set gateway.auth.mode password",
+      "littlebaby config set gateway.auth.mode password",
     );
   });
 

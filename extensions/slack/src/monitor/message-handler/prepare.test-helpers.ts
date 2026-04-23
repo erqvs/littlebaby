@@ -1,15 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { App } from "@slack/bolt";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime-env";
+import { resolvePreferredLittleBabyTmpDir } from "littlebaby/plugin-sdk/temp-path";
 import type { ResolvedSlackAccount } from "../../accounts.js";
 import type { SlackChannelConfigEntries } from "../channel-config.js";
 import { createSlackMonitorContext } from "../context.js";
 
 export function createInboundSlackTestContext(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   appClient?: App["client"];
   defaultRequireMention?: boolean;
   replyToMode?: "off" | "all" | "first";
@@ -80,7 +80,7 @@ export function createSlackSessionStoreFixture(prefix: string) {
 
   return {
     setup() {
-      fixtureRoot = fs.mkdtempSync(path.join(resolvePreferredOpenClawTmpDir(), prefix));
+      fixtureRoot = fs.mkdtempSync(path.join(resolvePreferredLittleBabyTmpDir(), prefix));
     },
     cleanup() {
       if (!fixtureRoot) {

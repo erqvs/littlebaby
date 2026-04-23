@@ -1,6 +1,6 @@
 import { listPotentialConfiguredChannelIds } from "../../channels/config-presence.js";
 import { loadConfig } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { normalizeCronJobCreate, normalizeCronJobPatch } from "../../cron/normalize.js";
 import {
   readCronRunLogEntriesPage,
@@ -28,14 +28,14 @@ import {
 } from "../protocol/index.js";
 import type { GatewayRequestHandlers } from "./types.js";
 
-function listConfiguredAnnounceChannelIds(cfg: OpenClawConfig): string[] {
+function listConfiguredAnnounceChannelIds(cfg: LittleBabyConfig): string[] {
   return listPotentialConfiguredChannelIds(cfg, process.env, {
     includePersistedAuthState: false,
   }).filter((channelId) => cfg.channels?.[channelId]?.enabled !== false);
 }
 
 function assertConfiguredAnnounceChannel(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   channel?: string;
   field: "delivery.channel" | "delivery.failureDestination.channel";
 }) {
@@ -65,7 +65,7 @@ function assertConfiguredAnnounceChannel(params: {
   throw new Error(`${params.field} must be one of: ${configuredChannels.join(", ")}`);
 }
 
-function assertValidCronAnnounceDelivery(params: { cfg: OpenClawConfig; delivery?: CronDelivery }) {
+function assertValidCronAnnounceDelivery(params: { cfg: LittleBabyConfig; delivery?: CronDelivery }) {
   if (params.delivery?.mode === "announce") {
     assertConfiguredAnnounceChannel({
       cfg: params.cfg,
@@ -84,7 +84,7 @@ function assertValidCronAnnounceDelivery(params: { cfg: OpenClawConfig; delivery
   }
 }
 
-function assertValidCronCreateDelivery(cfg: OpenClawConfig, jobCreate: CronJobCreate) {
+function assertValidCronCreateDelivery(cfg: LittleBabyConfig, jobCreate: CronJobCreate) {
   assertValidCronAnnounceDelivery({
     cfg,
     delivery: jobCreate.delivery,
@@ -92,7 +92,7 @@ function assertValidCronCreateDelivery(cfg: OpenClawConfig, jobCreate: CronJobCr
 }
 
 function assertValidCronUpdateDelivery(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   defaultAgentId?: string;
   currentJob: CronJob | undefined;
   patch: CronJobPatch;

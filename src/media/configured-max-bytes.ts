@@ -1,8 +1,8 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
 const MB = 1024 * 1024;
 
-export function resolveConfiguredMediaMaxBytes(cfg?: OpenClawConfig): number | undefined {
+export function resolveConfiguredMediaMaxBytes(cfg?: LittleBabyConfig): number | undefined {
   const configured = cfg?.agents?.defaults?.mediaMaxMb;
   if (typeof configured === "number" && Number.isFinite(configured) && configured > 0) {
     return Math.floor(configured * MB);
@@ -11,7 +11,7 @@ export function resolveConfiguredMediaMaxBytes(cfg?: OpenClawConfig): number | u
 }
 
 export function resolveChannelAccountMediaMaxMb(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   channel?: string | null;
   accountId?: string | null;
 }): number | undefined {

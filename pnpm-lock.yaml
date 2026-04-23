@@ -250,13 +250,13 @@ importers:
         specifier: 0.5.3
         version: 0.5.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/alibaba:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -272,7 +272,7 @@ importers:
         specifier: 3.972.32
         version: 3.972.32
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -282,64 +282,64 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/anthropic:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/anthropic-vertex:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/arcee:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/bluebubbles:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/brave:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/browser:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/byteplus:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/chutes:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/cloudflare-ai-gateway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -355,31 +355,31 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/comfy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/copilot-proxy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepgram:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepseek:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -419,7 +419,7 @@ importers:
         specifier: ^1.40.0
         version: 1.40.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -438,7 +438,7 @@ importers:
         specifier: 1.59.1
         version: 1.59.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -463,10 +463,10 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
     optionalDependencies:
@@ -476,25 +476,25 @@ importers:
 
   extensions/duckduckgo:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/elevenlabs:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/exa:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/fal:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -510,28 +510,28 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/firecrawl:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/fireworks:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/github-copilot:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -541,7 +541,7 @@ importers:
         specifier: ^1.50.1
         version: 1.50.1(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -551,52 +551,52 @@ importers:
         specifier: ^10.6.2
         version: 10.6.2
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/groq:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/huggingface:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/image-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/imessage:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/irc:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/kilocode:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/kimi-coding:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -606,16 +606,16 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/litellm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -628,7 +628,7 @@ importers:
         specifier: ^8.18.0
         version: 8.18.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -643,7 +643,7 @@ importers:
         specifier: 0.34.49
         version: 0.34.49
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -668,10 +668,10 @@ importers:
         specifier: ^11.12.3
         version: 11.12.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
@@ -684,25 +684,25 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/media-understanding-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/memory-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
@@ -718,7 +718,7 @@ importers:
         specifier: ^6.34.0
         version: 6.34.0(ws@8.20.0)(zod@4.3.6)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -728,10 +728,10 @@ importers:
         specifier: ^2.8.3
         version: 2.8.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
@@ -741,31 +741,31 @@ importers:
         specifier: ^1.2.10
         version: 1.2.10
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/microsoft-foundry:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/minimax:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/mistral:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/moonshot:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -793,22 +793,22 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/nextcloud-talk:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
@@ -818,28 +818,28 @@ importers:
         specifier: ^2.23.3
         version: 2.23.3(typescript@6.0.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/nvidia:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/ollama:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/open-prose:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -849,25 +849,25 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/opencode:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/opencode-go:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/openrouter:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -877,22 +877,22 @@ importers:
         specifier: 0.1.0
         version: 0.1.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/perplexity:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/qa-channel:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
@@ -905,28 +905,28 @@ importers:
         specifier: 1.59.1
         version: 1.59.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/qa-matrix:
     devDependencies:
-      '@openclaw/matrix':
+      '@littlebaby/matrix':
         specifier: workspace:*
         version: link:../matrix
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/qianfan:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -942,43 +942,43 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/qwen:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/runway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/searxng:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/sglang:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/signal:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -994,37 +994,37 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/speech-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/stepfun:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/synology-chat:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/synthetic:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/tavily:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1040,7 +1040,7 @@ importers:
         specifier: ^1.42.0
         version: 1.42.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1059,16 +1059,16 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/together:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1084,31 +1084,31 @@ importers:
         specifier: ^8.1.3
         version: 8.1.3(@twurple/auth@8.1.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/venice:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vercel-ai-gateway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/video-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vllm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1124,28 +1124,28 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/volcengine:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/voyage:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vydra:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1155,7 +1155,7 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1171,28 +1171,28 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
   extensions/xai:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/xiaomi:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/zai:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1202,10 +1202,10 @@ importers:
         specifier: 8.1.0
         version: 8.1.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 
@@ -1218,10 +1218,10 @@ importers:
         specifier: 2.1.2
         version: 2.1.2
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@littlebaby/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      littlebaby:
         specifier: workspace:*
         version: link:../..
 

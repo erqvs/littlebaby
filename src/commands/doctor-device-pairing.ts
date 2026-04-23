@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { formatCliCommand } from "../cli/command-format.js";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { callGateway } from "../gateway/call.js";
 import {
   listApprovedPairedDeviceRoles,
@@ -141,7 +141,7 @@ function normalizeLocalPairedDevice(device: PairedDevice): DoctorPairedDevice {
 }
 
 async function loadDoctorPairingSnapshot(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   healthOk: boolean;
 }): Promise<DoctorPairingSnapshot | null> {
   if (params.healthOk) {
@@ -511,7 +511,7 @@ function collectLocalDeviceAuthIssues(snapshot: DoctorPairingSnapshot): string[]
 }
 
 export async function noteDevicePairingHealth(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   healthOk: boolean;
 }): Promise<void> {
   const snapshot = await loadDoctorPairingSnapshot(params);

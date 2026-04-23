@@ -1,11 +1,11 @@
-import { resolveActiveTalkProviderConfig } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { SpeechVoiceOption } from "openclaw/plugin-sdk/speech";
+import { resolveActiveTalkProviderConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import type { SpeechVoiceOption } from "littlebaby/plugin-sdk/speech";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "openclaw/plugin-sdk/text-runtime";
-import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
+} from "littlebaby/plugin-sdk/text-runtime";
+import { definePluginEntry, type LittleBabyPluginApi } from "./api.js";
 
 function mask(s: string, keep: number = 6): string {
   const trimmed = s.trim();
@@ -120,7 +120,7 @@ export default definePluginEntry({
   id: "talk-voice",
   name: "Talk Voice",
   description: "Command helpers for managing Talk voice configuration",
-  register(api: OpenClawPluginApi) {
+  register(api: LittleBabyPluginApi) {
     api.registerCommand({
       name: "voice",
       nativeNames: {

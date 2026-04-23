@@ -1,5 +1,5 @@
 import { loadSessionStore, updateSessionStore } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { parseSessionLabel } from "../sessions/session-label.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 import {
@@ -36,7 +36,7 @@ function noSessionFoundResult(key: string): SessionsResolveResult {
 
 /** Rejects sessions whose owning agent no longer exists in config (#65524). */
 function validateSessionAgentExists(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   key: string,
 ): SessionsResolveResult | null {
   const deletedAgentId = resolveDeletedAgentIdFromSessionKey(cfg, key);
@@ -53,7 +53,7 @@ function validateSessionAgentExists(
 }
 
 function isResolvedSessionKeyVisible(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   p: SessionsResolveParams;
   storePath: string;
   store: ReturnType<typeof loadSessionStore>;
@@ -71,7 +71,7 @@ function isResolvedSessionKeyVisible(params: {
 }
 
 export async function resolveSessionKeyFromResolveParams(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   p: SessionsResolveParams;
 }): Promise<SessionsResolveResult> {
   const { cfg, p } = params;

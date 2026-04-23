@@ -1,9 +1,9 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { normalizeOptionalLowercaseString } from "../shared/string-coerce.js";
 import { isRecord } from "../utils.js";
 
 export function collectConfiguredAgentHarnessRuntimes(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   env: NodeJS.ProcessEnv,
 ): string[] {
   const runtimes = new Set<string>();

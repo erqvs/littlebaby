@@ -1,12 +1,12 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { DEFAULT_PROVIDER } from "./defaults.js";
 import { resolveStaticAllowlistModelKey } from "./model-ref-shared.js";
 
 export function ensureStaticModelAllowlistEntry(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   modelRef: string;
   defaultProvider?: string;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   const rawModelRef = params.modelRef.trim();
   if (!rawModelRef) {
     return params.cfg;

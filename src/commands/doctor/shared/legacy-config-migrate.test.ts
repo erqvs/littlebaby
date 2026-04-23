@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.js";
+import type { LittleBabyConfig } from "../../../config/types.js";
 import { LEGACY_CONFIG_MIGRATIONS } from "./legacy-config-migrations.js";
 
 function migrateLegacyConfigForTest(raw: unknown): {
-  config: OpenClawConfig | null;
+  config: LittleBabyConfig | null;
   changes: string[];
 } {
   if (!raw || typeof raw !== "object") {
@@ -16,7 +16,7 @@ function migrateLegacyConfigForTest(raw: unknown): {
   }
   return changes.length === 0
     ? { config: null, changes }
-    : { config: next as OpenClawConfig, changes };
+    : { config: next as LittleBabyConfig, changes };
 }
 
 describe("legacy migrate audio transcription", () => {

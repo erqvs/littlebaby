@@ -17,12 +17,12 @@ const qaTempPathState = vi.hoisted(() => ({
   preferredTmpDir: process.env.TMPDIR || "/tmp",
 }));
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/ssrf-runtime", () => ({
   fetchWithSsrFGuard: fetchWithSsrFGuardMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/temp-path", () => ({
-  resolvePreferredOpenClawTmpDir: () => qaTempPathState.preferredTmpDir,
+vi.mock("littlebaby/plugin-sdk/temp-path", () => ({
+  resolvePreferredLittleBabyTmpDir: () => qaTempPathState.preferredTmpDir,
 }));
 
 vi.mock("./node-exec.js", () => ({
@@ -42,14 +42,14 @@ afterEach(async () => {
 
 function createParams(baseEnv?: NodeJS.ProcessEnv) {
   return {
-    configPath: "/tmp/openclaw-qa/openclaw.json",
+    configPath: "/tmp/littlebaby-qa/littlebaby.json",
     gatewayToken: "qa-token",
-    homeDir: "/tmp/openclaw-qa/home",
-    stateDir: "/tmp/openclaw-qa/state",
-    xdgConfigHome: "/tmp/openclaw-qa/xdg-config",
-    xdgDataHome: "/tmp/openclaw-qa/xdg-data",
-    xdgCacheHome: "/tmp/openclaw-qa/xdg-cache",
-    bundledPluginsDir: "/tmp/openclaw-qa/bundled-plugins",
+    homeDir: "/tmp/littlebaby-qa/home",
+    stateDir: "/tmp/littlebaby-qa/state",
+    xdgConfigHome: "/tmp/littlebaby-qa/xdg-config",
+    xdgDataHome: "/tmp/littlebaby-qa/xdg-data",
+    xdgCacheHome: "/tmp/littlebaby-qa/xdg-cache",
+    bundledPluginsDir: "/tmp/littlebaby-qa/bundled-plugins",
     compatibilityHostVersion: "2026.4.8",
     baseEnv,
   };
@@ -87,7 +87,7 @@ describe("buildQaRuntimeEnv", () => {
     expect(env.LITTLEBABY_TEST_FAST).toBe("1");
     expect(env.LITTLEBABY_QA_ALLOW_LOCAL_IMAGE_PROVIDER).toBe("1");
     expect(env.LITTLEBABY_ALLOW_SLOW_REPLY_TESTS).toBe("1");
-    expect(env.LITTLEBABY_BUNDLED_PLUGINS_DIR).toBe("/tmp/openclaw-qa/bundled-plugins");
+    expect(env.LITTLEBABY_BUNDLED_PLUGINS_DIR).toBe("/tmp/littlebaby-qa/bundled-plugins");
     expect(env.LITTLEBABY_COMPATIBILITY_HOST_VERSION).toBe("2026.4.8");
   });
 
@@ -123,7 +123,7 @@ describe("buildQaRuntimeEnv", () => {
     expect(env.OPENAI_API_KEY).toBe("openai-explicit");
   });
 
-  it("preserves Codex CLI auth home for live frontier runs while sandboxing OpenClaw home", async () => {
+  it("preserves Codex CLI auth home for live frontier runs while sandboxing LittleBaby home", async () => {
     const hostHome = await mkdtemp(path.join(os.tmpdir(), "qa-host-home-"));
     cleanups.push(async () => {
       await rm(hostHome, { recursive: true, force: true });
@@ -138,12 +138,12 @@ describe("buildQaRuntimeEnv", () => {
       providerMode: "live-frontier",
     });
 
-    expect(env.HOME).toBe("/tmp/openclaw-qa/home");
-    expect(env.LITTLEBABY_HOME).toBe("/tmp/openclaw-qa/home");
+    expect(env.HOME).toBe("/tmp/littlebaby-qa/home");
+    expect(env.LITTLEBABY_HOME).toBe("/tmp/littlebaby-qa/home");
     expect(env.CODEX_HOME).toBe(codexHome);
   });
 
-  it("forwards host HOME for live Claude CLI runs while keeping OpenClaw home sandboxed", async () => {
+  it("forwards host HOME for live Claude CLI runs while keeping LittleBaby home sandboxed", async () => {
     const hostHome = await mkdtemp(path.join(os.tmpdir(), "qa-host-home-"));
     cleanups.push(async () => {
       await rm(hostHome, { recursive: true, force: true });
@@ -158,11 +158,11 @@ describe("buildQaRuntimeEnv", () => {
     });
 
     expect(env.HOME).toBe(hostHome);
-    expect(env.LITTLEBABY_HOME).toBe("/tmp/openclaw-qa/home");
-    expect(env.LITTLEBABY_STATE_DIR).toBe("/tmp/openclaw-qa/state");
+    expect(env.LITTLEBABY_HOME).toBe("/tmp/littlebaby-qa/home");
+    expect(env.LITTLEBABY_STATE_DIR).toBe("/tmp/littlebaby-qa/state");
   });
 
-  it("can forward host HOME for browser-backed QA runs while keeping OpenClaw home sandboxed", async () => {
+  it("can forward host HOME for browser-backed QA runs while keeping LittleBaby home sandboxed", async () => {
     const hostHome = await mkdtemp(path.join(os.tmpdir(), "qa-host-home-"));
     cleanups.push(async () => {
       await rm(hostHome, { recursive: true, force: true });
@@ -177,8 +177,8 @@ describe("buildQaRuntimeEnv", () => {
     });
 
     expect(env.HOME).toBe(hostHome);
-    expect(env.LITTLEBABY_HOME).toBe("/tmp/openclaw-qa/home");
-    expect(env.LITTLEBABY_STATE_DIR).toBe("/tmp/openclaw-qa/state");
+    expect(env.LITTLEBABY_HOME).toBe("/tmp/littlebaby-qa/home");
+    expect(env.LITTLEBABY_STATE_DIR).toBe("/tmp/littlebaby-qa/state");
   });
 
   it("preserves the live Anthropic key for live Claude CLI runs without writing it into config", async () => {
@@ -601,7 +601,7 @@ describe("buildQaRuntimeEnv", () => {
 
   it("rejects preserved gateway artifacts outside the repo root", async () => {
     await expect(
-      __testing.assertQaArtifactDirWithinRepo("/tmp/openclaw-repo", "/tmp/outside"),
+      __testing.assertQaArtifactDirWithinRepo("/tmp/littlebaby-repo", "/tmp/outside"),
     ).rejects.toThrow("QA gateway artifact directory must stay within the repo root.");
   });
 
@@ -631,7 +631,7 @@ describe("buildQaRuntimeEnv", () => {
       await rm(stagedRoot, { recursive: true, force: true });
     });
 
-    await writeFile(path.join(tempRoot, "openclaw.json"), "{}", "utf8");
+    await writeFile(path.join(tempRoot, "littlebaby.json"), "{}", "utf8");
     await writeFile(path.join(stagedRoot, "marker.txt"), "x", "utf8");
 
     await __testing.cleanupQaGatewayTempRoots({
@@ -729,14 +729,14 @@ describe("qa bundled plugin dir", () => {
       "utf8",
     );
     await writeFile(
-      path.join(repoRoot, "dist", "extensions", "memory-core", "openclaw.plugin.json"),
+      path.join(repoRoot, "dist", "extensions", "memory-core", "littlebaby.plugin.json"),
       JSON.stringify({ id: "memory-core", kind: "memory" }),
       "utf8",
     );
     await mkdir(path.join(repoRoot, "extensions", "memory-core"), { recursive: true });
     await writeFile(path.join(repoRoot, "extensions", "memory-core", "package.json"), "{}", "utf8");
     await writeFile(
-      path.join(repoRoot, "extensions", "memory-core", "openclaw.plugin.json"),
+      path.join(repoRoot, "extensions", "memory-core", "littlebaby.plugin.json"),
       JSON.stringify({ id: "memory-core", kind: "memory" }),
       "utf8",
     );
@@ -788,13 +788,13 @@ describe("qa bundled plugin dir", () => {
     );
     await writeFile(
       path.join(repoRoot, "dist", "extensions", "qa-channel", "package.json"),
-      JSON.stringify({ name: "@openclaw/qa-channel", type: "module" }, null, 2),
+      JSON.stringify({ name: "@littlebaby/qa-channel", type: "module" }, null, 2),
       "utf8",
     );
     await writeFile(
       path.join(repoRoot, "dist", "extensions", "qa-channel", "index.js"),
       [
-        'import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";',
+        'import { normalizeAccountId } from "littlebaby/plugin-sdk/account-id";',
         'export const accountId = normalizeAccountId("QA");',
         "",
       ].join("\n"),
@@ -887,7 +887,7 @@ describe("qa bundled plugin dir", () => {
     );
     await writeFile(
       path.join(repoRoot, "dist-runtime", "extensions", "runtime-only", "package.json"),
-      JSON.stringify({ name: "@openclaw/runtime-only", type: "module" }, null, 2),
+      JSON.stringify({ name: "@littlebaby/runtime-only", type: "module" }, null, 2),
       "utf8",
     );
     await writeFile(
@@ -996,13 +996,13 @@ describe("qa bundled plugin dir", () => {
     await mkdir(path.join(repoRoot, "extensions", "qa-channel"), { recursive: true });
     await writeFile(
       path.join(repoRoot, "extensions", "qa-channel", "package.json"),
-      JSON.stringify({ name: "@openclaw/qa-channel", type: "module" }, null, 2),
+      JSON.stringify({ name: "@littlebaby/qa-channel", type: "module" }, null, 2),
       "utf8",
     );
     await writeFile(
       path.join(repoRoot, "extensions", "qa-channel", "index.ts"),
       [
-        'import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";',
+        'import { normalizeAccountId } from "littlebaby/plugin-sdk/account-id";',
         'import { marker } from "fake-dep";',
         'export const accountId = `${normalizeAccountId("QA")}:${marker}`;',
         "",
@@ -1071,7 +1071,7 @@ describe("qa bundled plugin dir", () => {
     });
     await mkdir(path.join(repoRoot, "dist", "extensions", "openai"), { recursive: true });
     await writeFile(
-      path.join(repoRoot, "dist", "extensions", "openai", "openclaw.plugin.json"),
+      path.join(repoRoot, "dist", "extensions", "openai", "littlebaby.plugin.json"),
       JSON.stringify({
         id: "openai",
         providers: ["openai", "openai-codex"],
@@ -1095,7 +1095,7 @@ describe("qa bundled plugin dir", () => {
     });
     await mkdir(path.join(repoRoot, "dist", "extensions", "openai"), { recursive: true });
     await writeFile(
-      path.join(repoRoot, "dist", "extensions", "openai", "openclaw.plugin.json"),
+      path.join(repoRoot, "dist", "extensions", "openai", "littlebaby.plugin.json"),
       JSON.stringify({
         id: "openai",
         providers: ["openai"],
@@ -1133,7 +1133,7 @@ describe("qa bundled plugin dir", () => {
   it("copies selected live provider configs from the host config", async () => {
     const configPath = path.join(
       await mkdtemp(path.join(os.tmpdir(), "qa-provider-config-")),
-      "openclaw.json",
+      "littlebaby.json",
     );
     cleanups.push(async () => {
       await rm(path.dirname(configPath), { recursive: true, force: true });
@@ -1197,14 +1197,14 @@ describe("qa bundled plugin dir", () => {
     await mkdir(path.join(bundledRoot, "qa-channel"), { recursive: true });
     await writeFile(
       path.join(bundledRoot, "qa-channel", "package.json"),
-      JSON.stringify({ openclaw: { install: { minHostVersion: ">=2026.4.8" } } }),
+      JSON.stringify({ littlebaby: { install: { minHostVersion: ">=2026.4.8" } } }),
       "utf8",
     );
 
     await mkdir(path.join(bundledRoot, "memory-core"), { recursive: true });
     await writeFile(
       path.join(bundledRoot, "memory-core", "package.json"),
-      JSON.stringify({ openclaw: { install: { minHostVersion: ">=2026.4.7" } } }),
+      JSON.stringify({ littlebaby: { install: { minHostVersion: ">=2026.4.7" } } }),
       "utf8",
     );
 
@@ -1230,13 +1230,13 @@ describe("qa bundled plugin dir", () => {
     await mkdir(path.join(bundledRoot, "qa-channel"), { recursive: true });
     await writeFile(
       path.join(bundledRoot, "qa-channel", "package.json"),
-      JSON.stringify({ openclaw: { install: { minHostVersion: ">=2026.4.8" } } }),
+      JSON.stringify({ littlebaby: { install: { minHostVersion: ">=2026.4.8" } } }),
       "utf8",
     );
     await mkdir(path.join(bundledRoot, "speech-core"), { recursive: true });
     await writeFile(
       path.join(bundledRoot, "speech-core", "package.json"),
-      JSON.stringify({ openclaw: { install: { minHostVersion: ">=2026.4.9" } } }),
+      JSON.stringify({ littlebaby: { install: { minHostVersion: ">=2026.4.9" } } }),
       "utf8",
     );
 

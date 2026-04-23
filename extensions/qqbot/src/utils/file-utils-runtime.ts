@@ -1,1 +1,1 @@
-export { fetchRemoteMedia } from "openclaw/plugin-sdk/media-runtime";
+export { fetchRemoteMedia } from "littlebaby/plugin-sdk/media-runtime";

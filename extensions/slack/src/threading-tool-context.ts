@@ -1,13 +1,13 @@
 import type {
   ChannelThreadingContext,
   ChannelThreadingToolContext,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/channel-contract";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { resolveSlackAccount, resolveSlackReplyToMode } from "./accounts.js";
 
 export function buildSlackThreadingToolContext(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   context: ChannelThreadingContext;
   hasRepliedRef?: { value: boolean };

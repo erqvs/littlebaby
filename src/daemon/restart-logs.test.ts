@@ -27,11 +27,11 @@ describe("restart log conventions", () => {
   it("honors LITTLEBABY_STATE_DIR for restart attempts", () => {
     const env = {
       HOME: "/Users/test",
-      LITTLEBABY_STATE_DIR: "/tmp/openclaw-state",
+      LITTLEBABY_STATE_DIR: "/tmp/littlebaby-state",
     };
 
     expect(resolveGatewayRestartLogPath(env)).toBe(
-      `/tmp/openclaw-state/logs/${GATEWAY_RESTART_LOG_FILENAME}`,
+      `/tmp/littlebaby-state/logs/${GATEWAY_RESTART_LOG_FILENAME}`,
     );
   });
 

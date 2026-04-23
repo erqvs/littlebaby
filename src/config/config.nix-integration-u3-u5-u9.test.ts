@@ -41,7 +41,7 @@ describe("Nix integration (U3, U5, U9)", () => {
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
     it("STATE_DIR defaults to ~/.littlebaby when env not set", () => {
-      expect(resolveStateDir(envWith({ LITTLEBABY_STATE_DIR: undefined }))).toMatch(/\.openclaw$/);
+      expect(resolveStateDir(envWith({ LITTLEBABY_STATE_DIR: undefined }))).toMatch(/\.littlebaby$/);
     });
 
     it("STATE_DIR respects LITTLEBABY_STATE_DIR override", () => {
@@ -54,10 +54,10 @@ describe("Nix integration (U3, U5, U9)", () => {
       const customHome = path.join(path.sep, "custom", "home");
       expect(
         resolveStateDir(envWith({ LITTLEBABY_HOME: customHome, LITTLEBABY_STATE_DIR: undefined })),
-      ).toBe(path.join(path.resolve(customHome), ".openclaw"));
+      ).toBe(path.join(path.resolve(customHome), ".littlebaby"));
     });
 
-    it("CONFIG_PATH defaults to LITTLEBABY_HOME/.littlebaby/openclaw.json", () => {
+    it("CONFIG_PATH defaults to LITTLEBABY_HOME/.littlebaby/littlebaby.json", () => {
       const customHome = path.join(path.sep, "custom", "home");
       expect(
         resolveConfigPathCandidate(
@@ -67,23 +67,23 @@ describe("Nix integration (U3, U5, U9)", () => {
             LITTLEBABY_STATE_DIR: undefined,
           }),
         ),
-      ).toBe(path.join(path.resolve(customHome), ".openclaw", "openclaw.json"));
+      ).toBe(path.join(path.resolve(customHome), ".littlebaby", "littlebaby.json"));
     });
 
-    it("CONFIG_PATH defaults to ~/.littlebaby/openclaw.json when env not set", () => {
+    it("CONFIG_PATH defaults to ~/.littlebaby/littlebaby.json when env not set", () => {
       expect(
         resolveConfigPathCandidate(
           envWith({ LITTLEBABY_CONFIG_PATH: undefined, LITTLEBABY_STATE_DIR: undefined }),
         ),
-      ).toMatch(/\.openclaw[\\/]openclaw\.json$/);
+      ).toMatch(/\.littlebaby[\\/]littlebaby\.json$/);
     });
 
     it("CONFIG_PATH respects LITTLEBABY_CONFIG_PATH override", () => {
       expect(
         resolveConfigPathCandidate(
-          envWith({ LITTLEBABY_CONFIG_PATH: "/nix/store/abc/openclaw.json" }),
+          envWith({ LITTLEBABY_CONFIG_PATH: "/nix/store/abc/littlebaby.json" }),
         ),
-      ).toBe(path.resolve("/nix/store/abc/openclaw.json"));
+      ).toBe(path.resolve("/nix/store/abc/littlebaby.json"));
     });
 
     it("CONFIG_PATH expands ~ in LITTLEBABY_CONFIG_PATH override", async () => {
@@ -93,7 +93,7 @@ describe("Nix integration (U3, U5, U9)", () => {
             envWith({ LITTLEBABY_HOME: home, LITTLEBABY_CONFIG_PATH: "~/.littlebaby/custom.json" }),
             () => home,
           ),
-        ).toBe(path.join(home, ".openclaw", "custom.json"));
+        ).toBe(path.join(home, ".littlebaby", "custom.json"));
       });
     });
 
@@ -101,9 +101,9 @@ describe("Nix integration (U3, U5, U9)", () => {
       expect(
         resolveConfigPathCandidate(
           envWith({ LITTLEBABY_STATE_DIR: "/custom/state", LITTLEBABY_TEST_FAST: "1" }),
-          () => path.join(path.sep, "tmp", "openclaw-config-home"),
+          () => path.join(path.sep, "tmp", "littlebaby-config-home"),
         ),
-      ).toBe(path.join(path.resolve("/custom/state"), "openclaw.json"));
+      ).toBe(path.join(path.resolve("/custom/state"), "littlebaby.json"));
     });
   });
 

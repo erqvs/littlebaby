@@ -1,10 +1,10 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { loadWorkspaceSkillEntries, type SkillEntry, type SkillSnapshot } from "../skills.js";
 import { resolveSkillRuntimeConfig } from "../skills/runtime-config.js";
 
 export function resolveEmbeddedRunSkillEntries(params: {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   agentId?: string;
   skillsSnapshot?: SkillSnapshot;
 }): {

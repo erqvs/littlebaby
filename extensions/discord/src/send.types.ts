@@ -1,6 +1,6 @@
 import type { RequestClient } from "@buape/carbon";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { RetryConfig } from "openclaw/plugin-sdk/retry-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { RetryConfig } from "littlebaby/plugin-sdk/retry-runtime";
 
 export class DiscordSendError extends Error {
   kind?: "missing-permissions" | "dm-blocked";
@@ -30,12 +30,12 @@ export type DiscordSendResult = {
 };
 
 export type DiscordRuntimeAccountContext = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
 };
 
 export type DiscordReactOpts = {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   accountId?: string;
   token?: string;
   rest?: RequestClient;

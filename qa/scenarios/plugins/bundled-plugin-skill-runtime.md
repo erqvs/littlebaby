@@ -59,7 +59,7 @@ steps:
                   fs.mkdir(dir, { recursive: true }),
                 ),
               );
-              const configPath = path.join(tempRoot, "openclaw.json");
+              const configPath = path.join(tempRoot, "littlebaby.json");
               await fs.writeFile(
                 configPath,
                 `${JSON.stringify(

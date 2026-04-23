@@ -20,7 +20,7 @@ import { configureTaskFlowRegistryRuntime } from "./task-flow-registry.store.js"
 const ORIGINAL_STATE_DIR = process.env.LITTLEBABY_STATE_DIR;
 
 async function withFlowRegistryTempDir<T>(run: (root: string) => Promise<T>): Promise<T> {
-  return await withTempDir({ prefix: "openclaw-task-flow-registry-" }, async (root) => {
+  return await withTempDir({ prefix: "littlebaby-task-flow-registry-" }, async (root) => {
     process.env.LITTLEBABY_STATE_DIR = root;
     resetTaskFlowRegistryForTests();
     try {

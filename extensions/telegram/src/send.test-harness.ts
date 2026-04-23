@@ -1,11 +1,11 @@
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "littlebaby/plugin-sdk/config-runtime";
 import {
   buildOutboundMediaLoadOptions,
   isGifMedia,
   kindFromMime,
   normalizePollInput,
-} from "openclaw/plugin-sdk/media-runtime";
-import type { MockFn } from "openclaw/plugin-sdk/testing";
+} from "littlebaby/plugin-sdk/media-runtime";
+import type { MockFn } from "littlebaby/plugin-sdk/testing";
 import { beforeEach, vi } from "vitest";
 
 const { botApi, botCtorSpy } = vi.hoisted(() => ({
@@ -45,7 +45,7 @@ const { imageMetadata } = vi.hoisted(() => ({
 const { loadConfig, resolveStorePath } = vi.hoisted(() => ({
   loadConfig: vi.fn(() => ({})),
   resolveStorePath: vi.fn(
-    (storePath?: string) => storePath ?? "/tmp/openclaw-telegram-send-tests.json",
+    (storePath?: string) => storePath ?? "/tmp/littlebaby-telegram-send-tests.json",
   ),
 }));
 
@@ -92,7 +92,7 @@ type TelegramSendTestMocks = {
   imageMetadata: { width: number | undefined; height: number | undefined };
 };
 
-vi.mock("openclaw/plugin-sdk/web-media", () => ({
+vi.mock("littlebaby/plugin-sdk/web-media", () => ({
   loadWebMedia,
 }));
 
@@ -166,7 +166,7 @@ export function getTelegramSendTestMocks(): TelegramSendTestMocks {
 export function installTelegramSendTestHooks() {
   beforeEach(() => {
     loadConfig.mockReturnValue({});
-    resolveStorePath.mockReturnValue("/tmp/openclaw-telegram-send-tests.json");
+    resolveStorePath.mockReturnValue("/tmp/littlebaby-telegram-send-tests.json");
     loadWebMedia.mockReset();
     imageMetadata.width = 1200;
     imageMetadata.height = 800;

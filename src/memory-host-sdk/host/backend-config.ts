@@ -11,7 +11,7 @@ import type {
   MemoryQmdMcporterConfig,
   MemoryQmdSearchMode,
 } from "../../config/types.memory.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { normalizeAgentId } from "../../routing/session-key.js";
 import {
   normalizeLowercaseStringOrEmpty,
@@ -347,7 +347,7 @@ function resolveDefaultCollections(
 }
 
 export function resolveMemoryBackendConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
 }): ResolvedMemoryBackendConfig {
   const normalizedAgentId = normalizeAgentId(params.agentId);

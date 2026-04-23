@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/runway-provider",
+  "name": "@littlebaby/runway-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Runway video provider plugin",
+  "description": "LittleBaby Runway video provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

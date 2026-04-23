@@ -6,7 +6,7 @@ import {
   abortAgentHarnessRun,
   queueAgentHarnessMessage,
   type EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness";
+} from "littlebaby/plugin-sdk/agent-harness";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CodexServerNotification } from "./protocol.js";
 import { runCodexAppServerAttempt, __testing } from "./run-attempt.js";
@@ -117,7 +117,7 @@ function createResumeHarness() {
 
 describe("runCodexAppServerAttempt", () => {
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-run-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-run-"));
   });
 
   afterEach(async () => {
@@ -477,7 +477,7 @@ describe("runCodexAppServerAttempt", () => {
     );
   });
 
-  it("builds resume and turn params from the currently selected OpenClaw model", () => {
+  it("builds resume and turn params from the currently selected LittleBaby model", () => {
     const params = createParams("/tmp/session.jsonl", "/tmp/workspace");
     const appServer = {
       start: {

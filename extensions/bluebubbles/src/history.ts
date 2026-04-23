@@ -1,6 +1,6 @@
 import { resolveBlueBubblesServerAccount } from "./account-resolve.js";
 import { createBlueBubblesClientFromParts } from "./client.js";
-import type { OpenClawConfig } from "./runtime-api.js";
+import type { LittleBabyConfig } from "./runtime-api.js";
 
 export type BlueBubblesHistoryEntry = {
   sender: string;
@@ -37,7 +37,7 @@ export type BlueBubblesChatOpts = {
   password?: string;
   accountId?: string;
   timeoutMs?: number;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
 };
 
 function resolveAccount(params: BlueBubblesChatOpts) {

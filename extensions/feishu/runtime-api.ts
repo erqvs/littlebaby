@@ -11,42 +11,42 @@ export type {
   ChannelOutboundAdapter,
   ChannelPlugin,
   HistoryEntry,
-  OpenClawConfig,
-  OpenClawPluginApi,
+  LittleBabyConfig,
+  LittleBabyPluginApi,
   OutboundIdentity,
   PluginRuntime,
   ReplyPayload,
-} from "openclaw/plugin-sdk/core";
-export type { OpenClawConfig as ClawdbotConfig } from "openclaw/plugin-sdk/core";
-export type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-export type { GroupToolPolicyConfig } from "openclaw/plugin-sdk/config-runtime";
+} from "littlebaby/plugin-sdk/core";
+export type { LittleBabyConfig as ClawdbotConfig } from "littlebaby/plugin-sdk/core";
+export type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime";
+export type { GroupToolPolicyConfig } from "littlebaby/plugin-sdk/config-runtime";
 export {
   DEFAULT_ACCOUNT_ID,
   buildChannelConfigSchema,
   createActionGate,
   createDedupeCache,
-} from "openclaw/plugin-sdk/core";
+} from "littlebaby/plugin-sdk/core";
 export {
   PAIRING_APPROVED_MESSAGE,
   buildProbeChannelStatusSummary,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/channel-status";
-export { buildAgentMediaPayload } from "openclaw/plugin-sdk/agent-media-payload";
-export { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
-export { createReplyPrefixContext } from "openclaw/plugin-sdk/channel-reply-pipeline";
+} from "littlebaby/plugin-sdk/channel-status";
+export { buildAgentMediaPayload } from "littlebaby/plugin-sdk/agent-media-payload";
+export { createChannelPairingController } from "littlebaby/plugin-sdk/channel-pairing";
+export { createReplyPrefixContext } from "littlebaby/plugin-sdk/channel-reply-pipeline";
 export {
   evaluateSupplementalContextVisibility,
   filterSupplementalContextItems,
   resolveChannelContextVisibilityMode,
-} from "openclaw/plugin-sdk/config-runtime";
-export { loadSessionStore, resolveSessionStoreEntry } from "openclaw/plugin-sdk/config-runtime";
-export { readJsonFileWithFallback } from "openclaw/plugin-sdk/json-store";
-export { createPersistentDedupe } from "openclaw/plugin-sdk/persistent-dedupe";
-export { normalizeAgentId } from "openclaw/plugin-sdk/routing";
-export { chunkTextForOutbound } from "openclaw/plugin-sdk/text-chunking";
+} from "littlebaby/plugin-sdk/config-runtime";
+export { loadSessionStore, resolveSessionStoreEntry } from "littlebaby/plugin-sdk/config-runtime";
+export { readJsonFileWithFallback } from "littlebaby/plugin-sdk/json-store";
+export { createPersistentDedupe } from "littlebaby/plugin-sdk/persistent-dedupe";
+export { normalizeAgentId } from "littlebaby/plugin-sdk/routing";
+export { chunkTextForOutbound } from "littlebaby/plugin-sdk/text-chunking";
 export {
   isRequestBodyLimitError,
   readRequestBodyWithLimit,
   requestBodyErrorToText,
-} from "openclaw/plugin-sdk/webhook-ingress";
+} from "littlebaby/plugin-sdk/webhook-ingress";
 export { setFeishuRuntime } from "./src/runtime.js";

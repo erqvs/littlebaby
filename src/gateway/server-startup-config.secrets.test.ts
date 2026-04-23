@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.js";
+import type { ConfigFileSnapshot, LittleBabyConfig } from "../config/types.js";
 import type { PreparedSecretsRuntimeSnapshot, SecretResolverWarning } from "../secrets/runtime.js";
 import { KNOWN_WEAK_GATEWAY_TOKEN_PLACEHOLDERS } from "./known-weak-gateway-secrets.js";
 import {
@@ -8,7 +8,7 @@ import {
 } from "./server-startup-config.js";
 import { buildTestConfigSnapshot } from "./test-helpers.config-snapshots.js";
 
-function gatewayTokenConfig(config: OpenClawConfig): OpenClawConfig {
+function gatewayTokenConfig(config: LittleBabyConfig): LittleBabyConfig {
   return {
     ...config,
     gateway: {
@@ -22,14 +22,14 @@ function gatewayTokenConfig(config: OpenClawConfig): OpenClawConfig {
   };
 }
 
-function asConfig(value: unknown): OpenClawConfig {
-  return value as OpenClawConfig;
+function asConfig(value: unknown): LittleBabyConfig {
+  return value as LittleBabyConfig;
 }
 
-function buildSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
+function buildSnapshot(config: LittleBabyConfig): ConfigFileSnapshot {
   const raw = `${JSON.stringify(config, null, 2)}\n`;
   return buildTestConfigSnapshot({
-    path: "/tmp/openclaw-startup-secrets-test.json",
+    path: "/tmp/littlebaby-startup-secrets-test.json",
     exists: true,
     raw,
     parsed: config,
@@ -40,7 +40,7 @@ function buildSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
   });
 }
 
-function preparedSnapshot(config: OpenClawConfig): PreparedSecretsRuntimeSnapshot {
+function preparedSnapshot(config: LittleBabyConfig): PreparedSecretsRuntimeSnapshot {
   return {
     sourceConfig: config,
     config,

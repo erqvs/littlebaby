@@ -1,4 +1,4 @@
-import type { TelegramNetworkConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { TelegramNetworkConfig } from "littlebaby/plugin-sdk/config-runtime";
 
 export type TelegramGroupMembershipAuditEntry = {
   chatId: string;

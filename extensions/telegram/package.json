@@ -1,8 +1,8 @@
 {
-  "name": "@openclaw/telegram",
+  "name": "@littlebaby/telegram",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Telegram channel plugin",
+  "description": "LittleBaby Telegram channel plugin",
   "type": "module",
   "dependencies": {
     "@grammyjs/runner": "^2.0.3",
@@ -10,9 +10,9 @@
     "grammy": "^1.42.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],
@@ -32,7 +32,7 @@
       "selectionDocsPrefix": "",
       "selectionDocsOmitLabel": true,
       "selectionExtras": [
-        "https://openclaw.ai"
+        "https://littlebaby.ai"
       ],
       "markdownCapable": true,
       "configuredState": {

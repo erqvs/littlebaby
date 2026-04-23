@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/litellm-provider",
+  "name": "@littlebaby/litellm-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw LiteLLM provider plugin",
+  "description": "LittleBaby LiteLLM provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

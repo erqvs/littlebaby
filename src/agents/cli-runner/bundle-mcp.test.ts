@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import {
   createBundleMcpTempHarness,
   createBundleProbePlugin,
@@ -18,9 +18,9 @@ let envSnapshot: ReturnType<typeof captureEnv> | undefined;
 
 beforeAll(async () => {
   envSnapshot = captureEnv(["LITTLEBABY_BUNDLED_PLUGINS_DIR"]);
-  bundleProbeHomeDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-home-");
-  bundleProbeWorkspaceDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-workspace-");
-  const emptyBundledDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-bundled-");
+  bundleProbeHomeDir = await tempHarness.createTempDir("littlebaby-cli-bundle-mcp-home-");
+  bundleProbeWorkspaceDir = await tempHarness.createTempDir("littlebaby-cli-bundle-mcp-workspace-");
+  const emptyBundledDir = await tempHarness.createTempDir("littlebaby-cli-bundle-mcp-bundled-");
   process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR = emptyBundledDir;
   ({ serverPath: bundleProbeServerPath } = await createBundleProbePlugin(bundleProbeHomeDir));
 });
@@ -30,7 +30,7 @@ afterAll(async () => {
   await tempHarness.cleanup();
 });
 
-function createEnabledBundleProbeConfig(): OpenClawConfig {
+function createEnabledBundleProbeConfig(): LittleBabyConfig {
   return {
     plugins: {
       entries: {
@@ -64,7 +64,7 @@ async function prepareBundleProbeCliConfig(params?: {
 
 describe("prepareCliBundleMcpConfig", () => {
   it("injects a strict empty --mcp-config overlay for bundle-MCP-enabled backends without servers", async () => {
-    const workspaceDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-empty-");
+    const workspaceDir = await tempHarness.createTempDir("littlebaby-cli-bundle-mcp-empty-");
 
     const prepared = await prepareCliBundleMcpConfig({
       enabled: true,
@@ -108,8 +108,8 @@ describe("prepareCliBundleMcpConfig", () => {
   });
 
   it("loads workspace bundle MCP plugins from the configured workspace root", async () => {
-    const workspaceDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-workspace-root-");
-    const pluginRoot = path.join(workspaceDir, ".openclaw", "extensions", "workspace-probe");
+    const workspaceDir = await tempHarness.createTempDir("littlebaby-cli-bundle-mcp-workspace-root-");
+    const pluginRoot = path.join(workspaceDir, ".littlebaby", "extensions", "workspace-probe");
     const serverPath = path.join(pluginRoot, "servers", "probe.mjs");
     await fs.mkdir(path.dirname(serverPath), { recursive: true });
     await fs.writeFile(serverPath, "export {};\n", "utf-8");
@@ -166,7 +166,7 @@ describe("prepareCliBundleMcpConfig", () => {
     const prepared = await prepareBundleProbeCliConfig({
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          littlebaby: {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
@@ -183,14 +183,14 @@ describe("prepareCliBundleMcpConfig", () => {
       mcpServers?: Record<string, { url?: string; headers?: Record<string, string> }>;
     };
     expect(Object.keys(raw.mcpServers ?? {}).toSorted()).toEqual(["bundleProbe", "littlebaby"]);
-    expect(raw.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:23119/mcp");
-    expect(raw.mcpServers?.openclaw?.headers?.Authorization).toBe("Bearer ${LITTLEBABY_MCP_TOKEN}");
+    expect(raw.mcpServers?.littlebaby?.url).toBe("http://127.0.0.1:23119/mcp");
+    expect(raw.mcpServers?.littlebaby?.headers?.Authorization).toBe("Bearer ${LITTLEBABY_MCP_TOKEN}");
 
     await prepared.cleanup?.();
   });
 
   it("preserves extra env values alongside generated MCP config", async () => {
-    const workspaceDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-env-");
+    const workspaceDir = await tempHarness.createTempDir("littlebaby-cli-bundle-mcp-env-");
 
     const prepared = await prepareCliBundleMcpConfig({
       enabled: true,
@@ -224,7 +224,7 @@ describe("prepareCliBundleMcpConfig", () => {
         command: "node",
         args: ["./fake-cli.mjs"],
       },
-      workspaceDir: "/tmp/openclaw-bundle-mcp-disabled",
+      workspaceDir: "/tmp/littlebaby-bundle-mcp-disabled",
     });
 
     expect(prepared.backend.args).toEqual(["./fake-cli.mjs"]);
@@ -240,17 +240,17 @@ describe("prepareCliBundleMcpConfig", () => {
         args: ["exec", "--json"],
         resumeArgs: ["exec", "resume", "{sessionId}"],
       },
-      workspaceDir: "/tmp/openclaw-bundle-mcp-codex",
+      workspaceDir: "/tmp/littlebaby-bundle-mcp-codex",
       config: { plugins: { enabled: false } },
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          littlebaby: {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
               Authorization: "Bearer ${LITTLEBABY_MCP_TOKEN}",
               "x-session-key": "${LITTLEBABY_MCP_SESSION_KEY}",
-              "x-openclaw-sender-is-owner": "${LITTLEBABY_MCP_SENDER_IS_OWNER}",
+              "x-littlebaby-sender-is-owner": "${LITTLEBABY_MCP_SENDER_IS_OWNER}",
             },
           },
         },
@@ -261,14 +261,14 @@ describe("prepareCliBundleMcpConfig", () => {
       "exec",
       "--json",
       "-c",
-      'mcp_servers={ openclaw = { url = "http://127.0.0.1:23119/mcp", bearer_token_env_var = "LITTLEBABY_MCP_TOKEN", env_http_headers = { x-session-key = "LITTLEBABY_MCP_SESSION_KEY", x-openclaw-sender-is-owner = "LITTLEBABY_MCP_SENDER_IS_OWNER" } } }',
+      'mcp_servers={ littlebaby = { url = "http://127.0.0.1:23119/mcp", bearer_token_env_var = "LITTLEBABY_MCP_TOKEN", env_http_headers = { x-session-key = "LITTLEBABY_MCP_SESSION_KEY", x-littlebaby-sender-is-owner = "LITTLEBABY_MCP_SENDER_IS_OWNER" } } }',
     ]);
     expect(prepared.backend.resumeArgs).toEqual([
       "exec",
       "resume",
       "{sessionId}",
       "-c",
-      'mcp_servers={ openclaw = { url = "http://127.0.0.1:23119/mcp", bearer_token_env_var = "LITTLEBABY_MCP_TOKEN", env_http_headers = { x-session-key = "LITTLEBABY_MCP_SESSION_KEY", x-openclaw-sender-is-owner = "LITTLEBABY_MCP_SENDER_IS_OWNER" } } }',
+      'mcp_servers={ littlebaby = { url = "http://127.0.0.1:23119/mcp", bearer_token_env_var = "LITTLEBABY_MCP_TOKEN", env_http_headers = { x-session-key = "LITTLEBABY_MCP_SESSION_KEY", x-littlebaby-sender-is-owner = "LITTLEBABY_MCP_SENDER_IS_OWNER" } } }',
     ]);
     expect(prepared.cleanup).toBeUndefined();
   });
@@ -281,11 +281,11 @@ describe("prepareCliBundleMcpConfig", () => {
         command: "gemini",
         args: ["--prompt", "{prompt}"],
       },
-      workspaceDir: "/tmp/openclaw-bundle-mcp-gemini",
+      workspaceDir: "/tmp/littlebaby-bundle-mcp-gemini",
       config: { plugins: { enabled: false } },
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          littlebaby: {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
@@ -309,8 +309,8 @@ describe("prepareCliBundleMcpConfig", () => {
       mcpServers?: Record<string, { url?: string; headers?: Record<string, string> }>;
     };
     expect(raw.mcp?.allowed).toEqual(["littlebaby"]);
-    expect(raw.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:23119/mcp");
-    expect(raw.mcpServers?.openclaw?.headers?.Authorization).toBe("Bearer loopback-token-123");
+    expect(raw.mcpServers?.littlebaby?.url).toBe("http://127.0.0.1:23119/mcp");
+    expect(raw.mcpServers?.littlebaby?.headers?.Authorization).toBe("Bearer loopback-token-123");
 
     await prepared.cleanup?.();
   });

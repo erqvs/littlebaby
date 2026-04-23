@@ -2,17 +2,17 @@ import { ChannelType, type Client } from "@buape/carbon";
 import { Routes, type APIAttachment, type APIStickerItem } from "discord-api-types/v10";
 import {
   resolveChannelModelOverride,
-  type OpenClawConfig,
+  type LittleBabyConfig,
   type ReplyToMode,
-} from "openclaw/plugin-sdk/config-runtime";
-import { createReplyReferencePlanner } from "openclaw/plugin-sdk/reply-reference";
-import { buildAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/config-runtime";
+import { createReplyReferencePlanner } from "littlebaby/plugin-sdk/reply-reference";
+import { buildAgentSessionKey } from "littlebaby/plugin-sdk/routing";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
 import {
   normalizeOptionalString,
   normalizeOptionalStringifiedId,
   truncateUtf16Safe,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import type { DiscordChannelConfigResolved } from "./allow-list.js";
 import { resolveDiscordChannelNameSafe } from "./channel-access.js";
 import type { DiscordMessageEvent } from "./listeners.js";
@@ -437,7 +437,7 @@ type MaybeCreateDiscordAutoThreadParams = {
   channelDescription?: string;
   baseText: string;
   combinedBody: string;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   agentId?: string;
 };
 
@@ -446,7 +446,7 @@ export async function resolveDiscordAutoThreadReplyPlan(
     replyToMode: ReplyToMode;
     agentId: string;
     channel: string;
-    cfg?: OpenClawConfig;
+    cfg?: LittleBabyConfig;
   },
 ): Promise<DiscordAutoThreadReplyPlan> {
   const messageChannelId = resolveTrimmedDiscordMessageChannelId(params);
@@ -585,7 +585,7 @@ export async function maybeCreateDiscordAutoThread(
 }
 
 function resolveDiscordThreadTitleModelRef(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   channel?: string;
   agentId: string;
   threadId: string;
@@ -624,7 +624,7 @@ async function maybeRenameDiscordAutoThread(params: {
   modelRef?: string;
   channelName?: string;
   channelDescription?: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
 }): Promise<void> {
   try {

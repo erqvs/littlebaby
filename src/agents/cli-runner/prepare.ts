@@ -7,7 +7,7 @@ import type {
   CliBackendAuthEpochMode,
   CliBackendPreparedExecution,
 } from "../../plugins/cli-backend.types.js";
-import { resolveOpenClawAgentDir } from "../agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../agent-paths.js";
 import { resolveSessionAgentIds } from "../agent-scope.js";
 import { loadAuthProfileStoreForRuntime } from "../auth-profiles/store.js";
 import type { AuthProfileCredential } from "../auth-profiles/types.js";
@@ -46,9 +46,9 @@ const prepareDeps = {
   getActiveMcpLoopbackRuntime,
   ensureMcpLoopbackServer,
   createMcpLoopbackServerConfig,
-  resolveOpenClawDocsPath: async (
-    params: Parameters<typeof import("../docs-path.js").resolveOpenClawDocsPath>[0],
-  ) => (await import("../docs-path.js")).resolveOpenClawDocsPath(params),
+  resolveLittleBabyDocsPath: async (
+    params: Parameters<typeof import("../docs-path.js").resolveLittleBabyDocsPath>[0],
+  ) => (await import("../docs-path.js")).resolveLittleBabyDocsPath(params),
 };
 
 export function setCliRunnerPrepareTestDeps(overrides: Partial<typeof prepareDeps>): void {
@@ -94,7 +94,7 @@ export async function prepareCliRunContext(
   if (!backendResolved) {
     throw new Error(`Unknown CLI backend: ${params.provider}`);
   }
-  const agentDir = resolveOpenClawAgentDir();
+  const agentDir = resolveLittleBabyAgentDir();
   const requestedAuthProfileId = params.authProfileId?.trim() || undefined;
   const effectiveAuthProfileId =
     requestedAuthProfileId ?? backendResolved.defaultAuthProfileId?.trim() ?? undefined;
@@ -246,7 +246,7 @@ export async function prepareCliRunContext(
     agentId: sessionAgentId,
     defaultAgentId,
   });
-  const docsPath = await prepareDeps.resolveOpenClawDocsPath({
+  const docsPath = await prepareDeps.resolveLittleBabyDocsPath({
     workspaceDir,
     argv1: process.argv[1],
     cwd: process.cwd(),

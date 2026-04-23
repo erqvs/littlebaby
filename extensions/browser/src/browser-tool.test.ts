@@ -120,9 +120,9 @@ const configMocks = vi.hoisted(() => ({
     }
   >(() => ({ browser: {} })),
 }));
-vi.mock("openclaw/plugin-sdk/config-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/config-runtime")>(
-    "openclaw/plugin-sdk/config-runtime",
+vi.mock("littlebaby/plugin-sdk/config-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/config-runtime")>(
+    "littlebaby/plugin-sdk/config-runtime",
   );
   return {
     ...actual,

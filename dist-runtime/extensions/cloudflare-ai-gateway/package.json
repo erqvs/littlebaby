@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/cloudflare-ai-gateway-provider",
+  "name": "@littlebaby/cloudflare-ai-gateway-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Cloudflare AI Gateway provider plugin",
+  "description": "LittleBaby Cloudflare AI Gateway provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

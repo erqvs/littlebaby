@@ -7,7 +7,7 @@ import {
   type ConfigObserveAuditRecord,
 } from "./io.audit.js";
 import { resolveStateDir } from "./paths.js";
-import type { ConfigFileSnapshot } from "./types.openclaw.js";
+import type { ConfigFileSnapshot } from "./types.littlebaby.js";
 
 export type ObserveRecoveryDeps = {
   fs: {

@@ -74,7 +74,7 @@ function formatCompletionSourceLine(
 }
 
 function isCompletionProfileHeader(line: string): boolean {
-  return line.trim() === "# OpenClaw Completion";
+  return line.trim() === "# LittleBaby Completion";
 }
 
 function isCompletionProfileLine(line: string, binName: string, cachePath: string | null): boolean {
@@ -120,7 +120,7 @@ function updateCompletionProfile(
   }
 
   const trimmed = filtered.join("\n").trimEnd();
-  const block = `# OpenClaw Completion\n${sourceLine}`;
+  const block = `# LittleBaby Completion\n${sourceLine}`;
   const next = trimmed ? `${trimmed}\n\n${block}\n` : `${block}\n`;
   return { next, changed: next !== content, hadExisting };
 }
@@ -167,7 +167,7 @@ export async function isCompletionInstalled(
 
 /**
  * Check if the profile uses the slow dynamic completion pattern.
- * Returns true if profile has `source <(openclaw completion ...)` instead of cached file.
+ * Returns true if profile has `source <(littlebaby completion ...)` instead of cached file.
  */
 export async function usesSlowDynamicCompletion(
   shell: CompletionShell,

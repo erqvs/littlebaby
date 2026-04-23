@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/memory-core",
+  "name": "@littlebaby/memory-core",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw core memory search plugin",
+  "description": "LittleBaby core memory search plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*",
+    "littlebaby": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.20"
+    "littlebaby": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

@@ -236,7 +236,7 @@ export function loadGlobalRuntimeDotEnvFiles(opts?: { quiet?: boolean; stateEnvP
   const stateEnvPath = opts?.stateEnvPath ?? path.join(resolveConfigDir(process.env), ".env");
   const defaultStateEnvPath = path.join(
     resolveRequiredHomeDir(process.env, os.homedir),
-    ".openclaw",
+    ".littlebaby",
     ".env",
   );
   const hasExplicitNonDefaultStateDir =

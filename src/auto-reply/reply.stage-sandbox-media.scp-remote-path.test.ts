@@ -50,7 +50,7 @@ function createRemoteStageParams(home: string): {
     cfg: createSandboxMediaStageConfig(home),
     workspaceDir: join(home, "littlebaby"),
     sessionKey,
-    remoteCacheDir: join(home, ".openclaw", "media", "remote-cache", sessionKey),
+    remoteCacheDir: join(home, ".littlebaby", "media", "remote-cache", sessionKey),
   };
 }
 
@@ -65,7 +65,7 @@ function createRemoteContexts(remotePath: string) {
 
 describe("stageSandboxMedia scp remote paths", () => {
   it("rejects remote attachment filenames with shell metacharacters before spawning scp", async () => {
-    await withSandboxMediaTempHome("openclaw-triggers-", async (home) => {
+    await withSandboxMediaTempHome("littlebaby-triggers-", async (home) => {
       const { cfg, workspaceDir, sessionKey, remoteCacheDir } = createRemoteStageParams(home);
       const remotePath = "/Users/demo/Library/Messages/Attachments/ab/cd/evil$(touch pwned).jpg";
       const { ctx, sessionCtx } = createRemoteContexts(remotePath);

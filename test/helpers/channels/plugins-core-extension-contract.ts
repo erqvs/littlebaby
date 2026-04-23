@@ -4,7 +4,7 @@ import type {
   BaseTokenResolution,
   ChannelDirectoryEntry,
 } from "../../../src/channels/plugins/types.js";
-import type { OpenClawConfig } from "../../../src/config/config.js";
+import type { LittleBabyConfig } from "../../../src/config/config.js";
 import type { LineProbeResult } from "../../../src/plugin-sdk/line.js";
 import { resolveRelativeBundledPluginPublicModuleId } from "../../../src/test-utils/bundled-plugin-public-surface.js";
 import { withEnvAsync } from "../../../src/test-utils/env.js";
@@ -72,13 +72,13 @@ function getWhatsAppDirectoryContractApi(): Promise<WhatsAppDirectoryContractApi
 }
 
 type DirectoryListFn = (params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string;
   query?: string | null;
   limit?: number | null;
 }) => Promise<ChannelDirectoryEntry[]>;
 
-async function listDirectoryEntriesWithDefaults(listFn: DirectoryListFn, cfg: OpenClawConfig) {
+async function listDirectoryEntriesWithDefaults(listFn: DirectoryListFn, cfg: LittleBabyConfig) {
   return await listFn({
     cfg,
     accountId: "default",
@@ -89,7 +89,7 @@ async function listDirectoryEntriesWithDefaults(listFn: DirectoryListFn, cfg: Op
 
 async function expectDirectoryIds(
   listFn: DirectoryListFn,
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   expected: string[],
   options?: { sorted?: boolean },
 ) {
@@ -130,7 +130,7 @@ export function describeDiscordPluginsCoreExtensionContract() {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(
         listDiscordDirectoryPeersFromConfig,
@@ -170,7 +170,7 @@ export function describeDiscordPluginsCoreExtensionContract() {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(listDiscordDirectoryPeersFromConfig, cfg, ["user:111"]);
       await expectDirectoryIds(listDiscordDirectoryGroupsFromConfig, cfg, ["channel:555"]);
@@ -193,7 +193,7 @@ export function describeDiscordPluginsCoreExtensionContract() {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       const groups = await listDiscordDirectoryGroupsFromConfig({
         cfg,
@@ -225,7 +225,7 @@ export function describeSlackPluginsCoreExtensionContract() {
             channels: { C111: { users: ["U777"] } },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(
         listSlackDirectoryPeersFromConfig,
@@ -253,7 +253,7 @@ export function describeSlackPluginsCoreExtensionContract() {
             channels: { C111: {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(listSlackDirectoryPeersFromConfig, cfg, ["user:u123"]);
       await expectDirectoryIds(listSlackDirectoryGroupsFromConfig, cfg, ["channel:c111"]);
@@ -270,7 +270,7 @@ export function describeSlackPluginsCoreExtensionContract() {
             dms: { U300: {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       const peers = await listSlackDirectoryPeersFromConfig({
         cfg,
@@ -306,7 +306,7 @@ export function describeTelegramPluginsCoreExtensionContract() {
             groups: { "-1001": {}, "*": {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(
         listTelegramDirectoryPeersFromConfig,
@@ -337,7 +337,7 @@ export function describeTelegramPluginsCoreExtensionContract() {
               },
             },
           },
-        } as unknown as OpenClawConfig;
+        } as unknown as LittleBabyConfig;
 
         await expectDirectoryIds(listTelegramDirectoryPeersFromConfig, cfg, ["@alice"]);
         await expectDirectoryIds(listTelegramDirectoryGroupsFromConfig, cfg, ["-1001"]);
@@ -360,7 +360,7 @@ export function describeTelegramPluginsCoreExtensionContract() {
             groups: { "-1001": {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(listTelegramDirectoryPeersFromConfig, cfg, ["@alice"]);
       await expectDirectoryIds(listTelegramDirectoryGroupsFromConfig, cfg, ["-1001"]);
@@ -375,7 +375,7 @@ export function describeTelegramPluginsCoreExtensionContract() {
             groups: { "-1001": {}, "-1002": {}, "-2001": {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       const groups = await listTelegramDirectoryGroupsFromConfig({
         cfg,
@@ -400,7 +400,7 @@ export function describeWhatsAppPluginsCoreExtensionContract() {
             groups: { "999@g.us": { requireMention: true }, "*": {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       await expectDirectoryIds(listWhatsAppDirectoryPeersFromConfig, cfg, ["+15550000000"]);
       await expectDirectoryIds(listWhatsAppDirectoryGroupsFromConfig, cfg, ["999@g.us"]);
@@ -414,7 +414,7 @@ export function describeWhatsAppPluginsCoreExtensionContract() {
             groups: { "111@g.us": {}, "222@g.us": {}, "333@s.whatsapp.net": {} },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       const groups = await listWhatsAppDirectoryGroupsFromConfig({
         cfg,

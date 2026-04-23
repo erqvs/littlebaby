@@ -3,23 +3,23 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 import { resolveAgentRuntimeConfig } from "../agents/agent-runtime-config.js";
 import { resolveSession } from "../agents/command/session.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { createThrowingTestRuntime } from "./test-runtime-config-helpers.js";
 
 type ConfigSnapshotForWrite = {
-  snapshot: { valid: boolean; resolved: OpenClawConfig };
+  snapshot: { valid: boolean; resolved: LittleBabyConfig };
   writeOptions: Record<string, never>;
 };
 
 type ResolveCommandConfigParams = {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   commandName: string;
   targetIds: Set<string>;
   runtime: RuntimeEnv;
 };
 
-const loadConfigMock = vi.hoisted(() => vi.fn<() => OpenClawConfig>());
+const loadConfigMock = vi.hoisted(() => vi.fn<() => LittleBabyConfig>());
 const readConfigFileSnapshotForWriteMock = vi.hoisted(() =>
   vi.fn<() => Promise<ConfigSnapshotForWrite>>(),
 );
@@ -37,7 +37,7 @@ vi.mock("../cli/command-secret-targets.js", () => ({
 }));
 
 const setRuntimeConfigSnapshotMock = vi.hoisted(() =>
-  vi.fn<(cfg: OpenClawConfig, sourceConfig: OpenClawConfig) => void>(),
+  vi.fn<(cfg: LittleBabyConfig, sourceConfig: LittleBabyConfig) => void>(),
 );
 vi.mock("../config/runtime-snapshot.js", () => ({
   setRuntimeConfigSnapshot: setRuntimeConfigSnapshotMock,
@@ -46,8 +46,8 @@ vi.mock("../config/runtime-snapshot.js", () => ({
 const resolveCommandConfigWithSecretsMock = vi.hoisted(() =>
   vi.fn<
     (params: ResolveCommandConfigParams) => Promise<{
-      resolvedConfig: OpenClawConfig;
-      effectiveConfig: OpenClawConfig;
+      resolvedConfig: LittleBabyConfig;
+      effectiveConfig: LittleBabyConfig;
       diagnostics: never[];
     }>
   >(),
@@ -59,10 +59,10 @@ vi.mock("../cli/command-config-resolution.runtime.js", () => ({
 const runtime = createThrowingTestRuntime();
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-agent-" });
+  return withTempHomeBase(fn, { prefix: "littlebaby-agent-" });
 }
 
-function mockConfig(home: string, storePath: string): OpenClawConfig {
+function mockConfig(home: string, storePath: string): LittleBabyConfig {
   const cfg = {
     agents: {
       defaults: {
@@ -72,7 +72,7 @@ function mockConfig(home: string, storePath: string): OpenClawConfig {
       },
     },
     session: { store: storePath, mainKey: "main" },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
   loadConfigMock.mockReturnValue(cfg);
   return cfg;
 }
@@ -80,7 +80,7 @@ function mockConfig(home: string, storePath: string): OpenClawConfig {
 beforeEach(() => {
   vi.clearAllMocks();
   readConfigFileSnapshotForWriteMock.mockResolvedValue({
-    snapshot: { valid: false, resolved: {} as OpenClawConfig },
+    snapshot: { valid: false, resolved: {} as LittleBabyConfig },
     writeOptions: {},
   });
 });
@@ -107,7 +107,7 @@ describe("agentCommand runtime config", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
       const sourceConfig = {
         ...loadedConfig,
         models: {
@@ -119,7 +119,7 @@ describe("agentCommand runtime config", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
       const resolvedConfig = {
         ...loadedConfig,
         models: {
@@ -131,7 +131,7 @@ describe("agentCommand runtime config", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as LittleBabyConfig;
 
       loadConfigMock.mockReturnValue(loadedConfig);
       readConfigFileSnapshotForWriteMock.mockResolvedValue({
@@ -170,7 +170,7 @@ describe("agentCommand runtime config", () => {
         telegram: {
           botToken: { source: "env", provider: "default", id: "TELEGRAM_BOT_TOKEN" },
         },
-      } as unknown as OpenClawConfig["channels"];
+      } as unknown as LittleBabyConfig["channels"];
       resolveCommandConfigWithSecretsMock.mockResolvedValueOnce({
         resolvedConfig: loadedConfig,
         effectiveConfig: loadedConfig,

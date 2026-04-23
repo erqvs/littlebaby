@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type {
   TaskDeliveryState,
   TaskDeliveryStatus,
@@ -86,7 +86,7 @@ export type DetachedTaskDeliveryStatusParams = {
 };
 
 export type DetachedTaskCancelParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   taskId: string;
 };
 

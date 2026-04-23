@@ -1,6 +1,6 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import type { Api, Model } from "@mariozechner/pi-ai";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { resolveProviderStreamFn } from "../plugins/provider-runtime.js";
 import { createAnthropicMessagesTransportStreamFn } from "./anthropic-transport-stream.js";
 import {
@@ -20,16 +20,16 @@ const SUPPORTED_TRANSPORT_APIS = new Set<Api>([
 ]);
 
 const SIMPLE_TRANSPORT_API_ALIAS: Record<string, Api> = {
-  "openai-responses": "openclaw-openai-responses-transport",
-  "openai-codex-responses": "openclaw-openai-responses-transport",
-  "openai-completions": "openclaw-openai-completions-transport",
-  "azure-openai-responses": "openclaw-azure-openai-responses-transport",
-  "anthropic-messages": "openclaw-anthropic-messages-transport",
-  "google-generative-ai": "openclaw-google-generative-ai-transport",
+  "openai-responses": "littlebaby-openai-responses-transport",
+  "openai-codex-responses": "littlebaby-openai-responses-transport",
+  "openai-completions": "littlebaby-openai-completions-transport",
+  "azure-openai-responses": "littlebaby-azure-openai-responses-transport",
+  "anthropic-messages": "littlebaby-anthropic-messages-transport",
+  "google-generative-ai": "littlebaby-google-generative-ai-transport",
 };
 
 type ProviderTransportStreamContext = {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   agentDir?: string;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;

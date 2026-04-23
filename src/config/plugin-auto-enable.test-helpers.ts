@@ -22,7 +22,7 @@ export function resetPluginAutoEnableTestState(): void {
 }
 
 export function makeTempDir(): string {
-  return makeTrackedTempDir("openclaw-plugin-auto-enable", tempDirs);
+  return makeTrackedTempDir("littlebaby-plugin-auto-enable", tempDirs);
 }
 
 export function makeIsolatedEnv(overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
@@ -40,7 +40,7 @@ export function writePluginManifestFixture(params: {
 }): void {
   mkdirSafeDir(params.rootDir);
   fs.writeFileSync(
-    path.join(params.rootDir, "openclaw.plugin.json"),
+    path.join(params.rootDir, "littlebaby.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -85,7 +85,7 @@ export function makeRegistry(
       origin: "config" as const,
       rootDir: `/fake/${plugin.id}`,
       source: `/fake/${plugin.id}/index.js`,
-      manifestPath: `/fake/${plugin.id}/openclaw.plugin.json`,
+      manifestPath: `/fake/${plugin.id}/littlebaby.plugin.json`,
     })),
     diagnostics: [],
   };

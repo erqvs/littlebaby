@@ -1,6 +1,6 @@
 ---
 title: "Memory Overview"
-summary: "How OpenClaw remembers things across sessions"
+summary: "How LittleBaby remembers things across sessions"
 read_when:
   - You want to understand how memory works
   - You want to know what memory files to write
@@ -8,7 +8,7 @@ read_when:
 
 # Memory Overview
 
-OpenClaw remembers things by writing **plain Markdown files** in your agent's
+LittleBaby remembers things by writing **plain Markdown files** in your agent's
 workspace. The model only "remembers" what gets saved to disk -- there is no
 hidden state.
 
@@ -68,7 +68,7 @@ search** -- combining vector similarity (semantic meaning) with keyword matching
 an API key for any supported provider.
 
 <Info>
-OpenClaw auto-detects your embedding provider from available API keys. If you
+LittleBaby auto-detects your embedding provider from available API keys. If you
 have an OpenAI, Gemini, Voyage, or Mistral key configured, memory search is
 enabled automatically.
 </Info>
@@ -104,7 +104,7 @@ dashboards, bridge mode, and Obsidian-friendly workflows.
 
 ## Automatic memory flush
 
-Before [compaction](/concepts/compaction) summarizes your conversation, OpenClaw
+Before [compaction](/concepts/compaction) summarizes your conversation, LittleBaby
 runs a silent turn that reminds the agent to save important context to memory
 files. This is on by default -- you do not need to configure anything.
 
@@ -149,7 +149,7 @@ the system thinks is durable without manually editing `MEMORY.md`.
 When you use:
 
 ```bash
-openclaw memory rem-backfill --path ./memory --stage-short-term
+littlebaby memory rem-backfill --path ./memory --stage-short-term
 ```
 
 the grounded durable candidates are not promoted directly. They are staged into
@@ -164,16 +164,16 @@ If you decide the replay was not useful, you can remove the staged artifacts
 without touching ordinary diary entries or normal recall state:
 
 ```bash
-openclaw memory rem-backfill --rollback
-openclaw memory rem-backfill --rollback-short-term
+littlebaby memory rem-backfill --rollback
+littlebaby memory rem-backfill --rollback-short-term
 ```
 
 ## CLI
 
 ```bash
-openclaw memory status          # Check index status and provider
-openclaw memory search "query"  # Search from the command line
-openclaw memory index --force   # Rebuild the index
+littlebaby memory status          # Check index status and provider
+littlebaby memory search "query"  # Search from the command line
+littlebaby memory index --force   # Rebuild the index
 ```
 
 ## Further reading

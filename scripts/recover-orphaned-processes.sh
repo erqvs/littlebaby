@@ -146,7 +146,7 @@ const includePattern = /codex|claude/i;
 const excludePatterns = [
   /littlebaby-gateway/i,
   /signal-cli/i,
-  /node_modules\/\.bin\/openclaw/i,
+  /node_modules\/\.bin\/littlebaby/i,
   /recover-orphaned-processes\.sh/i,
 ];
 

@@ -3,8 +3,8 @@ import path from "node:path";
 import {
   ensureAuthProfileStoreForLocalUpdate,
   type OAuthCredential,
-} from "openclaw/plugin-sdk/provider-auth";
-import { writePrivateSecretFileAtomic } from "openclaw/plugin-sdk/secret-file-runtime";
+} from "littlebaby/plugin-sdk/provider-auth";
+import { writePrivateSecretFileAtomic } from "littlebaby/plugin-sdk/secret-file-runtime";
 import type { CodexAppServerStartOptions } from "./config.js";
 
 const DEFAULT_CODEX_AUTH_PROFILE_ID = "openai-codex:default";

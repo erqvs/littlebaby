@@ -1,5 +1,5 @@
 import { mergeMissing } from "../../../config/legacy.shared.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../../config/types.littlebaby.js";
 import {
   cloneRecord,
   ensureRecord,
@@ -147,7 +147,7 @@ function normalizeLegacyWebFetchConfigRecord<T extends JsonRecord>(
 }
 
 export function resolvePluginWebFetchConfig(
-  config: OpenClawConfig | undefined,
+  config: LittleBabyConfig | undefined,
   pluginId: string,
 ): Record<string, unknown> | undefined {
   const pluginConfig = config?.plugins?.entries?.[pluginId]?.config;

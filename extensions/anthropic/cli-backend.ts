@@ -1,8 +1,8 @@
-import type { CliBackendPlugin } from "openclaw/plugin-sdk/cli-backend";
+import type { CliBackendPlugin } from "littlebaby/plugin-sdk/cli-backend";
 import {
   CLI_FRESH_WATCHDOG_DEFAULTS,
   CLI_RESUME_WATCHDOG_DEFAULTS,
-} from "openclaw/plugin-sdk/cli-backend";
+} from "littlebaby/plugin-sdk/cli-backend";
 import {
   CLAUDE_CLI_BACKEND_ID,
   CLAUDE_CLI_DEFAULT_MODEL_REF,

@@ -1,12 +1,12 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import { streamSimple } from "@mariozechner/pi-ai";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { ProviderWrapStreamFnContext } from "littlebaby/plugin-sdk/plugin-entry";
 import {
   applyAnthropicEphemeralCacheControlMarkers,
   buildCopilotDynamicHeaders,
   hasCopilotVisionInput,
   streamWithPayloadPatch,
-} from "openclaw/plugin-sdk/provider-stream-shared";
+} from "littlebaby/plugin-sdk/provider-stream-shared";
 
 type _StreamContext = Parameters<StreamFn>[1];
 

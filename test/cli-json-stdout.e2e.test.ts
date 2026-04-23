@@ -38,7 +38,7 @@ describe("cli json stdout contract", () => {
         expect(stdout).not.toContain("Doctor changes");
         expect(stdout).not.toContain("Config invalid");
       },
-      { prefix: "openclaw-json-e2e-" },
+      { prefix: "littlebaby-json-e2e-" },
     );
   });
 });

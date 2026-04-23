@@ -25,7 +25,7 @@ describe("path-resolve helpers (direct-import coverage attribution)", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-direct-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-path-direct-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
   });
 
@@ -41,8 +41,8 @@ describe("path-resolve helpers (direct-import coverage attribution)", () => {
     expect(path.basename(resolved)).toMatch(/auth-profiles/);
   });
 
-  it("resolveAuthStorePath falls back to resolveOpenClawAgentDir when agentDir is omitted", () => {
-    // Omitting agentDir exercises the `agentDir ?? resolveOpenClawAgentDir()`
+  it("resolveAuthStorePath falls back to resolveLittleBabyAgentDir when agentDir is omitted", () => {
+    // Omitting agentDir exercises the `agentDir ?? resolveLittleBabyAgentDir()`
     // nullish branch. With LITTLEBABY_STATE_DIR set to our tempdir, the
     // resolved path must live under it.
     const resolved = resolveAuthStorePath();
@@ -83,7 +83,7 @@ describe("path-resolve helpers (direct-import coverage attribution)", () => {
     // Exercises the `pathname.startsWith(\"~\")` branch. We use a contrived
     // agentDir that already starts with `~` so the resolver echoes the
     // tilde path back instead of expanding it via resolveUserPath.
-    const tildeAgentDir = "~fake-openclaw-no-expand";
+    const tildeAgentDir = "~fake-littlebaby-no-expand";
     const resolved = resolveAuthStorePathForDisplay(tildeAgentDir);
     // Either the path itself starts with `~`, or the display variant
     // happened to resolve through the user-path branch. Both branches are
@@ -106,7 +106,7 @@ describe("ensureAuthStoreFile (direct-import coverage attribution)", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-ensure-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-path-ensure-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
   });
 

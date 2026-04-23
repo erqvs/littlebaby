@@ -48,17 +48,17 @@ describe("formatSystemRunAllowlistMissMessage", () => {
 
 describe("handleSystemRunInvoke mac app exec host routing", () => {
   let sharedFixtureRoot = "";
-  let sharedOpenClawHome = "";
+  let sharedLittleBabyHome = "";
   let sharedRuntimeBinDir = "";
   let sharedFixtureId = 0;
-  let previousOpenClawHome: string | undefined;
+  let previousLittleBabyHome: string | undefined;
   const sharedRuntimeBins = new Set<string>();
 
   beforeAll(() => {
-    sharedFixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-node-host-fixtures-"));
-    sharedOpenClawHome = path.join(sharedFixtureRoot, "openclaw-home");
+    sharedFixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-node-host-fixtures-"));
+    sharedLittleBabyHome = path.join(sharedFixtureRoot, "littlebaby-home");
     sharedRuntimeBinDir = path.join(sharedFixtureRoot, "bin");
-    fs.mkdirSync(sharedOpenClawHome, { recursive: true });
+    fs.mkdirSync(sharedLittleBabyHome, { recursive: true });
     fs.mkdirSync(sharedRuntimeBinDir, { recursive: true });
   });
 
@@ -75,18 +75,18 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   }
 
   beforeEach(() => {
-    previousOpenClawHome = process.env.LITTLEBABY_HOME;
-    process.env.LITTLEBABY_HOME = sharedOpenClawHome;
+    previousLittleBabyHome = process.env.LITTLEBABY_HOME;
+    process.env.LITTLEBABY_HOME = sharedLittleBabyHome;
     fs.rmSync(resolveExecApprovalsPath(), { force: true });
     clearRuntimeConfigSnapshot();
   });
 
   afterEach(() => {
     clearRuntimeConfigSnapshot();
-    if (previousOpenClawHome === undefined) {
+    if (previousLittleBabyHome === undefined) {
       delete process.env.LITTLEBABY_HOME;
     } else {
-      process.env.LITTLEBABY_HOME = previousOpenClawHome;
+      process.env.LITTLEBABY_HOME = previousLittleBabyHome;
     }
   });
 
@@ -273,17 +273,17 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     approvals: Parameters<typeof saveExecApprovals>[0];
     run: (ctx: { tempHome: string }) => Promise<T>;
   }): Promise<T> {
-    const tempHome = sharedOpenClawHome;
-    const previousOpenClawHome = process.env.LITTLEBABY_HOME;
+    const tempHome = sharedLittleBabyHome;
+    const previousLittleBabyHome = process.env.LITTLEBABY_HOME;
     process.env.LITTLEBABY_HOME = tempHome;
     saveExecApprovals(params.approvals);
     try {
       return await params.run({ tempHome });
     } finally {
-      if (previousOpenClawHome === undefined) {
+      if (previousLittleBabyHome === undefined) {
         delete process.env.LITTLEBABY_HOME;
       } else {
-        process.env.LITTLEBABY_HOME = previousOpenClawHome;
+        process.env.LITTLEBABY_HOME = previousLittleBabyHome;
       }
     }
   }
@@ -556,7 +556,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
 
   for (const testCase of approvedEnvShellWrapperCases) {
     it.runIf(process.platform !== "win32")(testCase.name, async () => {
-      const tmp = createFixtureDir("openclaw-approved-wrapper-");
+      const tmp = createFixtureDir("littlebaby-approved-wrapper-");
       const marker = path.join(tmp, "marker");
       const attackerScript = path.join(tmp, "sh");
       fs.writeFileSync(attackerScript, "#!/bin/sh\necho exploited > marker\n");
@@ -651,7 +651,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     "pins PATH-token executable to canonical path for approval-based runs",
     async () => {
       await withPathTokenCommand({
-        tmpPrefix: "openclaw-approval-path-pin-",
+        tmpPrefix: "littlebaby-approval-path-pin-",
         run: async ({ expected }) => {
           const { runCommand, sendInvokeResult } = await runSystemInvoke({
             preferMacAppExecHost: false,
@@ -675,7 +675,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     "accepts prepared plans after PATH-token hardening rewrites argv",
     async () => {
       await withPathTokenCommand({
-        tmpPrefix: "openclaw-prepare-run-path-pin-",
+        tmpPrefix: "littlebaby-prepare-run-path-pin-",
         run: async ({ expected }) => {
           const prepared = buildSystemRunApprovalPlan({
             command: ["poccmd", "hello"],
@@ -712,7 +712,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
       }));
       const sendInvokeResult = vi.fn(async () => {});
       await withPathTokenCommand({
-        tmpPrefix: "openclaw-allowlist-path-pin-",
+        tmpPrefix: "littlebaby-allowlist-path-pin-",
         run: async ({ link, expected }) => {
           await withTempApprovalsHome({
             approvals: {
@@ -753,7 +753,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   it.runIf(process.platform !== "win32")(
     "denies approval-based execution when cwd is a symlink",
     async () => {
-      const tmp = createFixtureDir("openclaw-approval-cwd-link-");
+      const tmp = createFixtureDir("littlebaby-approval-cwd-link-");
       const safeDir = path.join(tmp, "safe");
       const linkDir = path.join(tmp, "cwd-link");
       const script = path.join(safeDir, "run.sh");
@@ -781,7 +781,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   it.runIf(process.platform !== "win32")(
     "denies approval-based execution when cwd contains a symlink parent component",
     async () => {
-      const tmp = createFixtureDir("openclaw-approval-cwd-parent-link-");
+      const tmp = createFixtureDir("littlebaby-approval-cwd-parent-link-");
       const safeRoot = path.join(tmp, "safe-root");
       const safeSub = path.join(safeRoot, "sub");
       const linkRoot = path.join(tmp, "approved-link");
@@ -805,7 +805,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   );
 
   it("uses canonical executable path for approval-based relative command execution", async () => {
-    const tmp = createFixtureDir("openclaw-approval-cwd-real-");
+    const tmp = createFixtureDir("littlebaby-approval-cwd-real-");
     const script = path.join(tmp, "run.sh");
     fs.writeFileSync(script, "#!/bin/sh\necho SAFE\n");
     fs.chmodSync(script, 0o755);
@@ -839,8 +839,8 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   });
 
   it("denies approval-based execution when cwd identity drifts before execution", async () => {
-    const tmp = createFixtureDir("openclaw-approval-cwd-drift-");
-    const fallback = createFixtureDir("openclaw-approval-cwd-drift-alt-");
+    const tmp = createFixtureDir("littlebaby-approval-cwd-drift-");
+    const fallback = createFixtureDir("littlebaby-approval-cwd-drift-alt-");
     const script = path.join(tmp, "run.sh");
     fs.writeFileSync(script, "#!/bin/sh\necho SAFE\n");
     fs.chmodSync(script, 0o755);
@@ -879,7 +879,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   });
 
   it("denies approval-based execution when a script operand changes after approval", async () => {
-    const tmp = createFixtureDir("openclaw-approval-script-drift-");
+    const tmp = createFixtureDir("littlebaby-approval-script-drift-");
     const fixture = createMutableScriptOperandFixture(tmp);
     fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
     if (process.platform !== "win32") {
@@ -918,7 +918,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   });
 
   it("keeps approved shell script execution working when the script is unchanged", async () => {
-    const tmp = createFixtureDir("openclaw-approval-script-stable-");
+    const tmp = createFixtureDir("littlebaby-approval-script-stable-");
     const fixture = createMutableScriptOperandFixture(tmp);
     fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
     if (process.platform !== "win32") {
@@ -956,7 +956,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     await withFakeRuntimeOnPath({
       runtime: "tsx",
       run: async () => {
-        const tmp = createFixtureDir("openclaw-approval-tsx-script-drift-");
+        const tmp = createFixtureDir("littlebaby-approval-tsx-script-drift-");
         const fixture = createRuntimeScriptOperandFixture({ tmp, runtime: "tsx" });
         fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
         try {
@@ -989,7 +989,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
         } finally {
           fs.rmSync(tmp, { recursive: true, force: true });
         }
-        const stableTmp = createFixtureDir("openclaw-approval-tsx-script-stable-");
+        const stableTmp = createFixtureDir("littlebaby-approval-tsx-script-stable-");
         const stableFixture = createRuntimeScriptOperandFixture({ tmp: stableTmp, runtime: "tsx" });
         fs.writeFileSync(stableFixture.scriptPath, stableFixture.initialBody);
         try {
@@ -1026,7 +1026,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     await withFakeRuntimeOnPath({
       runtime: "tsx",
       run: async () => {
-        const tmp = createFixtureDir("openclaw-approval-tsx-missing-binding-");
+        const tmp = createFixtureDir("littlebaby-approval-tsx-missing-binding-");
         const fixture = createRuntimeScriptOperandFixture({ tmp, runtime: "tsx" });
         fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
         try {
@@ -1065,7 +1065,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   });
 
   it("denies ./sh wrapper spoof in allowlist on-miss mode before execution", async () => {
-    const marker = path.join(os.tmpdir(), `openclaw-wrapper-spoof-${process.pid}-${Date.now()}`);
+    const marker = path.join(os.tmpdir(), `littlebaby-wrapper-spoof-${process.pid}-${Date.now()}`);
     const runCommand = vi.fn(async () => {
       fs.writeFileSync(marker, "executed");
       return createLocalRunResult();
@@ -1131,7 +1131,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   });
 
   it("denies semicolon-chained shell payloads in allowlist mode without explicit approval", async () => {
-    const payloads = ["openclaw status; id", "openclaw status; cat /etc/passwd"];
+    const payloads = ["littlebaby status; id", "littlebaby status; cat /etc/passwd"];
     for (const payload of payloads) {
       const command =
         process.platform === "win32"
@@ -1414,7 +1414,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
       await withTempApprovalsHome({
         approvals: createAllowlistOnMissApprovals(),
         run: async () => {
-          const tempDir = createFixtureDir("openclaw-inline-eval-bin-");
+          const tempDir = createFixtureDir("littlebaby-inline-eval-bin-");
           for (const testCase of cases) {
             const executablePath = createTempExecutable({
               dir: tempDir,
@@ -1453,7 +1453,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
       await withTempApprovalsHome({
         approvals: createAllowlistOnMissApprovals(),
         run: async () => {
-          const tempDir = createFixtureDir("openclaw-inline-eval-awk-");
+          const tempDir = createFixtureDir("littlebaby-inline-eval-awk-");
           try {
             const executablePath = createTempExecutable({
               dir: tempDir,
@@ -1510,7 +1510,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
       await withTempApprovalsHome({
         approvals: createAllowlistOnMissApprovals(),
         run: async () => {
-          const tempDir = createFixtureDir("openclaw-inline-eval-make-");
+          const tempDir = createFixtureDir("littlebaby-inline-eval-make-");
           try {
             const executablePath = createTempExecutable({
               dir: tempDir,
@@ -1556,7 +1556,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   it.runIf(process.platform !== "win32")(
     "auto-runs allowlisted inner scripts through transport shell wrappers",
     async () => {
-      const tempDir = createFixtureDir("openclaw-shell-wrapper-inner-");
+      const tempDir = createFixtureDir("littlebaby-shell-wrapper-inner-");
       try {
         const scriptsDir = path.join(tempDir, "scripts");
         fs.mkdirSync(scriptsDir, { recursive: true });
@@ -1597,7 +1597,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
 
   it("keeps cmd.exe transport wrappers approval-gated on Windows", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    const tempDir = createFixtureDir("openclaw-cmd-wrapper-allow-");
+    const tempDir = createFixtureDir("littlebaby-cmd-wrapper-allow-");
     try {
       const scriptPath = path.join(tempDir, "check_mail.cmd");
       fs.writeFileSync(scriptPath, "@echo off\r\necho ok\r\n");
@@ -1651,7 +1651,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     },
   ])("$name", async ({ command }) => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    const tempDir = createFixtureDir("openclaw-env-cmd-wrapper-allow-");
+    const tempDir = createFixtureDir("littlebaby-env-cmd-wrapper-allow-");
     try {
       const scriptPath = path.join(tempDir, "check_mail.cmd");
       fs.writeFileSync(scriptPath, "@echo off\r\necho ok\r\n");
@@ -1703,7 +1703,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
       return;
     }
 
-    const tempDir = createFixtureDir("openclaw-shell-wrapper-allow-");
+    const tempDir = createFixtureDir("littlebaby-shell-wrapper-allow-");
     try {
       const prepared = buildSystemRunApprovalPlan({
         command: ["/bin/sh", "-lc", "cd ."],

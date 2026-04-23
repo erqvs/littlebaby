@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/google-plugin",
+  "name": "@littlebaby/google-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Google plugin",
+  "description": "LittleBaby Google plugin",
   "type": "module",
   "dependencies": {
     "@google/genai": "^1.50.1"
   },
-  "openclaw": {
+  "littlebaby": {
     "bundle": {
       "stageRuntimeDependencies": true
     },

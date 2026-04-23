@@ -64,21 +64,21 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw status", "Show channel health + session summary."],
-          ["openclaw status --all", "Full diagnosis (read-only)."],
-          ["openclaw status --json", "Machine-readable output."],
-          ["openclaw status --usage", "Show model provider usage/quota snapshots."],
+          ["littlebaby status", "Show channel health + session summary."],
+          ["littlebaby status --all", "Full diagnosis (read-only)."],
+          ["littlebaby status --json", "Machine-readable output."],
+          ["littlebaby status --usage", "Show model provider usage/quota snapshots."],
           [
-            "openclaw status --deep",
+            "littlebaby status --deep",
             "Run channel probes (WA + Telegram + Discord + Slack + Signal).",
           ],
-          ["openclaw status --deep --timeout 5000", "Tighten probe timeout."],
+          ["littlebaby status --deep --timeout 5000", "Tighten probe timeout."],
         ])}`,
     )
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/status", "docs.openclaw.ai/cli/status")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/status", "docs.littlebaby.ai/cli/status")}\n`,
     )
     .action(async (opts) => {
       await runWithVerboseAndTimeout(opts, async ({ verbose, timeoutMs }) => {
@@ -106,7 +106,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/health", "docs.openclaw.ai/cli/health")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/health", "docs.littlebaby.ai/cli/health")}\n`,
     )
     .action(async (opts) => {
       await runWithVerboseAndTimeout(opts, async ({ verbose, timeoutMs }) => {
@@ -134,12 +134,12 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw sessions", "List all sessions."],
-          ["openclaw sessions --agent work", "List sessions for one agent."],
-          ["openclaw sessions --all-agents", "Aggregate sessions across agents."],
-          ["openclaw sessions --active 120", "Only last 2 hours."],
-          ["openclaw sessions --json", "Machine-readable output."],
-          ["openclaw sessions --store ./tmp/sessions.json", "Use a specific session store."],
+          ["littlebaby sessions", "List all sessions."],
+          ["littlebaby sessions --agent work", "List sessions for one agent."],
+          ["littlebaby sessions --all-agents", "Aggregate sessions across agents."],
+          ["littlebaby sessions --active 120", "Only last 2 hours."],
+          ["littlebaby sessions --json", "Machine-readable output."],
+          ["littlebaby sessions --store ./tmp/sessions.json", "Use a specific session store."],
         ])}\n\n${theme.muted(
           "Shows token usage per session when the agent reports it; set agents.defaults.contextTokens to cap the window and show %.",
         )}`,
@@ -147,7 +147,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sessions", "docs.openclaw.ai/cli/sessions")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sessions", "docs.littlebaby.ai/cli/sessions")}\n`,
     )
     .action(async (opts) => {
       setVerbose(Boolean(opts.verbose));
@@ -183,16 +183,16 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw sessions cleanup --dry-run", "Preview stale/cap cleanup."],
+          ["littlebaby sessions cleanup --dry-run", "Preview stale/cap cleanup."],
           [
-            "openclaw sessions cleanup --dry-run --fix-missing",
+            "littlebaby sessions cleanup --dry-run --fix-missing",
             "Also preview pruning entries with missing transcript files.",
           ],
-          ["openclaw sessions cleanup --enforce", "Apply maintenance now."],
-          ["openclaw sessions cleanup --agent work --dry-run", "Preview one agent store."],
-          ["openclaw sessions cleanup --all-agents --dry-run", "Preview all agent stores."],
+          ["littlebaby sessions cleanup --enforce", "Apply maintenance now."],
+          ["littlebaby sessions cleanup --agent work --dry-run", "Preview one agent store."],
+          ["littlebaby sessions cleanup --all-agents --dry-run", "Preview all agent stores."],
           [
-            "openclaw sessions cleanup --enforce --store ./tmp/sessions.json",
+            "littlebaby sessions cleanup --enforce --store ./tmp/sessions.json",
             "Use a specific store.",
           ],
         ])}`,

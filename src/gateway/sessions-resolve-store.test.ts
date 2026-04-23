@@ -1,19 +1,19 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { resolveStorePath, saveSessionStore } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { withStateDirEnv } from "../test-helpers/state-dir-env.js";
 import { ErrorCodes } from "./protocol/index.js";
 import { resolveSessionKeyFromResolveParams } from "./sessions-resolve.js";
 
 describe("resolveSessionKeyFromResolveParams store canonicalization", () => {
   it("resolves legacy main-alias matches by sessionId and label for the configured default agent", async () => {
-    await withStateDirEnv("openclaw-sessions-resolve-alias-", async ({ stateDir }) => {
+    await withStateDirEnv("littlebaby-sessions-resolve-alias-", async ({ stateDir }) => {
       const storePath = path.join(stateDir, "sessions.json");
       const cfg = {
         session: { store: storePath, mainKey: "main" },
         agents: { list: [{ id: "ops", default: true }] },
-      } satisfies OpenClawConfig;
+      } satisfies LittleBabyConfig;
       await saveSessionStore(storePath, {
         "agent:main:main": {
           sessionId: "sess-default-alias",
@@ -39,12 +39,12 @@ describe("resolveSessionKeyFromResolveParams store canonicalization", () => {
   });
 
   it("still rejects non-alias agent:main matches when main is no longer configured", async () => {
-    await withStateDirEnv("openclaw-sessions-resolve-stale-main-", async ({ stateDir }) => {
+    await withStateDirEnv("littlebaby-sessions-resolve-stale-main-", async ({ stateDir }) => {
       const storePath = path.join(stateDir, "sessions.json");
       const cfg = {
         session: { store: storePath, mainKey: "main" },
         agents: { list: [{ id: "ops", default: true }] },
-      } satisfies OpenClawConfig;
+      } satisfies LittleBabyConfig;
       await saveSessionStore(storePath, {
         "agent:main:discord:direct:u1": {
           sessionId: "sess-stale-main",
@@ -69,8 +69,8 @@ describe("resolveSessionKeyFromResolveParams store canonicalization", () => {
   });
 
   it("does not adopt legacy main aliases from discovered deleted-agent stores", async () => {
-    await withStateDirEnv("openclaw-sessions-resolve-discovered-main-", async () => {
-      const cfg: OpenClawConfig = {
+    await withStateDirEnv("littlebaby-sessions-resolve-discovered-main-", async () => {
+      const cfg: LittleBabyConfig = {
         agents: { list: [{ id: "ops", default: true }] },
       };
       const staleMainStorePath = resolveStorePath(cfg.session?.store, { agentId: "main" });
@@ -111,8 +111,8 @@ describe("resolveSessionKeyFromResolveParams store canonicalization", () => {
   });
 
   it("rejects an explicit listed deleted main key instead of remapping to the live default main", async () => {
-    await withStateDirEnv("openclaw-sessions-resolve-key-deleted-main-", async () => {
-      const cfg: OpenClawConfig = {
+    await withStateDirEnv("littlebaby-sessions-resolve-key-deleted-main-", async () => {
+      const cfg: LittleBabyConfig = {
         agents: { list: [{ id: "ops", default: true }] },
       };
       const liveDefaultStorePath = resolveStorePath(cfg.session?.store, { agentId: "ops" });

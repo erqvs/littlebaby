@@ -16,13 +16,13 @@ import { createTypingSignaler, resolveTypingMode } from "./typing-mode.js";
 import { createTypingController } from "./typing.js";
 
 describe("matchesMentionWithExplicit", () => {
-  const mentionRegexes = [/\bopenclaw\b/i];
+  const mentionRegexes = [/\blittlebaby\b/i];
 
   it("combines explicit-mention state with regex fallback rules", () => {
     const cases = [
       {
         name: "regex match with explicit resolver available",
-        text: "@openclaw hello",
+        text: "@littlebaby hello",
         mentionRegexes,
         explicit: {
           hasAnyMention: true,
@@ -55,7 +55,7 @@ describe("matchesMentionWithExplicit", () => {
       },
       {
         name: "falls back to regex when explicit cannot resolve",
-        text: "openclaw please",
+        text: "littlebaby please",
         mentionRegexes,
         explicit: {
           hasAnyMention: true,
@@ -517,14 +517,14 @@ describe("resolveResponsePrefixTemplate", () => {
       {
         name: "identity.name",
         template: "[{identity.name}]",
-        values: { identityName: "OpenClaw" },
-        expected: "[OpenClaw]",
+        values: { identityName: "LittleBaby" },
+        expected: "[LittleBaby]",
       },
       {
         name: "identityName alias",
         template: "[{identityName}]",
-        values: { identityName: "OpenClaw" },
-        expected: "[OpenClaw]",
+        values: { identityName: "LittleBaby" },
+        expected: "[LittleBaby]",
       },
       {
         name: "case-insensitive variables",
@@ -536,12 +536,12 @@ describe("resolveResponsePrefixTemplate", () => {
         name: "all variables",
         template: "[{identity.name}] {provider}/{model} (think:{thinkingLevel})",
         values: {
-          identityName: "OpenClaw",
+          identityName: "LittleBaby",
           provider: "anthropic",
           model: "claude-opus-4-6",
           thinkingLevel: "high",
         },
-        expected: "[OpenClaw] anthropic/claude-opus-4-6 (think:high)",
+        expected: "[LittleBaby] anthropic/claude-opus-4-6 (think:high)",
       },
     ] as const;
     expectResolvedTemplateCases(cases);

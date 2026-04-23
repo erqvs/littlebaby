@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/duckduckgo-plugin",
+  "name": "@littlebaby/duckduckgo-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw DuckDuckGo plugin",
+  "description": "LittleBaby DuckDuckGo plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

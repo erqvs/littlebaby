@@ -3,12 +3,12 @@ set -euo pipefail
 
 cd /repo
 
-export LITTLEBABY_STATE_DIR="/tmp/openclaw-test"
-export LITTLEBABY_CONFIG_PATH="${LITTLEBABY_STATE_DIR}/openclaw.json"
+export LITTLEBABY_STATE_DIR="/tmp/littlebaby-test"
+export LITTLEBABY_CONFIG_PATH="${LITTLEBABY_STATE_DIR}/littlebaby.json"
 
 echo "==> Build"
-if ! pnpm build >/tmp/openclaw-cleanup-build.log 2>&1; then
-  cat /tmp/openclaw-cleanup-build.log
+if ! pnpm build >/tmp/littlebaby-cleanup-build.log 2>&1; then
+  cat /tmp/littlebaby-cleanup-build.log
   exit 1
 fi
 
@@ -20,8 +20,8 @@ echo 'creds' >"${LITTLEBABY_STATE_DIR}/credentials/marker.txt"
 echo 'session' >"${LITTLEBABY_STATE_DIR}/agents/main/sessions/sessions.json"
 
 echo "==> Reset (config+creds+sessions)"
-if ! pnpm openclaw reset --scope config+creds+sessions --yes --non-interactive >/tmp/openclaw-cleanup-reset.log 2>&1; then
-  cat /tmp/openclaw-cleanup-reset.log
+if ! pnpm littlebaby reset --scope config+creds+sessions --yes --non-interactive >/tmp/littlebaby-cleanup-reset.log 2>&1; then
+  cat /tmp/littlebaby-cleanup-reset.log
   exit 1
 fi
 
@@ -34,8 +34,8 @@ mkdir -p "${LITTLEBABY_STATE_DIR}/credentials"
 echo '{}' >"${LITTLEBABY_CONFIG_PATH}"
 
 echo "==> Uninstall (state only)"
-if ! pnpm openclaw uninstall --state --yes --non-interactive >/tmp/openclaw-cleanup-uninstall.log 2>&1; then
-  cat /tmp/openclaw-cleanup-uninstall.log
+if ! pnpm littlebaby uninstall --state --yes --non-interactive >/tmp/littlebaby-cleanup-uninstall.log 2>&1; then
+  cat /tmp/littlebaby-cleanup-uninstall.log
   exit 1
 fi
 

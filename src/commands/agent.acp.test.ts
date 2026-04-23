@@ -7,7 +7,7 @@ import * as acpManagerModule from "../acp/control-plane/manager.js";
 import { AcpRuntimeError } from "../acp/runtime/errors.js";
 import * as embeddedModule from "../agents/pi-embedded.js";
 import * as configIoModule from "../config/io.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { agentCommand } from "./agent.js";
 import { createThrowingTestRuntime } from "./test-runtime-config-helpers.js";
@@ -117,10 +117,10 @@ const getAcpSessionManagerSpy = vi.spyOn(acpManagerModule, "getAcpSessionManager
 const runtime = createThrowingTestRuntime();
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-agent-acp-" });
+  return withTempHomeBase(fn, { prefix: "littlebaby-agent-acp-" });
 }
 
-function createAcpEnabledConfig(home: string, storePath: string): OpenClawConfig {
+function createAcpEnabledConfig(home: string, storePath: string): LittleBabyConfig {
   return {
     acp: {
       enabled: true,
@@ -146,7 +146,7 @@ function mockConfig(home: string, storePath: string) {
 function mockConfigWithAcpOverrides(
   home: string,
   storePath: string,
-  acpOverrides: Partial<NonNullable<OpenClawConfig["acp"]>>,
+  acpOverrides: Partial<NonNullable<LittleBabyConfig["acp"]>>,
 ) {
   const cfg = createAcpEnabledConfig(home, storePath);
   cfg.acp = {
@@ -199,7 +199,7 @@ function resolveReadySession(
 function mockAcpManager(params: {
   runTurn: (params: unknown) => Promise<void>;
   resolveSession?: (params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     sessionKey: string;
   }) => ReturnType<ReturnType<typeof acpManagerModule.getAcpSessionManager>["resolveSession"]>;
 }) {
@@ -303,7 +303,7 @@ function expectPersistedAcpTranscript(params: { userContent: string; assistantTe
 }
 
 async function runAcpSessionWithPolicyOverrides(params: {
-  acpOverrides: Partial<NonNullable<OpenClawConfig["acp"]>>;
+  acpOverrides: Partial<NonNullable<LittleBabyConfig["acp"]>>;
   resolveSession?: Parameters<typeof mockAcpManager>[0]["resolveSession"];
 }) {
   await withTempHome(async (home) => {
@@ -420,7 +420,7 @@ describe("agentCommand ACP runtime routing", () => {
     for (const acpOverrides of [
       { enabled: false },
       { dispatch: { enabled: false } },
-    ] satisfies Array<Partial<NonNullable<OpenClawConfig["acp"]>>>) {
+    ] satisfies Array<Partial<NonNullable<LittleBabyConfig["acp"]>>>) {
       await runAcpSessionWithPolicyOverrides({ acpOverrides });
     }
   });

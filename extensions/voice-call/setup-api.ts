@@ -1,10 +1,10 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { isRecord } from "openclaw/plugin-sdk/text-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/plugin-entry";
+import { definePluginEntry } from "littlebaby/plugin-sdk/plugin-entry";
+import { isRecord } from "littlebaby/plugin-sdk/text-runtime";
 import { migrateVoiceCallLegacyConfigInput } from "./config-api.js";
 
-function migrateVoiceCallPluginConfig(config: OpenClawConfig): {
-  config: OpenClawConfig;
+function migrateVoiceCallPluginConfig(config: LittleBabyConfig): {
+  config: LittleBabyConfig;
   changes: string[];
 } | null {
   const rawVoiceCallConfig = config.plugins?.entries?.["voice-call"]?.config;

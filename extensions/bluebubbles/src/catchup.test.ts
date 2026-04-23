@@ -12,7 +12,7 @@ import type { NormalizedWebhookMessage } from "./monitor-normalize.js";
 import type { WebhookTarget } from "./monitor-shared.js";
 
 function makeStateDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-catchup-test-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-catchup-test-"));
   process.env.LITTLEBABY_STATE_DIR = dir;
   return dir;
 }

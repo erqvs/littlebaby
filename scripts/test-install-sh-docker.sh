@@ -136,13 +136,13 @@ console.log(
 ' "$baseline_pack_json_file" "$update_pack_json_file"
 }
 
-SMOKE_IMAGE="${LITTLEBABY_INSTALL_SMOKE_IMAGE:-openclaw-install-smoke:local}"
-NONROOT_IMAGE="${LITTLEBABY_INSTALL_NONROOT_IMAGE:-openclaw-install-nonroot:local}"
+SMOKE_IMAGE="${LITTLEBABY_INSTALL_SMOKE_IMAGE:-littlebaby-install-smoke:local}"
+NONROOT_IMAGE="${LITTLEBABY_INSTALL_NONROOT_IMAGE:-littlebaby-install-nonroot:local}"
 SMOKE_PLATFORM="$(resolve_default_smoke_platform)"
 NONROOT_PLATFORM="${LITTLEBABY_INSTALL_NONROOT_PLATFORM:-$SMOKE_PLATFORM}"
-INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://openclaw.bot/install.sh}"
-CLI_INSTALL_URL="${LITTLEBABY_INSTALL_CLI_URL:-https://openclaw.bot/install-cli.sh}"
-PACKAGE_NAME="${LITTLEBABY_INSTALL_PACKAGE:-openclaw}"
+INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://littlebaby.bot/install.sh}"
+CLI_INSTALL_URL="${LITTLEBABY_INSTALL_CLI_URL:-https://littlebaby.bot/install-cli.sh}"
+PACKAGE_NAME="${LITTLEBABY_INSTALL_PACKAGE:-littlebaby}"
 SKIP_NONROOT="${LITTLEBABY_INSTALL_SMOKE_SKIP_NONROOT:-0}"
 SKIP_SMOKE_IMAGE_BUILD="${LITTLEBABY_INSTALL_SMOKE_SKIP_IMAGE_BUILD:-0}"
 SKIP_NONROOT_IMAGE_BUILD="${LITTLEBABY_INSTALL_NONROOT_SKIP_IMAGE_BUILD:-0}"

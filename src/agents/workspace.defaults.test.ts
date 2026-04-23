@@ -8,12 +8,12 @@ afterEach(() => {
 
 describe("DEFAULT_AGENT_WORKSPACE_DIR", () => {
   it("uses LITTLEBABY_HOME when resolving the default workspace dir", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
+    const home = path.join(path.sep, "srv", "littlebaby-home");
     vi.stubEnv("LITTLEBABY_HOME", home);
     vi.stubEnv("HOME", path.join(path.sep, "home", "other"));
 
     expect(resolveDefaultAgentWorkspaceDir()).toBe(
-      path.join(path.resolve(home), ".openclaw", "workspace"),
+      path.join(path.resolve(home), ".littlebaby", "workspace"),
     );
   });
 });

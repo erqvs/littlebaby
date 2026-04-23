@@ -1,8 +1,8 @@
-import { resolveChannelGroupRequireMention } from "openclaw/plugin-sdk/channel-policy";
-import { resolveExactLineGroupConfigKey, type OpenClawConfig } from "./channel-api.js";
+import { resolveChannelGroupRequireMention } from "littlebaby/plugin-sdk/channel-policy";
+import { resolveExactLineGroupConfigKey, type LittleBabyConfig } from "./channel-api.js";
 
 type LineGroupContext = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   groupId?: string | null;
 };

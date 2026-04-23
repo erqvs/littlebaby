@@ -9,7 +9,7 @@ import { buildWorkspaceSkillsPrompt } from "./skills/workspace.js";
 describe("buildWorkspaceSkillsPrompt", () => {
   it("applies bundled allowlist without affecting workspace skills", async () => {
     const env = captureEnv(["HOME", "USERPROFILE", "LITTLEBABY_HOME", "LITTLEBABY_STATE_DIR"]);
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-"));
     try {
       process.env.HOME = workspaceDir;
       process.env.USERPROFILE = workspaceDir;

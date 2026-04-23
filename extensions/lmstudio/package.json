@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/lmstudio-provider",
+  "name": "@littlebaby/lmstudio-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw LM Studio provider plugin",
+  "description": "LittleBaby LM Studio provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

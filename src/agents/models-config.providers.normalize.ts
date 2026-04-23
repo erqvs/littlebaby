@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { ensureAuthProfileStore } from "./auth-profiles/store.js";
 import {
   normalizeProviderSpecificConfig,
@@ -14,7 +14,7 @@ import {
 } from "./models-config.providers.secret-helpers.js";
 import { enforceSourceManagedProviderSecrets } from "./models-config.providers.source-managed.js";
 
-type ModelsConfig = NonNullable<OpenClawConfig["models"]>;
+type ModelsConfig = NonNullable<LittleBabyConfig["models"]>;
 
 export function normalizeProviders(params: {
   providers: ModelsConfig["providers"];

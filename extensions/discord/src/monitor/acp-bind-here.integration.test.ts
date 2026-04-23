@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const loadConfigMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/config-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/config-runtime")>(
-    "openclaw/plugin-sdk/config-runtime",
+vi.mock("littlebaby/plugin-sdk/config-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/config-runtime")>(
+    "littlebaby/plugin-sdk/config-runtime",
   );
   return {
     ...actual,
@@ -13,14 +13,14 @@ vi.mock("openclaw/plugin-sdk/config-runtime", async () => {
   };
 });
 
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   getSessionBindingService,
   registerSessionBindingAdapter,
   type SessionBindingBindInput,
   type SessionBindingRecord,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { __testing as sessionBindingTesting } from "openclaw/plugin-sdk/conversation-runtime";
+} from "littlebaby/plugin-sdk/conversation-runtime";
+import { __testing as sessionBindingTesting } from "littlebaby/plugin-sdk/conversation-runtime";
 import { preflightDiscordMessage } from "./message-handler.preflight.js";
 import {
   createDiscordMessage,
@@ -49,7 +49,7 @@ const baseCfg = {
       },
     },
   },
-} satisfies OpenClawConfig;
+} satisfies LittleBabyConfig;
 
 function createDmClient(channelId: string): DiscordClient {
   return {

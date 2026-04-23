@@ -29,7 +29,7 @@ import type {
 } from "./runtime-api.js";
 
 const DEFAULT_BOT_ID = "littlebaby";
-const DEFAULT_BOT_NAME = "OpenClaw QA";
+const DEFAULT_BOT_NAME = "LittleBaby QA";
 
 type QaBusEventSeed =
   | {

@@ -4,7 +4,7 @@ set -Eeuo pipefail
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
 
 export DISPLAY=:1
-export HOME=/tmp/openclaw-home
+export HOME=/tmp/littlebaby-home
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_CACHE_HOME="${HOME}/.cache"
 

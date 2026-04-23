@@ -87,7 +87,7 @@ function createDefaultSessionMessages(): unknown[] {
 }
 export const sessionMessages: unknown[] = createDefaultSessionMessages();
 export const sessionAbortCompactionMock: Mock<(reason?: unknown) => void> = vi.fn();
-export const createOpenClawCodingToolsMock = vi.fn(() => []);
+export const createLittleBabyCodingToolsMock = vi.fn(() => []);
 export const resolveEmbeddedAgentStreamFnMock: Mock<
   (params?: unknown) => MockEmbeddedAgentStreamFn
 > = vi.fn((_params?: unknown) => vi.fn());
@@ -175,8 +175,8 @@ export function resetCompactHooksHarnessMocks(): void {
 
   triggerInternalHook.mockReset();
   resetCompactSessionStateMocks();
-  createOpenClawCodingToolsMock.mockReset();
-  createOpenClawCodingToolsMock.mockReturnValue([]);
+  createLittleBabyCodingToolsMock.mockReset();
+  createLittleBabyCodingToolsMock.mockReturnValue([]);
 }
 
 export async function loadCompactHooksHarness(): Promise<{
@@ -289,7 +289,7 @@ export async function loadCompactHooksHarness(): Promise<{
   }));
 
   vi.doMock("../models-config.js", () => ({
-    ensureOpenClawModelsJson: vi.fn(async () => {}),
+    ensureLittleBabyModelsJson: vi.fn(async () => {}),
   }));
 
   vi.doMock("../model-auth.js", () => ({
@@ -355,7 +355,7 @@ export async function loadCompactHooksHarness(): Promise<{
   }));
 
   vi.doMock("../docs-path.js", () => ({
-    resolveOpenClawDocsPath: vi.fn(async () => undefined),
+    resolveLittleBabyDocsPath: vi.fn(async () => undefined),
   }));
 
   vi.doMock("../channel-tools.js", () => ({
@@ -364,7 +364,7 @@ export async function loadCompactHooksHarness(): Promise<{
   }));
 
   vi.doMock("../pi-tools.js", () => ({
-    createOpenClawCodingTools: createOpenClawCodingToolsMock,
+    createLittleBabyCodingTools: createLittleBabyCodingToolsMock,
   }));
 
   vi.doMock("./replay-history.js", () => ({
@@ -462,7 +462,7 @@ export async function loadCompactHooksHarness(): Promise<{
   }));
 
   vi.doMock("../agent-paths.js", () => ({
-    resolveOpenClawAgentDir: vi.fn(() => "/tmp"),
+    resolveLittleBabyAgentDir: vi.fn(() => "/tmp"),
   }));
 
   vi.doMock("../agent-scope.js", () => ({

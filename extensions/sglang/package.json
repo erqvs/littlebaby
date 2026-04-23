@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/sglang-provider",
+  "name": "@littlebaby/sglang-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw SGLang provider plugin",
+  "description": "LittleBaby SGLang provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

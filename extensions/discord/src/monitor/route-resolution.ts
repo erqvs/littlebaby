@@ -1,11 +1,11 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   deriveLastRoutePolicy,
   resolveAgentRoute,
   type ResolvedAgentRoute,
   type RoutePeer,
-} from "openclaw/plugin-sdk/routing";
-import { resolveAgentIdFromSessionKey } from "openclaw/plugin-sdk/routing";
+} from "littlebaby/plugin-sdk/routing";
+import { resolveAgentIdFromSessionKey } from "littlebaby/plugin-sdk/routing";
 
 export function buildDiscordRoutePeer(params: {
   isDirectMessage: boolean;
@@ -22,7 +22,7 @@ export function buildDiscordRoutePeer(params: {
 }
 
 export function resolveDiscordConversationRoute(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   guildId?: string | null;
   memberRoleIds?: string[];
@@ -43,7 +43,7 @@ export function resolveDiscordConversationRoute(params: {
 }
 
 export function resolveDiscordBoundConversationRoute(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   guildId?: string | null;
   memberRoleIds?: string[];

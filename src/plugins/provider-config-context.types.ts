@@ -1,5 +1,5 @@
 import type { ModelProviderConfig } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
 /**
  * Provider-owned config normalization for `models.providers.<id>` entries.
@@ -31,6 +31,6 @@ export type ProviderResolveConfigApiKeyContext = {
  */
 export type ProviderApplyConfigDefaultsContext = {
   provider: string;
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
 };

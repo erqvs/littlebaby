@@ -1,7 +1,7 @@
 ---
 name: session-memory
 description: "Save session context to memory when /new or /reset command is issued"
-homepage: https://docs.openclaw.ai/automation/hooks#session-memory
+homepage: https://docs.littlebaby.ai/automation/hooks#session-memory
 metadata:
   {
     "littlebaby":
@@ -9,7 +9,7 @@ metadata:
         "emoji": "💾",
         "events": ["command:new", "command:reset"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with LittleBaby" }],
       },
   }
 ---
@@ -90,7 +90,7 @@ The hook automatically:
 To disable this hook:
 
 ```bash
-openclaw hooks disable session-memory
+littlebaby hooks disable session-memory
 ```
 
 Or remove it from your config:

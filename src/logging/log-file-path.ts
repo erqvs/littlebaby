@@ -1,9 +1,9 @@
 import path from "node:path";
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import {
   POSIX_LITTLEBABY_TMP_DIR,
-  resolvePreferredOpenClawTmpDir,
-} from "../infra/tmp-openclaw-dir.js";
+  resolvePreferredLittleBabyTmpDir,
+} from "../infra/tmp-littlebaby-dir.js";
 
 const LOG_PREFIX = "littlebaby";
 const LOG_SUFFIX = ".log";
@@ -32,10 +32,10 @@ function formatLocalDate(date: Date): string {
 }
 
 export function resolveDefaultRollingLogFile(date = new Date()): string {
-  const logDir = canUseNodeFs() ? resolvePreferredOpenClawTmpDir() : POSIX_LITTLEBABY_TMP_DIR;
+  const logDir = canUseNodeFs() ? resolvePreferredLittleBabyTmpDir() : POSIX_LITTLEBABY_TMP_DIR;
   return path.join(logDir, `${LOG_PREFIX}-${formatLocalDate(date)}${LOG_SUFFIX}`);
 }
 
-export function resolveConfiguredLogFilePath(config?: OpenClawConfig | null): string {
+export function resolveConfiguredLogFilePath(config?: LittleBabyConfig | null): string {
   return config?.logging?.file ?? resolveDefaultRollingLogFile();
 }

@@ -1,19 +1,19 @@
-import { resolveAccountEntry } from "openclaw/plugin-sdk/account-core";
-import { resolveInboundDebounceMs } from "openclaw/plugin-sdk/channel-inbound";
-import { formatCliCommand } from "openclaw/plugin-sdk/cli-runtime";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-detection";
-import { drainPendingDeliveries } from "openclaw/plugin-sdk/infra-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/infra-runtime";
-import { DEFAULT_GROUP_HISTORY_LIMIT } from "openclaw/plugin-sdk/reply-history";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { registerUnhandledRejectionHandler } from "openclaw/plugin-sdk/runtime-env";
-import { getChildLogger } from "openclaw/plugin-sdk/runtime-env";
+import { resolveAccountEntry } from "littlebaby/plugin-sdk/account-core";
+import { resolveInboundDebounceMs } from "littlebaby/plugin-sdk/channel-inbound";
+import { formatCliCommand } from "littlebaby/plugin-sdk/cli-runtime";
+import { hasControlCommand } from "littlebaby/plugin-sdk/command-detection";
+import { drainPendingDeliveries } from "littlebaby/plugin-sdk/infra-runtime";
+import { enqueueSystemEvent } from "littlebaby/plugin-sdk/infra-runtime";
+import { DEFAULT_GROUP_HISTORY_LIMIT } from "littlebaby/plugin-sdk/reply-history";
+import { resolveAgentRoute } from "littlebaby/plugin-sdk/routing";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { registerUnhandledRejectionHandler } from "littlebaby/plugin-sdk/runtime-env";
+import { getChildLogger } from "littlebaby/plugin-sdk/runtime-env";
 import {
   defaultRuntime,
   formatDurationPrecise,
   type RuntimeEnv,
-} from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/runtime-env";
 import { resolveWhatsAppAccount, resolveWhatsAppMediaMaxBytes } from "../accounts.js";
 import { WHATSAPP_AUTH_UNSTABLE_CODE, WhatsAppAuthUnstableError } from "../auth-store.js";
 import {
@@ -459,7 +459,7 @@ export async function monitorWebChannel(
 
         if (decision.healthState === "logged-out") {
           runtime.error(
-            `WhatsApp session logged out. Run \`${formatCliCommand("openclaw channels login --channel web")}\` to relink.`,
+            `WhatsApp session logged out. Run \`${formatCliCommand("littlebaby channels login --channel web")}\` to relink.`,
           );
         } else if (decision.healthState === "conflict") {
           reconnectLogger.warn(
@@ -471,7 +471,7 @@ export async function monitorWebChannel(
             "web reconnect: non-retryable close status; stopping monitor",
           );
           runtime.error(
-            `WhatsApp Web connection closed (status ${decision.normalized.statusLabel}: session conflict). Resolve conflicting WhatsApp Web sessions, then relink with \`${formatCliCommand("openclaw channels login --channel web")}\`. Stopping web monitoring.`,
+            `WhatsApp Web connection closed (status ${decision.normalized.statusLabel}: session conflict). Resolve conflicting WhatsApp Web sessions, then relink with \`${formatCliCommand("littlebaby channels login --channel web")}\`. Stopping web monitoring.`,
           );
         } else {
           reconnectLogger.warn(

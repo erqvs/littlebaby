@@ -56,9 +56,9 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
   });
 
   it("loads an activated qa runner from a linked plugin path without a bundled install fallback", async () => {
-    const stateDir = makeTempDir("openclaw-qa-runner-state-");
+    const stateDir = makeTempDir("littlebaby-qa-runner-state-");
     const pluginDir = path.join(stateDir, "extensions", "qa-linked");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "littlebaby.json");
 
     fs.writeFileSync(
       configPath,
@@ -71,7 +71,7 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
 
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "littlebaby.plugin.json"),
       JSON.stringify({
         id: "qa-linked",
         qaRunners: [
@@ -91,12 +91,12 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/qa-linked",
+        name: "@littlebaby/qa-linked",
         type: "module",
-        openclaw: {
+        littlebaby: {
           extensions: ["./index.js"],
           install: {
-            npmSpec: "@openclaw/qa-linked",
+            npmSpec: "@littlebaby/qa-linked",
           },
         },
       }),

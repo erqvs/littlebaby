@@ -2,14 +2,14 @@ import {
   ensureControlUiAllowedOriginsForNonLoopbackBind,
   type GatewayNonLoopbackBindMode,
 } from "../config/gateway-control-ui-origins.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { isContainerEnvironment } from "./net.js";
 
 export async function maybeSeedControlUiAllowedOriginsAtStartup(params: {
-  config: OpenClawConfig;
-  writeConfig: (config: OpenClawConfig) => Promise<void>;
+  config: LittleBabyConfig;
+  writeConfig: (config: LittleBabyConfig) => Promise<void>;
   log: { info: (msg: string) => void; warn: (msg: string) => void };
-}): Promise<{ config: OpenClawConfig; persistedAllowedOriginsSeed: boolean }> {
+}): Promise<{ config: LittleBabyConfig; persistedAllowedOriginsSeed: boolean }> {
   const seeded = ensureControlUiAllowedOriginsForNonLoopbackBind(params.config, {
     isContainerEnvironment,
   });

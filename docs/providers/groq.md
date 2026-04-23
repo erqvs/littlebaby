@@ -2,14 +2,14 @@
 title: "Groq"
 summary: "Groq setup (auth + model selection)"
 read_when:
-  - You want to use Groq with OpenClaw
+  - You want to use Groq with LittleBaby
   - You need the API key env var or CLI auth choice
 ---
 
 # Groq
 
 [Groq](https://groq.com) provides ultra-fast inference on open-source models
-(Llama, Gemma, Mistral, and more) using custom LPU hardware. OpenClaw connects
+(Llama, Gemma, Mistral, and more) using custom LPU hardware. LittleBaby connects
 to Groq through its OpenAI-compatible API.
 
 | Property | Value             |
@@ -57,7 +57,7 @@ to Groq through its OpenAI-compatible API.
 
 ## Available models
 
-Groq's model catalog changes frequently. Run `openclaw models list | grep groq`
+Groq's model catalog changes frequently. Run `littlebaby models list | grep groq`
 to see currently available models, or check
 [console.groq.com/docs/models](https://console.groq.com/docs/models).
 
@@ -69,14 +69,14 @@ to see currently available models, or check
 | **Mixtral 8x7B**            | MoE architecture, strong reasoning |
 
 <Tip>
-Use `openclaw models list --provider groq` for the most up-to-date list of
+Use `littlebaby models list --provider groq` for the most up-to-date list of
 models available on your account.
 </Tip>
 
 ## Audio transcription
 
 Groq also provides fast Whisper-based audio transcription. When configured as a
-media-understanding provider, OpenClaw uses Groq's `whisper-large-v3-turbo`
+media-understanding provider, LittleBaby uses Groq's `whisper-large-v3-turbo`
 model to transcribe voice messages through the shared `tools.media.audio`
 surface.
 

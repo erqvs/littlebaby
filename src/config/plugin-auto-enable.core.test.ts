@@ -465,7 +465,7 @@ describe("applyPluginAutoEnable core", () => {
       env: {
         ...makeIsolatedEnv(),
         IRC_HOST: "irc.libera.chat",
-        IRC_NICK: "openclaw-bot",
+        IRC_NICK: "littlebaby-bot",
       },
     });
 

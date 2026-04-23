@@ -9,7 +9,7 @@ title: "QA E2E Automation"
 
 # QA E2E Automation
 
-The private QA stack is meant to exercise OpenClaw in a more realistic,
+The private QA stack is meant to exercise LittleBaby in a more realistic,
 channel-shaped way than a single unit test can.
 
 Current pieces:
@@ -41,7 +41,7 @@ For faster QA Lab UI iteration without rebuilding the Docker image each time,
 start the stack with a bind-mounted QA Lab bundle:
 
 ```bash
-pnpm openclaw qa docker-build-image
+pnpm littlebaby qa docker-build-image
 pnpm qa:lab:build
 pnpm qa:lab:up:fast
 pnpm qa:lab:watch
@@ -55,7 +55,7 @@ asset hash changes.
 For a transport-real Matrix smoke lane, run:
 
 ```bash
-pnpm openclaw qa matrix
+pnpm littlebaby qa matrix
 ```
 
 That lane provisions a disposable Tuwunel homeserver in Docker, registers
@@ -70,7 +70,7 @@ capture the outer `scripts/run-node.mjs` build/launcher output too, set
 For a transport-real Telegram smoke lane, run:
 
 ```bash
-pnpm openclaw qa telegram
+pnpm littlebaby qa telegram
 ```
 
 That lane targets one real private Telegram group instead of provisioning a
@@ -101,10 +101,10 @@ checklist.
 For a disposable Linux VM lane without bringing Docker into the QA path, run:
 
 ```bash
-pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline
+pnpm littlebaby qa suite --runner multipass --scenario channel-chat-baseline
 ```
 
-This boots a fresh Multipass guest, installs dependencies, builds OpenClaw
+This boots a fresh Multipass guest, installs dependencies, builds LittleBaby
 inside the guest, runs `qa suite`, then copies the normal QA report and
 summary back into `.artifacts/qa-e2e/...` on the host.
 It reuses the same scenario-selection behavior as `qa suite` on the host.
@@ -164,7 +164,7 @@ The baseline list should stay broad enough to cover:
 
 `qa suite` has two local provider mock lanes:
 
-- `mock-openai` is the scenario-aware OpenClaw mock. It remains the default
+- `mock-openai` is the scenario-aware LittleBaby mock. It remains the default
   deterministic mock lane for repo-backed QA and parity gates.
 - `aimock` starts an AIMock-backed provider server for experimental protocol,
   fixture, record/replay, and chaos coverage. It is additive and does not
@@ -206,7 +206,7 @@ For character and style checks, run the same scenario across multiple live model
 refs and write a judged Markdown report:
 
 ```bash
-pnpm openclaw qa character-eval \
+pnpm littlebaby qa character-eval \
   --model openai/gpt-5.4,thinking=xhigh \
   --model openai/gpt-5.2,thinking=xhigh \
   --model openai/gpt-5,thinking=xhigh \

@@ -1,6 +1,6 @@
 import { type Context, complete } from "@mariozechner/pi-ai";
 import { Type } from "@sinclair/typebox";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { extractPdfContent, type PdfExtractedContent } from "../../media/pdf-extract.js";
 import { loadWebMediaRaw } from "../../media/web-media.js";
 import {
@@ -31,7 +31,7 @@ import {
   createSandboxBridgeReadFile,
   discoverAuthStorage,
   discoverModels,
-  ensureOpenClawModelsJson,
+  ensureLittleBabyModelsJson,
   resolveSandboxedBridgeMediaPath,
   runWithImageModelFallback,
   type AnyAgentTool,
@@ -110,7 +110,7 @@ type PdfSandboxConfig = {
 };
 
 async function runPdfPrompt(params: {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   agentDir: string;
   pdfModelConfig: ImageModelConfig;
   modelOverride?: string;
@@ -127,7 +127,7 @@ async function runPdfPrompt(params: {
 }> {
   const effectiveCfg = applyImageModelConfigDefaults(params.cfg, params.pdfModelConfig);
 
-  await ensureOpenClawModelsJson(effectiveCfg, params.agentDir);
+  await ensureLittleBabyModelsJson(effectiveCfg, params.agentDir);
   const authStorage = discoverAuthStorage(params.agentDir);
   const modelRegistry = discoverModels(authStorage, params.agentDir);
 
@@ -237,7 +237,7 @@ async function runPdfPrompt(params: {
 // ---------------------------------------------------------------------------
 
 export function createPdfTool(options?: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   agentDir?: string;
   workspaceDir?: string;
   sandbox?: PdfSandboxConfig;

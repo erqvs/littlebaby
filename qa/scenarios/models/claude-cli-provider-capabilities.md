@@ -29,7 +29,7 @@ codeRefs:
   - extensions/qa-lab/src/suite.ts
 execution:
   kind: flow
-  summary: Run with `pnpm openclaw qa suite --provider-mode live-frontier --cli-auth-mode api-key --model claude-cli/claude-sonnet-4-6 --alt-model claude-cli/claude-sonnet-4-6 --scenario claude-cli-provider-capabilities`.
+  summary: Run with `pnpm littlebaby qa suite --provider-mode live-frontier --cli-auth-mode api-key --model claude-cli/claude-sonnet-4-6 --alt-model claude-cli/claude-sonnet-4-6 --scenario claude-cli-provider-capabilities`.
   config:
     authMode: api-key
     requiredProvider: claude-cli

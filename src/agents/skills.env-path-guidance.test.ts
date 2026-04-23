@@ -23,12 +23,12 @@ const CASES: GuidanceCase[] = [
   {
     file: "skills/gh-issues/SKILL.md",
     required: ["LITTLEBABY_CONFIG_PATH"],
-    forbidden: ["cat ~/.littlebaby/openclaw.json"],
+    forbidden: ["cat ~/.littlebaby/littlebaby.json"],
   },
   {
     file: "skills/canvas/SKILL.md",
     required: ["LITTLEBABY_CONFIG_PATH"],
-    forbidden: ["cat ~/.littlebaby/openclaw.json"],
+    forbidden: ["cat ~/.littlebaby/littlebaby.json"],
   },
   {
     file: "skills/openai-whisper-api/SKILL.md",
@@ -56,7 +56,7 @@ const CASES: GuidanceCase[] = [
 
 describe("bundled skill env-path guidance", () => {
   it.each(CASES)(
-    "keeps $file aligned with OPENCLAW env overrides",
+    "keeps $file aligned with LITTLEBABY env overrides",
     ({ file, required, forbidden }) => {
       const content = fs.readFileSync(path.join(REPO_ROOT, file), "utf8");
       for (const needle of required ?? []) {

@@ -119,7 +119,7 @@ describe("channelsCapabilitiesCommand", () => {
     });
     plugin.status = {
       ...plugin.status,
-      formatCapabilitiesProbe: () => [{ text: "Bot: @openclaw" }, { text: "Team: team" }],
+      formatCapabilitiesProbe: () => [{ text: "Bot: @littlebaby" }, { text: "Team: team" }],
       buildCapabilitiesDiagnostics: async () => ({
         lines: [
           { text: "Bot scopes (auth.scopes): chat:write" },

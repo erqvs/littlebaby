@@ -178,7 +178,7 @@ export const id: TranslationMap = {
     skills: "Skills dan kunci API.",
     nodes: "Perangkat yang dipasangkan dan perintah.",
     chat: "Chat Gateway untuk intervensi cepat.",
-    config: "Edit openclaw.json.",
+    config: "Edit littlebaby.json.",
     communications: "Saluran, pesan, dan pengaturan audio.",
     appearance: "Tema, UI, dan pengaturan wizard penyiapan.",
     automation: "Perintah, hook, cron, dan plugin.",
@@ -253,7 +253,7 @@ export const id: TranslationMap = {
       metadataUpgradeSummary:
         "Perangkat ini sudah dipasangkan, tetapi perubahan metadata sedang menunggu persetujuan.",
       mobileHint:
-        "Di seluler? Salin URL lengkap (termasuk #token=...) dari openclaw dashboard --no-open di desktop Anda.",
+        "Di seluler? Salin URL lengkap (termasuk #token=...) dari littlebaby dashboard --no-open di desktop Anda.",
       docsTitle: "Dokumentasi pemasangan perangkat (dibuka di tab baru)",
       docsLink: "Dokumentasi: Pemasangan perangkat",
     },
@@ -289,7 +289,7 @@ export const id: TranslationMap = {
       modelAuthExpiresIn: "kedaluwarsa {when}",
       modelAuthAttentionExpiredTitle: "Autentikasi model kedaluwarsa",
       modelAuthAttentionExpiringTitle: "Autentikasi model akan segera kedaluwarsa",
-      modelAuthAttentionExpiredDesc: "{providers} — autentikasi ulang dengan openclaw models auth",
+      modelAuthAttentionExpiredDesc: "{providers} — autentikasi ulang dengan littlebaby models auth",
       modelAuthAttentionExpiringEntry: "{provider} ({when})",
     },
     attention: {

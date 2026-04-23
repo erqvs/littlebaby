@@ -111,7 +111,7 @@ describe("resolveBuildAllSteps", () => {
 
 describe("resolveBuildAllStepCacheState", () => {
   it("marks cacheable steps fresh when the input signature matches", () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-build-cache-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-build-cache-"));
     try {
       const inputPath = path.join(rootDir, "src/input.ts");
       const outputPath = path.join(rootDir, "dist/output.js");
@@ -142,7 +142,7 @@ describe("resolveBuildAllStepCacheState", () => {
   });
 
   it("marks cacheable steps stale when an input changes", () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-build-cache-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-build-cache-"));
     try {
       const inputPath = path.join(rootDir, "src/input.ts");
       const outputPath = path.join(rootDir, "dist/output.js");
@@ -172,7 +172,7 @@ describe("resolveBuildAllStepCacheState", () => {
   });
 
   it("restores cached outputs when generated files were removed", () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-build-cache-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-build-cache-"));
     try {
       const inputPath = path.join(rootDir, "src/input.ts");
       const outputPath = path.join(rootDir, "dist/output.js");

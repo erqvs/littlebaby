@@ -1,6 +1,6 @@
-# OpenClaw iOS (Super Alpha)
+# LittleBaby iOS (Super Alpha)
 
-This iPhone app is super-alpha and internal-use only. It connects to an OpenClaw Gateway as a `role: node`.
+This iPhone app is super-alpha and internal-use only. It connects to an LittleBaby Gateway as a `role: node`.
 
 ## Distribution Status
 
@@ -29,11 +29,11 @@ pnpm install
 ./scripts/ios-configure-signing.sh
 cd apps/ios
 xcodegen generate
-open OpenClaw.xcodeproj
+open LittleBaby.xcodeproj
 ```
 
 3. In Xcode:
-   - Scheme: `OpenClaw`
+   - Scheme: `LittleBaby`
    - Destination: connected iPhone (recommended for real behavior)
    - Build configuration: `Debug`
    - Run (`Product` -> `Run`)
@@ -61,8 +61,8 @@ Prereqs:
 Release behavior:
 
 - Local development keeps using unique per-developer bundle IDs from `scripts/ios-configure-signing.sh`.
-- Beta release uses canonical `ai.openclaw.client*` bundle IDs through a temporary generated xcconfig in `apps/ios/build/BetaRelease.xcconfig`.
-- Beta release also switches the app to `OpenClawPushTransport=relay`, `OpenClawPushDistribution=official`, and `OpenClawPushAPNsEnvironment=production`.
+- Beta release uses canonical `ai.littlebaby.client*` bundle IDs through a temporary generated xcconfig in `apps/ios/build/BetaRelease.xcconfig`.
+- Beta release also switches the app to `LittleBabyPushTransport=relay`, `LittleBabyPushDistribution=official`, and `LittleBabyPushAPNsEnvironment=production`.
 - The beta flow does not modify `apps/ios/.local-signing.xcconfig` or `apps/ios/LocalSigning.xcconfig`.
 - `apps/ios/version.json` is the pinned iOS release version source.
 - `apps/ios/CHANGELOG.md` is the iOS-only changelog and release-note source.
@@ -141,12 +141,12 @@ pnpm ios:beta
    - verifies synced iOS versioning artifacts
    - resolves the next TestFlight build number for that short version
    - generates `apps/ios/build/BetaRelease.xcconfig`
-   - archives `OpenClaw`
+   - archives `LittleBaby`
    - uploads the IPA to TestFlight
 
 7. Expected outputs after a successful run:
-   - `apps/ios/build/beta/OpenClaw-<version>.ipa`
-   - `apps/ios/build/beta/OpenClaw-<version>.app.dSYM.zip`
+   - `apps/ios/build/beta/LittleBaby-<version>.ipa`
+   - `apps/ios/build/beta/LittleBaby-<version>.app.dSYM.zip`
    - Fastlane log line like `Uploaded iOS beta: version=<version> short=<short> build=<build>`
 
 8. If this is a fresh clone on a maintainer machine that already works elsewhere, it is OK to copy the non-secret `apps/ios/fastlane/.env` from another trusted local clone on the same Mac. The Keychain-backed private key remains machine-local and is not stored in the repo.
@@ -196,15 +196,15 @@ See `apps/ios/VERSIONING.md` for the detailed spec.
 ## APNs Expectations For Local/Manual Builds
 
 - The app calls `registerForRemoteNotifications()` at launch.
-- `apps/ios/Sources/OpenClaw.entitlements` sets `aps-environment` to `development`.
+- `apps/ios/Sources/LittleBaby.entitlements` sets `aps-environment` to `development`.
 - APNs token registration to gateway happens only after gateway connection (`push.apns.register`).
-- Local/manual builds default to `OpenClawPushTransport=direct` and `OpenClawPushDistribution=local`.
+- Local/manual builds default to `LittleBabyPushTransport=direct` and `LittleBabyPushDistribution=local`.
 - Your selected team/profile must support Push Notifications for the app bundle ID you are signing.
 - If push capability or provisioning is wrong, APNs registration fails at runtime (check Xcode logs for `APNs registration failed`).
 - The gateway host also needs direct APNs auth configured separately with `LITTLEBABY_APNS_TEAM_ID`, `LITTLEBABY_APNS_KEY_ID`, and either `LITTLEBABY_APNS_PRIVATE_KEY_P8` or `LITTLEBABY_APNS_PRIVATE_KEY_PATH`.
 - Recommended gateway-host storage for the APNs `.p8` file is `~/.littlebaby/credentials/apns/AuthKey_<KEYID>.p8` with restrictive permissions, then point `LITTLEBABY_APNS_PRIVATE_KEY_PATH` at that file.
 - `apps/ios/fastlane/.env` only covers App Store Connect / Fastlane auth; it does not provide gateway APNs credentials for local direct-push testing.
-- Debug builds default to `OpenClawPushAPNsEnvironment=sandbox`; Release builds default to `production`.
+- Debug builds default to `LittleBabyPushAPNsEnvironment=sandbox`; Release builds default to `production`.
 
 ## APNs Expectations For Official Builds
 
@@ -214,7 +214,7 @@ See `apps/ios/VERSIONING.md` for the detailed spec.
 - The app persists the relay handle metadata locally so reconnects can republish the gateway registration without re-registering on every connect.
 - If the relay base URL changes in a later build, the app refreshes the relay registration instead of reusing the old relay origin.
 - Relay mode requires a reachable relay base URL and uses App Attest plus the app receipt during registration.
-- Gateway-side relay sending is configured through `gateway.push.apns.relay.baseUrl` in `openclaw.json`. `LITTLEBABY_APNS_RELAY_BASE_URL` remains a temporary env override only.
+- Gateway-side relay sending is configured through `gateway.push.apns.relay.baseUrl` in `littlebaby.json`. `LITTLEBABY_APNS_RELAY_BASE_URL` remains a temporary env override only.
 
 ## Official Build Relay Trust Model
 
@@ -236,7 +236,7 @@ See `apps/ios/VERSIONING.md` for the detailed spec.
   - Production APNs credentials and raw official-build APNs tokens stay in the relay deployment,
     not on the gateway.
 
-This exists to keep the hosted relay limited to genuine OpenClaw official builds and to ensure a
+This exists to keep the hosted relay limited to genuine LittleBaby official builds and to ensure a
 gateway can only send pushes for iOS devices that paired with that gateway.
 
 ## What Works Now (Concrete)
@@ -313,7 +313,7 @@ Automatic wake/reconnect hardening:
 5. If network path is unclear:
    - switch to manual host/port + TLS in Gateway Advanced settings
 6. In Xcode console, filter for subsystem/category signals:
-   - `ai.openclaw.ios`
+   - `ai.littlebaby.ios`
    - `GatewayDiag`
    - `APNs registration failed`
 7. Validate background expectations:

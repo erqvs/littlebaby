@@ -463,7 +463,7 @@ export function registerBrowserManageCommands(
     .option("--color <hex>", "Profile color (hex format, e.g. #0066CC)")
     .option("--cdp-url <url>", "CDP URL for remote Chrome (http/https)")
     .option("--user-data-dir <path>", "User data dir for existing-session Chromium attach")
-    .option("--driver <driver>", "Profile driver (openclaw|existing-session). Default: openclaw")
+    .option("--driver <driver>", "Profile driver (littlebaby|existing-session). Default: littlebaby")
     .action(
       async (
         opts: {

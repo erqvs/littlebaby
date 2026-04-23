@@ -1,5 +1,5 @@
 import { resolveConfigPath, resolveGatewayPort } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 import { isSecureWebSocketUrl } from "./net.js";
 
@@ -12,14 +12,14 @@ export type GatewayConnectionDetails = {
 };
 
 type GatewayConnectionDetailResolvers = {
-  loadConfig?: () => OpenClawConfig;
+  loadConfig?: () => LittleBabyConfig;
   resolveConfigPath?: (env: NodeJS.ProcessEnv) => string;
-  resolveGatewayPort?: (cfg?: OpenClawConfig, env?: NodeJS.ProcessEnv) => number;
+  resolveGatewayPort?: (cfg?: LittleBabyConfig, env?: NodeJS.ProcessEnv) => number;
 };
 
 export function buildGatewayConnectionDetailsWithResolvers(
   options: {
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     url?: string;
     configPath?: string;
     urlSource?: "cli" | "env";
@@ -78,8 +78,8 @@ export function buildGatewayConnectionDetailsWithResolvers(
         allowPrivateWs
           ? undefined
           : "Break-glass (trusted private networks only): set LITTLEBABY_ALLOW_INSECURE_PRIVATE_WS=1",
-        "Doctor: openclaw doctor --fix",
-        "Docs: https://docs.openclaw.ai/gateway/remote",
+        "Doctor: littlebaby doctor --fix",
+        "Docs: https://docs.littlebaby.ai/gateway/remote",
       ].join("\n"),
     );
   }

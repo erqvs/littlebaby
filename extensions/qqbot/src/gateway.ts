@@ -1,6 +1,6 @@
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import WebSocket from "ws";
 import {
   clearTokenCache,
@@ -108,7 +108,7 @@ function readOptionalMessageSceneExt(
 export interface GatewayContext {
   account: ResolvedQQBotAccount;
   abortSignal: AbortSignal;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   onReady?: (data: unknown) => void;
   onError?: (error: Error) => void;
   log?: {

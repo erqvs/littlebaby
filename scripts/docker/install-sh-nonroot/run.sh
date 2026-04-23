@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://openclaw.bot/install.sh}"
+INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://littlebaby.bot/install.sh}"
 DEFAULT_PACKAGE="littlebaby"
 PACKAGE_NAME="${LITTLEBABY_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

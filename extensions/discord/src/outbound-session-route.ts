@@ -1,14 +1,14 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   buildOutboundBaseSessionKey,
   normalizeOutboundThreadId,
   resolveThreadSessionKeys,
   type RoutePeer,
-} from "openclaw/plugin-sdk/routing";
+} from "littlebaby/plugin-sdk/routing";
 import { parseDiscordTarget } from "./target-parsing.js";
 
 export type ResolveDiscordOutboundSessionRouteParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
   accountId?: string | null;
   target: string;

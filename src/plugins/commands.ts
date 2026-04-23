@@ -6,7 +6,7 @@
  */
 
 import { resolveConversationBindingContext } from "../channels/conversation-binding-context.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { logVerbose } from "../globals.js";
 import { normalizeLowercaseStringOrEmpty } from "../shared/string-coerce.js";
 import {
@@ -31,7 +31,7 @@ import {
 } from "./conversation-binding.js";
 import { getActivePluginChannelRegistry } from "./runtime.js";
 import type {
-  OpenClawPluginCommandDefinition,
+  LittleBabyPluginCommandDefinition,
   PluginCommandContext,
   PluginCommandResult,
 } from "./types.js";
@@ -128,7 +128,7 @@ function sanitizeArgs(args: string | undefined): string | undefined {
 }
 
 function resolveBindingConversationFromCommand(params: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   channel: string;
   senderId?: string;
   from?: string;
@@ -150,7 +150,7 @@ function resolveBindingConversationFromCommand(params: {
     return null;
   }
   return resolveConversationBindingContext({
-    cfg: params.config ?? ({} as OpenClawConfig),
+    cfg: params.config ?? ({} as LittleBabyConfig),
     channel: params.channel,
     accountId: params.accountId,
     threadId: params.messageThreadId,
@@ -180,7 +180,7 @@ export async function executePluginCommand(params: {
   sessionId?: PluginCommandContext["sessionId"];
   sessionFile?: PluginCommandContext["sessionFile"];
   commandBody: string;
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   from?: PluginCommandContext["from"];
   to?: PluginCommandContext["to"];
   accountId?: PluginCommandContext["accountId"];
@@ -301,7 +301,7 @@ export function listPluginCommands(): Array<{
   }));
 }
 
-function listPluginInvocationNames(command: OpenClawPluginCommandDefinition): string[] {
+function listPluginInvocationNames(command: LittleBabyPluginCommandDefinition): string[] {
   return listPluginInvocationKeys(command);
 }
 

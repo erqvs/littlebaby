@@ -40,11 +40,11 @@ describe("gateway cli backend connect", () => {
       ]);
 
       const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-gateway-connect-home-"));
-      const configPath = path.join(tempHome, ".openclaw", "openclaw.json");
-      const bundledPluginsDir = path.join(tempHome, "openclaw-test-no-bundled-extensions");
+      const configPath = path.join(tempHome, ".littlebaby", "littlebaby.json");
+      const bundledPluginsDir = path.join(tempHome, "littlebaby-test-no-bundled-extensions");
       const token = `test-${Date.now()}`;
       process.env.HOME = tempHome;
-      process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".openclaw");
+      process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".littlebaby");
       process.env.LITTLEBABY_CONFIG_PATH = configPath;
       process.env.LITTLEBABY_GATEWAY_TOKEN = token;
       process.env.LITTLEBABY_SKIP_CHANNELS = "1";

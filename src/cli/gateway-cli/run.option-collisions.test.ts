@@ -26,13 +26,13 @@ const configState = vi.hoisted(() => ({
   snapshot: { exists: false } as Record<string, unknown>,
 }));
 const controlUiState = vi.hoisted(() => ({
-  root: "/tmp/openclaw-control-ui" as string | null,
+  root: "/tmp/littlebaby-control-ui" as string | null,
 }));
 
 const { runtimeErrors, defaultRuntime, resetRuntimeCapture } = createCliRuntimeCapture();
 
 vi.mock("../../config/config.js", () => ({
-  getConfigPath: () => "/tmp/openclaw-test-missing-config.json",
+  getConfigPath: () => "/tmp/littlebaby-test-missing-config.json",
   loadConfig: () => configState.cfg,
   readConfigFileSnapshot: async () => configState.snapshot,
   resolveStateDir: () => "/tmp",
@@ -142,7 +142,7 @@ describe("gateway run option collisions", () => {
     resetRuntimeCapture();
     configState.cfg = {};
     configState.snapshot = { exists: false };
-    controlUiState.root = "/tmp/openclaw-control-ui";
+    controlUiState.root = "/tmp/littlebaby-control-ui";
     gatewayLogMessages.length = 0;
     startGatewayServer.mockClear();
     setGatewayWsLogStyle.mockClear();
@@ -250,7 +250,7 @@ describe("gateway run option collisions", () => {
     await expect(runGatewayCli(["gateway", "run"])).rejects.toThrow("__exit__:78");
 
     expect(runtimeErrors).toContain(
-      "Gateway start blocked: existing config is missing gateway.mode. Treat this as suspicious or clobbered config. Re-run `openclaw onboard --mode local` or `openclaw setup`, set gateway.mode=local manually, or pass --allow-unconfigured.",
+      "Gateway start blocked: existing config is missing gateway.mode. Treat this as suspicious or clobbered config. Re-run `littlebaby onboard --mode local` or `littlebaby setup`, set gateway.mode=local manually, or pass --allow-unconfigured.",
     );
     expect(runtimeErrors).toContain(
       `Config write audit: ${path.join("/tmp", "logs", "config-audit.jsonl")}`,

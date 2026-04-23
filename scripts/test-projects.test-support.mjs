@@ -145,7 +145,7 @@ const VITEST_CONFIG_BY_KIND = {
 const BROAD_CHANGED_RERUN_PATTERNS = [
   /^package\.json$/u,
   /^pnpm-lock\.yaml$/u,
-  /^test\/setup(?:\.shared|\.extensions|-openclaw-runtime)?\.ts$/u,
+  /^test\/setup(?:\.shared|\.extensions|-littlebaby-runtime)?\.ts$/u,
   /^vitest(?:\..+)?\.(?:config\.ts|paths\.mjs)$/u,
   /^test\/vitest\/vitest(?:\..+)?\.(?:config\.ts|paths\.mjs)$/u,
   /^scripts\/run-vitest\.mjs$/u,
@@ -735,7 +735,7 @@ export function createVitestRunSpecs(args, params = {}) {
     const includeFilePath = plan.includePatterns
       ? path.join(
           params.tempDir ?? os.tmpdir(),
-          `openclaw-vitest-include-${process.pid}-${Date.now()}-${index}.json`,
+          `littlebaby-vitest-include-${process.pid}-${Date.now()}-${index}.json`,
         )
       : null;
     return {

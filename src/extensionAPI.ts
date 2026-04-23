@@ -1,4 +1,4 @@
-// Legacy compat surface for plugins that still import openclaw/extension-api.
+// Legacy compat surface for plugins that still import littlebaby/extension-api.
 // Keep this file intentionally narrow and forward-only.
 
 const shouldWarnExtensionApiImport =
@@ -8,11 +8,11 @@ const shouldWarnExtensionApiImport =
 
 if (shouldWarnExtensionApiImport) {
   process.emitWarning(
-    "openclaw/extension-api is deprecated. Migrate to api.runtime.agent.* or focused openclaw/plugin-sdk/<subpath> imports. See https://docs.openclaw.ai/plugins/sdk-migration",
+    "littlebaby/extension-api is deprecated. Migrate to api.runtime.agent.* or focused littlebaby/plugin-sdk/<subpath> imports. See https://docs.littlebaby.ai/plugins/sdk-migration",
     {
       code: "LITTLEBABY_EXTENSION_API_DEPRECATED",
       detail:
-        "This compatibility bridge is temporary. Bundled plugins should use the injected plugin runtime instead of importing host-side agent helpers directly. Migration guide: https://docs.openclaw.ai/plugins/sdk-migration",
+        "This compatibility bridge is temporary. Bundled plugins should use the injected plugin runtime instead of importing host-side agent helpers directly. Migration guide: https://docs.littlebaby.ai/plugins/sdk-migration",
     },
   );
 }

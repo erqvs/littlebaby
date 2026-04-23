@@ -1,6 +1,6 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 
-export type BuildMentionRegexes = (cfg: OpenClawConfig | undefined, agentId?: string) => RegExp[];
+export type BuildMentionRegexes = (cfg: LittleBabyConfig | undefined, agentId?: string) => RegExp[];
 
 export type MatchesMentionPatterns = (text: string, mentionRegexes: RegExp[]) => boolean;
 

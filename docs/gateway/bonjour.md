@@ -8,7 +8,7 @@ title: "Bonjour Discovery"
 
 # Bonjour / mDNS discovery
 
-OpenClaw uses Bonjour (mDNS / DNS‑SD) to discover an active Gateway (WebSocket endpoint).
+LittleBaby uses Bonjour (mDNS / DNS‑SD) to discover an active Gateway (WebSocket endpoint).
 Multicast `local.` browsing is a **LAN-only convenience**. For cross-network discovery, the
 same beacon can also be published through a configured wide-area DNS-SD domain. Discovery is
 still best-effort and does **not** replace SSH or Tailnet-based connectivity.
@@ -22,12 +22,12 @@ boundary. You can keep the same discovery UX by switching to **unicast DNS‑SD*
 High‑level steps:
 
 1. Run a DNS server on the gateway host (reachable over Tailnet).
-2. Publish DNS‑SD records for `_openclaw-gw._tcp` under a dedicated zone
-   (example: `openclaw.internal.`).
+2. Publish DNS‑SD records for `_littlebaby-gw._tcp` under a dedicated zone
+   (example: `littlebaby.internal.`).
 3. Configure Tailscale **split DNS** so your chosen domain resolves via that
    DNS server for clients (including iOS).
 
-OpenClaw supports any discovery domain; `openclaw.internal.` is just an example.
+LittleBaby supports any discovery domain; `littlebaby.internal.` is just an example.
 iOS/Android nodes browse both `local.` and your configured wide‑area domain.
 
 ### Gateway config (recommended)
@@ -42,19 +42,19 @@ iOS/Android nodes browse both `local.` and your configured wide‑area domain.
 ### One-time DNS server setup (gateway host)
 
 ```bash
-openclaw dns setup --apply
+littlebaby dns setup --apply
 ```
 
 This installs CoreDNS and configures it to:
 
 - listen on port 53 only on the gateway’s Tailscale interfaces
-- serve your chosen domain (example: `openclaw.internal.`) from `~/.littlebaby/dns/<domain>.db`
+- serve your chosen domain (example: `littlebaby.internal.`) from `~/.littlebaby/dns/<domain>.db`
 
 Validate from a tailnet‑connected machine:
 
 ```bash
-dns-sd -B _openclaw-gw._tcp openclaw.internal.
-dig @<TAILNET_IPV4> -p 53 _openclaw-gw._tcp.openclaw.internal PTR +short
+dns-sd -B _littlebaby-gw._tcp littlebaby.internal.
+dig @<TAILNET_IPV4> -p 53 _littlebaby-gw._tcp.littlebaby.internal PTR +short
 ```
 
 ### Tailscale DNS settings
@@ -65,7 +65,7 @@ In the Tailscale admin console:
 - Add split DNS so your discovery domain uses that nameserver.
 
 Once clients accept tailnet DNS, iOS nodes and CLI discovery can browse
-`_openclaw-gw._tcp` in your discovery domain without multicast.
+`_littlebaby-gw._tcp` in your discovery domain without multicast.
 
 ### Gateway listener security (recommended)
 
@@ -74,16 +74,16 @@ access, bind explicitly and keep auth enabled.
 
 For tailnet‑only setups:
 
-- Set `gateway.bind: "tailnet"` in `~/.littlebaby/openclaw.json`.
+- Set `gateway.bind: "tailnet"` in `~/.littlebaby/littlebaby.json`.
 - Restart the Gateway (or restart the macOS menubar app).
 
 ## What advertises
 
-Only the Gateway advertises `_openclaw-gw._tcp`.
+Only the Gateway advertises `_littlebaby-gw._tcp`.
 
 ## Service types
 
-- `_openclaw-gw._tcp` — gateway transport beacon (used by macOS/iOS/Android nodes).
+- `_littlebaby-gw._tcp` — gateway transport beacon (used by macOS/iOS/Android nodes).
 
 ## TXT keys (non-secret hints)
 
@@ -116,13 +116,13 @@ Useful built‑in tools:
 - Browse instances:
 
   ```bash
-  dns-sd -B _openclaw-gw._tcp local.
+  dns-sd -B _littlebaby-gw._tcp local.
   ```
 
 - Resolve one instance (replace `<instance>`):
 
   ```bash
-  dns-sd -L "<instance>" _openclaw-gw._tcp local.
+  dns-sd -L "<instance>" _littlebaby-gw._tcp local.
   ```
 
 If browsing works but resolving fails, you’re usually hitting a LAN policy or
@@ -139,7 +139,7 @@ The Gateway writes a rolling log file (printed on startup as
 
 ## Debugging on iOS node
 
-The iOS node uses `NWBrowser` to discover `_openclaw-gw._tcp`.
+The iOS node uses `NWBrowser` to discover `_littlebaby-gw._tcp`.
 
 To capture logs:
 
@@ -168,7 +168,7 @@ sequences (e.g. spaces become `\032`).
 ## Disabling / configuration
 
 - `LITTLEBABY_DISABLE_BONJOUR=1` disables advertising (legacy: `LITTLEBABY_DISABLE_BONJOUR`).
-- `gateway.bind` in `~/.littlebaby/openclaw.json` controls the Gateway bind mode.
+- `gateway.bind` in `~/.littlebaby/littlebaby.json` controls the Gateway bind mode.
 - `LITTLEBABY_SSH_PORT` overrides the SSH port when `sshPort` is advertised (legacy: `LITTLEBABY_SSH_PORT`).
 - `LITTLEBABY_TAILNET_DNS` publishes a MagicDNS hint in TXT (legacy: `LITTLEBABY_TAILNET_DNS`).
 - `LITTLEBABY_CLI_PATH` overrides the advertised CLI path (legacy: `LITTLEBABY_CLI_PATH`).

@@ -1,9 +1,9 @@
-import { resolveCommandAuthorizedFromAuthorizers } from "openclaw/plugin-sdk/command-auth-native";
+import { resolveCommandAuthorizedFromAuthorizers } from "littlebaby/plugin-sdk/command-auth-native";
 import {
   readStoreAllowFromForDmPolicy,
   resolveDmGroupAccessWithLists,
   type DmGroupAccessDecision,
-} from "openclaw/plugin-sdk/security-runtime";
+} from "littlebaby/plugin-sdk/security-runtime";
 import { normalizeDiscordAllowList, resolveDiscordAllowListMatch } from "./allow-list.js";
 
 const DISCORD_ALLOW_LIST_PREFIXES = ["discord:", "user:", "pk:"];

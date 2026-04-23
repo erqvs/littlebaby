@@ -1,6 +1,6 @@
 import { formatCliCommand } from "../cli/command-format.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveNodeLaunchAgentLabel,
@@ -87,7 +87,7 @@ async function maybeRepairLaunchAgentBootstrap(params: {
 }
 
 export async function maybeRepairGatewayDaemon(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   runtime: RuntimeEnv;
   prompter: DoctorPrompter;
   options: DoctorOptions;
@@ -254,7 +254,7 @@ export async function maybeRepairGatewayDaemon(params: {
   if (process.platform === "darwin") {
     const label = resolveGatewayLaunchAgentLabel(process.env.LITTLEBABY_PROFILE);
     note(
-      `LaunchAgent loaded; stopping requires "${formatCliCommand("openclaw gateway stop")}" or launchctl bootout gui/$UID/${label}.`,
+      `LaunchAgent loaded; stopping requires "${formatCliCommand("littlebaby gateway stop")}" or launchctl bootout gui/$UID/${label}.`,
       "Gateway",
     );
   }

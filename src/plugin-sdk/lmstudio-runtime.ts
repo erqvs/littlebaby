@@ -2,7 +2,7 @@
 import type {
   ModelDefinitionConfig,
   ModelProviderConfig,
-  OpenClawConfig,
+  LittleBabyConfig,
 } from "../config/types.js";
 import {
   createLazyFacadeValue as createLazyFacadeRuntimeValue,
@@ -71,7 +71,7 @@ type FacadeModule = {
   }) => Promise<unknown>;
   mapLmstudioWireEntry: (entry: LmstudioModelWire) => LmstudioModelBase | null;
   discoverLmstudioModels: (params?: {
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     baseUrl?: string;
     apiKey?: string;
     headers?: Record<string, string>;
@@ -83,18 +83,18 @@ type FacadeModule = {
     headers?: Record<string, string>;
   }) => Record<string, string> | undefined;
   resolveLmstudioConfiguredApiKey: (params: {
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     env?: NodeJS.ProcessEnv;
     path?: string;
   }) => Promise<string | undefined>;
   resolveLmstudioProviderHeaders: (params: {
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     env?: NodeJS.ProcessEnv;
     headers?: unknown;
     path?: string;
   }) => Promise<Record<string, string> | undefined>;
   resolveLmstudioRuntimeApiKey: (params: {
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     agentDir?: string;
     env?: NodeJS.ProcessEnv;
     headers?: unknown;

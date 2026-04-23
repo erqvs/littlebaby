@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/vydra-provider",
+  "name": "@littlebaby/vydra-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Vydra media provider plugin",
+  "description": "LittleBaby Vydra media provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

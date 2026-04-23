@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox";
-import type { ChannelMessageActionContext } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { withEnv } from "openclaw/plugin-sdk/testing";
+import type { ChannelMessageActionContext } from "littlebaby/plugin-sdk/channel-contract";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { withEnv } from "littlebaby/plugin-sdk/testing";
 import { describe, expect, it, vi } from "vitest";
 
 const handleDiscordMessageActionMock = vi.hoisted(() =>
@@ -24,7 +24,7 @@ describe("discordMessageActions", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
       });
 
       expect(discovery).toEqual({
@@ -50,7 +50,7 @@ describe("discordMessageActions", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
     });
 
     expect(discovery?.capabilities).toEqual(["interactive", "components"]);
@@ -82,7 +82,7 @@ describe("discordMessageActions", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     const defaultDiscovery = discordMessageActions.describeMessageTool?.({
       cfg,
@@ -109,7 +109,7 @@ describe("discordMessageActions", () => {
             token: "Bot token-main",
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
     });
     const schema = discovery?.schema;
     if (!schema || Array.isArray(schema)) {
@@ -146,7 +146,7 @@ describe("discordMessageActions", () => {
           token: "Bot token-main",
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const toolContext: ChannelMessageActionContext["toolContext"] = {
       currentChannelProvider: "discord",
     };

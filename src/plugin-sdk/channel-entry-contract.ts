@@ -6,7 +6,7 @@ import { emptyChannelConfigSchema } from "../channels/plugins/config-schema.js";
 import type { ChannelConfigSchema } from "../channels/plugins/types.config.js";
 import type { ChannelLegacyStateMigrationPlan } from "../channels/plugins/types.core.js";
 import type { ChannelPlugin } from "../channels/plugins/types.plugin.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { openBoundaryFileSync } from "../infra/boundary-file-read.js";
 import {
   getCachedPluginJitiLoader,
@@ -14,10 +14,10 @@ import {
 } from "../plugins/jiti-loader-cache.js";
 import type { PluginRuntime } from "../plugins/runtime/types.js";
 import { resolveLoaderPackageRoot } from "../plugins/sdk-alias.js";
-import type { AnyAgentTool, OpenClawPluginApi, PluginCommandContext } from "../plugins/types.js";
+import type { AnyAgentTool, LittleBabyPluginApi, PluginCommandContext } from "../plugins/types.js";
 import { normalizeLowercaseStringOrEmpty } from "../shared/string-coerce.js";
 
-export type { AnyAgentTool, OpenClawPluginApi, PluginCommandContext };
+export type { AnyAgentTool, LittleBabyPluginApi, PluginCommandContext };
 
 type ChannelEntryConfigSchema<TPlugin> =
   TPlugin extends ChannelPlugin<unknown>
@@ -40,8 +40,8 @@ type DefineBundledChannelEntryOptions<TPlugin = ChannelPlugin> = {
   runtime?: BundledEntryModuleRef;
   accountInspect?: BundledEntryModuleRef;
   features?: BundledChannelEntryFeatures;
-  registerCliMetadata?: (api: OpenClawPluginApi) => void;
-  registerFull?: (api: OpenClawPluginApi) => void;
+  registerCliMetadata?: (api: LittleBabyPluginApi) => void;
+  registerFull?: (api: LittleBabyPluginApi) => void;
 };
 
 type DefineBundledChannelSetupEntryOptions = {
@@ -72,7 +72,7 @@ export type BundledChannelLegacySessionSurface = {
 };
 
 export type BundledChannelLegacyStateMigrationDetector = (params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
   stateDir: string;
   oauthDir: string;
@@ -89,7 +89,7 @@ export type BundledChannelEntryContract<TPlugin = ChannelPlugin> = {
   description: string;
   configSchema: ChannelEntryConfigSchema<TPlugin>;
   features?: BundledChannelEntryFeatures;
-  register: (api: OpenClawPluginApi) => void;
+  register: (api: LittleBabyPluginApi) => void;
   loadChannelPlugin: () => TPlugin;
   loadChannelSecrets?: () => ChannelPlugin["secrets"] | undefined;
   loadChannelAccountInspector?: () => NonNullable<ChannelPlugin["config"]["inspectAccount"]>;
@@ -405,7 +405,7 @@ export function defineBundledChannelEntry<TPlugin = ChannelPlugin>({
     ...(features || accountInspect
       ? { features: { ...features, ...(accountInspect ? { accountInspect: true } : {}) } }
       : {}),
-    register(api: OpenClawPluginApi) {
+    register(api: LittleBabyPluginApi) {
       if (api.registrationMode === "cli-metadata") {
         registerCliMetadata?.(api);
         return;

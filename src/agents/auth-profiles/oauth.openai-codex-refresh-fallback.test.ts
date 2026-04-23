@@ -104,7 +104,7 @@ describe("resolveApiKeyForProfile openai-codex refresh fallback", () => {
   let caseIndex = 0;
 
   beforeAll(async () => {
-    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-refresh-fallback-"));
+    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-refresh-fallback-"));
     ({ resolveApiKeyForProfile } = await import("./oauth.js"));
   });
 

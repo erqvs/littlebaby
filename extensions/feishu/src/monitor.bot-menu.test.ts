@@ -123,7 +123,7 @@ describe("Feishu bot menu handler", () => {
   beforeEach(() => {
     handlers = {};
     vi.clearAllMocks();
-    process.env.LITTLEBABY_STATE_DIR = `/tmp/openclaw-feishu-bot-menu-test-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    process.env.LITTLEBABY_STATE_DIR = `/tmp/littlebaby-feishu-bot-menu-test-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   });
 
   afterEach(() => {

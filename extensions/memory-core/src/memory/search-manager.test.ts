@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/memory-core-host-engine-foundation";
+import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "littlebaby/plugin-sdk/memory-core-host-engine-qmd";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type CheckQmdBinaryAvailability = typeof checkQmdBinaryAvailabilityFn;
@@ -111,7 +111,7 @@ vi.mock("./qmd-manager.js", () => ({
   },
 }));
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-qmd", () => ({
+vi.mock("littlebaby/plugin-sdk/memory-core-host-engine-qmd", () => ({
   checkQmdBinaryAvailability,
 }));
 
@@ -129,14 +129,14 @@ const createQmdManagerMock = vi.mocked(QmdMemoryManager.create);
 type SearchManagerResult = Awaited<ReturnType<typeof getMemorySearchManager>>;
 type SearchManager = NonNullable<SearchManagerResult["manager"]>;
 
-function createQmdCfg(agentId: string): OpenClawConfig {
+function createQmdCfg(agentId: string): LittleBabyConfig {
   return {
     memory: { backend: "qmd", qmd: {} },
     agents: { list: [{ id: agentId, default: true, workspace: "/tmp/workspace" }] },
   };
 }
 
-function createBuiltinCfg(agentId: string): OpenClawConfig {
+function createBuiltinCfg(agentId: string): LittleBabyConfig {
   return {
     agents: {
       defaults: {
@@ -156,7 +156,7 @@ function createBuiltinCfg(agentId: string): OpenClawConfig {
       },
       list: [{ id: agentId, default: true, workspace: "/tmp/workspace" }],
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 function requireManager(result: SearchManagerResult): SearchManager {
@@ -260,13 +260,13 @@ describe("getMemorySearchManager caching", () => {
   });
 
   it("creates a missing agent workspace before probing qmd availability", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-workspace-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-qmd-workspace-"));
     const workspace = path.join(tempRoot, "missing", "workspace");
     const agentId = "missing-workspace";
     const cfg = {
       memory: { backend: "qmd", qmd: {} },
       agents: { list: [{ id: agentId, default: true, workspace }] },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     try {
       await getMemorySearchManager({ cfg, agentId });

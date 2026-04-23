@@ -1,21 +1,21 @@
 import { describe, expect, it, vi } from "vitest";
 import { collectDiscordSecurityAuditFindings } from "../../test/helpers/channels/security-audit-contract.js";
 import type { ChannelPlugin } from "../channels/plugins/types.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { collectChannelSecurityFindings } from "./audit-channel.js";
 
 const { readChannelAllowFromStoreMock } = vi.hoisted(() => ({
   readChannelAllowFromStoreMock: vi.fn(async () => [] as string[]),
 }));
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/conversation-runtime", () => ({
   readChannelAllowFromStore: readChannelAllowFromStoreMock,
 }));
 
 function stubDiscordPlugin(params: {
-  resolveAccount: (cfg: OpenClawConfig, accountId: string | null | undefined) => unknown;
-  inspectAccount?: (cfg: OpenClawConfig, accountId: string | null | undefined) => unknown;
-  isConfigured?: (account: unknown, cfg: OpenClawConfig) => boolean;
+  resolveAccount: (cfg: LittleBabyConfig, accountId: string | null | undefined) => unknown;
+  inspectAccount?: (cfg: LittleBabyConfig, accountId: string | null | undefined) => unknown;
+  isConfigured?: (account: unknown, cfg: LittleBabyConfig) => boolean;
 }): ChannelPlugin {
   return {
     id: "discord",
@@ -62,7 +62,7 @@ function stubDiscordPlugin(params: {
 
 describe("security audit channel source-config fallback discord", () => {
   it("keeps source-configured channel security findings when resolved inspection is incomplete", async () => {
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: LittleBabyConfig = {
       commands: { native: true },
       channels: {
         discord: {
@@ -79,7 +79,7 @@ describe("security audit channel source-config fallback discord", () => {
         },
       },
     };
-    const resolvedConfig: OpenClawConfig = {
+    const resolvedConfig: LittleBabyConfig = {
       commands: { native: true },
       channels: {
         discord: {

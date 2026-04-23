@@ -3,7 +3,7 @@ import type {
   GatewayBindMode,
   GatewayTailscaleConfig,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import {
   assertGatewayAuthConfigured,
   type ResolvedGatewayAuth,
@@ -38,7 +38,7 @@ export type GatewayRuntimeConfig = {
 };
 
 export async function resolveGatewayRuntimeConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   port: number;
   bind?: GatewayBindMode;
   host?: string;

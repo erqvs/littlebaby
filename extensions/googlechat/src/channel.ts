@@ -1,16 +1,16 @@
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import { formatNormalizedAllowFromEntries } from "openclaw/plugin-sdk/allow-from";
+import { describeAccountSnapshot } from "littlebaby/plugin-sdk/account-helpers";
+import { formatNormalizedAllowFromEntries } from "littlebaby/plugin-sdk/allow-from";
 import {
   adaptScopedAccountAccessor,
   createScopedChannelConfigAdapter,
-} from "openclaw/plugin-sdk/channel-config-helpers";
-import { createChatChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-import { buildPassiveProbedChannelStatusSummary } from "openclaw/plugin-sdk/extension-shared";
-import { createLazyRuntimeNamedExport } from "openclaw/plugin-sdk/lazy-runtime";
+} from "littlebaby/plugin-sdk/channel-config-helpers";
+import { createChatChannelPlugin } from "littlebaby/plugin-sdk/channel-core";
+import { buildPassiveProbedChannelStatusSummary } from "littlebaby/plugin-sdk/extension-shared";
+import { createLazyRuntimeNamedExport } from "littlebaby/plugin-sdk/lazy-runtime";
 import {
   createComputedAccountStatusAdapter,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/status-helpers";
+} from "littlebaby/plugin-sdk/status-helpers";
 import { googlechatMessageActions } from "./actions.js";
 import { googleChatApprovalAuth } from "./approval-auth.js";
 import {

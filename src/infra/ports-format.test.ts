@@ -11,7 +11,7 @@ describe("ports-format", () => {
   it.each([
     [{ commandLine: "ssh -N -L 18789:127.0.0.1:18789 user@host" }, "ssh"],
     [{ command: "ssh" }, "ssh"],
-    [{ commandLine: "node /Users/me/Projects/openclaw/dist/entry.js gateway" }, "gateway"],
+    [{ commandLine: "node /Users/me/Projects/littlebaby/dist/entry.js gateway" }, "gateway"],
     [{ commandLine: "python -m http.server 18789" }, "unknown"],
   ] as const)("classifies port listener %j", (listener, expected) => {
     expect(classifyPortListener(listener, 18789)).toBe(expected);
@@ -21,7 +21,7 @@ describe("ports-format", () => {
     expect(
       buildPortHints(
         [
-          { commandLine: "node dist/index.js openclaw gateway" },
+          { commandLine: "node dist/index.js littlebaby gateway" },
           { commandLine: "ssh -N -L 18789:127.0.0.1:18789" },
           { commandLine: "python -m http.server 18789" },
         ],

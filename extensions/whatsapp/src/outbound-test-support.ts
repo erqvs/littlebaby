@@ -1,8 +1,8 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import type { MockInstance } from "vitest";
 
 export function createWhatsAppPollFixture() {
-  const cfg = { marker: "resolved-cfg" } as OpenClawConfig;
+  const cfg = { marker: "resolved-cfg" } as LittleBabyConfig;
   const poll = {
     question: "Lunch?",
     options: ["Pizza", "Sushi"],
@@ -19,7 +19,7 @@ export function createWhatsAppPollFixture() {
 export function expectWhatsAppPollSent(
   sendPollWhatsApp: MockInstance,
   params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     poll: { question: string; options: string[]; maxSelections: number };
     to?: string;
     accountId?: string;

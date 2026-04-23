@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw skills` (search/install/update/list/info/check)"
+summary: "CLI reference for `littlebaby skills` (search/install/update/list/info/check)"
 read_when:
   - You want to see which skills are available and ready to run
   - You want to search, install, or update skills from ClawHub
@@ -7,7 +7,7 @@ read_when:
 title: "skills"
 ---
 
-# `openclaw skills`
+# `littlebaby skills`
 
 Inspect local skills and install/update skills from ClawHub.
 
@@ -20,21 +20,21 @@ Related:
 ## Commands
 
 ```bash
-openclaw skills search "calendar"
-openclaw skills search --limit 20 --json
-openclaw skills install <slug>
-openclaw skills install <slug> --version <version>
-openclaw skills install <slug> --force
-openclaw skills update <slug>
-openclaw skills update --all
-openclaw skills list
-openclaw skills list --eligible
-openclaw skills list --json
-openclaw skills list --verbose
-openclaw skills info <name>
-openclaw skills info <name> --json
-openclaw skills check
-openclaw skills check --json
+littlebaby skills search "calendar"
+littlebaby skills search --limit 20 --json
+littlebaby skills install <slug>
+littlebaby skills install <slug> --version <version>
+littlebaby skills install <slug> --force
+littlebaby skills update <slug>
+littlebaby skills update --all
+littlebaby skills list
+littlebaby skills list --eligible
+littlebaby skills list --json
+littlebaby skills list --verbose
+littlebaby skills info <name>
+littlebaby skills info <name> --json
+littlebaby skills check
+littlebaby skills check --json
 ```
 
 `search`/`install`/`update` use ClawHub directly and install into the active

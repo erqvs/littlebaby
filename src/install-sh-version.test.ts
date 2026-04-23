@@ -7,7 +7,7 @@ import { cleanupTempDirs, makeTempDir } from "../test/helpers/temp-dir.js";
 const tempRoots: string[] = [];
 
 function withFakeCli(versionOutput: string): { root: string; cliPath: string } {
-  const root = makeTempDir(tempRoots, "openclaw-install-sh-");
+  const root = makeTempDir(tempRoots, "littlebaby-install-sh-");
   const cliPath = path.join(root, "littlebaby");
   const escapedOutput = versionOutput.replace(/'/g, "'\\''");
   fs.writeFileSync(
@@ -39,19 +39,19 @@ function resolveInstallerVersionCases(params: {
     [
       "-c",
       `${versionHelperSource}
-for openclaw_bin in "\${@:3}"; do
-  LITTLEBABY_BIN="$openclaw_bin"
-  resolve_openclaw_version
+for littlebaby_bin in "\${@:3}"; do
+  LITTLEBABY_BIN="$littlebaby_bin"
+  resolve_littlebaby_version
 done
 (
   cd "$2"
   FAKE_LITTLEBABY_BIN="\${@:1:1}" bash -s <<'LITTLEBABY_STDIN_INSTALLER'
 ${versionHelperSource}
 LITTLEBABY_BIN="$FAKE_LITTLEBABY_BIN"
-resolve_openclaw_version
+resolve_littlebaby_version
 LITTLEBABY_STDIN_INSTALLER
 )`,
-      "openclaw-version-test",
+      "littlebaby-version-test",
       params.stdinCliPath,
       params.stdinCwd,
       ...params.cliPaths,
@@ -76,11 +76,11 @@ describe("install.sh version resolution", () => {
   it.runIf(process.platform !== "win32")(
     "parses CLI versions and keeps stdin helpers isolated from cwd",
     () => {
-      const decorated = withFakeCli("OpenClaw 2026.3.10 (abcdef0)");
-      const raw = withFakeCli("OpenClaw dev's build");
-      const stdinFixture = withFakeCli("OpenClaw 2026.3.10 (abcdef0)");
+      const decorated = withFakeCli("LittleBaby 2026.3.10 (abcdef0)");
+      const raw = withFakeCli("LittleBaby dev's build");
+      const stdinFixture = withFakeCli("LittleBaby 2026.3.10 (abcdef0)");
 
-      const hostileCwd = makeTempDir(tempRoots, "openclaw-install-stdin-");
+      const hostileCwd = makeTempDir(tempRoots, "littlebaby-install-stdin-");
       const hostileHelper = path.join(
         hostileCwd,
         "docker",
@@ -91,7 +91,7 @@ describe("install.sh version resolution", () => {
       fs.writeFileSync(
         hostileHelper,
         `#!/usr/bin/env bash
-extract_openclaw_semver() {
+extract_littlebaby_semver() {
   printf '%s' 'poisoned'
 }
 `,
@@ -104,7 +104,7 @@ extract_openclaw_semver() {
           stdinCliPath: stdinFixture.cliPath,
           stdinCwd: hostileCwd,
         }),
-      ).toEqual(["2026.3.10", "OpenClaw dev's build", "2026.3.10"]);
+      ).toEqual(["2026.3.10", "LittleBaby dev's build", "2026.3.10"]);
     },
   );
 });

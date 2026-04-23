@@ -1,5 +1,5 @@
-export type { ChannelPlugin } from "openclaw/plugin-sdk/channel-plugin-common";
-export type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-export { clearAccountEntryFields } from "openclaw/plugin-sdk/channel-plugin-common";
-export { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-export { buildChannelConfigSchema } from "openclaw/plugin-sdk/channel-config-schema";
+export type { ChannelPlugin } from "littlebaby/plugin-sdk/channel-plugin-common";
+export type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+export { clearAccountEntryFields } from "littlebaby/plugin-sdk/channel-plugin-common";
+export { DEFAULT_ACCOUNT_ID } from "littlebaby/plugin-sdk/account-id";
+export { buildChannelConfigSchema } from "littlebaby/plugin-sdk/channel-config-schema";

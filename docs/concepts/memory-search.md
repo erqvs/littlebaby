@@ -49,7 +49,7 @@ node-llama-cpp).
 
 ## How search works
 
-OpenClaw runs two retrieval paths in parallel and merges the results:
+LittleBaby runs two retrieval paths in parallel and merges the results:
 
 ```mermaid
 flowchart LR
@@ -63,13 +63,13 @@ flowchart LR
 ```
 
 - **Vector search** finds notes with similar meaning ("gateway host" matches
-  "the machine running OpenClaw").
+  "the machine running LittleBaby").
 - **BM25 keyword search** finds exact matches (IDs, error strings, config
   keys).
 
 If only one path is available (no embeddings or no FTS), the other runs alone.
 
-When embeddings are unavailable, OpenClaw still uses lexical ranking over FTS results instead of falling back to raw exact-match ordering only. That degraded mode boosts chunks with stronger query-term coverage and relevant file paths, which keeps recall useful even without `sqlite-vec` or an embedding provider.
+When embeddings are unavailable, LittleBaby still uses lexical ranking over FTS results instead of falling back to raw exact-match ordering only. That degraded mode boosts chunks with stronger query-term coverage and relevant file paths, which keeps recall useful even without `sqlite-vec` or an embedding provider.
 
 ## Improving search quality
 
@@ -131,14 +131,14 @@ earlier conversations. This is opt-in via
 
 ## Troubleshooting
 
-**No results?** Run `openclaw memory status` to check the index. If empty, run
-`openclaw memory index --force`.
+**No results?** Run `littlebaby memory status` to check the index. If empty, run
+`littlebaby memory index --force`.
 
 **Only keyword matches?** Your embedding provider may not be configured. Check
-`openclaw memory status --deep`.
+`littlebaby memory status --deep`.
 
 **CJK text not found?** Rebuild the FTS index with
-`openclaw memory index --force`.
+`littlebaby memory index --force`.
 
 ## Further reading
 

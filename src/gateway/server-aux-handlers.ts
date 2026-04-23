@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { createExecApprovalForwarder } from "../infra/exec-approval-forwarder.js";
 import { type PluginApprovalRequestPayload } from "../infra/plugin-approvals.js";
 import {
@@ -29,7 +29,7 @@ export function createGatewayAuxHandlers(params: {
   log: GatewayAuxHandlerLogger;
   activateRuntimeSecrets: ActivateRuntimeSecrets;
   sharedGatewaySessionGenerationState: SharedGatewaySessionGenerationState;
-  resolveSharedGatewaySessionGenerationForConfig: (config: OpenClawConfig) => string | undefined;
+  resolveSharedGatewaySessionGenerationForConfig: (config: LittleBabyConfig) => string | undefined;
   clients: Iterable<SharedGatewayAuthClient>;
 }) {
   const execApprovalManager = new ExecApprovalManager();

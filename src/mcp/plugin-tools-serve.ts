@@ -1,5 +1,5 @@
 /**
- * Standalone MCP server that exposes OpenClaw plugin-registered tools
+ * Standalone MCP server that exposes LittleBaby plugin-registered tools
  * (e.g. memory-lancedb's memory_recall, memory_store, memory_forget)
  * so ACP sessions running Claude Code can use them.
  *
@@ -12,14 +12,14 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import { loadConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { routeLogsToStderr } from "../logging/console.js";
 import { resolvePluginTools } from "../plugins/tools.js";
 import { VERSION } from "../version.js";
 import { createPluginToolsMcpHandlers } from "./plugin-tools-handlers.js";
 
-function resolveTools(config: OpenClawConfig): AnyAgentTool[] {
+function resolveTools(config: LittleBabyConfig): AnyAgentTool[] {
   return resolvePluginTools({
     context: { config },
     suppressNameConflicts: true,
@@ -28,7 +28,7 @@ function resolveTools(config: OpenClawConfig): AnyAgentTool[] {
 
 export function createPluginToolsMcpServer(
   params: {
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     tools?: AnyAgentTool[];
   } = {},
 ): Server {
@@ -37,7 +37,7 @@ export function createPluginToolsMcpServer(
   const handlers = createPluginToolsMcpHandlers(tools);
 
   const server = new Server(
-    { name: "openclaw-plugin-tools", version: VERSION },
+    { name: "littlebaby-plugin-tools", version: VERSION },
     { capabilities: { tools: {} } },
   );
 

@@ -1,14 +1,14 @@
 import { describe, expect, it, test } from "vitest";
 import {
-  applyOpenClawManifestInstallCommonFields,
+  applyLittleBabyManifestInstallCommonFields,
   getFrontmatterString,
   normalizeStringList,
   parseFrontmatterBool,
-  parseOpenClawManifestInstallBase,
-  resolveOpenClawManifestBlock,
-  resolveOpenClawManifestInstall,
-  resolveOpenClawManifestOs,
-  resolveOpenClawManifestRequires,
+  parseLittleBabyManifestInstallBase,
+  resolveLittleBabyManifestBlock,
+  resolveLittleBabyManifestInstall,
+  resolveLittleBabyManifestOs,
+  resolveLittleBabyManifestRequires,
 } from "./frontmatter.js";
 
 describe("shared/frontmatter", () => {
@@ -30,40 +30,40 @@ describe("shared/frontmatter", () => {
     expect(parseFrontmatterBool("maybe", false)).toBe(false);
   });
 
-  test("resolveOpenClawManifestBlock reads current manifest keys and custom metadata fields", () => {
+  test("resolveLittleBabyManifestBlock reads current manifest keys and custom metadata fields", () => {
     expect(
-      resolveOpenClawManifestBlock({
+      resolveLittleBabyManifestBlock({
         frontmatter: {
-          metadata: "{ openclaw: { foo: 1, bar: 'baz' } }",
+          metadata: "{ littlebaby: { foo: 1, bar: 'baz' } }",
         },
       }),
     ).toEqual({ foo: 1, bar: "baz" });
 
     expect(
-      resolveOpenClawManifestBlock({
+      resolveLittleBabyManifestBlock({
         frontmatter: {
-          pluginMeta: "{ openclaw: { foo: 2 } }",
+          pluginMeta: "{ littlebaby: { foo: 2 } }",
         },
         key: "pluginMeta",
       }),
     ).toEqual({ foo: 2 });
   });
 
-  test("resolveOpenClawManifestBlock returns undefined for invalid input", () => {
-    expect(resolveOpenClawManifestBlock({ frontmatter: {} })).toBeUndefined();
+  test("resolveLittleBabyManifestBlock returns undefined for invalid input", () => {
+    expect(resolveLittleBabyManifestBlock({ frontmatter: {} })).toBeUndefined();
     expect(
-      resolveOpenClawManifestBlock({ frontmatter: { metadata: "not-json5" } }),
+      resolveLittleBabyManifestBlock({ frontmatter: { metadata: "not-json5" } }),
     ).toBeUndefined();
-    expect(resolveOpenClawManifestBlock({ frontmatter: { metadata: "123" } })).toBeUndefined();
-    expect(resolveOpenClawManifestBlock({ frontmatter: { metadata: "[]" } })).toBeUndefined();
+    expect(resolveLittleBabyManifestBlock({ frontmatter: { metadata: "123" } })).toBeUndefined();
+    expect(resolveLittleBabyManifestBlock({ frontmatter: { metadata: "[]" } })).toBeUndefined();
     expect(
-      resolveOpenClawManifestBlock({ frontmatter: { metadata: "{ nope: { a: 1 } }" } }),
+      resolveLittleBabyManifestBlock({ frontmatter: { metadata: "{ nope: { a: 1 } }" } }),
     ).toBeUndefined();
   });
 
   it("normalizes manifest requirement and os lists", () => {
     expect(
-      resolveOpenClawManifestRequires({
+      resolveLittleBabyManifestRequires({
         requires: {
           bins: "bun, node",
           anyBins: [" ffmpeg ", ""],
@@ -77,15 +77,15 @@ describe("shared/frontmatter", () => {
       env: ["LITTLEBABY_TOKEN", "LITTLEBABY_URL"],
       config: [],
     });
-    expect(resolveOpenClawManifestRequires({})).toBeUndefined();
-    expect(resolveOpenClawManifestOs({ os: [" darwin ", "linux", ""] })).toEqual([
+    expect(resolveLittleBabyManifestRequires({})).toBeUndefined();
+    expect(resolveLittleBabyManifestOs({ os: [" darwin ", "linux", ""] })).toEqual([
       "darwin",
       "linux",
     ]);
   });
 
   it("parses and applies install common fields", () => {
-    const parsed = parseOpenClawManifestInstallBase(
+    const parsed = parseLittleBabyManifestInstallBase(
       {
         type: " Brew ",
         id: "brew.git",
@@ -107,9 +107,9 @@ describe("shared/frontmatter", () => {
       label: "Git",
       bins: ["git", "git"],
     });
-    expect(parseOpenClawManifestInstallBase({ kind: "bad" }, ["brew"])).toBeUndefined();
+    expect(parseLittleBabyManifestInstallBase({ kind: "bad" }, ["brew"])).toBeUndefined();
     expect(
-      applyOpenClawManifestInstallCommonFields<{
+      applyLittleBabyManifestInstallCommonFields<{
         extra: boolean;
         id?: string;
         label?: string;
@@ -124,7 +124,7 @@ describe("shared/frontmatter", () => {
   });
 
   it("prefers explicit kind, ignores invalid common fields, and leaves missing ones untouched", () => {
-    const parsed = parseOpenClawManifestInstallBase(
+    const parsed = parseLittleBabyManifestInstallBase(
       {
         kind: " npm ",
         type: "brew",
@@ -146,7 +146,7 @@ describe("shared/frontmatter", () => {
       kind: "npm",
     });
     expect(
-      applyOpenClawManifestInstallCommonFields(
+      applyLittleBabyManifestInstallCommonFields(
         { id: "keep", label: "Keep", bins: ["bun"] },
         parsed!,
       ),
@@ -159,7 +159,7 @@ describe("shared/frontmatter", () => {
 
   it("maps install entries through the parser and filters rejected specs", () => {
     expect(
-      resolveOpenClawManifestInstall(
+      resolveLittleBabyManifestInstall(
         {
           install: [{ id: "keep" }, { id: "drop" }, "bad"],
         },

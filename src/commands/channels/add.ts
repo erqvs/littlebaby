@@ -5,7 +5,7 @@ import { moveSingleAccountChannelSectionToDefaultAccount } from "../../channels/
 import type { ChannelSetupPlugin } from "../../channels/plugins/setup-wizard-types.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
 import type { ChannelId, ChannelSetupInput } from "../../channels/plugins/types.public.js";
-import { replaceConfigFile, type OpenClawConfig } from "../../config/config.js";
+import { replaceConfigFile, type LittleBabyConfig } from "../../config/config.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key.js";
 import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
 import { normalizeOptionalLowercaseString } from "../../shared/string-coerce.js";
@@ -39,7 +39,7 @@ export type ChannelsAddOptions = {
   dmAllowlist?: string;
 } & Omit<ChannelSetupInput, "groupChannels" | "dmAllowlist" | "initialSyncLimit">;
 
-async function resolveCatalogChannelEntry(raw: string, cfg: OpenClawConfig | null) {
+async function resolveCatalogChannelEntry(raw: string, cfg: LittleBabyConfig | null) {
   const trimmed = normalizeOptionalLowercaseString(raw);
   if (!trimmed) {
     return undefined;
@@ -65,7 +65,7 @@ export async function channelsAddCommand(
   if (!configSnapshot) {
     return;
   }
-  const cfg = (configSnapshot.sourceConfig ?? configSnapshot.config) as OpenClawConfig;
+  const cfg = (configSnapshot.sourceConfig ?? configSnapshot.config) as LittleBabyConfig;
   const baseHash = configSnapshot.hash;
   let nextConfig = cfg;
 
@@ -212,7 +212,7 @@ export async function channelsAddCommand(
   let catalogEntry = channel ? undefined : await resolveCatalogChannelEntry(rawChannel, nextConfig);
   const resolveWorkspaceDir = () =>
     resolveAgentWorkspaceDir(nextConfig, resolveDefaultAgentId(nextConfig));
-  // May trigger loadOpenClawPlugins on cache miss (disk scan + jiti import)
+  // May trigger loadLittleBabyPlugins on cache miss (disk scan + jiti import)
   const loadScopedPlugin = async (
     channelId: ChannelId,
     pluginId?: string,

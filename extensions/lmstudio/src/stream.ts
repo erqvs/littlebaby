@@ -1,8 +1,8 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import { streamSimple } from "@mariozechner/pi-ai";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/logging-core";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
-import type { SsrFPolicy } from "openclaw/plugin-sdk/ssrf-runtime";
+import { createSubsystemLogger } from "littlebaby/plugin-sdk/logging-core";
+import type { ProviderWrapStreamFnContext } from "littlebaby/plugin-sdk/plugin-entry";
+import type { SsrFPolicy } from "littlebaby/plugin-sdk/ssrf-runtime";
 import { LMSTUDIO_PROVIDER_ID } from "./defaults.js";
 import { ensureLmstudioModelLoaded } from "./models.fetch.js";
 import { resolveLmstudioInferenceBase } from "./models.js";

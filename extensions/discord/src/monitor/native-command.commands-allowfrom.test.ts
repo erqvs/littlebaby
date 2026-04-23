@@ -1,9 +1,9 @@
 import { ChannelType } from "discord-api-types/v10";
-import type { NativeCommandSpec } from "openclaw/plugin-sdk/command-auth";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { DiscordAccountConfig } from "openclaw/plugin-sdk/config-runtime";
-import * as pluginCommandsModule from "openclaw/plugin-sdk/plugin-runtime";
-import * as dispatcherModule from "openclaw/plugin-sdk/reply-dispatch-runtime";
+import type { NativeCommandSpec } from "littlebaby/plugin-sdk/command-auth";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { DiscordAccountConfig } from "littlebaby/plugin-sdk/config-runtime";
+import * as pluginCommandsModule from "littlebaby/plugin-sdk/plugin-runtime";
+import * as dispatcherModule from "littlebaby/plugin-sdk/reply-dispatch-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { __testing as nativeCommandTesting, createDiscordNativeCommand } from "./native-command.js";
 import {
@@ -25,7 +25,7 @@ function createInteraction(params?: { userId?: string }): MockCommandInteraction
   });
 }
 
-function createConfig(): OpenClawConfig {
+function createConfig(): LittleBabyConfig {
   return {
     commands: {
       allowFrom: {
@@ -47,10 +47,10 @@ function createConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
-function createCommand(cfg: OpenClawConfig, discordConfig?: DiscordAccountConfig) {
+function createCommand(cfg: LittleBabyConfig, discordConfig?: DiscordAccountConfig) {
   const commandSpec: NativeCommandSpec = {
     name: "ping",
     description: "Ping",
@@ -81,7 +81,7 @@ function createDispatchSpy() {
 
 async function runGuildSlashCommand(params?: {
   userId?: string;
-  mutateConfig?: (cfg: OpenClawConfig) => void;
+  mutateConfig?: (cfg: LittleBabyConfig) => void;
   runtimeDiscordConfig?: DiscordAccountConfig;
   mutateInteraction?: (interaction: MockCommandInteraction) => void;
 }) {

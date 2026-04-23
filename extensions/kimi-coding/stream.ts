@@ -1,8 +1,8 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import { streamSimple } from "@mariozechner/pi-ai";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
-import { streamWithPayloadPatch } from "openclaw/plugin-sdk/provider-stream-shared";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/text-runtime";
+import type { ProviderWrapStreamFnContext } from "littlebaby/plugin-sdk/plugin-entry";
+import { streamWithPayloadPatch } from "littlebaby/plugin-sdk/provider-stream-shared";
+import { normalizeOptionalLowercaseString } from "littlebaby/plugin-sdk/text-runtime";
 
 const TOOL_CALLS_SECTION_BEGIN = "<|tool_calls_section_begin|>";
 const TOOL_CALLS_SECTION_END = "<|tool_calls_section_end|>";

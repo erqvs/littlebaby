@@ -12,7 +12,7 @@ type TestEntry = {
 };
 
 function createTestCache(): ManagedCache<TestEntry> {
-  return resolveSingletonManagedCache<TestEntry>(Symbol("openclaw.manager-cache.test"));
+  return resolveSingletonManagedCache<TestEntry>(Symbol("littlebaby.manager-cache.test"));
 }
 
 function createEntry(id: string): TestEntry {

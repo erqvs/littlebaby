@@ -425,7 +425,7 @@ function parseOptions(): CliOptions {
 }
 
 function printUsage(): void {
-  console.log(`OpenClaw CLI benchmark
+  console.log(`LittleBaby CLI benchmark
 
 Usage:
   pnpm tsx scripts/bench-cli-startup.ts [options]
@@ -456,7 +456,7 @@ async function main(): Promise<void> {
   }
 
   const options = parseOptions();
-  const tmpDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-bench-"));
+  const tmpDir = mkdtempSync(path.join(os.tmpdir(), "littlebaby-cli-bench-"));
   const rssHookPath = buildRssHook(tmpDir);
   try {
     const primary = buildSuiteResult({

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# ClawDock - Docker helpers for OpenClaw
-# Inspired by Simon Willison's "Running OpenClaw in Docker"
-# https://til.simonwillison.net/llms/openclaw-docker
+# ClawDock - Docker helpers for LittleBaby
+# Inspired by Simon Willison's "Running LittleBaby in Docker"
+# https://til.simonwillison.net/llms/littlebaby-docker
 #
 # Installation:
-#   mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
+#   mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 #   echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc
 #
 # Usage:
@@ -38,14 +38,14 @@ _cmd() {
 # =============================================================================
 CLAWDOCK_CONFIG="${HOME}/.clawdock/config"
 
-# Common paths to check for OpenClaw
+# Common paths to check for LittleBaby
 CLAWDOCK_COMMON_PATHS=(
-  "${HOME}/openclaw"
-  "${HOME}/workspace/openclaw"
-  "${HOME}/projects/openclaw"
-  "${HOME}/dev/openclaw"
-  "${HOME}/code/openclaw"
-  "${HOME}/src/openclaw"
+  "${HOME}/littlebaby"
+  "${HOME}/workspace/littlebaby"
+  "${HOME}/projects/littlebaby"
+  "${HOME}/dev/littlebaby"
+  "${HOME}/code/littlebaby"
+  "${HOME}/src/littlebaby"
 )
 
 _clawdock_filter_warnings() {
@@ -111,28 +111,28 @@ _clawdock_ensure_dir() {
 
   if [[ -n "$found_path" ]]; then
     echo ""
-    echo "🦞 Found OpenClaw at: $found_path"
+    echo "🦞 Found LittleBaby at: $found_path"
     echo -n "   Use this location? [Y/n] "
     read -r response
     if [[ "$response" =~ ^[Nn] ]]; then
       echo ""
       echo "Set CLAWDOCK_DIR manually:"
-      echo "  export CLAWDOCK_DIR=/path/to/openclaw"
+      echo "  export CLAWDOCK_DIR=/path/to/littlebaby"
       return 1
     fi
     CLAWDOCK_DIR="$found_path"
   else
     echo ""
-    echo "❌ OpenClaw not found in common locations."
+    echo "❌ LittleBaby not found in common locations."
     echo ""
     echo "Clone it first:"
     echo ""
-    echo "  git clone https://github.com/openclaw/openclaw.git ~/openclaw"
-    echo "  cd ~/openclaw && ./scripts/docker/setup.sh"
+    echo "  git clone https://github.com/littlebaby/littlebaby.git ~/littlebaby"
+    echo "  cd ~/littlebaby && ./scripts/docker/setup.sh"
     echo ""
     echo "Or set CLAWDOCK_DIR if it's elsewhere:"
     echo ""
-    echo "  export CLAWDOCK_DIR=/path/to/openclaw"
+    echo "  export CLAWDOCK_DIR=/path/to/littlebaby"
     echo ""
     return 1
   fi
@@ -207,12 +207,12 @@ clawdock-show-config() {
   echo -e "${_CLR_BOLD}Config directory:${_CLR_RESET} ${_CLR_CYAN}${config_dir}${_CLR_RESET}"
   echo ""
 
-  # Show openclaw.json
-  if [[ -f "${config_dir}/openclaw.json" ]]; then
-    echo -e "${_CLR_BOLD}${config_dir}/openclaw.json${_CLR_RESET}"
-    echo -e "${_CLR_DIM}$(cat "${config_dir}/openclaw.json")${_CLR_RESET}"
+  # Show littlebaby.json
+  if [[ -f "${config_dir}/littlebaby.json" ]]; then
+    echo -e "${_CLR_BOLD}${config_dir}/littlebaby.json${_CLR_RESET}"
+    echo -e "${_CLR_DIM}$(cat "${config_dir}/littlebaby.json")${_CLR_RESET}"
   else
-    echo -e "${_CLR_YELLOW}No openclaw.json found${_CLR_RESET}"
+    echo -e "${_CLR_YELLOW}No littlebaby.json found${_CLR_RESET}"
   fi
   echo ""
 
@@ -260,7 +260,7 @@ clawdock-workspace() {
 # Container Access
 clawdock-shell() {
   _clawdock_compose exec littlebaby-gateway \
-    bash -c 'echo "alias openclaw=\"./littlebaby.mjs\"" > /tmp/.bashrc_openclaw && bash --rcfile /tmp/.bashrc_openclaw'
+    bash -c 'echo "alias littlebaby=\"./littlebaby.mjs\"" > /tmp/.bashrc_littlebaby && bash --rcfile /tmp/.bashrc_littlebaby'
 }
 
 clawdock-exec() {
@@ -268,14 +268,14 @@ clawdock-exec() {
 }
 
 clawdock-cli() {
-  _clawdock_compose run --rm openclaw-cli "$@"
+  _clawdock_compose run --rm littlebaby-cli "$@"
 }
 
 # Maintenance
 clawdock-update() {
   _clawdock_ensure_dir || return 1
 
-  echo "🔄 Updating OpenClaw..."
+  echo "🔄 Updating LittleBaby..."
 
   echo ""
   echo "📥 Pulling latest source..."
@@ -372,7 +372,7 @@ clawdock-dashboard() {
 
   echo "🦞 Getting dashboard URL..."
   local output exit_status url
-  output=$(_clawdock_compose run --rm openclaw-cli dashboard --no-open 2>&1)
+  output=$(_clawdock_compose run --rm littlebaby-cli dashboard --no-open 2>&1)
   exit_status=$?
   url=$(printf "%s\n" "$output" | _clawdock_filter_warnings | grep -o 'http[s]\?://[^[:space:]]*' | head -n 1)
   if [[ $exit_status -ne 0 ]]; then
@@ -411,7 +411,7 @@ clawdock-devices() {
     echo -e "   2. Try fixing the token automatically: $(_cmd clawdock-fix-token)"
     echo "   3. If you still see errors, try manual config inside container:"
     echo -e "      $(_cmd clawdock-shell)"
-    echo -e "      $(_cmd 'openclaw config get gateway.remote.token')"
+    echo -e "      $(_cmd 'littlebaby config get gateway.remote.token')"
     return 1
   fi
 
@@ -447,7 +447,7 @@ clawdock-approve() {
 
 # Show all available clawdock helper commands
 clawdock-help() {
-  echo -e "\n${_CLR_BOLD}${_CLR_CYAN}🦞 ClawDock - Docker Helpers for OpenClaw${_CLR_RESET}\n"
+  echo -e "\n${_CLR_BOLD}${_CLR_CYAN}🦞 ClawDock - Docker Helpers for LittleBaby${_CLR_RESET}\n"
 
   echo -e "${_CLR_BOLD}${_CLR_MAGENTA}⚡ Basic Operations${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-start)       ${_CLR_DIM}Start the gateway${_CLR_RESET}"
@@ -458,7 +458,7 @@ clawdock-help() {
   echo ""
 
   echo -e "${_CLR_BOLD}${_CLR_MAGENTA}🐚 Container Access${_CLR_RESET}"
-  echo -e "  $(_cmd clawdock-shell)       ${_CLR_DIM}Shell into container (openclaw alias ready)${_CLR_RESET}"
+  echo -e "  $(_cmd clawdock-shell)       ${_CLR_DIM}Shell into container (littlebaby alias ready)${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-cli)         ${_CLR_DIM}Run CLI commands (e.g., clawdock-cli status)${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-exec) ${_CLR_CYAN}<cmd>${_CLR_RESET}  ${_CLR_DIM}Execute command in gateway container${_CLR_RESET}"
   echo ""
@@ -482,7 +482,7 @@ clawdock-help() {
   echo -e "${_CLR_BOLD}${_CLR_MAGENTA}🛠️  Utilities${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-health)      ${_CLR_DIM}Run health check${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-token)       ${_CLR_DIM}Show gateway auth token${_CLR_RESET}"
-  echo -e "  $(_cmd clawdock-cd)          ${_CLR_DIM}Jump to openclaw project directory${_CLR_RESET}"
+  echo -e "  $(_cmd clawdock-cd)          ${_CLR_DIM}Jump to littlebaby project directory${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-config)      ${_CLR_DIM}Open config directory (~/.littlebaby)${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-show-config) ${_CLR_DIM}Print config files with redacted values${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-workspace)   ${_CLR_DIM}Open workspace directory${_CLR_RESET}"
@@ -499,14 +499,14 @@ clawdock-help() {
 
   echo -e "${_CLR_BOLD}${_CLR_GREEN}💬 WhatsApp Setup${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-shell)"
-  echo -e "    ${_CLR_BLUE}>${_CLR_RESET} $(_cmd 'openclaw channels login --channel whatsapp')"
-  echo -e "    ${_CLR_BLUE}>${_CLR_RESET} $(_cmd 'openclaw status')"
+  echo -e "    ${_CLR_BLUE}>${_CLR_RESET} $(_cmd 'littlebaby channels login --channel whatsapp')"
+  echo -e "    ${_CLR_BLUE}>${_CLR_RESET} $(_cmd 'littlebaby status')"
   echo ""
 
   echo -e "${_CLR_BOLD}${_CLR_CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${_CLR_RESET}"
   echo ""
 
   echo -e "${_CLR_CYAN}💡 All commands guide you through next steps!${_CLR_RESET}"
-  echo -e "${_CLR_BLUE}📚 Docs: ${_CLR_RESET}${_CLR_CYAN}https://docs.openclaw.ai${_CLR_RESET}"
+  echo -e "${_CLR_BLUE}📚 Docs: ${_CLR_RESET}${_CLR_CYAN}https://docs.littlebaby.ai${_CLR_RESET}"
   echo ""
 }

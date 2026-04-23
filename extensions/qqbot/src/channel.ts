@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { ChannelPlugin } from "littlebaby/plugin-sdk/core";
 import { initApiConfig } from "./api.js";
 import { qqbotConfigAdapter, qqbotMeta, qqbotSetupAdapterShared } from "./channel-config-shared.js";
 import { qqbotChannelConfigSchema } from "./config-schema.js";
@@ -165,7 +165,7 @@ export const qqbotPlugin: ChannelPlugin<ResolvedQQBotAccount> = {
       });
     },
     logoutAccount: async ({ accountId, cfg }) => {
-      const nextCfg = { ...cfg } as OpenClawConfig;
+      const nextCfg = { ...cfg } as LittleBabyConfig;
       const nextQQBot = cfg.channels?.qqbot ? { ...cfg.channels.qqbot } : undefined;
       let cleared = false;
       let changed = false;
@@ -208,7 +208,7 @@ export const qqbotPlugin: ChannelPlugin<ResolvedQQBotAccount> = {
         nextCfg.channels = { ...nextCfg.channels, qqbot: nextQQBot };
         const runtime = getQQBotRuntime();
         const configApi = runtime.config as {
-          writeConfigFile: (cfg: OpenClawConfig) => Promise<void>;
+          writeConfigFile: (cfg: LittleBabyConfig) => Promise<void>;
         };
         await configApi.writeConfigFile(nextCfg);
       }

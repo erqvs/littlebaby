@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/openai-provider",
+  "name": "@littlebaby/openai-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw OpenAI provider plugins",
+  "description": "LittleBaby OpenAI provider plugins",
   "type": "module",
   "dependencies": {
     "ws": "^8.20.0"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

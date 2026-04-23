@@ -97,7 +97,7 @@ describe("createScopedVitestConfig", () => {
     expect(normalizeConfigPath(config.test?.runner)).toBe("test/non-isolated-runner.ts");
     expect(normalizeConfigPaths(config.test?.setupFiles)).toEqual([
       "test/setup.ts",
-      "test/setup-openclaw-runtime.ts",
+      "test/setup-littlebaby-runtime.ts",
     ]);
   });
 
@@ -133,7 +133,7 @@ describe("createScopedVitestConfig", () => {
   });
 
   it("loads scoped include overrides from LITTLEBABY_VITEST_INCLUDE_FILE", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-vitest-scoped-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-vitest-scoped-"));
     try {
       const includeFile = path.join(tempDir, "include.json");
       fs.writeFileSync(includeFile, JSON.stringify(["src/utils/utils-misc.test.ts"]), "utf8");
@@ -160,7 +160,7 @@ describe("createScopedVitestConfig", () => {
     expect(normalizeConfigPaths(config.test?.setupFiles)).toEqual([
       "test/setup.ts",
       "test/setup.extensions.ts",
-      "test/setup-openclaw-runtime.ts",
+      "test/setup-littlebaby-runtime.ts",
     ]);
   });
 
@@ -254,12 +254,12 @@ describe("scoped vitest configs", () => {
     expect(defaultUiConfig.test?.runner).toBeUndefined();
   });
 
-  it("keeps the process lane off the openclaw runtime setup", () => {
+  it("keeps the process lane off the littlebaby runtime setup", () => {
     expect(normalizeConfigPaths(defaultProcessConfig.test?.setupFiles)).toEqual(["test/setup.ts"]);
     expect(normalizeConfigPaths(defaultRuntimeConfig.test?.setupFiles)).toEqual(["test/setup.ts"]);
     expect(normalizeConfigPaths(defaultPluginSdkConfig.test?.setupFiles)).toEqual([
       "test/setup.ts",
-      "test/setup-openclaw-runtime.ts",
+      "test/setup-littlebaby-runtime.ts",
     ]);
   });
 
@@ -272,7 +272,7 @@ describe("scoped vitest configs", () => {
     expect(defaultAutoReplyReplyConfig.test?.include).toEqual(["reply/**/*.test.ts"]);
   });
 
-  it("keeps selected plugin-sdk and commands light lanes off the openclaw runtime setup", () => {
+  it("keeps selected plugin-sdk and commands light lanes off the littlebaby runtime setup", () => {
     expect(normalizeConfigPaths(defaultPluginSdkLightConfig.test?.setupFiles)).toEqual([
       "test/setup.ts",
     ]);
@@ -281,7 +281,7 @@ describe("scoped vitest configs", () => {
     ]);
   });
 
-  it("keeps the ui lane off both the openclaw runtime setup and unit-fast excludes", () => {
+  it("keeps the ui lane off both the littlebaby runtime setup and unit-fast excludes", () => {
     expect(normalizeConfigPaths(defaultUiConfig.test?.setupFiles)).toEqual([
       "test/setup.ts",
       "ui/src/test-helpers/lit-warnings.setup.ts",
@@ -303,7 +303,7 @@ describe("scoped vitest configs", () => {
 
   it("loads channel include overrides from LITTLEBABY_VITEST_INCLUDE_FILE", () => {
     const tempDirs: string[] = [];
-    const tempDir = makeTempDir(tempDirs, "openclaw-vitest-channels-");
+    const tempDir = makeTempDir(tempDirs, "littlebaby-vitest-channels-");
     try {
       const includeFile = path.join(tempDir, "include.json");
       fs.writeFileSync(
@@ -457,12 +457,12 @@ describe("scoped vitest configs", () => {
     expect(normalizeConfigPaths(defaultExtensionsConfig.test?.setupFiles)).toEqual([
       "test/setup.ts",
       "test/setup.extensions.ts",
-      "test/setup-openclaw-runtime.ts",
+      "test/setup-littlebaby-runtime.ts",
     ]);
     expect(normalizeConfigPaths(defaultExtensionTelegramConfig.test?.setupFiles)).toEqual([
       "test/setup.ts",
       "test/setup.extensions.ts",
-      "test/setup-openclaw-runtime.ts",
+      "test/setup-littlebaby-runtime.ts",
     ]);
   });
 

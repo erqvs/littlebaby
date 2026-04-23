@@ -143,9 +143,9 @@ exit 0
       });
       expect(scriptPath.endsWith(".sh")).toBe(true);
       expect(content).toContain("#!/bin/sh");
-      expect(content).toContain("launchctl kickstart -k 'gui/501/ai.openclaw.gateway'");
+      expect(content).toContain("launchctl kickstart -k 'gui/501/ai.littlebaby.gateway'");
       // Should clear disabled state and fall back to bootstrap when kickstart fails.
-      expect(content).toContain("launchctl enable 'gui/501/ai.openclaw.gateway'");
+      expect(content).toContain("launchctl enable 'gui/501/ai.littlebaby.gateway'");
       expect(content).toContain("launchctl bootstrap 'gui/501'");
       expect(content).toContain('rm -f "$0"');
       await cleanupScript(scriptPath);
@@ -180,20 +180,20 @@ exit 0
       const { scriptPath, content } = await prepareAndReadScript({
         LITTLEBABY_PROFILE: "default",
         HOME: "/Users/testuser",
-        LITTLEBABY_STATE_DIR: "/tmp/openclaw-state",
+        LITTLEBABY_STATE_DIR: "/tmp/littlebaby-state",
       });
 
       expect(content).toContain(
-        "if mkdir -p '/tmp/openclaw-state/logs' 2>/dev/null && : >>'/tmp/openclaw-state/logs/gateway-restart.log' 2>/dev/null; then",
+        "if mkdir -p '/tmp/littlebaby-state/logs' 2>/dev/null && : >>'/tmp/littlebaby-state/logs/gateway-restart.log' 2>/dev/null; then",
       );
-      expect(content).toContain("exec >>'/tmp/openclaw-state/logs/gateway-restart.log' 2>&1");
+      expect(content).toContain("exec >>'/tmp/littlebaby-state/logs/gateway-restart.log' 2>&1");
       await cleanupScript(scriptPath);
     });
 
     it("returns the final macOS launchctl kickstart failure after logging cleanup", async () => {
       Object.defineProperty(process, "platform", { value: "darwin" });
       process.getuid = () => 501;
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("littlebaby-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const stateDir = path.join(tmpDir, "state");
       await fs.mkdir(fakeBinDir, { recursive: true });
@@ -221,16 +221,16 @@ exit 0
       const log = await fs.readFile(path.join(stateDir, "logs", "gateway-restart.log"), "utf-8");
 
       expect(result.code).toBe(42);
-      expect(log).toContain("openclaw restart attempt source=update target=ai.openclaw.gateway");
-      expect(log).toContain("launchctl kickstart -k gui/501/ai.openclaw.gateway");
-      expect(log).toContain("openclaw restart failed source=update status=42");
-      expect(log).not.toContain("openclaw restart done source=update");
+      expect(log).toContain("littlebaby restart attempt source=update target=ai.littlebaby.gateway");
+      expect(log).toContain("launchctl kickstart -k gui/501/ai.littlebaby.gateway");
+      expect(log).toContain("littlebaby restart failed source=update status=42");
+      expect(log).not.toContain("littlebaby restart done source=update");
     });
 
     it("continues the macOS restart path when log setup fails", async () => {
       Object.defineProperty(process, "platform", { value: "darwin" });
       process.getuid = () => 501;
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("littlebaby-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const stateFile = path.join(tmpDir, "state-file");
       const markerPath = path.join(tmpDir, "launchctl-ran");
@@ -262,14 +262,14 @@ exit 0
     it("logs custom macOS launchd labels without shell expansion", async () => {
       Object.defineProperty(process, "platform", { value: "darwin" });
       process.getuid = () => 501;
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("littlebaby-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const stateDir = path.join(tmpDir, "state");
       await fs.mkdir(fakeBinDir, { recursive: true });
       await writeFakeLaunchctl(fakeBinDir);
 
       const { scriptPath } = await prepareAndReadScript({
-        LITTLEBABY_LAUNCHD_LABEL: "ai.openclaw.$(echo injected)",
+        LITTLEBABY_LAUNCHD_LABEL: "ai.littlebaby.$(echo injected)",
         HOME: path.join(tmpDir, "home"),
         LITTLEBABY_STATE_DIR: stateDir,
       });
@@ -280,8 +280,8 @@ exit 0
       const log = await fs.readFile(path.join(stateDir, "logs", "gateway-restart.log"), "utf-8");
 
       expect(result.code).toBeNull();
-      expect(log).toContain("target=ai.openclaw.$(echo injected)");
-      expect(log).not.toContain("target=ai.openclaw.injected");
+      expect(log).toContain("target=ai.littlebaby.$(echo injected)");
+      expect(log).not.toContain("target=ai.littlebaby.injected");
     });
 
     it("uses LITTLEBABY_LAUNCHD_LABEL override on macOS", async () => {
@@ -290,9 +290,9 @@ exit 0
 
       const { scriptPath, content } = await prepareAndReadScript({
         LITTLEBABY_PROFILE: "default",
-        LITTLEBABY_LAUNCHD_LABEL: "com.custom.openclaw",
+        LITTLEBABY_LAUNCHD_LABEL: "com.custom.littlebaby",
       });
-      expect(content).toContain("launchctl kickstart -k 'gui/501/com.custom.openclaw'");
+      expect(content).toContain("launchctl kickstart -k 'gui/501/com.custom.littlebaby'");
       await cleanupScript(scriptPath);
     });
 
@@ -305,9 +305,9 @@ exit 0
       expect(scriptPath.endsWith(".bat")).toBe(true);
       expect(content).toContain("@echo off");
       expect(content).toContain("gateway-restart.log");
-      expect(content).toContain("openclaw restart attempt source=update target=OpenClaw Gateway");
-      expect(content).toContain('schtasks /End /TN "OpenClaw Gateway"');
-      expect(content).toContain('schtasks /Run /TN "OpenClaw Gateway" >>');
+      expect(content).toContain("littlebaby restart attempt source=update target=LittleBaby Gateway");
+      expect(content).toContain('schtasks /End /TN "LittleBaby Gateway"');
+      expect(content).toContain('schtasks /Run /TN "LittleBaby Gateway" >>');
       expectWindowsRestartWaitOrdering(content);
       // Batch self-cleanup
       expect(content).toContain('del "%~f0"');
@@ -319,10 +319,10 @@ exit 0
 
       const { scriptPath, content } = await prepareAndReadScript({
         LITTLEBABY_PROFILE: "default",
-        LITTLEBABY_WINDOWS_TASK_NAME: "OpenClaw Gateway (custom)",
+        LITTLEBABY_WINDOWS_TASK_NAME: "LittleBaby Gateway (custom)",
       });
-      expect(content).toContain('schtasks /End /TN "OpenClaw Gateway (custom)"');
-      expect(content).toContain('schtasks /Run /TN "OpenClaw Gateway (custom)"');
+      expect(content).toContain('schtasks /End /TN "LittleBaby Gateway (custom)"');
+      expect(content).toContain('schtasks /Run /TN "LittleBaby Gateway (custom)"');
       expectWindowsRestartWaitOrdering(content);
       await cleanupScript(scriptPath);
     });
@@ -361,7 +361,7 @@ exit 0
       const { scriptPath, content } = await prepareAndReadScript({
         LITTLEBABY_PROFILE: "staging",
       });
-      expect(content).toContain("gui/502/ai.openclaw.staging");
+      expect(content).toContain("gui/502/ai.littlebaby.staging");
       await cleanupScript(scriptPath);
     });
 
@@ -371,7 +371,7 @@ exit 0
       const { scriptPath, content } = await prepareAndReadScript({
         LITTLEBABY_PROFILE: "production",
       });
-      expect(content).toContain('schtasks /End /TN "OpenClaw Gateway (production)"');
+      expect(content).toContain('schtasks /End /TN "LittleBaby Gateway (production)"');
       expectWindowsRestartWaitOrdering(content);
       await cleanupScript(scriptPath);
     });
@@ -439,10 +439,10 @@ exit 0
 
       const { scriptPath, content } = await prepareAndReadScript({
         HOME: "/Users/testuser",
-        LITTLEBABY_LAUNCHD_LABEL: "ai.openclaw.it's-a-test",
+        LITTLEBABY_LAUNCHD_LABEL: "ai.littlebaby.it's-a-test",
       });
       // The plist path must also shell-escape the label to prevent injection
-      expect(content).toContain("ai.openclaw.it'\\''s-a-test.plist");
+      expect(content).toContain("ai.littlebaby.it'\\''s-a-test.plist");
       await cleanupScript(scriptPath);
     });
 

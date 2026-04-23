@@ -39,7 +39,7 @@ async function writePluginFixture(params: {
     manifest.channels = params.channels;
   }
   await fs.writeFile(
-    path.join(params.dir, "openclaw.plugin.json"),
+    path.join(params.dir, "littlebaby.plugin.json"),
     JSON.stringify(manifest, null, 2),
     "utf-8",
   );
@@ -107,7 +107,7 @@ describe("config plugin validation", () => {
     ({
       HOME: suiteHome,
       LITTLEBABY_HOME: undefined,
-      LITTLEBABY_STATE_DIR: path.join(suiteHome, ".openclaw"),
+      LITTLEBABY_STATE_DIR: path.join(suiteHome, ".littlebaby"),
       LITTLEBABY_PLUGIN_MANIFEST_CACHE_MS: "10000",
       LITTLEBABY_DISABLE_PLUGIN_DISCOVERY_CACHE: "1",
       LITTLEBABY_BUNDLED_PLUGINS_DIR: undefined,
@@ -131,7 +131,7 @@ describe("config plugin validation", () => {
     });
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-config-plugin-validation-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-config-plugin-validation-"));
     await chmodSafeDir(fixtureRoot);
     suiteHome = path.join(fixtureRoot, "home");
     await mkdirSafe(suiteHome);
@@ -196,7 +196,7 @@ describe("config plugin validation", () => {
       process.cwd(),
       "extensions",
       "voice-call",
-      "openclaw.plugin.json",
+      "littlebaby.plugin.json",
     );
     const voiceCallManifest = JSON.parse(await fs.readFile(voiceCallManifestPath, "utf-8")) as {
       configSchema?: Record<string, unknown>;

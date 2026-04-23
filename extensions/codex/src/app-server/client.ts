@@ -1,5 +1,5 @@
 import { createInterface, type Interface as ReadlineInterface } from "node:readline";
-import { embeddedAgentLog, LITTLEBABY_VERSION } from "openclaw/plugin-sdk/agent-harness";
+import { embeddedAgentLog, LITTLEBABY_VERSION } from "littlebaby/plugin-sdk/agent-harness";
 import { resolveCodexAppServerRuntimeOptions, type CodexAppServerStartOptions } from "./config.js";
 import {
   type CodexInitializeResponse,
@@ -109,7 +109,7 @@ export class CodexAppServerClient {
     const response = await this.request<CodexInitializeResponse>("initialize", {
       clientInfo: {
         name: "littlebaby",
-        title: "OpenClaw",
+        title: "LittleBaby",
         version: LITTLEBABY_VERSION,
       },
       capabilities: {
@@ -335,7 +335,7 @@ export function defaultServerRequestResponse(
       contentItems: [
         {
           type: "inputText",
-          text: "OpenClaw did not register a handler for this app-server tool call.",
+          text: "LittleBaby did not register a handler for this app-server tool call.",
         },
       ],
       success: false,
@@ -353,7 +353,7 @@ export function defaultServerRequestResponse(
   if (isCodexAppServerApprovalRequest(request.method)) {
     return {
       decision: "decline",
-      reason: "OpenClaw codex app-server bridge does not grant native approvals yet.",
+      reason: "LittleBaby codex app-server bridge does not grant native approvals yet.",
     };
   }
   if (request.method === "item/tool/requestUserInput") {
@@ -373,7 +373,7 @@ function assertSupportedCodexAppServerVersion(response: CodexInitializeResponse)
   const detectedVersion = readCodexVersionFromUserAgent(response.userAgent);
   if (!detectedVersion) {
     throw new Error(
-      `Codex app-server ${MIN_CODEX_APP_SERVER_VERSION} or newer is required, but OpenClaw could not determine the running Codex version. Upgrade Codex CLI and retry.`,
+      `Codex app-server ${MIN_CODEX_APP_SERVER_VERSION} or newer is required, but LittleBaby could not determine the running Codex version. Upgrade Codex CLI and retry.`,
     );
   }
   if (compareVersions(detectedVersion, MIN_CODEX_APP_SERVER_VERSION) < 0) {
@@ -385,7 +385,7 @@ function assertSupportedCodexAppServerVersion(response: CodexInitializeResponse)
 
 export function readCodexVersionFromUserAgent(userAgent: string | undefined): string | undefined {
   // Codex returns `<originator>/<codex-version> ...`; the originator can be
-  // OpenClaw, Codex Desktop, or an env override, so only the slash-delimited
+  // LittleBaby, Codex Desktop, or an env override, so only the slash-delimited
   // version in the leading product field is stable.
   const match = userAgent?.match(
     /^[^/]+\/(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)(?:[\s(]|$)/,

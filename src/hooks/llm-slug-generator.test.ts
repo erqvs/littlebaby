@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
 const runEmbeddedPiAgentMock = vi.fn();
 
 vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: vi.fn(() => "main"),
-  resolveAgentWorkspaceDir: vi.fn(() => "/tmp/openclaw-agent"),
-  resolveAgentDir: vi.fn(() => "/tmp/openclaw-agent/.littlebaby-agent"),
+  resolveAgentWorkspaceDir: vi.fn(() => "/tmp/littlebaby-agent"),
+  resolveAgentDir: vi.fn(() => "/tmp/littlebaby-agent/.littlebaby-agent"),
   resolveAgentEffectiveModelPrimary: vi.fn(() => null),
 }));
 
@@ -27,7 +27,7 @@ describe("generateSlugViaLLM", () => {
   it("keeps the helper default timeout when no agent timeout is configured", async () => {
     await generateSlugViaLLM({
       sessionContent: "hello",
-      cfg: {} as OpenClawConfig,
+      cfg: {} as LittleBabyConfig,
     });
 
     expect(runEmbeddedPiAgentMock).toHaveBeenCalledOnce();
@@ -47,7 +47,7 @@ describe("generateSlugViaLLM", () => {
             timeoutSeconds: 500,
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
     });
 
     expect(runEmbeddedPiAgentMock).toHaveBeenCalledOnce();

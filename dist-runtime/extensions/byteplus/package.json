@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/byteplus-provider",
+  "name": "@littlebaby/byteplus-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw BytePlus provider plugin",
+  "description": "LittleBaby BytePlus provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

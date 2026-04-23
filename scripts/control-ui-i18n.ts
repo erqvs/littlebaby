@@ -99,7 +99,7 @@ const LOCALE_ENTRIES: readonly LocaleEntry[] = [
 ];
 
 const DEFAULT_GLOSSARY: readonly GlossaryEntry[] = [
-  { source: "OpenClaw", target: "OpenClaw" },
+  { source: "LittleBaby", target: "LittleBaby" },
   { source: "Gateway", target: "Gateway" },
   { source: "Control UI", target: "Control UI" },
   { source: "Skills", target: "Skills" },

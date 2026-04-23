@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { extractToolSend } from "openclaw/plugin-sdk/tool-send";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/string-coerce-runtime";
+import { extractToolSend } from "littlebaby/plugin-sdk/tool-send";
 import { requiresExplicitMatrixDefaultAccount } from "./account-selection.js";
 import { resolveDefaultMatrixAccountId, resolveMatrixAccount } from "./matrix/accounts.js";
 import {

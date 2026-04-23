@@ -132,7 +132,7 @@ function instantiatePiModelRegistry(
   return new Registry(authStorage, modelsJsonPath);
 }
 
-function createOpenClawModelRegistry(
+function createLittleBabyModelRegistry(
   authStorage: PiAuthStorage,
   modelsJsonPath: string,
   agentDir: string,
@@ -300,5 +300,5 @@ export function discoverAuthStorage(agentDir: string): PiAuthStorage {
 }
 
 export function discoverModels(authStorage: PiAuthStorage, agentDir: string): PiModelRegistry {
-  return createOpenClawModelRegistry(authStorage, path.join(agentDir, "models.json"), agentDir);
+  return createLittleBabyModelRegistry(authStorage, path.join(agentDir, "models.json"), agentDir);
 }

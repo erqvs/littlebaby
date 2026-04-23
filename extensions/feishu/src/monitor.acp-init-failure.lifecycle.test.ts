@@ -76,7 +76,7 @@ describe("Feishu ACP-init failure lifecycle", () => {
     vi.clearAllMocks();
     _handlers = {};
     lastRuntime = null;
-    setFeishuLifecycleStateDir("openclaw-feishu-acp-failure");
+    setFeishuLifecycleStateDir("littlebaby-feishu-acp-failure");
 
     resolveBoundConversationMock.mockReturnValue(null);
     resolveAgentRouteMock.mockReturnValue({

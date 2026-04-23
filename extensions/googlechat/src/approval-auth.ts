@@ -1,8 +1,8 @@
 import {
   createResolvedApproverActionAuthAdapter,
   resolveApprovalApprovers,
-} from "openclaw/plugin-sdk/approval-auth-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/approval-auth-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { resolveGoogleChatAccount } from "./accounts.js";
 import { isGoogleChatUserTarget, normalizeGoogleChatTarget } from "./targets.js";
 

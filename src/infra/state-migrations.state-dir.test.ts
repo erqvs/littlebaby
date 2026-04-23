@@ -9,7 +9,7 @@ import {
 
 async function withStateDirFixture(run: (root: string) => Promise<void>): Promise<void> {
   try {
-    await withTempDir({ prefix: "openclaw-state-dir-" }, async (root) => {
+    await withTempDir({ prefix: "littlebaby-state-dir-" }, async (root) => {
       await run(root);
     });
   } finally {

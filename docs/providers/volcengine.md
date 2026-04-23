@@ -2,7 +2,7 @@
 title: "Volcengine (Doubao)"
 summary: "Volcano Engine setup (Doubao models, general + coding endpoints)"
 read_when:
-  - You want to use Volcano Engine or Doubao models with OpenClaw
+  - You want to use Volcano Engine or Doubao models with LittleBaby
   - You need the Volcengine API key setup
 ---
 
@@ -25,7 +25,7 @@ workloads.
     Run interactive onboarding:
 
     ```bash
-    openclaw onboard --auth-choice volcengine-api-key
+    littlebaby onboard --auth-choice volcengine-api-key
     ```
 
     This registers both the general (`volcengine`) and coding (`volcengine-plan`) providers from a single API key.
@@ -44,8 +44,8 @@ workloads.
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider volcengine
-    openclaw models list --provider volcengine-plan
+    littlebaby models list --provider volcengine
+    littlebaby models list --provider volcengine-plan
     ```
   </Step>
 </Steps>
@@ -54,7 +54,7 @@ workloads.
 For non-interactive setup (CI, scripting), pass the key directly:
 
 ```bash
-openclaw onboard --non-interactive \
+littlebaby onboard --non-interactive \
   --mode local \
   --auth-choice volcengine-api-key \
   --volcengine-api-key "$VOLCANO_ENGINE_API_KEY"
@@ -101,7 +101,7 @@ Both providers are configured from a single API key. Setup registers both automa
 
 <AccordionGroup>
   <Accordion title="Default model after onboarding">
-    `openclaw onboard --auth-choice volcengine-api-key` currently sets
+    `littlebaby onboard --auth-choice volcengine-api-key` currently sets
     `volcengine-plan/ark-code-latest` as the default model while also registering
     the general `volcengine` catalog.
   </Accordion>
@@ -109,7 +109,7 @@ Both providers are configured from a single API key. Setup registers both automa
   <Accordion title="Model picker fallback behavior">
     During onboarding/configure model selection, the Volcengine auth choice prefers
     both `volcengine/*` and `volcengine-plan/*` rows. If those models are not
-    loaded yet, OpenClaw falls back to the unfiltered catalog instead of showing an
+    loaded yet, LittleBaby falls back to the unfiltered catalog instead of showing an
     empty provider-scoped picker.
   </Accordion>
 
@@ -121,7 +121,7 @@ Both providers are configured from a single API key. Setup registers both automa
 </AccordionGroup>
 
 <Warning>
-When running OpenClaw as a background service, environment variables set in your
+When running LittleBaby as a background service, environment variables set in your
 interactive shell are not automatically inherited. See the daemon note above.
 </Warning>
 
@@ -138,6 +138,6 @@ interactive shell are not automatically inherited. See the daemon note above.
     Common issues and debugging steps.
   </Card>
   <Card title="FAQ" href="/help/faq" icon="circle-question">
-    Frequently asked questions about OpenClaw setup.
+    Frequently asked questions about LittleBaby setup.
   </Card>
 </CardGroup>

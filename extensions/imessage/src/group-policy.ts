@@ -2,11 +2,11 @@ import {
   resolveChannelGroupRequireMention,
   resolveChannelGroupToolsPolicy,
   type GroupToolPolicyConfig,
-} from "openclaw/plugin-sdk/channel-policy";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+} from "littlebaby/plugin-sdk/channel-policy";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/core";
 
 type IMessageGroupContext = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   groupId?: string | null;
   senderId?: string | null;

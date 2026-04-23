@@ -38,7 +38,7 @@ const FULL_DEFAULTS = {
 
 function compileManifestConfigSchema() {
   const manifest = JSON.parse(
-    fs.readFileSync(new URL("../openclaw.plugin.json", import.meta.url), "utf8"),
+    fs.readFileSync(new URL("../littlebaby.plugin.json", import.meta.url), "utf8"),
   ) as { configSchema: Record<string, unknown> };
   const Ajv = AjvPkg as unknown as new (opts?: object) => import("ajv").default;
   const ajv = new Ajv({ allErrors: true, strict: false, useDefaults: true });
@@ -225,9 +225,9 @@ describe("resolveDiffsPluginViewerBaseUrl", () => {
   it("normalizes configured viewer base URLs", () => {
     expect(
       resolveDiffsPluginViewerBaseUrl({
-        viewerBaseUrl: "https://example.com/openclaw/",
+        viewerBaseUrl: "https://example.com/littlebaby/",
       }),
-    ).toBe("https://example.com/openclaw");
+    ).toBe("https://example.com/littlebaby");
   });
 });
 
@@ -236,15 +236,15 @@ describe("diffs plugin schema surfaces", () => {
     const validate = compileManifestConfigSchema();
 
     expect(validate({ viewerBaseUrl: "javascript:alert(1)" })).toBe(false);
-    expect(validate({ viewerBaseUrl: "https://example.com/openclaw?x=1" })).toBe(false);
-    expect(validate({ viewerBaseUrl: "https://example.com/openclaw#frag" })).toBe(false);
-    expect(validate({ viewerBaseUrl: "https://example.com/openclaw/" })).toBe(true);
+    expect(validate({ viewerBaseUrl: "https://example.com/littlebaby?x=1" })).toBe(false);
+    expect(validate({ viewerBaseUrl: "https://example.com/littlebaby#frag" })).toBe(false);
+    expect(validate({ viewerBaseUrl: "https://example.com/littlebaby/" })).toBe(true);
   });
 
   it("preserves defaults and security for direct safeParse callers", () => {
     expect(
       diffsPluginConfigSchema.safeParse?.({
-        viewerBaseUrl: "https://example.com/openclaw/",
+        viewerBaseUrl: "https://example.com/littlebaby/",
         defaults: {
           theme: "light",
         },
@@ -255,7 +255,7 @@ describe("diffs plugin schema surfaces", () => {
     ).toMatchObject({
       success: true,
       data: {
-        viewerBaseUrl: "https://example.com/openclaw",
+        viewerBaseUrl: "https://example.com/littlebaby",
         defaults: {
           fontFamily: "Fira Code",
           fontSize: 15,
@@ -320,7 +320,7 @@ describe("diffs plugin schema surfaces", () => {
 
   it("keeps the runtime json schema in sync with the manifest config schema", () => {
     const manifest = JSON.parse(
-      fs.readFileSync(new URL("../openclaw.plugin.json", import.meta.url), "utf8"),
+      fs.readFileSync(new URL("../littlebaby.plugin.json", import.meta.url), "utf8"),
     ) as { configSchema?: unknown };
 
     expect(diffsPluginConfigSchema.jsonSchema).toEqual(manifest.configSchema);
@@ -364,20 +364,20 @@ describe("diffs viewer URL helpers", () => {
     expect(
       buildViewerUrl({
         config: {},
-        baseUrl: "https://example.com/openclaw",
+        baseUrl: "https://example.com/littlebaby",
         viewerPath: "/plugins/diffs/view/id/token",
       }),
-    ).toBe("https://example.com/openclaw/plugins/diffs/view/id/token");
+    ).toBe("https://example.com/littlebaby/plugins/diffs/view/id/token");
   });
 
   it("prefers normalized viewerBaseUrl strings too", () => {
     expect(
       buildViewerUrl({
         config: {},
-        baseUrl: "https://example.com/openclaw/",
+        baseUrl: "https://example.com/littlebaby/",
         viewerPath: "/plugins/diffs/view/id/token",
       }),
-    ).toBe("https://example.com/openclaw/plugins/diffs/view/id/token");
+    ).toBe("https://example.com/littlebaby/plugins/diffs/view/id/token");
   });
 
   it("rejects base URLs with query/hash", () => {
@@ -449,7 +449,7 @@ describe("viewer assets", () => {
     const runtime = await getServedViewerAsset(VIEWER_RUNTIME_PATH);
 
     expect(runtime?.contentType).toBe("text/javascript; charset=utf-8");
-    expect(String(runtime?.body)).toContain("openclawDiffsReady");
+    expect(String(runtime?.body)).toContain("littlebabyDiffsReady");
     expect(String(runtime?.body)).toContain('style.width="24px"');
     expect(String(runtime?.body)).toContain('style.gap="6px"');
   });

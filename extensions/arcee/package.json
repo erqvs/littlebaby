@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/arcee-provider",
+  "name": "@littlebaby/arcee-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Arcee provider plugin",
+  "description": "LittleBaby Arcee provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

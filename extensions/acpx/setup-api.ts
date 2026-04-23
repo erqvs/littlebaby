@@ -1,5 +1,5 @@
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { definePluginEntry } from "littlebaby/plugin-sdk/plugin-entry";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 
 export default definePluginEntry({
   id: "acpx",

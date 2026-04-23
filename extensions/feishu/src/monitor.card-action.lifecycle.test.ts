@@ -116,7 +116,7 @@ describe("Feishu card-action lifecycle", () => {
     _handlers = {};
     lastRuntime = null;
     resetProcessedFeishuCardActionTokensForTests();
-    setFeishuLifecycleStateDir("openclaw-feishu-card-action");
+    setFeishuLifecycleStateDir("littlebaby-feishu-card-action");
 
     createFeishuReplyDispatcherMock.mockReturnValue(createFeishuLifecycleReplyDispatcher());
 

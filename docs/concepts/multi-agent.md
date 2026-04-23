@@ -52,7 +52,7 @@ reach other host locations unless sandboxing is enabled. See
 
 ## Paths (quick map)
 
-- Config: `~/.littlebaby/openclaw.json` (or `LITTLEBABY_CONFIG_PATH`)
+- Config: `~/.littlebaby/littlebaby.json` (or `LITTLEBABY_CONFIG_PATH`)
 - State dir: `~/.littlebaby` (or `LITTLEBABY_STATE_DIR`)
 - Workspace: `~/.littlebaby/workspace` (or `~/.littlebaby/workspace-<agentId>`)
 - Agent dir: `~/.littlebaby/agents/<agentId>/agent` (or `agents.list[].agentDir`)
@@ -60,7 +60,7 @@ reach other host locations unless sandboxing is enabled. See
 
 ### Single-agent mode (default)
 
-If you do nothing, OpenClaw runs a single agent:
+If you do nothing, LittleBaby runs a single agent:
 
 - `agentId` defaults to **`main`**.
 - Sessions are keyed as `agent:main:<mainKey>`.
@@ -72,7 +72,7 @@ If you do nothing, OpenClaw runs a single agent:
 Use the agent wizard to add a new isolated agent:
 
 ```bash
-openclaw agents add work
+littlebaby agents add work
 ```
 
 Then add `bindings` (or let the wizard do it) to route inbound messages.
@@ -80,7 +80,7 @@ Then add `bindings` (or let the wizard do it) to route inbound messages.
 Verify with:
 
 ```bash
-openclaw agents list --bindings
+littlebaby agents list --bindings
 ```
 
 ## Quick start
@@ -91,8 +91,8 @@ openclaw agents list --bindings
 Use the wizard or create workspaces manually:
 
 ```bash
-openclaw agents add coding
-openclaw agents add social
+littlebaby agents add coding
+littlebaby agents add social
 ```
 
 Each agent gets its own workspace with `SOUL.md`, `AGENTS.md`, and optional `USER.md`, plus a dedicated `agentDir` and session store under `~/.littlebaby/agents/<agentId>`.
@@ -108,7 +108,7 @@ Create one account per agent on your preferred channels:
 - WhatsApp: link each phone number per account.
 
 ```bash
-openclaw channels login --channel whatsapp --account work
+littlebaby channels login --channel whatsapp --account work
 ```
 
 See channel guides: [Discord](/channels/discord), [Telegram](/channels/telegram), [WhatsApp](/channels/whatsapp).
@@ -124,9 +124,9 @@ Add agents under `agents.list`, channel accounts under `channels.<channel>.accou
   <Step title="Restart and verify">
 
 ```bash
-openclaw gateway restart
-openclaw agents list --bindings
-openclaw channels status --probe
+littlebaby gateway restart
+littlebaby agents list --bindings
+littlebaby channels status --probe
 ```
 
   </Step>
@@ -244,7 +244,7 @@ Important account-scope detail:
 
 - A binding that omits `accountId` matches the default account only.
 - Use `accountId: "*"` for a channel-wide fallback across all accounts.
-- If you later add the same binding for the same agent with an explicit account id, OpenClaw upgrades the existing channel-only binding to account-scoped instead of duplicating it.
+- If you later add the same binding for the same agent with an explicit account id, LittleBaby upgrades the existing channel-only binding to account-scoped instead of duplicating it.
 
 ## Multiple accounts / phone numbers
 
@@ -253,7 +253,7 @@ each login. Each `accountId` can be routed to a different agent, so one server c
 multiple phone numbers without mixing sessions.
 
 If you want a channel-wide default account when `accountId` is omitted, set
-`channels.<channel>.defaultAccount` (optional). When unset, OpenClaw falls back
+`channels.<channel>.defaultAccount` (optional). When unset, LittleBaby falls back
 to `default` if present, otherwise the first configured account id (sorted).
 
 Common channels supporting this pattern include:
@@ -364,11 +364,11 @@ Notes:
 Link each account before starting the gateway:
 
 ```bash
-openclaw channels login --channel whatsapp --account personal
-openclaw channels login --channel whatsapp --account biz
+littlebaby channels login --channel whatsapp --account personal
+littlebaby channels login --channel whatsapp --account biz
 ```
 
-`~/.littlebaby/openclaw.json` (JSON5):
+`~/.littlebaby/littlebaby.json` (JSON5):
 
 ```js
 {

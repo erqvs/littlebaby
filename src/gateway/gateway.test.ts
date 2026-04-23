@@ -42,7 +42,7 @@ function nextGatewayId(prefix: string): string {
 }
 
 async function createEmptyBundledPluginsDir(tempHome: string): Promise<string> {
-  const bundledPluginsDir = path.join(tempHome, "openclaw-test-empty-bundled-plugins");
+  const bundledPluginsDir = path.join(tempHome, "littlebaby-test-empty-bundled-plugins");
   await fs.mkdir(bundledPluginsDir, { recursive: true });
   return bundledPluginsDir;
 }
@@ -52,10 +52,10 @@ async function writeWorkspacePlugin(params: {
   id: string;
   body: string;
 }): Promise<void> {
-  const pluginDir = path.join(params.workspaceDir, ".openclaw", "extensions", params.id);
+  const pluginDir = path.join(params.workspaceDir, ".littlebaby", "extensions", params.id);
   await fs.mkdir(pluginDir, { recursive: true });
   await fs.writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "littlebaby.plugin.json"),
     `${JSON.stringify(
       {
         id: params.id,
@@ -93,7 +93,7 @@ async function setupGatewayTempHome(params: { prefix: string; minimalGateway?: b
 
   const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), params.prefix));
   process.env.HOME = tempHome;
-  process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".openclaw");
+  process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".littlebaby");
   delete process.env.LITTLEBABY_CONFIG_PATH;
   process.env.LITTLEBABY_SKIP_CHANNELS = "1";
   process.env.LITTLEBABY_SKIP_GMAIL_WATCHER = "1";
@@ -142,16 +142,16 @@ describe("gateway e2e", () => {
     async () => {
       const { baseUrl: openaiBaseUrl, restore } = installOpenAiResponsesMock();
       const { envSnapshot, tempHome, workspaceDir } = await setupGatewayTempHome({
-        prefix: "openclaw-gw-mock-home-",
+        prefix: "littlebaby-gw-mock-home-",
         minimalGateway: true,
       });
 
       const token = nextGatewayId("test-token");
       process.env.LITTLEBABY_GATEWAY_TOKEN = token;
 
-      const configDir = path.join(tempHome, ".openclaw");
+      const configDir = path.join(tempHome, ".littlebaby");
       await fs.mkdir(configDir, { recursive: true });
-      const configPath = path.join(configDir, "openclaw.json");
+      const configPath = path.join(configDir, "littlebaby.json");
       const mockProvider = buildMockOpenAiResponsesProvider(openaiBaseUrl);
 
       const cfg = {
@@ -222,7 +222,7 @@ describe("gateway e2e", () => {
     { timeout: GATEWAY_E2E_TIMEOUT_MS },
     async () => {
       const { envSnapshot, tempHome, workspaceDir } = await setupGatewayTempHome({
-        prefix: "openclaw-gw-http-tools-home-",
+        prefix: "littlebaby-gw-http-tools-home-",
       });
 
       const token = nextGatewayId("http-tools-token");
@@ -246,9 +246,9 @@ module.exports = {
 `.trimStart(),
       });
 
-      const configDir = path.join(tempHome, ".openclaw");
+      const configDir = path.join(tempHome, ".littlebaby");
       await fs.mkdir(configDir, { recursive: true });
-      const configPath = path.join(configDir, "openclaw.json");
+      const configPath = path.join(configDir, "littlebaby.json");
       const cfg = {
         agents: {
           defaults: { workspace: workspaceDir },
@@ -330,7 +330,7 @@ module.exports = {
       process.env.LITTLEBABY_TEST_MINIMAL_GATEWAY = "1";
       delete process.env.LITTLEBABY_GATEWAY_TOKEN;
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-wizard-home-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-wizard-home-"));
       process.env.HOME = tempHome;
       process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR = await createEmptyBundledPluginsDir(tempHome);
       delete process.env.LITTLEBABY_STATE_DIR;
@@ -456,11 +456,11 @@ module.exports = {
         "DISCORD_BOT_TOKEN",
       ]);
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-minimal-gateway-home-"));
-      const configPath = path.join(tempHome, ".openclaw", "openclaw.json");
-      const bundledPluginsDir = path.join(tempHome, "openclaw-test-no-bundled-extensions");
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-minimal-gateway-home-"));
+      const configPath = path.join(tempHome, ".littlebaby", "littlebaby.json");
+      const bundledPluginsDir = path.join(tempHome, "littlebaby-test-no-bundled-extensions");
       process.env.HOME = tempHome;
-      process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".openclaw");
+      process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".littlebaby");
       process.env.LITTLEBABY_CONFIG_PATH = configPath;
       process.env.LITTLEBABY_SKIP_CHANNELS = "1";
       process.env.LITTLEBABY_SKIP_GMAIL_WATCHER = "1";

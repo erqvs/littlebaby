@@ -1,14 +1,14 @@
 ---
-summary: "CLI reference for `openclaw setup` (initialize config + workspace)"
+summary: "CLI reference for `littlebaby setup` (initialize config + workspace)"
 read_when:
   - You’re doing first-run setup without full CLI onboarding
   - You want to set the default workspace path
 title: "setup"
 ---
 
-# `openclaw setup`
+# `littlebaby setup`
 
-Initialize `~/.littlebaby/openclaw.json` and the agent workspace.
+Initialize `~/.littlebaby/littlebaby.json` and the agent workspace.
 
 Related:
 
@@ -18,10 +18,10 @@ Related:
 ## Examples
 
 ```bash
-openclaw setup
-openclaw setup --workspace ~/.littlebaby/workspace
-openclaw setup --wizard
-openclaw setup --non-interactive --mode remote --remote-url wss://gateway-host:18789 --remote-token <token>
+littlebaby setup
+littlebaby setup --workspace ~/.littlebaby/workspace
+littlebaby setup --wizard
+littlebaby setup --non-interactive --mode remote --remote-url wss://gateway-host:18789 --remote-token <token>
 ```
 
 ## Options
@@ -36,10 +36,10 @@ openclaw setup --non-interactive --mode remote --remote-url wss://gateway-host:1
 To run onboarding via setup:
 
 ```bash
-openclaw setup --wizard
+littlebaby setup --wizard
 ```
 
 Notes:
 
-- Plain `openclaw setup` initializes config + workspace without the full onboarding flow.
+- Plain `littlebaby setup` initializes config + workspace without the full onboarding flow.
 - Onboarding auto-runs when any onboarding flags are present (`--wizard`, `--non-interactive`, `--mode`, `--remote-url`, `--remote-token`).

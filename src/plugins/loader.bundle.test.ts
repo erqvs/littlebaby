@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { withEnv } from "../test-utils/env.js";
-import { loadOpenClawPlugins } from "./loader.js";
+import { loadLittleBabyPlugins } from "./loader.js";
 import {
   cleanupPluginLoaderFixturesForTest,
   loadBundleFixture,
@@ -13,7 +13,7 @@ import {
 } from "./loader.test-fixtures.js";
 
 function expectNoUnwiredBundleDiagnostic(
-  registry: ReturnType<typeof loadOpenClawPlugins>,
+  registry: ReturnType<typeof loadLittleBabyPlugins>,
   pluginId: string,
 ) {
   expect(
@@ -38,7 +38,7 @@ describe("bundle plugins", () => {
     useNoBundledPlugins();
     const workspaceDir = makeTempDir();
     const stateDir = makeTempDir();
-    const bundleRoot = path.join(workspaceDir, ".openclaw", "extensions", "sample-bundle");
+    const bundleRoot = path.join(workspaceDir, ".littlebaby", "extensions", "sample-bundle");
     mkdirSafe(path.join(bundleRoot, ".codex-plugin"));
     mkdirSafe(path.join(bundleRoot, "skills"));
     fs.writeFileSync(
@@ -56,7 +56,7 @@ describe("bundle plugins", () => {
     );
 
     const registry = withEnv({ LITTLEBABY_STATE_DIR: stateDir }, () =>
-      loadOpenClawPlugins({
+      loadLittleBabyPlugins({
         workspaceDir,
         onlyPluginIds: ["sample-bundle"],
         config: {

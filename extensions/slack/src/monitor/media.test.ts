@@ -1,9 +1,9 @@
-import * as ssrf from "openclaw/plugin-sdk/infra-runtime";
-import * as mediaFetch from "openclaw/plugin-sdk/media-runtime";
-import type { SavedMedia } from "openclaw/plugin-sdk/media-runtime";
-import * as mediaStore from "openclaw/plugin-sdk/media-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { type FetchMock, withFetchPreconnect } from "openclaw/plugin-sdk/testing";
+import * as ssrf from "littlebaby/plugin-sdk/infra-runtime";
+import * as mediaFetch from "littlebaby/plugin-sdk/media-runtime";
+import type { SavedMedia } from "littlebaby/plugin-sdk/media-runtime";
+import * as mediaStore from "littlebaby/plugin-sdk/media-runtime";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { type FetchMock, withFetchPreconnect } from "littlebaby/plugin-sdk/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mockPinnedHostnameResolution } from "../../../../src/test-helpers/ssrf.js";
 import {
@@ -15,7 +15,7 @@ import {
   resetSlackThreadStarterCacheForTest,
 } from "./media.js";
 
-vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
+vi.mock("littlebaby/plugin-sdk/runtime-env", () => ({
   logVerbose: vi.fn(),
   danger: (message: string) => message,
   shouldLogVerbose: () => false,

@@ -1,10 +1,10 @@
 import path from "node:path";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
-type AgentDefaultConfig = NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>;
+type AgentDefaultConfig = NonNullable<NonNullable<LittleBabyConfig["agents"]>["defaults"]>;
 type LoadConfigMock = {
-  mockReturnValue(value: OpenClawConfig): unknown;
+  mockReturnValue(value: LittleBabyConfig): unknown;
 };
 
 export async function withAgentCommandTempHome<T>(
@@ -19,7 +19,7 @@ export function mockAgentCommandConfig(
   home: string,
   storePath: string,
   agentOverrides?: Partial<AgentDefaultConfig>,
-): OpenClawConfig {
+): LittleBabyConfig {
   const cfg = {
     agents: {
       defaults: {
@@ -30,7 +30,7 @@ export function mockAgentCommandConfig(
       },
     },
     session: { store: storePath, mainKey: "main" },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
   configSpy.mockReturnValue(cfg);
   return cfg;
 }

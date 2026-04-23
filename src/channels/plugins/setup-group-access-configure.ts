@@ -1,9 +1,9 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import type { WizardPrompter } from "../../wizard/prompts.js";
 import { promptChannelAccessConfig, type ChannelAccessPolicy } from "./setup-group-access.js";
 
 export async function configureChannelAccessWithAllowlist<TResolved>(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   prompter: WizardPrompter;
   label: string;
   currentPolicy: ChannelAccessPolicy;
@@ -11,10 +11,10 @@ export async function configureChannelAccessWithAllowlist<TResolved>(params: {
   placeholder: string;
   updatePrompt: boolean;
   skipAllowlistEntries?: boolean;
-  setPolicy: (cfg: OpenClawConfig, policy: ChannelAccessPolicy) => OpenClawConfig;
-  resolveAllowlist?: (params: { cfg: OpenClawConfig; entries: string[] }) => Promise<TResolved>;
-  applyAllowlist?: (params: { cfg: OpenClawConfig; resolved: TResolved }) => OpenClawConfig;
-}): Promise<OpenClawConfig> {
+  setPolicy: (cfg: LittleBabyConfig, policy: ChannelAccessPolicy) => LittleBabyConfig;
+  resolveAllowlist?: (params: { cfg: LittleBabyConfig; entries: string[] }) => Promise<TResolved>;
+  applyAllowlist?: (params: { cfg: LittleBabyConfig; resolved: TResolved }) => LittleBabyConfig;
+}): Promise<LittleBabyConfig> {
   let next = params.cfg;
   const accessConfig = await promptChannelAccessConfig({
     prompter: params.prompter,

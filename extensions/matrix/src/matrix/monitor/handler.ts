@@ -1,13 +1,13 @@
-import { resolveControlCommandGate } from "openclaw/plugin-sdk/command-gating";
+import { resolveControlCommandGate } from "littlebaby/plugin-sdk/command-gating";
 import {
   evaluateSupplementalContextVisibility,
   resolveChannelContextVisibilityMode,
-} from "openclaw/plugin-sdk/context-visibility-runtime";
+} from "littlebaby/plugin-sdk/context-visibility-runtime";
 import {
   loadSessionStore,
   resolveSessionStoreEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "littlebaby/plugin-sdk/session-store-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/string-coerce-runtime";
 import type {
   CoreConfig,
   MatrixRoomConfig,
@@ -78,10 +78,10 @@ const ALLOW_FROM_STORE_CACHE_TTL_MS = 30_000;
 const PAIRING_REPLY_COOLDOWN_MS = 5 * 60_000;
 let matrixSendModulePromise: Promise<typeof import("../send.js")> | undefined;
 let acpBindingRuntimePromise:
-  | Promise<typeof import("openclaw/plugin-sdk/acp-binding-runtime")>
+  | Promise<typeof import("littlebaby/plugin-sdk/acp-binding-runtime")>
   | undefined;
 let sessionBindingRuntimePromise:
-  | Promise<typeof import("openclaw/plugin-sdk/session-binding-runtime")>
+  | Promise<typeof import("littlebaby/plugin-sdk/session-binding-runtime")>
   | undefined;
 let matrixReactionEventsPromise: Promise<typeof import("./reaction-events.js")> | undefined;
 let matrixDraftStreamPromise: Promise<typeof import("../draft-stream.js")> | undefined;
@@ -92,16 +92,16 @@ function loadMatrixSendModule(): Promise<typeof import("../send.js")> {
 }
 
 function loadAcpBindingRuntime(): Promise<
-  typeof import("openclaw/plugin-sdk/acp-binding-runtime")
+  typeof import("littlebaby/plugin-sdk/acp-binding-runtime")
 > {
-  acpBindingRuntimePromise ??= import("openclaw/plugin-sdk/acp-binding-runtime");
+  acpBindingRuntimePromise ??= import("littlebaby/plugin-sdk/acp-binding-runtime");
   return acpBindingRuntimePromise;
 }
 
 function loadSessionBindingRuntime(): Promise<
-  typeof import("openclaw/plugin-sdk/session-binding-runtime")
+  typeof import("littlebaby/plugin-sdk/session-binding-runtime")
 > {
-  sessionBindingRuntimePromise ??= import("openclaw/plugin-sdk/session-binding-runtime");
+  sessionBindingRuntimePromise ??= import("littlebaby/plugin-sdk/session-binding-runtime");
   return sessionBindingRuntimePromise;
 }
 

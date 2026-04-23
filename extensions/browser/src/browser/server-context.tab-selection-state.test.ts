@@ -86,8 +86,8 @@ async function openManagedTabWithRunningProfile(params: {
   const state = makeState("littlebaby");
   seedRunningProfileState(state);
   const ctx = createBrowserRouteContext({ getState: () => state });
-  const openclaw = ctx.forProfile("littlebaby");
-  return await openclaw.openTab(params.url ?? "http://127.0.0.1:3009");
+  const littlebaby = ctx.forProfile("littlebaby");
+  return await littlebaby.openTab(params.url ?? "http://127.0.0.1:3009");
 }
 
 describe("browser server-context tab selection state", () => {
@@ -118,9 +118,9 @@ describe("browser server-context tab selection state", () => {
     global.fetch = withFetchPreconnect(fetchMock);
     const state = makeState("littlebaby");
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("littlebaby");
+    const littlebaby = ctx.forProfile("littlebaby");
 
-    const opened = await openclaw.openTab("http://127.0.0.1:8080");
+    const opened = await littlebaby.openTab("http://127.0.0.1:8080");
     expect(opened.targetId).toBe("CREATED");
     expect(state.profiles.get("littlebaby")?.lastTargetId).toBe("CREATED");
     expect(createTargetViaCdp).toHaveBeenCalledWith({
@@ -163,9 +163,9 @@ describe("browser server-context tab selection state", () => {
     const state = makeState("littlebaby");
     state.resolved.ssrfPolicy = {};
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("littlebaby");
+    const littlebaby = ctx.forProfile("littlebaby");
 
-    const selected = await openclaw.ensureTabAvailable();
+    const selected = await littlebaby.ensureTabAvailable();
     expect(selected.targetId).toBe("CREATED");
     expect(createTargetViaCdp).toHaveBeenCalledWith({
       cdpUrl: "http://127.0.0.1:18800",
@@ -229,9 +229,9 @@ describe("browser server-context tab selection state", () => {
     const state = makeState("littlebaby");
     seedRunningProfileState(state);
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("littlebaby");
+    const littlebaby = ctx.forProfile("littlebaby");
 
-    const opened = await openclaw.openTab("http://127.0.0.1:3009");
+    const opened = await littlebaby.openTab("http://127.0.0.1:3009");
     expect(opened.targetId).toBe("NEW");
   });
 
@@ -249,9 +249,9 @@ describe("browser server-context tab selection state", () => {
     const state = makeState("littlebaby");
     state.resolved.attachOnly = true;
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("littlebaby");
+    const littlebaby = ctx.forProfile("littlebaby");
 
-    const opened = await openclaw.openTab("http://127.0.0.1:3009");
+    const opened = await littlebaby.openTab("http://127.0.0.1:3009");
     expect(opened.targetId).toBe("NEW");
     expect(fetchMock).not.toHaveBeenCalledWith(
       expect.stringContaining("/json/close/"),
@@ -290,9 +290,9 @@ describe("browser server-context tab selection state", () => {
     global.fetch = withFetchPreconnect(fetchMock);
     const state = makeState("littlebaby");
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("littlebaby");
+    const littlebaby = ctx.forProfile("littlebaby");
 
-    await expect(openclaw.openTab("file:///etc/passwd")).rejects.toBeInstanceOf(
+    await expect(littlebaby.openTab("file:///etc/passwd")).rejects.toBeInstanceOf(
       InvalidBrowserNavigationUrlError,
     );
     expect(fetchMock).not.toHaveBeenCalled();
@@ -312,9 +312,9 @@ describe("browser server-context tab selection state", () => {
     const state = makeState("littlebaby");
     state.resolved.ssrfPolicy = {};
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("littlebaby");
+    const littlebaby = ctx.forProfile("littlebaby");
 
-    const opened = await openclaw.openTab("https://example.com");
+    const opened = await littlebaby.openTab("https://example.com");
     expect(opened.targetId).toBe("NEW");
     expect(fetchJson).toHaveBeenNthCalledWith(
       1,

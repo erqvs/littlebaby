@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { safeEqualSecret } from "openclaw/plugin-sdk/browser-security-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { safeEqualSecret } from "littlebaby/plugin-sdk/browser-security-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { resolveBlueBubblesEffectiveAllowPrivateNetwork } from "./accounts.js";
 import { runBlueBubblesCatchup } from "./catchup.js";
 import { createBlueBubblesDebounceRegistry } from "./monitor-debounce.js";

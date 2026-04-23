@@ -2,7 +2,7 @@
 title: "Arcee AI"
 summary: "Arcee AI setup (auth + model selection)"
 read_when:
-  - You want to use Arcee AI with OpenClaw
+  - You want to use Arcee AI with LittleBaby
   - You need the API key env var or CLI auth choice
 ---
 
@@ -29,7 +29,7 @@ Arcee AI models can be accessed directly via the Arcee platform or through [Open
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice arceeai-api-key
+        littlebaby onboard --auth-choice arceeai-api-key
         ```
       </Step>
       <Step title="Set a default model">
@@ -53,7 +53,7 @@ Arcee AI models can be accessed directly via the Arcee platform or through [Open
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice arceeai-openrouter
+        littlebaby onboard --auth-choice arceeai-openrouter
         ```
       </Step>
       <Step title="Set a default model">
@@ -79,7 +79,7 @@ Arcee AI models can be accessed directly via the Arcee platform or through [Open
 <Tabs>
   <Tab title="Direct (Arcee platform)">
     ```bash
-    openclaw onboard --non-interactive \
+    littlebaby onboard --non-interactive \
       --mode local \
       --auth-choice arceeai-api-key \
       --arceeai-api-key "$ARCEEAI_API_KEY"
@@ -88,7 +88,7 @@ Arcee AI models can be accessed directly via the Arcee platform or through [Open
 
   <Tab title="Via OpenRouter">
     ```bash
-    openclaw onboard --non-interactive \
+    littlebaby onboard --non-interactive \
       --mode local \
       --auth-choice arceeai-openrouter \
       --openrouter-api-key "$OPENROUTER_API_KEY"
@@ -98,7 +98,7 @@ Arcee AI models can be accessed directly via the Arcee platform or through [Open
 
 ## Built-in catalog
 
-OpenClaw currently ships this bundled Arcee catalog:
+LittleBaby currently ships this bundled Arcee catalog:
 
 | Model ref                      | Name                   | Input | Context | Cost (in/out per 1M) | Notes                                     |
 | ------------------------------ | ---------------------- | ----- | ------- | -------------------- | ----------------------------------------- |
@@ -128,7 +128,7 @@ The onboarding preset sets `arcee/trinity-large-thinking` as the default model.
 
   <Accordion title="OpenRouter routing">
     When using Arcee models via OpenRouter, the same `arcee/*` model refs apply.
-    OpenClaw handles routing transparently based on your auth choice. See the
+    LittleBaby handles routing transparently based on your auth choice. See the
     [OpenRouter provider docs](/providers/openrouter) for OpenRouter-specific
     configuration details.
   </Accordion>

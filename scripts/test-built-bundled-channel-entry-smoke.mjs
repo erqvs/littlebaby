@@ -19,7 +19,7 @@ const distExtensionsRoot = path.join(packageRoot, "dist", "extensions");
 const installedLayoutEnv = "LITTLEBABY_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
 
 function packageRootLooksInstalled(root) {
-  return root.replaceAll("\\", "/").endsWith("/node_modules/openclaw");
+  return root.replaceAll("\\", "/").endsWith("/node_modules/littlebaby");
 }
 
 function smokeInInstalledLayoutIfNeeded() {
@@ -27,7 +27,7 @@ function smokeInInstalledLayoutIfNeeded() {
     return;
   }
 
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-channel-entry-smoke-"));
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-channel-entry-smoke-"));
   const nodeModulesRoot = path.join(tempRoot, "node_modules");
   const installedPackageRoot = path.join(nodeModulesRoot, "littlebaby");
   fs.mkdirSync(nodeModulesRoot, { recursive: true });
@@ -79,13 +79,13 @@ function collectBundledChannelEntryFiles() {
       continue;
     }
     const packageJson = readJson(packageJsonPath);
-    if (!packageJson.openclaw?.channel) {
+    if (!packageJson.littlebaby?.channel) {
       continue;
     }
 
     const extensionEntries =
-      Array.isArray(packageJson.openclaw.extensions) && packageJson.openclaw.extensions.length > 0
-        ? packageJson.openclaw.extensions
+      Array.isArray(packageJson.littlebaby.extensions) && packageJson.littlebaby.extensions.length > 0
+        ? packageJson.littlebaby.extensions
         : ["./index.ts"];
     for (const entry of extensionEntries) {
       if (typeof entry !== "string" || entry.trim().length === 0) {
@@ -98,7 +98,7 @@ function collectBundledChannelEntryFiles() {
       });
     }
 
-    const setupEntry = packageJson.openclaw.setupEntry;
+    const setupEntry = packageJson.littlebaby.setupEntry;
     if (typeof setupEntry === "string" && setupEntry.trim().length > 0) {
       files.push({
         id: dirent.name,

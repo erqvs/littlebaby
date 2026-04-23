@@ -1,5 +1,5 @@
-import * as providerAuth from "openclaw/plugin-sdk/provider-auth-runtime";
-import { installPinnedHostnameTestHooks } from "openclaw/plugin-sdk/testing";
+import * as providerAuth from "littlebaby/plugin-sdk/provider-auth-runtime";
+import { installPinnedHostnameTestHooks } from "littlebaby/plugin-sdk/testing";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { expectExplicitVideoGenerationCapabilities } from "../../test/helpers/media-generation/provider-capability-assertions.js";
 import { buildVydraVideoGenerationProvider } from "./video-generation-provider.js";

@@ -2,11 +2,11 @@ import {
   createStandardChannelSetupStatus,
   formatDocsLink,
   type ChannelSetupWizard,
-} from "openclaw/plugin-sdk/setup";
+} from "littlebaby/plugin-sdk/setup";
 import {
   applySetupAccountConfigPatch,
   DEFAULT_ACCOUNT_ID,
-  type OpenClawConfig,
+  type LittleBabyConfig,
 } from "./runtime-api.js";
 import { isMattermostConfigured, resolveMattermostAccountWithSecrets } from "./setup-core.js";
 import { normalizeMattermostBaseUrl } from "./setup.client.runtime.js";
@@ -110,7 +110,7 @@ export const mattermostSetupWizard: ChannelSetupWizard = {
       normalizeValue: ({ value }) => normalizeMattermostBaseUrl(value) ?? value.trim(),
     },
   ],
-  disable: (cfg: OpenClawConfig) => ({
+  disable: (cfg: LittleBabyConfig) => ({
     ...cfg,
     channels: {
       ...cfg.channels,

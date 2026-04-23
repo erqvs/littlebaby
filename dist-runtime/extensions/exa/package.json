@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/exa-plugin",
+  "name": "@littlebaby/exa-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Exa plugin",
+  "description": "LittleBaby Exa plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

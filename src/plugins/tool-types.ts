@@ -1,14 +1,14 @@
 import type { ToolFsPolicy } from "../agents/tool-fs-policy.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type { HookEntry } from "../hooks/types.js";
 import type { DeliveryContext } from "../utils/delivery-context.types.js";
 
 /** Trusted execution context passed to plugin-owned agent tool factories. */
-export type OpenClawPluginToolContext = {
-  config?: OpenClawConfig;
+export type LittleBabyPluginToolContext = {
+  config?: LittleBabyConfig;
   /** Active runtime-resolved config snapshot when one is available. */
-  runtimeConfig?: OpenClawConfig;
+  runtimeConfig?: LittleBabyConfig;
   /** Effective filesystem policy for the active tool run. */
   fsPolicy?: ToolFsPolicy;
   workspaceDir?: string;
@@ -32,17 +32,17 @@ export type OpenClawPluginToolContext = {
   sandboxed?: boolean;
 };
 
-export type OpenClawPluginToolFactory = (
-  ctx: OpenClawPluginToolContext,
+export type LittleBabyPluginToolFactory = (
+  ctx: LittleBabyPluginToolContext,
 ) => AnyAgentTool | AnyAgentTool[] | null | undefined;
 
-export type OpenClawPluginToolOptions = {
+export type LittleBabyPluginToolOptions = {
   name?: string;
   names?: string[];
   optional?: boolean;
 };
 
-export type OpenClawPluginHookOptions = {
+export type LittleBabyPluginHookOptions = {
   entry?: HookEntry;
   name?: string;
   description?: string;
