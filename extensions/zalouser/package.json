@@ -49,7 +49,7 @@
       "littlebabyVersion": "2026.4.20"
     },
     "release": {
-      "publishToClawHub": true,
+      "publishToLittleBabyHub": true,
       "publishToNpm": true
     }
   }

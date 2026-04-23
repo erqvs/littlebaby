@@ -70,8 +70,8 @@ import type {
 import type { ExecApprovalRequest } from "./controllers/exec-approval.ts";
 import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals.ts";
 import type {
-  ClawHubSearchResult,
-  ClawHubSkillDetail,
+  LittleBabyHubSearchResult,
+  LittleBabyHubSkillDetail,
   SkillMessage,
 } from "./controllers/skills.ts";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway.ts";
@@ -147,7 +147,7 @@ export class LittleBabyApp extends LitElement {
   @state() tab: Tab = "chat";
   @state() onboarding = resolveOnboardingMode();
   @state() connected = false;
-  @state() theme: ThemeName = this.settings.theme ?? "claw";
+  @state() theme: ThemeName = this.settings.theme ?? "littlebaby";
   @state() themeMode: ThemeMode = this.settings.themeMode ?? "system";
   @state() themeResolved: ResolvedTheme = "dark";
   @state() themeOrder: ThemeName[] = this.buildThemeOrder(this.theme);
@@ -458,16 +458,16 @@ export class LittleBabyApp extends LitElement {
   @state() skillsBusyKey: string | null = null;
   @state() skillMessages: Record<string, SkillMessage> = {};
   @state() skillsDetailKey: string | null = null;
-  @state() clawhubSearchQuery = "";
-  @state() clawhubSearchResults: ClawHubSearchResult[] | null = null;
-  @state() clawhubSearchLoading = false;
-  @state() clawhubSearchError: string | null = null;
-  @state() clawhubDetail: ClawHubSkillDetail | null = null;
-  @state() clawhubDetailSlug: string | null = null;
-  @state() clawhubDetailLoading = false;
-  @state() clawhubDetailError: string | null = null;
-  @state() clawhubInstallSlug: string | null = null;
-  @state() clawhubInstallMessage: { kind: "success" | "error"; text: string } | null = null;
+  @state() littlebabyhubSearchQuery = "";
+  @state() littlebabyhubSearchResults: LittleBabyHubSearchResult[] | null = null;
+  @state() littlebabyhubSearchLoading = false;
+  @state() littlebabyhubSearchError: string | null = null;
+  @state() littlebabyhubDetail: LittleBabyHubSkillDetail | null = null;
+  @state() littlebabyhubDetailSlug: string | null = null;
+  @state() littlebabyhubDetailLoading = false;
+  @state() littlebabyhubDetailError: string | null = null;
+  @state() littlebabyhubInstallSlug: string | null = null;
+  @state() littlebabyhubInstallMessage: { kind: "success" | "error"; text: string } | null = null;
 
   @state() healthLoading = false;
   @state() healthResult: HealthSummary | null = null;

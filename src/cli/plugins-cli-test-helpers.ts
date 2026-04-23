@@ -7,7 +7,7 @@ import { createCliRuntimeCapture } from "./test-runtime-capture.js";
 type UnknownMock = Mock<(...args: unknown[]) => unknown>;
 type AsyncUnknownMock = Mock<(...args: unknown[]) => Promise<unknown>>;
 type LoadConfigFn = (typeof import("../config/config.js"))["loadConfig"];
-type ParseClawHubPluginSpecFn = (typeof import("../infra/clawhub.js"))["parseClawHubPluginSpec"];
+type ParseLittleBabyHubPluginSpecFn = (typeof import("../infra/littlebabyhub.js"))["parseLittleBabyHubPluginSpec"];
 type InstallPluginFromMarketplaceFn =
   (typeof import("../plugins/marketplace.js"))["installPluginFromMarketplace"];
 type ListMarketplacePluginsFn =
@@ -44,8 +44,8 @@ export const updateNpmInstalledHookPacks: AsyncUnknownMock = vi.fn();
 export const promptYesNo: AsyncUnknownMock = vi.fn();
 export const installPluginFromNpmSpec: AsyncUnknownMock = vi.fn();
 export const installPluginFromPath: AsyncUnknownMock = vi.fn();
-export const installPluginFromClawHub: AsyncUnknownMock = vi.fn();
-export const parseClawHubPluginSpec: Mock<ParseClawHubPluginSpecFn> = vi.fn();
+export const installPluginFromLittleBabyHub: AsyncUnknownMock = vi.fn();
+export const parseLittleBabyHubPluginSpec: Mock<ParseLittleBabyHubPluginSpecFn> = vi.fn();
 export const installHooksFromNpmSpec: AsyncUnknownMock = vi.fn();
 export const installHooksFromPath: AsyncUnknownMock = vi.fn();
 export const recordHookInstall: UnknownMock = vi.fn();
@@ -312,36 +312,36 @@ vi.mock("../hooks/installs.js", () => ({
     >(recordHookInstall, ...args)) as (typeof import("../hooks/installs.js"))["recordHookInstall"],
 }));
 
-vi.mock("../plugins/clawhub.js", () => ({
-  CLAWHUB_INSTALL_ERROR_CODE: {
+vi.mock("../plugins/littlebabyhub.js", () => ({
+  LITTLEBABYHUB_INSTALL_ERROR_CODE: {
     PACKAGE_NOT_FOUND: "package_not_found",
     VERSION_NOT_FOUND: "version_not_found",
   },
-  installPluginFromClawHub: ((
-    ...args: Parameters<(typeof import("../plugins/clawhub.js"))["installPluginFromClawHub"]>
+  installPluginFromLittleBabyHub: ((
+    ...args: Parameters<(typeof import("../plugins/littlebabyhub.js"))["installPluginFromLittleBabyHub"]>
   ) =>
     invokeMock<
-      Parameters<(typeof import("../plugins/clawhub.js"))["installPluginFromClawHub"]>,
-      ReturnType<(typeof import("../plugins/clawhub.js"))["installPluginFromClawHub"]>
+      Parameters<(typeof import("../plugins/littlebabyhub.js"))["installPluginFromLittleBabyHub"]>,
+      ReturnType<(typeof import("../plugins/littlebabyhub.js"))["installPluginFromLittleBabyHub"]>
     >(
-      installPluginFromClawHub,
+      installPluginFromLittleBabyHub,
       ...args,
-    )) as (typeof import("../plugins/clawhub.js"))["installPluginFromClawHub"],
-  formatClawHubSpecifier: ({ name, version }: { name: string; version?: string }) =>
-    `clawhub:${name}${version ? `@${version}` : ""}`,
+    )) as (typeof import("../plugins/littlebabyhub.js"))["installPluginFromLittleBabyHub"],
+  formatLittleBabyHubSpecifier: ({ name, version }: { name: string; version?: string }) =>
+    `littlebabyhub:${name}${version ? `@${version}` : ""}`,
 }));
 
-vi.mock("../infra/clawhub.js", () => ({
-  parseClawHubPluginSpec: ((
-    ...args: Parameters<(typeof import("../infra/clawhub.js"))["parseClawHubPluginSpec"]>
+vi.mock("../infra/littlebabyhub.js", () => ({
+  parseLittleBabyHubPluginSpec: ((
+    ...args: Parameters<(typeof import("../infra/littlebabyhub.js"))["parseLittleBabyHubPluginSpec"]>
   ) =>
     invokeMock<
-      Parameters<(typeof import("../infra/clawhub.js"))["parseClawHubPluginSpec"]>,
-      ReturnType<(typeof import("../infra/clawhub.js"))["parseClawHubPluginSpec"]>
+      Parameters<(typeof import("../infra/littlebabyhub.js"))["parseLittleBabyHubPluginSpec"]>,
+      ReturnType<(typeof import("../infra/littlebabyhub.js"))["parseLittleBabyHubPluginSpec"]>
     >(
-      parseClawHubPluginSpec,
+      parseLittleBabyHubPluginSpec,
       ...args,
-    )) as (typeof import("../infra/clawhub.js"))["parseClawHubPluginSpec"],
+    )) as (typeof import("../infra/littlebabyhub.js"))["parseLittleBabyHubPluginSpec"],
 }));
 
 const { registerPluginsCli } = await import("./plugins-cli.js");
@@ -382,8 +382,8 @@ export function resetPluginsCliTestState() {
   promptYesNo.mockReset();
   installPluginFromNpmSpec.mockReset();
   installPluginFromPath.mockReset();
-  installPluginFromClawHub.mockReset();
-  parseClawHubPluginSpec.mockReset();
+  installPluginFromLittleBabyHub.mockReset();
+  parseLittleBabyHubPluginSpec.mockReset();
   installHooksFromNpmSpec.mockReset();
   installHooksFromPath.mockReset();
   recordHookInstall.mockReset();
@@ -468,11 +468,11 @@ export function resetPluginsCliTestState() {
     ok: false,
     error: "npm install disabled in test",
   });
-  installPluginFromClawHub.mockResolvedValue({
+  installPluginFromLittleBabyHub.mockResolvedValue({
     ok: false,
-    error: "clawhub install disabled in test",
+    error: "littlebabyhub install disabled in test",
   });
-  parseClawHubPluginSpec.mockReturnValue(null);
+  parseLittleBabyHubPluginSpec.mockReturnValue(null);
   installHooksFromPath.mockResolvedValue({
     ok: false,
     error: "hook path install disabled in test",

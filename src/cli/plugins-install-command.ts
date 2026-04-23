@@ -4,10 +4,10 @@ import { loadConfig, readConfigFileSnapshot } from "../config/config.js";
 import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { installHooksFromNpmSpec, installHooksFromPath } from "../hooks/install.js";
 import { resolveArchiveKind } from "../infra/archive.js";
-import { parseClawHubPluginSpec } from "../infra/clawhub.js";
+import { parseLittleBabyHubPluginSpec } from "../infra/littlebabyhub.js";
 import { extractErrorCode, formatErrorMessage } from "../infra/errors.js";
 import { type BundledPluginSource, findBundledPluginSource } from "../plugins/bundled-sources.js";
-import { formatClawHubSpecifier, installPluginFromClawHub } from "../plugins/clawhub.js";
+import { formatLittleBabyHubSpecifier, installPluginFromLittleBabyHub } from "../plugins/littlebabyhub.js";
 import type { InstallSafetyOverrides } from "../plugins/install-security-scan.js";
 import {
   PLUGIN_INSTALL_ERROR_CODE,
@@ -34,10 +34,10 @@ import {
   resolveBundledInstallPlanForNpmFailure,
 } from "./plugin-install-plan.js";
 import {
-  buildPreferredClawHubSpec,
+  buildPreferredLittleBabyHubSpec,
   createHookPackInstallLogger,
   createPluginInstallLogger,
-  decidePreferredClawHubFallback,
+  decidePreferredLittleBabyHubFallback,
   formatPluginInstallWithHookFallbackError,
 } from "./plugins-command-helpers.js";
 import { persistHookPackInstall, persistPluginInstall } from "./plugins-install-persist.js";
@@ -493,9 +493,9 @@ export async function runPluginInstallCommand(params: {
     return;
   }
 
-  const clawhubSpec = parseClawHubPluginSpec(raw);
-  if (clawhubSpec) {
-    const result = await installPluginFromClawHub({
+  const littlebabyhubSpec = parseLittleBabyHubPluginSpec(raw);
+  if (littlebabyhubSpec) {
+    const result = await installPluginFromLittleBabyHub({
       ...safetyOverrides,
       mode: installMode,
       spec: raw,
@@ -511,57 +511,57 @@ export async function runPluginInstallCommand(params: {
       config: cfg,
       pluginId: result.pluginId,
       install: {
-        source: "clawhub",
-        spec: formatClawHubSpecifier({
-          name: result.clawhub.clawhubPackage,
-          version: result.clawhub.version,
+        source: "littlebabyhub",
+        spec: formatLittleBabyHubSpecifier({
+          name: result.littlebabyhub.littlebabyhubPackage,
+          version: result.littlebabyhub.version,
         }),
         installPath: result.targetDir,
         version: result.version,
-        integrity: result.clawhub.integrity,
-        resolvedAt: result.clawhub.resolvedAt,
-        clawhubUrl: result.clawhub.clawhubUrl,
-        clawhubPackage: result.clawhub.clawhubPackage,
-        clawhubFamily: result.clawhub.clawhubFamily,
-        clawhubChannel: result.clawhub.clawhubChannel,
+        integrity: result.littlebabyhub.integrity,
+        resolvedAt: result.littlebabyhub.resolvedAt,
+        littlebabyhubUrl: result.littlebabyhub.littlebabyhubUrl,
+        littlebabyhubPackage: result.littlebabyhub.littlebabyhubPackage,
+        littlebabyhubFamily: result.littlebabyhub.littlebabyhubFamily,
+        littlebabyhubChannel: result.littlebabyhub.littlebabyhubChannel,
       },
     });
     return;
   }
 
-  const preferredClawHubSpec = buildPreferredClawHubSpec(raw);
-  if (preferredClawHubSpec) {
-    const clawhubResult = await installPluginFromClawHub({
+  const preferredLittleBabyHubSpec = buildPreferredLittleBabyHubSpec(raw);
+  if (preferredLittleBabyHubSpec) {
+    const littlebabyhubResult = await installPluginFromLittleBabyHub({
       ...safetyOverrides,
       mode: installMode,
-      spec: preferredClawHubSpec,
+      spec: preferredLittleBabyHubSpec,
       logger: createPluginInstallLogger(),
     });
-    if (clawhubResult.ok) {
+    if (littlebabyhubResult.ok) {
       clearPluginManifestRegistryCache();
       await persistPluginInstall({
         config: cfg,
-        pluginId: clawhubResult.pluginId,
+        pluginId: littlebabyhubResult.pluginId,
         install: {
-          source: "clawhub",
-          spec: formatClawHubSpecifier({
-            name: clawhubResult.clawhub.clawhubPackage,
-            version: clawhubResult.clawhub.version,
+          source: "littlebabyhub",
+          spec: formatLittleBabyHubSpecifier({
+            name: littlebabyhubResult.littlebabyhub.littlebabyhubPackage,
+            version: littlebabyhubResult.littlebabyhub.version,
           }),
-          installPath: clawhubResult.targetDir,
-          version: clawhubResult.version,
-          integrity: clawhubResult.clawhub.integrity,
-          resolvedAt: clawhubResult.clawhub.resolvedAt,
-          clawhubUrl: clawhubResult.clawhub.clawhubUrl,
-          clawhubPackage: clawhubResult.clawhub.clawhubPackage,
-          clawhubFamily: clawhubResult.clawhub.clawhubFamily,
-          clawhubChannel: clawhubResult.clawhub.clawhubChannel,
+          installPath: littlebabyhubResult.targetDir,
+          version: littlebabyhubResult.version,
+          integrity: littlebabyhubResult.littlebabyhub.integrity,
+          resolvedAt: littlebabyhubResult.littlebabyhub.resolvedAt,
+          littlebabyhubUrl: littlebabyhubResult.littlebabyhub.littlebabyhubUrl,
+          littlebabyhubPackage: littlebabyhubResult.littlebabyhub.littlebabyhubPackage,
+          littlebabyhubFamily: littlebabyhubResult.littlebabyhub.littlebabyhubFamily,
+          littlebabyhubChannel: littlebabyhubResult.littlebabyhub.littlebabyhubChannel,
         },
       });
       return;
     }
-    if (decidePreferredClawHubFallback(clawhubResult) !== "fallback_to_npm") {
-      defaultRuntime.error(clawhubResult.error);
+    if (decidePreferredLittleBabyHubFallback(littlebabyhubResult) !== "fallback_to_npm") {
+      defaultRuntime.error(littlebabyhubResult.error);
       return defaultRuntime.exit(1);
     }
   }

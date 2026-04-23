@@ -357,7 +357,7 @@ describe("applyPluginAutoEnable core", () => {
     const result = applyPluginAutoEnable({
       config: {
         plugins: {
-          allow: ["glueclaw"],
+          allow: ["gluelittlebaby"],
           entries: {
             discord: {
               config: {
@@ -370,7 +370,7 @@ describe("applyPluginAutoEnable core", () => {
       env: makeIsolatedEnv(),
     });
 
-    expect(result.config.plugins?.allow).toEqual(["glueclaw", "discord"]);
+    expect(result.config.plugins?.allow).toEqual(["gluelittlebaby", "discord"]);
     expect(result.changes).toContain("discord plugin config present, added to plugin allowlist.");
   });
 
@@ -378,7 +378,7 @@ describe("applyPluginAutoEnable core", () => {
     const result = applyPluginAutoEnable({
       config: {
         plugins: {
-          allow: ["glueclaw"],
+          allow: ["gluelittlebaby"],
           entries: {
             "missing-plugin": {
               config: {
@@ -391,7 +391,7 @@ describe("applyPluginAutoEnable core", () => {
       env: makeIsolatedEnv(),
     });
 
-    expect(result.config.plugins?.allow).toEqual(["glueclaw"]);
+    expect(result.config.plugins?.allow).toEqual(["gluelittlebaby"]);
     expect(result.changes).toEqual([]);
   });
 

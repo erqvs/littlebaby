@@ -71,10 +71,10 @@ const mocks = vi.hoisted(() => {
     loadConfigMock: vi.fn(() => ({})),
     resolveDefaultAgentIdMock: vi.fn(() => "main"),
     resolveAgentWorkspaceDirMock: vi.fn(() => "/tmp/workspace"),
-    searchSkillsFromClawHubMock: vi.fn(),
-    installSkillFromClawHubMock: vi.fn(),
-    updateSkillsFromClawHubMock: vi.fn(),
-    readTrackedClawHubSkillSlugsMock: vi.fn(),
+    searchSkillsFromLittleBabyHubMock: vi.fn(),
+    installSkillFromLittleBabyHubMock: vi.fn(),
+    updateSkillsFromLittleBabyHubMock: vi.fn(),
+    readTrackedLittleBabyHubSkillSlugsMock: vi.fn(),
     buildWorkspaceSkillStatusMock,
     skillStatusReportFixture,
     defaultRuntime,
@@ -88,10 +88,10 @@ const {
   loadConfigMock,
   resolveDefaultAgentIdMock,
   resolveAgentWorkspaceDirMock,
-  searchSkillsFromClawHubMock,
-  installSkillFromClawHubMock,
-  updateSkillsFromClawHubMock,
-  readTrackedClawHubSkillSlugsMock,
+  searchSkillsFromLittleBabyHubMock,
+  installSkillFromLittleBabyHubMock,
+  updateSkillsFromLittleBabyHubMock,
+  readTrackedLittleBabyHubSkillSlugsMock,
   buildWorkspaceSkillStatusMock,
   skillStatusReportFixture,
   defaultRuntime,
@@ -113,12 +113,12 @@ vi.mock("../agents/agent-scope.js", () => ({
   resolveAgentWorkspaceDir: () => mocks.resolveAgentWorkspaceDirMock(),
 }));
 
-vi.mock("../agents/skills-clawhub.js", () => ({
-  searchSkillsFromClawHub: (...args: unknown[]) => mocks.searchSkillsFromClawHubMock(...args),
-  installSkillFromClawHub: (...args: unknown[]) => mocks.installSkillFromClawHubMock(...args),
-  updateSkillsFromClawHub: (...args: unknown[]) => mocks.updateSkillsFromClawHubMock(...args),
-  readTrackedClawHubSkillSlugs: (...args: unknown[]) =>
-    mocks.readTrackedClawHubSkillSlugsMock(...args),
+vi.mock("../agents/skills-littlebabyhub.js", () => ({
+  searchSkillsFromLittleBabyHub: (...args: unknown[]) => mocks.searchSkillsFromLittleBabyHubMock(...args),
+  installSkillFromLittleBabyHub: (...args: unknown[]) => mocks.installSkillFromLittleBabyHubMock(...args),
+  updateSkillsFromLittleBabyHub: (...args: unknown[]) => mocks.updateSkillsFromLittleBabyHubMock(...args),
+  readTrackedLittleBabyHubSkillSlugs: (...args: unknown[]) =>
+    mocks.readTrackedLittleBabyHubSkillSlugsMock(...args),
 }));
 
 vi.mock("../agents/skills-status.js", () => ({
@@ -143,22 +143,22 @@ describe("skills cli commands", () => {
     loadConfigMock.mockReset();
     resolveDefaultAgentIdMock.mockReset();
     resolveAgentWorkspaceDirMock.mockReset();
-    searchSkillsFromClawHubMock.mockReset();
-    installSkillFromClawHubMock.mockReset();
-    updateSkillsFromClawHubMock.mockReset();
-    readTrackedClawHubSkillSlugsMock.mockReset();
+    searchSkillsFromLittleBabyHubMock.mockReset();
+    installSkillFromLittleBabyHubMock.mockReset();
+    updateSkillsFromLittleBabyHubMock.mockReset();
+    readTrackedLittleBabyHubSkillSlugsMock.mockReset();
     buildWorkspaceSkillStatusMock.mockReset();
 
     loadConfigMock.mockReturnValue({});
     resolveDefaultAgentIdMock.mockReturnValue("main");
     resolveAgentWorkspaceDirMock.mockReturnValue("/tmp/workspace");
-    searchSkillsFromClawHubMock.mockResolvedValue([]);
-    installSkillFromClawHubMock.mockResolvedValue({
+    searchSkillsFromLittleBabyHubMock.mockResolvedValue([]);
+    installSkillFromLittleBabyHubMock.mockResolvedValue({
       ok: false,
       error: "install disabled in test",
     });
-    updateSkillsFromClawHubMock.mockResolvedValue([]);
-    readTrackedClawHubSkillSlugsMock.mockResolvedValue([]);
+    updateSkillsFromLittleBabyHubMock.mockResolvedValue([]);
+    readTrackedLittleBabyHubSkillSlugsMock.mockResolvedValue([]);
     buildWorkspaceSkillStatusMock.mockReturnValue(skillStatusReportFixture);
     defaultRuntime.log.mockClear();
     defaultRuntime.error.mockClear();
@@ -167,8 +167,8 @@ describe("skills cli commands", () => {
     defaultRuntime.exit.mockClear();
   });
 
-  it("searches ClawHub skills from the native CLI", async () => {
-    searchSkillsFromClawHubMock.mockResolvedValue([
+  it("searches LittleBabyHub skills from the native CLI", async () => {
+    searchSkillsFromLittleBabyHubMock.mockResolvedValue([
       {
         slug: "calendar",
         displayName: "Calendar",
@@ -179,15 +179,15 @@ describe("skills cli commands", () => {
 
     await runCommand(["skills", "search", "calendar"]);
 
-    expect(searchSkillsFromClawHubMock).toHaveBeenCalledWith({
+    expect(searchSkillsFromLittleBabyHubMock).toHaveBeenCalledWith({
       query: "calendar",
       limit: undefined,
     });
     expect(runtimeLogs.some((line) => line.includes("calendar v1.2.3  Calendar"))).toBe(true);
   });
 
-  it("installs a skill from ClawHub into the active workspace", async () => {
-    installSkillFromClawHubMock.mockResolvedValue({
+  it("installs a skill from LittleBabyHub into the active workspace", async () => {
+    installSkillFromLittleBabyHubMock.mockResolvedValue({
       ok: true,
       slug: "calendar",
       version: "1.2.3",
@@ -196,7 +196,7 @@ describe("skills cli commands", () => {
 
     await runCommand(["skills", "install", "calendar", "--version", "1.2.3"]);
 
-    expect(installSkillFromClawHubMock).toHaveBeenCalledWith({
+    expect(installSkillFromLittleBabyHubMock).toHaveBeenCalledWith({
       workspaceDir: "/tmp/workspace",
       slug: "calendar",
       version: "1.2.3",
@@ -210,9 +210,9 @@ describe("skills cli commands", () => {
     ).toBe(true);
   });
 
-  it("updates all tracked ClawHub skills", async () => {
-    readTrackedClawHubSkillSlugsMock.mockResolvedValue(["calendar"]);
-    updateSkillsFromClawHubMock.mockResolvedValue([
+  it("updates all tracked LittleBabyHub skills", async () => {
+    readTrackedLittleBabyHubSkillSlugsMock.mockResolvedValue(["calendar"]);
+    updateSkillsFromLittleBabyHubMock.mockResolvedValue([
       {
         ok: true,
         slug: "calendar",
@@ -225,8 +225,8 @@ describe("skills cli commands", () => {
 
     await runCommand(["skills", "update", "--all"]);
 
-    expect(readTrackedClawHubSkillSlugsMock).toHaveBeenCalledWith("/tmp/workspace");
-    expect(updateSkillsFromClawHubMock).toHaveBeenCalledWith({
+    expect(readTrackedLittleBabyHubSkillSlugsMock).toHaveBeenCalledWith("/tmp/workspace");
+    expect(updateSkillsFromLittleBabyHubMock).toHaveBeenCalledWith({
       workspaceDir: "/tmp/workspace",
       slug: undefined,
       logger: expect.any(Object),

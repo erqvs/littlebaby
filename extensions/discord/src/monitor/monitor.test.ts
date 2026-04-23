@@ -718,7 +718,7 @@ describe("discord component interactions", () => {
     expect(dispatchReplyMock).not.toHaveBeenCalled();
   });
 
-  it("does not fall through to Claw when a plugin Discord interaction already replied", async () => {
+  it("does not fall through to LittleBaby when a plugin Discord interaction already replied", async () => {
     registerDiscordComponentEntries({
       entries: [createButtonEntry({ callbackData: "codex:approve" })],
       modals: [],
@@ -813,7 +813,7 @@ describe("discord component interactions", () => {
     expect(dispatchReplyMock).toHaveBeenCalledTimes(1);
   });
 
-  it("resolves plugin binding approvals without falling through to Claw", async () => {
+  it("resolves plugin binding approvals without falling through to LittleBaby", async () => {
     registerDiscordComponentEntries({
       entries: [
         createButtonEntry({

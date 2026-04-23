@@ -6,24 +6,24 @@ import { Readable } from "node:stream";
 import JSZip from "jszip";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const parseClawHubPluginSpecMock = vi.fn();
-const fetchClawHubPackageDetailMock = vi.fn();
-const fetchClawHubPackageVersionMock = vi.fn();
-const downloadClawHubPackageArchiveMock = vi.fn();
+const parseLittleBabyHubPluginSpecMock = vi.fn();
+const fetchLittleBabyHubPackageDetailMock = vi.fn();
+const fetchLittleBabyHubPackageVersionMock = vi.fn();
+const downloadLittleBabyHubPackageArchiveMock = vi.fn();
 const archiveCleanupMock = vi.fn();
 const resolveLatestVersionFromPackageMock = vi.fn();
 const resolveCompatibilityHostVersionMock = vi.fn();
 const installPluginFromArchiveMock = vi.fn();
 
-vi.mock("../infra/clawhub.js", async () => {
-  const actual = await vi.importActual<typeof import("../infra/clawhub.js")>("../infra/clawhub.js");
+vi.mock("../infra/littlebabyhub.js", async () => {
+  const actual = await vi.importActual<typeof import("../infra/littlebabyhub.js")>("../infra/littlebabyhub.js");
   return {
     ...actual,
-    parseClawHubPluginSpec: (...args: unknown[]) => parseClawHubPluginSpecMock(...args),
-    fetchClawHubPackageDetail: (...args: unknown[]) => fetchClawHubPackageDetailMock(...args),
-    fetchClawHubPackageVersion: (...args: unknown[]) => fetchClawHubPackageVersionMock(...args),
-    downloadClawHubPackageArchive: (...args: unknown[]) =>
-      downloadClawHubPackageArchiveMock(...args),
+    parseLittleBabyHubPluginSpec: (...args: unknown[]) => parseLittleBabyHubPluginSpecMock(...args),
+    fetchLittleBabyHubPackageDetail: (...args: unknown[]) => fetchLittleBabyHubPackageDetailMock(...args),
+    fetchLittleBabyHubPackageVersion: (...args: unknown[]) => fetchLittleBabyHubPackageVersionMock(...args),
+    downloadLittleBabyHubPackageArchive: (...args: unknown[]) =>
+      downloadLittleBabyHubPackageArchiveMock(...args),
     resolveLatestVersionFromPackage: (...args: unknown[]) =>
       resolveLatestVersionFromPackageMock(...args),
   };
@@ -48,9 +48,9 @@ vi.mock("../infra/archive.js", async () => {
   };
 });
 
-const { ClawHubRequestError } = await import("../infra/clawhub.js");
-const { CLAWHUB_INSTALL_ERROR_CODE, formatClawHubSpecifier, installPluginFromClawHub } =
-  await import("./clawhub.js");
+const { LittleBabyHubRequestError } = await import("../infra/littlebabyhub.js");
+const { LITTLEBABYHUB_INSTALL_ERROR_CODE, formatLittleBabyHubSpecifier, installPluginFromLittleBabyHub } =
+  await import("./littlebabyhub.js");
 
 const DEMO_ARCHIVE_INTEGRITY = "sha256-qerEjGEpvES2+Tyan0j2xwDRkbcnmh4ZFfKN9vWbsa8=";
 const tempDirs: string[] = [];
@@ -59,8 +59,8 @@ function sha256Hex(value: string): string {
   return createHash("sha256").update(value, "utf8").digest("hex");
 }
 
-async function createClawHubArchive(entries: Record<string, string>) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-clawhub-archive-"));
+async function createLittleBabyHubArchive(entries: Record<string, string>) {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-littlebabyhub-archive-"));
   tempDirs.push(dir);
   const archivePath = path.join(dir, "archive.zip");
   const zip = new JSZip();
@@ -75,17 +75,17 @@ async function createClawHubArchive(entries: Record<string, string>) {
   };
 }
 
-async function expectClawHubInstallError(params: {
+async function expectLittleBabyHubInstallError(params: {
   setup?: () => void;
   spec: string;
   expected: {
     ok: false;
-    code: (typeof CLAWHUB_INSTALL_ERROR_CODE)[keyof typeof CLAWHUB_INSTALL_ERROR_CODE];
+    code: (typeof LITTLEBABYHUB_INSTALL_ERROR_CODE)[keyof typeof LITTLEBABYHUB_INSTALL_ERROR_CODE];
     error: string;
   };
 }) {
   params.setup?.();
-  await expect(installPluginFromClawHub({ spec: params.spec })).resolves.toMatchObject(
+  await expect(installPluginFromLittleBabyHub({ spec: params.spec })).resolves.toMatchObject(
     params.expected,
   );
 }
@@ -97,18 +97,18 @@ function createLoggerSpies() {
   };
 }
 
-function expectClawHubInstallFlow(params: {
+function expectLittleBabyHubInstallFlow(params: {
   baseUrl: string;
   version: string;
   archivePath: string;
 }) {
-  expect(fetchClawHubPackageDetailMock).toHaveBeenCalledWith(
+  expect(fetchLittleBabyHubPackageDetailMock).toHaveBeenCalledWith(
     expect.objectContaining({
       name: "demo",
       baseUrl: params.baseUrl,
     }),
   );
-  expect(fetchClawHubPackageVersionMock).toHaveBeenCalledWith(
+  expect(fetchLittleBabyHubPackageVersionMock).toHaveBeenCalledWith(
     expect.objectContaining({
       name: "demo",
       version: params.version,
@@ -121,22 +121,22 @@ function expectClawHubInstallFlow(params: {
   );
 }
 
-function expectSuccessfulClawHubInstall(result: unknown) {
+function expectSuccessfulLittleBabyHubInstall(result: unknown) {
   expect(result).toMatchObject({
     ok: true,
     pluginId: "demo",
     version: "2026.3.22",
-    clawhub: {
-      source: "clawhub",
-      clawhubPackage: "demo",
-      clawhubFamily: "code-plugin",
-      clawhubChannel: "official",
+    littlebabyhub: {
+      source: "littlebabyhub",
+      littlebabyhubPackage: "demo",
+      littlebabyhubFamily: "code-plugin",
+      littlebabyhubChannel: "official",
       integrity: DEMO_ARCHIVE_INTEGRITY,
     },
   });
 }
 
-describe("installPluginFromClawHub", () => {
+describe("installPluginFromLittleBabyHub", () => {
   afterEach(async () => {
     await Promise.all(
       tempDirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true })),
@@ -144,17 +144,17 @@ describe("installPluginFromClawHub", () => {
   });
 
   beforeEach(() => {
-    parseClawHubPluginSpecMock.mockReset();
-    fetchClawHubPackageDetailMock.mockReset();
-    fetchClawHubPackageVersionMock.mockReset();
-    downloadClawHubPackageArchiveMock.mockReset();
+    parseLittleBabyHubPluginSpecMock.mockReset();
+    fetchLittleBabyHubPackageDetailMock.mockReset();
+    fetchLittleBabyHubPackageVersionMock.mockReset();
+    downloadLittleBabyHubPackageArchiveMock.mockReset();
     archiveCleanupMock.mockReset();
     resolveLatestVersionFromPackageMock.mockReset();
     resolveCompatibilityHostVersionMock.mockReset();
     installPluginFromArchiveMock.mockReset();
 
-    parseClawHubPluginSpecMock.mockReturnValue({ name: "demo" });
-    fetchClawHubPackageDetailMock.mockResolvedValue({
+    parseLittleBabyHubPluginSpecMock.mockReturnValue({ name: "demo" });
+    fetchLittleBabyHubPackageDetailMock.mockResolvedValue({
       package: {
         name: "demo",
         displayName: "Demo",
@@ -170,7 +170,7 @@ describe("installPluginFromClawHub", () => {
       },
     });
     resolveLatestVersionFromPackageMock.mockReturnValue("2026.3.22");
-    fetchClawHubPackageVersionMock.mockResolvedValue({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValue({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -182,8 +182,8 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValue({
-      archivePath: "/tmp/clawhub-demo/archive.zip",
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValue({
+      archivePath: "/tmp/littlebabyhub-demo/archive.zip",
       integrity: DEMO_ARCHIVE_INTEGRITY,
       cleanup: archiveCleanupMock,
     });
@@ -197,26 +197,26 @@ describe("installPluginFromClawHub", () => {
     });
   });
 
-  it("formats clawhub specifiers", () => {
-    expect(formatClawHubSpecifier({ name: "demo" })).toBe("clawhub:demo");
-    expect(formatClawHubSpecifier({ name: "demo", version: "1.2.3" })).toBe("clawhub:demo@1.2.3");
+  it("formats littlebabyhub specifiers", () => {
+    expect(formatLittleBabyHubSpecifier({ name: "demo" })).toBe("littlebabyhub:demo");
+    expect(formatLittleBabyHubSpecifier({ name: "demo", version: "1.2.3" })).toBe("littlebabyhub:demo@1.2.3");
   });
 
-  it("installs a ClawHub code plugin through the archive installer", async () => {
+  it("installs a LittleBabyHub code plugin through the archive installer", async () => {
     const logger = createLoggerSpies();
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
-      baseUrl: "https://clawhub.ai",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
+      baseUrl: "https://littlebabyhub.ai",
       logger,
     });
 
-    expectClawHubInstallFlow({
-      baseUrl: "https://clawhub.ai",
+    expectLittleBabyHubInstallFlow({
+      baseUrl: "https://littlebabyhub.ai",
       version: "2026.3.22",
-      archivePath: "/tmp/clawhub-demo/archive.zip",
+      archivePath: "/tmp/littlebabyhub-demo/archive.zip",
     });
-    expectSuccessfulClawHubInstall(result);
-    expect(logger.info).toHaveBeenCalledWith("ClawHub code-plugin demo@2026.3.22 channel=official");
+    expectSuccessfulLittleBabyHubInstall(result);
+    expect(logger.info).toHaveBeenCalledWith("LittleBabyHub code-plugin demo@2026.3.22 channel=official");
     expect(logger.info).toHaveBeenCalledWith(
       "Compatibility: pluginApi=>=2026.3.22 minGateway=2026.3.0",
     );
@@ -225,14 +225,14 @@ describe("installPluginFromClawHub", () => {
   });
 
   it("passes dangerous force unsafe install through to archive installs", async () => {
-    await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
       dangerouslyForceUnsafeInstall: true,
     });
 
     expect(installPluginFromArchiveMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        archivePath: "/tmp/clawhub-demo/archive.zip",
+        archivePath: "/tmp/littlebabyhub-demo/archive.zip",
         dangerouslyForceUnsafeInstall: true,
       }),
     );
@@ -244,9 +244,9 @@ describe("installPluginFromClawHub", () => {
       error: "bad archive",
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
-      baseUrl: "https://clawhub.ai",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
+      baseUrl: "https://littlebabyhub.ai",
     });
 
     expect(result).toMatchObject({
@@ -257,7 +257,7 @@ describe("installPluginFromClawHub", () => {
   });
 
   it("accepts version-endpoint SHA-256 hashes expressed as raw hex", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -269,21 +269,21 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
-      archivePath: "/tmp/clawhub-demo/archive.zip",
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
+      archivePath: "/tmp/littlebabyhub-demo/archive.zip",
       integrity: "sha256-qerEjGEpvES2+Tyan0j2xwDRkbcnmh4ZFfKN9vWbsa8=",
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({ ok: true, pluginId: "demo" });
   });
 
   it("accepts version-endpoint SHA-256 hashes expressed as unpadded SRI", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -295,26 +295,26 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
-      archivePath: "/tmp/clawhub-demo/archive.zip",
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
+      archivePath: "/tmp/littlebabyhub-demo/archive.zip",
       integrity: DEMO_ARCHIVE_INTEGRITY,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({ ok: true, pluginId: "demo" });
   });
 
   it("falls back to strict files[] verification when sha256hash is missing", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
       "dist/index.js": 'export const demo = "ok";',
       "_meta.json": '{"slug":"demo","version":"2026.3.22"}',
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -338,30 +338,30 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
     const logger = createLoggerSpies();
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
       logger,
     });
 
     expect(result).toMatchObject({ ok: true, pluginId: "demo" });
     expect(logger.warn).toHaveBeenCalledWith(
-      'ClawHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: dist/index.js, littlebaby.plugin.json. Validated generated metadata files present in archive: _meta.json (JSON parse plus slug/version match only).',
+      'LittleBabyHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: dist/index.js, littlebaby.plugin.json. Validated generated metadata files present in archive: _meta.json (JSON parse plus slug/version match only).',
     );
   });
 
   it("validates _meta.json against canonical package and resolved version metadata", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
       "_meta.json": '{"slug":"demo","version":"2026.3.22"}',
     });
-    parseClawHubPluginSpecMock.mockReturnValueOnce({ name: "DemoAlias", version: "latest" });
-    fetchClawHubPackageDetailMock.mockResolvedValueOnce({
+    parseLittleBabyHubPluginSpecMock.mockReturnValueOnce({ name: "DemoAlias", version: "latest" });
+    fetchLittleBabyHubPackageDetailMock.mockResolvedValueOnce({
       package: {
         name: "demo",
         displayName: "Demo",
@@ -376,7 +376,7 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -395,36 +395,36 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
     const logger = createLoggerSpies();
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:DemoAlias@latest",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:DemoAlias@latest",
       logger,
     });
 
     expect(result).toMatchObject({ ok: true, pluginId: "demo", version: "2026.3.22" });
-    expect(fetchClawHubPackageDetailMock).toHaveBeenCalledWith(
+    expect(fetchLittleBabyHubPackageDetailMock).toHaveBeenCalledWith(
       expect.objectContaining({
         name: "DemoAlias",
       }),
     );
-    expect(fetchClawHubPackageVersionMock).toHaveBeenCalledWith(
+    expect(fetchLittleBabyHubPackageVersionMock).toHaveBeenCalledWith(
       expect.objectContaining({
         name: "demo",
         version: "latest",
       }),
     );
     expect(logger.warn).toHaveBeenCalledWith(
-      'ClawHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: littlebaby.plugin.json. Validated generated metadata files present in archive: _meta.json (JSON parse plus slug/version match only).',
+      'LittleBabyHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: littlebaby.plugin.json. Validated generated metadata files present in archive: _meta.json (JSON parse plus slug/version match only).',
     );
   });
 
   it("fails closed when sha256hash is present but unrecognized instead of silently falling back", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -444,21 +444,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has an invalid sha256hash (unrecognized value "definitely-not-a-sha256").',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has an invalid sha256hash (unrecognized value "definitely-not-a-sha256").',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
-  it("rejects ClawHub installs when sha256hash is explicitly null and files[] is unavailable", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+  it("rejects LittleBabyHub installs when sha256hash is explicitly null and files[] is unavailable", async () => {
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -471,21 +471,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" is missing sha256hash and usable files[] metadata for fallback archive verification.',
+        'LittleBabyHub version metadata for "demo@2026.3.22" is missing sha256hash and usable files[] metadata for fallback archive verification.',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
-  it("rejects ClawHub installs when the version metadata has no archive hash or fallback files[]", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+  it("rejects LittleBabyHub installs when the version metadata has no archive hash or fallback files[]", async () => {
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -497,21 +497,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" is missing sha256hash and usable files[] metadata for fallback archive verification.',
+        'LittleBabyHub version metadata for "demo@2026.3.22" is missing sha256hash and usable files[] metadata for fallback archive verification.',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("fails closed when files[] contains a malformed entry", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -524,21 +524,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has an invalid files[0] entry (expected an object, got null).',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has an invalid files[0] entry (expected an object, got null).',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("fails closed when files[] contains an invalid sha256", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -557,21 +557,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has an invalid files[0].sha256 (value "not-a-digest" is not a 64-character hexadecimal SHA-256 digest).',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has an invalid files[0].sha256 (value "not-a-digest" is not a 64-character hexadecimal SHA-256 digest).',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("fails closed when sha256hash is not a string", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -584,24 +584,24 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has an invalid sha256hash (non-string value of type number).',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has an invalid sha256hash (non-string value of type number).',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("returns a typed install failure when the archive download throws", async () => {
-    downloadClawHubPackageArchiveMock.mockRejectedValueOnce(new Error("network timeout"));
+    downloadLittleBabyHubPackageArchiveMock.mockRejectedValueOnce(new Error("network timeout"));
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
@@ -612,11 +612,11 @@ describe("installPluginFromClawHub", () => {
   });
 
   it("returns a typed install failure when fallback archive verification cannot read the zip", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-clawhub-archive-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-littlebabyhub-archive-"));
     tempDirs.push(dir);
     const archivePath = path.join(dir, "archive.zip");
     await fs.writeFile(archivePath, "not-a-zip", "utf8");
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -634,26 +634,26 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       archivePath,
       integrity: "sha256-not-used-in-fallback",
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
-      error: "ClawHub archive fallback verification failed while reading the downloaded archive.",
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      error: "LittleBabyHub archive fallback verification failed while reading the downloaded archive.",
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
-  it("rejects ClawHub installs when the downloaded archive hash drifts from metadata", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+  it("rejects LittleBabyHub installs when the downloaded archive hash drifts from metadata", async () => {
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -665,30 +665,30 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
-      archivePath: "/tmp/clawhub-demo/archive.zip",
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
+      archivePath: "/tmp/littlebabyhub-demo/archive.zip",
       integrity: DEMO_ARCHIVE_INTEGRITY,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
-      error: `ClawHub archive integrity mismatch for "demo@2026.3.22": expected sha256-ERERERERERERERERERERERERERERERERERERERERERE=, got ${DEMO_ARCHIVE_INTEGRITY}.`,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      error: `LittleBabyHub archive integrity mismatch for "demo@2026.3.22": expected sha256-ERERERERERERERERERERERERERERERERERERERERERE=, got ${DEMO_ARCHIVE_INTEGRITY}.`,
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
     expect(archiveCleanupMock).toHaveBeenCalledTimes(1);
   });
 
   it("rejects fallback verification when an expected file is missing from the archive", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -711,31 +711,31 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        'ClawHub archive contents do not match files[] metadata for "demo@2026.3.22": missing "dist/index.js".',
+        'LittleBabyHub archive contents do not match files[] metadata for "demo@2026.3.22": missing "dist/index.js".',
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when the archive includes an unexpected file", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
       "dist/index.js": 'export const demo = "ok";',
       "extra.txt": "surprise",
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -758,26 +758,26 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        'ClawHub archive contents do not match files[] metadata for "demo@2026.3.22": unexpected file "extra.txt".',
+        'LittleBabyHub archive contents do not match files[] metadata for "demo@2026.3.22": unexpected file "extra.txt".',
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("accepts root-level files[] paths and allows _meta.json as an unvalidated generated file", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-clawhub-archive-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-littlebabyhub-archive-"));
     tempDirs.push(dir);
     const archivePath = path.join(dir, "archive.zip");
     const zip = new JSZip();
@@ -786,7 +786,7 @@ describe("installPluginFromClawHub", () => {
     zip.file("_meta.json", '{"slug":"demo","version":"2026.3.22"}');
     const archiveBytes = await zip.generateAsync({ type: "nodebuffer" });
     await fs.writeFile(archivePath, archiveBytes);
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -809,29 +809,29 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       archivePath,
       integrity: `sha256-${createHash("sha256").update(archiveBytes).digest("base64")}`,
       cleanup: archiveCleanupMock,
     });
     const logger = createLoggerSpies();
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
       logger,
     });
 
     expect(result).toMatchObject({ ok: true, pluginId: "demo" });
     expect(logger.warn).toHaveBeenCalledWith(
-      'ClawHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: SKILL.md, scripts/search.py. Validated generated metadata files present in archive: _meta.json (JSON parse plus slug/version match only).',
+      'LittleBabyHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: SKILL.md, scripts/search.py. Validated generated metadata files present in archive: _meta.json (JSON parse plus slug/version match only).',
     );
   });
 
   it("omits the skipped-files suffix when no generated extras are present", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -849,29 +849,29 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
     const logger = createLoggerSpies();
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
       logger,
     });
 
     expect(result).toMatchObject({ ok: true, pluginId: "demo" });
     expect(logger.warn).toHaveBeenCalledWith(
-      'ClawHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: littlebaby.plugin.json.',
+      'LittleBabyHub package "demo@2026.3.22" is missing sha256hash; falling back to files[] verification. Validated files: littlebaby.plugin.json.',
     );
   });
 
   it("rejects fallback verification when _meta.json is not valid JSON", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
       "_meta.json": "{not-json",
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -889,30 +889,30 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        'ClawHub archive contents do not match files[] metadata for "demo@2026.3.22": _meta.json is not valid JSON.',
+        'LittleBabyHub archive contents do not match files[] metadata for "demo@2026.3.22": _meta.json is not valid JSON.',
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when _meta.json slug does not match the package name", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
       "_meta.json": '{"slug":"wrong","version":"2026.3.22"}',
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -930,26 +930,26 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        'ClawHub archive contents do not match files[] metadata for "demo@2026.3.22": _meta.json slug does not match the package name.',
+        'LittleBabyHub archive contents do not match files[] metadata for "demo@2026.3.22": _meta.json slug does not match the package name.',
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when _meta.json exceeds the per-file size limit", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-clawhub-archive-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-littlebabyhub-archive-"));
     tempDirs.push(dir);
     const archivePath = path.join(dir, "archive.zip");
     await fs.writeFile(archivePath, "placeholder", "utf8");
@@ -971,7 +971,7 @@ describe("installPluginFromClawHub", () => {
         "littlebaby.plugin.json": listedFileEntry,
       },
     } as unknown as JSZip);
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -989,28 +989,28 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       archivePath,
       integrity: "sha256-not-used-in-fallback",
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     loadAsyncSpy.mockRestore();
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        'ClawHub archive fallback verification rejected "_meta.json" because it exceeds the per-file size limit.',
+        'LittleBabyHub archive fallback verification rejected "_meta.json" because it exceeds the per-file size limit.',
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when archive directories alone exceed the entry limit", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-clawhub-archive-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-littlebabyhub-archive-"));
     tempDirs.push(dir);
     const archivePath = path.join(dir, "archive.zip");
     await fs.writeFile(archivePath, "placeholder", "utf8");
@@ -1026,7 +1026,7 @@ describe("installPluginFromClawHub", () => {
     const loadAsyncSpy = vi.spyOn(JSZip, "loadAsync").mockResolvedValueOnce({
       files: zipEntries,
     } as unknown as JSZip);
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1044,27 +1044,27 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       archivePath,
       integrity: "sha256-not-used-in-fallback",
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     loadAsyncSpy.mockRestore();
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
-      error: "ClawHub archive fallback verification exceeded the archive entry limit.",
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      error: "LittleBabyHub archive fallback verification exceeded the archive entry limit.",
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when the downloaded archive exceeds the ZIP size limit", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-clawhub-archive-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-littlebabyhub-archive-"));
     tempDirs.push(dir);
     const archivePath = path.join(dir, "archive.zip");
     await fs.writeFile(archivePath, "placeholder", "utf8");
@@ -1077,7 +1077,7 @@ describe("installPluginFromClawHub", () => {
       }
       return await realStat(filePath, options);
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1095,31 +1095,31 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       archivePath,
       integrity: "sha256-not-used-in-fallback",
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     statSpy.mockRestore();
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        "ClawHub archive fallback verification rejected the downloaded archive because it exceeds the ZIP archive size limit.",
+        "LittleBabyHub archive fallback verification rejected the downloaded archive because it exceeds the ZIP archive size limit.",
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when a file hash drifts from files[] metadata", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1137,25 +1137,25 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
-      error: `ClawHub archive contents do not match files[] metadata for "demo@2026.3.22": expected littlebaby.plugin.json to hash to ${"1".repeat(64)}, got ${sha256Hex('{"id":"demo"}')}.`,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      error: `LittleBabyHub archive contents do not match files[] metadata for "demo@2026.3.22": expected littlebaby.plugin.json to hash to ${"1".repeat(64)}, got ${sha256Hex('{"id":"demo"}')}.`,
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback metadata with an unsafe files[] path", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1174,21 +1174,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has an invalid files[0].path (path "../evil.txt" contains dot segments).',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has an invalid files[0].path (path "../evil.txt" contains dot segments).',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback metadata with leading or trailing path whitespace", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1207,25 +1207,25 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has an invalid files[0].path (path "littlebaby.plugin.json " has leading or trailing whitespace).',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has an invalid files[0].path (path "littlebaby.plugin.json " has leading or trailing whitespace).',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback verification when the archive includes a whitespace-suffixed file path", async () => {
-    const archive = await createClawHubArchive({
+    const archive = await createLittleBabyHubArchive({
       "littlebaby.plugin.json": '{"id":"demo"}',
       "littlebaby.plugin.json ": '{"id":"demo"}',
     });
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1243,26 +1243,26 @@ describe("installPluginFromClawHub", () => {
         },
       },
     });
-    downloadClawHubPackageArchiveMock.mockResolvedValueOnce({
+    downloadLittleBabyHubPackageArchiveMock.mockResolvedValueOnce({
       ...archive,
       cleanup: archiveCleanupMock,
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.ARCHIVE_INTEGRITY_MISMATCH,
       error:
-        'ClawHub archive contents do not match files[] metadata for "demo@2026.3.22": invalid package file path "littlebaby.plugin.json " (path "littlebaby.plugin.json " has leading or trailing whitespace).',
+        'LittleBabyHub archive contents do not match files[] metadata for "demo@2026.3.22": invalid package file path "littlebaby.plugin.json " (path "littlebaby.plugin.json " has leading or trailing whitespace).',
     });
     expect(installPluginFromArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback metadata with duplicate files[] paths", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1286,21 +1286,21 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" has duplicate files[] path "littlebaby.plugin.json".',
+        'LittleBabyHub version metadata for "demo@2026.3.22" has duplicate files[] path "littlebaby.plugin.json".',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it("rejects fallback metadata when files[] includes generated _meta.json", async () => {
-    fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+    fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
       version: {
         version: "2026.3.22",
         createdAt: 0,
@@ -1319,17 +1319,17 @@ describe("installPluginFromClawHub", () => {
       },
     });
 
-    const result = await installPluginFromClawHub({
-      spec: "clawhub:demo",
+    const result = await installPluginFromLittleBabyHub({
+      spec: "littlebabyhub:demo",
     });
 
     expect(result).toMatchObject({
       ok: false,
-      code: CLAWHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
+      code: LITTLEBABYHUB_INSTALL_ERROR_CODE.MISSING_ARCHIVE_INTEGRITY,
       error:
-        'ClawHub version metadata for "demo@2026.3.22" must not include generated file "_meta.json" in files[].',
+        'LittleBabyHub version metadata for "demo@2026.3.22" must not include generated file "_meta.json" in files[].',
     });
-    expect(downloadClawHubPackageArchiveMock).not.toHaveBeenCalled();
+    expect(downloadLittleBabyHubPackageArchiveMock).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -1338,10 +1338,10 @@ describe("installPluginFromClawHub", () => {
       setup: () => {
         resolveCompatibilityHostVersionMock.mockReturnValueOnce("2026.3.21");
       },
-      spec: "clawhub:demo",
+      spec: "littlebabyhub:demo",
       expected: {
         ok: false,
-        code: CLAWHUB_INSTALL_ERROR_CODE.INCOMPATIBLE_PLUGIN_API,
+        code: LITTLEBABYHUB_INSTALL_ERROR_CODE.INCOMPATIBLE_PLUGIN_API,
         error:
           'Plugin "demo" requires plugin API >=2026.3.22, but this LittleBaby runtime exposes 2026.3.21.',
       },
@@ -1349,7 +1349,7 @@ describe("installPluginFromClawHub", () => {
     {
       name: "rejects skill families and redirects to skills install",
       setup: () => {
-        fetchClawHubPackageDetailMock.mockResolvedValueOnce({
+        fetchLittleBabyHubPackageDetailMock.mockResolvedValueOnce({
           package: {
             name: "calendar",
             displayName: "Calendar",
@@ -1361,17 +1361,17 @@ describe("installPluginFromClawHub", () => {
           },
         });
       },
-      spec: "clawhub:calendar",
+      spec: "littlebabyhub:calendar",
       expected: {
         ok: false,
-        code: CLAWHUB_INSTALL_ERROR_CODE.SKILL_PACKAGE,
+        code: LITTLEBABYHUB_INSTALL_ERROR_CODE.SKILL_PACKAGE,
         error: '"calendar" is a skill. Use "littlebaby skills install calendar" instead.',
       },
     },
     {
       name: "redirects skill families before missing archive metadata checks",
       setup: () => {
-        fetchClawHubPackageDetailMock.mockResolvedValueOnce({
+        fetchLittleBabyHubPackageDetailMock.mockResolvedValueOnce({
           package: {
             name: "calendar",
             displayName: "Calendar",
@@ -1382,7 +1382,7 @@ describe("installPluginFromClawHub", () => {
             updatedAt: 0,
           },
         });
-        fetchClawHubPackageVersionMock.mockResolvedValueOnce({
+        fetchLittleBabyHubPackageVersionMock.mockResolvedValueOnce({
           version: {
             version: "2026.3.22",
             createdAt: 0,
@@ -1390,51 +1390,51 @@ describe("installPluginFromClawHub", () => {
           },
         });
       },
-      spec: "clawhub:calendar",
+      spec: "littlebabyhub:calendar",
       expected: {
         ok: false,
-        code: CLAWHUB_INSTALL_ERROR_CODE.SKILL_PACKAGE,
+        code: LITTLEBABYHUB_INSTALL_ERROR_CODE.SKILL_PACKAGE,
         error: '"calendar" is a skill. Use "littlebaby skills install calendar" instead.',
       },
     },
     {
       name: "returns typed package-not-found failures",
       setup: () => {
-        fetchClawHubPackageDetailMock.mockRejectedValueOnce(
-          new ClawHubRequestError({
+        fetchLittleBabyHubPackageDetailMock.mockRejectedValueOnce(
+          new LittleBabyHubRequestError({
             path: "/api/v1/packages/demo",
             status: 404,
             body: "Package not found",
           }),
         );
       },
-      spec: "clawhub:demo",
+      spec: "littlebabyhub:demo",
       expected: {
         ok: false,
-        code: CLAWHUB_INSTALL_ERROR_CODE.PACKAGE_NOT_FOUND,
-        error: "Package not found on ClawHub.",
+        code: LITTLEBABYHUB_INSTALL_ERROR_CODE.PACKAGE_NOT_FOUND,
+        error: "Package not found on LittleBabyHub.",
       },
     },
     {
       name: "returns typed version-not-found failures",
       setup: () => {
-        parseClawHubPluginSpecMock.mockReturnValueOnce({ name: "demo", version: "9.9.9" });
-        fetchClawHubPackageVersionMock.mockRejectedValueOnce(
-          new ClawHubRequestError({
+        parseLittleBabyHubPluginSpecMock.mockReturnValueOnce({ name: "demo", version: "9.9.9" });
+        fetchLittleBabyHubPackageVersionMock.mockRejectedValueOnce(
+          new LittleBabyHubRequestError({
             path: "/api/v1/packages/demo/versions/9.9.9",
             status: 404,
             body: "Version not found",
           }),
         );
       },
-      spec: "clawhub:demo@9.9.9",
+      spec: "littlebabyhub:demo@9.9.9",
       expected: {
         ok: false,
-        code: CLAWHUB_INSTALL_ERROR_CODE.VERSION_NOT_FOUND,
-        error: "Version not found on ClawHub: demo@9.9.9.",
+        code: LITTLEBABYHUB_INSTALL_ERROR_CODE.VERSION_NOT_FOUND,
+        error: "Version not found on LittleBabyHub: demo@9.9.9.",
       },
     },
   ] as const)("$name", async ({ setup, spec, expected }) => {
-    await expectClawHubInstallError({ setup, spec, expected });
+    await expectLittleBabyHubInstallError({ setup, spec, expected });
   });
 });

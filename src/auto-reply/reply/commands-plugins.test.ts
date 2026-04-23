@@ -17,9 +17,9 @@ vi.mock("../../cli/npm-resolution.js", () => ({
 }));
 
 vi.mock("../../cli/plugins-command-helpers.js", () => ({
-  buildPreferredClawHubSpec: vi.fn(() => null),
+  buildPreferredLittleBabyHubSpec: vi.fn(() => null),
   createPluginInstallLogger: vi.fn(() => ({})),
-  decidePreferredClawHubFallback: vi.fn(() => "fallback_to_npm"),
+  decidePreferredLittleBabyHubFallback: vi.fn(() => "fallback_to_npm"),
   resolveFileNpmSpecToLocalPath: vi.fn(() => null),
 }));
 
@@ -37,12 +37,12 @@ vi.mock("../../infra/archive.js", () => ({
   resolveArchiveKind: vi.fn(() => null),
 }));
 
-vi.mock("../../infra/clawhub.js", () => ({
-  parseClawHubPluginSpec: vi.fn(() => null),
+vi.mock("../../infra/littlebabyhub.js", () => ({
+  parseLittleBabyHubPluginSpec: vi.fn(() => null),
 }));
 
-vi.mock("../../plugins/clawhub.js", () => ({
-  installPluginFromClawHub: vi.fn(),
+vi.mock("../../plugins/littlebabyhub.js", () => ({
+  installPluginFromLittleBabyHub: vi.fn(),
 }));
 
 vi.mock("../../plugins/install.js", () => ({

@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   installSkill,
-  loadClawHubDetail,
+  loadLittleBabyHubDetail,
   saveSkillApiKey,
-  searchClawHub,
-  setClawHubSearchQuery,
+  searchLittleBabyHub,
+  setLittleBabyHubSearchQuery,
   updateSkillEnabled,
   type SkillsState,
 } from "./skills.ts";
@@ -22,8 +22,8 @@ function createState(): { state: SkillsState; request: ReturnType<typeof vi.fn> 
     skillsBusyKey: null,
     skillEdits: {},
     skillMessages: {},
-    clawhubSearchQuery: "github",
-    clawhubSearchResults: [
+    littlebabyhubSearchQuery: "github",
+    littlebabyhubSearchResults: [
       {
         score: 0.9,
         slug: "github",
@@ -32,14 +32,14 @@ function createState(): { state: SkillsState; request: ReturnType<typeof vi.fn> 
         version: "1.0.0",
       },
     ],
-    clawhubSearchLoading: false,
-    clawhubSearchError: "old error",
-    clawhubDetail: null,
-    clawhubDetailSlug: null,
-    clawhubDetailLoading: false,
-    clawhubDetailError: null,
-    clawhubInstallSlug: null,
-    clawhubInstallMessage: null,
+    littlebabyhubSearchLoading: false,
+    littlebabyhubSearchError: "old error",
+    littlebabyhubDetail: null,
+    littlebabyhubDetailSlug: null,
+    littlebabyhubDetailLoading: false,
+    littlebabyhubDetailError: null,
+    littlebabyhubInstallSlug: null,
+    littlebabyhubInstallMessage: null,
   };
   return { state, request };
 }
@@ -68,25 +68,25 @@ function mockSkillMutationRequests(request: ReturnType<typeof vi.fn>, installMes
   });
 }
 
-describe("searchClawHub", () => {
+describe("searchLittleBabyHub", () => {
   it("clears stale query state immediately when the input changes", () => {
     const { state } = createState();
 
-    state.clawhubSearchLoading = true;
-    state.clawhubInstallMessage = { kind: "success", text: "Installed github" };
+    state.littlebabyhubSearchLoading = true;
+    state.littlebabyhubInstallMessage = { kind: "success", text: "Installed github" };
 
-    setClawHubSearchQuery(state, "github app");
+    setLittleBabyHubSearchQuery(state, "github app");
 
-    expect(state.clawhubSearchQuery).toBe("github app");
-    expect(state.clawhubSearchResults).toBeNull();
-    expect(state.clawhubSearchError).toBeNull();
-    expect(state.clawhubSearchLoading).toBe(false);
-    expect(state.clawhubInstallMessage).toBeNull();
+    expect(state.littlebabyhubSearchQuery).toBe("github app");
+    expect(state.littlebabyhubSearchResults).toBeNull();
+    expect(state.littlebabyhubSearchError).toBeNull();
+    expect(state.littlebabyhubSearchLoading).toBe(false);
+    expect(state.littlebabyhubInstallMessage).toBeNull();
   });
 
   it("clears stale results as soon as a new search starts", async () => {
     const { state, request } = createState();
-    type SearchResponse = { results: SkillsState["clawhubSearchResults"] };
+    type SearchResponse = { results: SkillsState["littlebabyhubSearchResults"] };
     let resolveRequest: (value: SearchResponse) => void = () => {
       throw new Error("expected search request promise to be pending");
     };
@@ -97,11 +97,11 @@ describe("searchClawHub", () => {
         }),
     );
 
-    const pending = searchClawHub(state, "github");
+    const pending = searchLittleBabyHub(state, "github");
 
-    expect(state.clawhubSearchResults).toBeNull();
-    expect(state.clawhubSearchLoading).toBe(true);
-    expect(state.clawhubSearchError).toBeNull();
+    expect(state.littlebabyhubSearchResults).toBeNull();
+    expect(state.littlebabyhubSearchLoading).toBe(true);
+    expect(state.littlebabyhubSearchError).toBeNull();
 
     resolveRequest({
       results: [
@@ -116,7 +116,7 @@ describe("searchClawHub", () => {
     });
     await pending;
 
-    expect(state.clawhubSearchResults).toEqual([
+    expect(state.littlebabyhubSearchResults).toEqual([
       {
         score: 0.95,
         slug: "github-new",
@@ -125,45 +125,45 @@ describe("searchClawHub", () => {
         version: "2.0.0",
       },
     ]);
-    expect(state.clawhubSearchLoading).toBe(false);
+    expect(state.littlebabyhubSearchLoading).toBe(false);
   });
 
   it("clears stale results when the query is emptied", async () => {
     const { state, request } = createState();
 
-    await searchClawHub(state, "   ");
+    await searchLittleBabyHub(state, "   ");
 
     expect(request).not.toHaveBeenCalled();
-    expect(state.clawhubSearchResults).toBeNull();
-    expect(state.clawhubSearchError).toBeNull();
-    expect(state.clawhubSearchLoading).toBe(false);
+    expect(state.littlebabyhubSearchResults).toBeNull();
+    expect(state.littlebabyhubSearchError).toBeNull();
+    expect(state.littlebabyhubSearchLoading).toBe(false);
   });
 
   it("ignores stale search responses after query changes", async () => {
     const { state, request } = createState();
     const queue = createDeferredRequestQueue(request);
 
-    const pending = searchClawHub(state, "github");
-    setClawHubSearchQuery(state, "gitlab");
+    const pending = searchLittleBabyHub(state, "github");
+    setLittleBabyHubSearchQuery(state, "gitlab");
     queue.resolveNext({
       results: [{ score: 1, slug: "github", displayName: "GitHub" }],
     });
     await pending;
 
-    expect(state.clawhubSearchQuery).toBe("gitlab");
-    expect(state.clawhubSearchResults).toBeNull();
-    expect(state.clawhubSearchError).toBeNull();
-    expect(state.clawhubSearchLoading).toBe(false);
+    expect(state.littlebabyhubSearchQuery).toBe("gitlab");
+    expect(state.littlebabyhubSearchResults).toBeNull();
+    expect(state.littlebabyhubSearchError).toBeNull();
+    expect(state.littlebabyhubSearchLoading).toBe(false);
   });
 });
 
-describe("loadClawHubDetail", () => {
+describe("loadLittleBabyHubDetail", () => {
   it("ignores stale detail responses after slug changes", async () => {
     const { state, request } = createState();
     const queue = createDeferredRequestQueue(request);
 
-    const firstPending = loadClawHubDetail(state, "github");
-    const secondPending = loadClawHubDetail(state, "gitlab");
+    const firstPending = loadLittleBabyHubDetail(state, "github");
+    const secondPending = loadLittleBabyHubDetail(state, "gitlab");
 
     queue.resolveNext({
       skill: { slug: "github", displayName: "GitHub", createdAt: 1, updatedAt: 2 },
@@ -175,8 +175,8 @@ describe("loadClawHubDetail", () => {
     });
     await secondPending;
 
-    expect(state.clawhubDetailLoading).toBe(false);
-    expect(state.clawhubDetail?.skill?.slug).toBe("gitlab");
+    expect(state.littlebabyhubDetailLoading).toBe(false);
+    expect(state.littlebabyhubDetail?.skill?.slug).toBe("gitlab");
   });
 });
 

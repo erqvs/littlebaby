@@ -33,7 +33,7 @@ first, then select the engine in the slot:
 
 ```bash
 # Install from npm
-littlebaby plugins install @martian-engineering/lossless-claw
+littlebaby plugins install @martian-engineering/lossless-littlebaby
 
 # Or install from a local path (for development)
 littlebaby plugins install -l ./my-context-engine
@@ -46,10 +46,10 @@ Then enable the plugin and select it as the active engine in your config:
 {
   plugins: {
     slots: {
-      contextEngine: "lossless-claw", // must match the plugin's registered engine id
+      contextEngine: "lossless-littlebaby", // must match the plugin's registered engine id
     },
     entries: {
-      "lossless-claw": {
+      "lossless-littlebaby": {
         enabled: true,
         // Plugin-specific config goes here (see the plugin's docs)
       },

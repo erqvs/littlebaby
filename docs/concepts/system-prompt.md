@@ -195,6 +195,6 @@ as `memory_get`, live tool results, and post-compaction AGENTS.md refreshes.
 When available, the system prompt includes a **Documentation** section that points to the
 local LittleBaby docs directory (either `docs/` in the repo workspace or the bundled npm
 package docs) and also notes the public mirror, source repo, community Discord, and
-ClawHub ([https://clawhub.ai](https://clawhub.ai)) for skills discovery. The prompt instructs the model to consult local docs first
+LittleBabyHub ([https://littlebabyhub.ai](https://littlebabyhub.ai)) for skills discovery. The prompt instructs the model to consult local docs first
 for LittleBaby behavior, commands, configuration, or architecture, and to run
 `littlebaby status` itself when possible (asking the user only when it lacks access).

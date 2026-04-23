@@ -73,12 +73,12 @@ describe("@littlebaby/plugin-package-contract", () => {
       {
         fieldPath: "littlebaby.compat.pluginApi",
         message:
-          "littlebaby.compat.pluginApi is required for external code plugins published to ClawHub.",
+          "littlebaby.compat.pluginApi is required for external code plugins published to LittleBabyHub.",
       },
       {
         fieldPath: "littlebaby.build.littlebabyVersion",
         message:
-          "littlebaby.build.littlebabyVersion is required for external code plugins published to ClawHub.",
+          "littlebaby.build.littlebabyVersion is required for external code plugins published to LittleBabyHub.",
       },
     ]);
   });

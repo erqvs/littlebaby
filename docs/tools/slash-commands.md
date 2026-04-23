@@ -178,7 +178,7 @@ Notes:
 - In multi-account channels, config-targeted `/allowlist --account <id>` and `/config set channels.<provider>.accounts.<id>...` also honor the target account's `configWrites`.
 - `/usage` controls the per-response usage footer; `/usage cost` prints a local cost summary from LittleBaby session logs.
 - `/restart` is enabled by default; set `commands.restart: false` to disable it.
-- `/plugins install <spec>` accepts the same plugin specs as `littlebaby plugins install`: local path/archive, npm package, or `clawhub:<pkg>`.
+- `/plugins install <spec>` accepts the same plugin specs as `littlebaby plugins install`: local path/archive, npm package, or `littlebabyhub:<pkg>`.
 - `/plugins enable|disable` updates plugin config and may prompt for a restart.
 - Discord-only native command: `/vc join|leave|status` controls voice channels (requires `channels.discord.voice` and native commands; not available as text).
 - Discord thread-binding commands (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) require effective thread bindings to be enabled (`session.threadBindings.enabled` and/or `channels.discord.threadBindings.enabled`).

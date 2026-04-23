@@ -1,5 +1,5 @@
 import type { LittleBabyConfig } from "../config/types.littlebaby.js";
-import { parseClawHubPluginSpec } from "../infra/clawhub-spec.js";
+import { parseLittleBabyHubPluginSpec } from "../infra/littlebabyhub-spec.js";
 import type { PluginRecord } from "../plugins/registry.js";
 
 export function resolvePluginUninstallId<
@@ -26,14 +26,14 @@ export function resolvePluginUninstallId<
     }
   }
 
-  const requestedClawHub = parseClawHubPluginSpec(rawId);
-  if (requestedClawHub) {
+  const requestedLittleBabyHub = parseLittleBabyHubPluginSpec(rawId);
+  if (requestedLittleBabyHub) {
     for (const [pluginId, install] of Object.entries(params.config.plugins?.installs ?? {})) {
-      const installedClawHubName =
-        install.clawhubPackage ??
-        parseClawHubPluginSpec(install.spec ?? "")?.name ??
-        parseClawHubPluginSpec(install.resolvedSpec ?? "")?.name;
-      if (installedClawHubName === requestedClawHub.name) {
+      const installedLittleBabyHubName =
+        install.littlebabyhubPackage ??
+        parseLittleBabyHubPluginSpec(install.spec ?? "")?.name ??
+        parseLittleBabyHubPluginSpec(install.resolvedSpec ?? "")?.name;
+      if (installedLittleBabyHubName === requestedLittleBabyHub.name) {
         return { pluginId };
       }
     }

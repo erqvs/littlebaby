@@ -89,8 +89,8 @@ describe("installTestEnv", () => {
     );
     writeFile(path.join(realHome, ".littlebaby", "credentials", "token.txt"), "secret\n");
     writeFile(
-      path.join(realHome, ".littlebaby", "external-plugins", "glueclaw", "littlebaby.plugin.json"),
-      '{"id":"glueclaw"}\n',
+      path.join(realHome, ".littlebaby", "external-plugins", "gluelittlebaby", "littlebaby.plugin.json"),
+      '{"id":"gluelittlebaby"}\n',
     );
     writeFile(
       path.join(realHome, ".littlebaby", "agents", "main", "agent", "auth-profiles.json"),
@@ -153,7 +153,7 @@ describe("installTestEnv", () => {
           testEnv.tempHome,
           ".littlebaby",
           "external-plugins",
-          "glueclaw",
+          "gluelittlebaby",
           "littlebaby.plugin.json",
         ),
       ),

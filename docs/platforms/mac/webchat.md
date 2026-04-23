@@ -24,7 +24,7 @@ agent (with a session switcher for other sessions).
   dist/LittleBaby.app/Contents/MacOS/LittleBaby --webchat
   ```
 
-- Logs: `./scripts/clawlog.sh` (subsystem `ai.littlebaby`, category `WebChatSwiftUI`).
+- Logs: `./scripts/littlebabylog.sh` (subsystem `ai.littlebaby`, category `WebChatSwiftUI`).
 
 ## How it is wired
 

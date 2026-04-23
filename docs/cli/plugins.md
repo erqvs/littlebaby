@@ -54,8 +54,8 @@ capabilities.
 ### Install
 
 ```bash
-littlebaby plugins install <package>                      # ClawHub first, then npm
-littlebaby plugins install clawhub:<package>              # ClawHub only
+littlebaby plugins install <package>                      # LittleBabyHub first, then npm
+littlebaby plugins install littlebabyhub:<package>              # LittleBabyHub only
 littlebaby plugins install <package> --force              # overwrite existing install
 littlebaby plugins install <package> --pin                # pin version
 littlebaby plugins install <package> --dangerously-force-unsafe-install
@@ -65,7 +65,7 @@ littlebaby plugins install <plugin> --marketplace <name>  # marketplace (explici
 littlebaby plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
 ```
 
-Bare package names are checked against ClawHub first, then npm. Security note:
+Bare package names are checked against LittleBabyHub first, then npm. Security note:
 treat plugin installs like running code. Prefer pinned versions.
 
 If config is invalid, `plugins install` normally fails closed and tells you to
@@ -75,7 +75,7 @@ bundled-plugin recovery path for plugins that explicitly opt into
 
 `--force` reuses the existing install target and overwrites an already-installed
 plugin or hook pack in place. Use it when you are intentionally reinstalling
-the same id from a new local path, archive, ClawHub package, or npm artifact.
+the same id from a new local path, archive, LittleBabyHub package, or npm artifact.
 
 `--pin` applies to npm installs only. It is not supported with `--marketplace`,
 because marketplace installs persist marketplace source metadata instead of an
@@ -89,7 +89,7 @@ failures.
 
 This CLI flag applies to plugin install/update flows. Gateway-backed skill
 dependency installs use the matching `dangerouslyForceUnsafeInstall` request
-override, while `littlebaby skills install` remains a separate ClawHub skill
+override, while `littlebaby skills install` remains a separate LittleBabyHub skill
 download/install flow.
 
 `plugins install` is also the install surface for hook packs that expose
@@ -113,23 +113,23 @@ Supported archives: `.zip`, `.tgz`, `.tar.gz`, `.tar`.
 
 Claude marketplace installs are also supported.
 
-ClawHub installs use an explicit `clawhub:<package>` locator:
+LittleBabyHub installs use an explicit `littlebabyhub:<package>` locator:
 
 ```bash
-littlebaby plugins install clawhub:littlebaby-codex-app-server
-littlebaby plugins install clawhub:littlebaby-codex-app-server@1.2.3
+littlebaby plugins install littlebabyhub:littlebaby-codex-app-server
+littlebaby plugins install littlebabyhub:littlebaby-codex-app-server@1.2.3
 ```
 
-LittleBaby now also prefers ClawHub for bare npm-safe plugin specs. It only falls
-back to npm if ClawHub does not have that package or version:
+LittleBaby now also prefers LittleBabyHub for bare npm-safe plugin specs. It only falls
+back to npm if LittleBabyHub does not have that package or version:
 
 ```bash
 littlebaby plugins install littlebaby-codex-app-server
 ```
 
-LittleBaby downloads the package archive from ClawHub, checks the advertised
+LittleBaby downloads the package archive from LittleBabyHub, checks the advertised
 plugin API / minimum gateway compatibility, then installs it through the normal
-archive path. Recorded installs keep their ClawHub source metadata for later
+archive path. Recorded installs keep their LittleBabyHub source metadata for later
 updates.
 
 Use `plugin@marketplace` shorthand when the marketplace name exists in Claude's

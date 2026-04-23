@@ -50,13 +50,13 @@ are **external** (published on npm by the community).
 If you prefer chat-native control, enable `commands.plugins: true` and use:
 
 ```text
-/plugin install clawhub:@littlebaby/voice-call
+/plugin install littlebabyhub:@littlebaby/voice-call
 /plugin show voice-call
 /plugin enable voice-call
 ```
 
 The install path uses the same resolver as the CLI: local path/archive, explicit
-`clawhub:<pkg>`, or bare package spec (ClawHub first, then npm fallback).
+`littlebabyhub:<pkg>`, or bare package spec (LittleBabyHub first, then npm fallback).
 
 If config is invalid, install normally fails closed and points you at
 `littlebaby doctor --fix`. The only recovery exception is a narrow bundled-plugin
@@ -218,8 +218,8 @@ littlebaby plugins inspect --all             # fleet-wide table
 littlebaby plugins info <id>                 # inspect alias
 littlebaby plugins doctor                    # diagnostics
 
-littlebaby plugins install <package>         # install (ClawHub first, then npm)
-littlebaby plugins install clawhub:<pkg>     # install from ClawHub only
+littlebaby plugins install <package>         # install (LittleBabyHub first, then npm)
+littlebaby plugins install littlebabyhub:<pkg>     # install from LittleBabyHub only
 littlebaby plugins install <spec> --force    # overwrite existing install
 littlebaby plugins install <path>            # install from local path
 littlebaby plugins install -l <path>         # link (no copy) for dev
@@ -257,7 +257,7 @@ does not bypass plugin `before_install` policy blocks or scan-failure blocking.
 
 This CLI flag applies to plugin install/update flows only. Gateway-backed skill
 dependency installs use the matching `dangerouslyForceUnsafeInstall` request
-override instead, while `littlebaby skills install` remains the separate ClawHub
+override instead, while `littlebaby skills install` remains the separate LittleBabyHub
 skill download/install flow.
 
 Compatible bundles participate in the same plugin list/inspect/enable/disable

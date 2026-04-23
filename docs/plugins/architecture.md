@@ -1532,8 +1532,8 @@ pipeline rather than just add memory search or hooks.
 import { buildMemorySystemPromptAddition } from "littlebaby/plugin-sdk/core";
 
 export default function (api) {
-  api.registerContextEngine("lossless-claw", () => ({
-    info: { id: "lossless-claw", name: "Lossless Claw", ownsCompaction: true },
+  api.registerContextEngine("lossless-littlebaby", () => ({
+    info: { id: "lossless-littlebaby", name: "Lossless LittleBaby", ownsCompaction: true },
     async ingest() {
       return { ingested: true };
     },

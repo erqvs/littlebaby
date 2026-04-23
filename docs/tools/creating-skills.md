@@ -98,7 +98,7 @@ The YAML frontmatter supports these fields:
 - **Be concise** — instruct the model on _what_ to do, not how to be an AI
 - **Safety first** — if your skill uses `exec`, ensure prompts don't allow arbitrary command injection from untrusted input
 - **Test locally** — use `littlebaby agent --message "..."` to test before sharing
-- **Use ClawHub** — browse and contribute skills at [ClawHub](https://clawhub.ai)
+- **Use LittleBabyHub** — browse and contribute skills at [LittleBabyHub](https://littlebabyhub.ai)
 
 ## Where skills live
 
@@ -115,5 +115,5 @@ The YAML frontmatter supports these fields:
 
 - [Skills reference](/tools/skills) — loading, precedence, and gating rules
 - [Skills config](/tools/skills-config) — `skills.*` config schema
-- [ClawHub](/tools/clawhub) — public skill registry
+- [LittleBabyHub](/tools/littlebabyhub) — public skill registry
 - [Building Plugins](/plugins/building-plugins) — plugins can ship skills

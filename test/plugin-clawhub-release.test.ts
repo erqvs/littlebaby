@@ -3,14 +3,14 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  collectClawHubPublishablePluginPackages,
-  collectClawHubVersionGateErrors,
-  collectPluginClawHubReleasePathsFromGitRange,
-  collectPluginClawHubReleasePlan,
-  resolveChangedClawHubPublishablePluginPackages,
-  resolveSelectedClawHubPublishablePluginPackages,
+  collectLittleBabyHubPublishablePluginPackages,
+  collectLittleBabyHubVersionGateErrors,
+  collectPluginLittleBabyHubReleasePathsFromGitRange,
+  collectPluginLittleBabyHubReleasePlan,
+  resolveChangedLittleBabyHubPublishablePluginPackages,
+  resolveSelectedLittleBabyHubPublishablePluginPackages,
   type PublishablePluginPackage,
-} from "../scripts/lib/plugin-clawhub-release.ts";
+} from "../scripts/lib/plugin-littlebabyhub-release.ts";
 import { cleanupTempDirs, makeTempRepoRoot } from "./helpers/temp-repo.js";
 
 const tempDirs: string[] = [];
@@ -19,7 +19,7 @@ afterEach(() => {
   cleanupTempDirs(tempDirs);
 });
 
-describe("resolveChangedClawHubPublishablePluginPackages", () => {
+describe("resolveChangedLittleBabyHubPublishablePluginPackages", () => {
   const publishablePlugins: PublishablePluginPackage[] = [
     {
       extensionId: "feishu",
@@ -41,7 +41,7 @@ describe("resolveChangedClawHubPublishablePluginPackages", () => {
 
   it("ignores shared release-tooling changes", () => {
     expect(
-      resolveChangedClawHubPublishablePluginPackages({
+      resolveChangedLittleBabyHubPublishablePluginPackages({
         plugins: publishablePlugins,
         changedPaths: ["pnpm-lock.yaml"],
       }),
@@ -49,14 +49,14 @@ describe("resolveChangedClawHubPublishablePluginPackages", () => {
   });
 });
 
-describe("collectClawHubPublishablePluginPackages", () => {
-  it("requires the ClawHub external plugin contract", () => {
+describe("collectLittleBabyHubPublishablePluginPackages", () => {
+  it("requires the LittleBabyHub external plugin contract", () => {
     const repoDir = createTempPluginRepo({
-      includeClawHubContract: false,
+      includeLittleBabyHubContract: false,
     });
 
-    expect(() => collectClawHubPublishablePluginPackages(repoDir)).toThrow(
-      "littlebaby.compat.pluginApi is required for external code plugins published to ClawHub.",
+    expect(() => collectLittleBabyHubPublishablePluginPackages(repoDir)).toThrow(
+      "littlebaby.compat.pluginApi is required for external code plugins published to LittleBabyHub.",
     );
   });
 
@@ -65,13 +65,13 @@ describe("collectClawHubPublishablePluginPackages", () => {
       extensionId: "Demo Plugin",
     });
 
-    expect(() => collectClawHubPublishablePluginPackages(repoDir)).toThrow(
+    expect(() => collectLittleBabyHubPublishablePluginPackages(repoDir)).toThrow(
       "Demo Plugin: extension directory name must match",
     );
   });
 });
 
-describe("collectClawHubVersionGateErrors", () => {
+describe("collectLittleBabyHubVersionGateErrors", () => {
   it("requires a version bump when a publishable plugin changes", () => {
     const repoDir = createTempPluginRepo();
     const baseRef = git(repoDir, ["rev-parse", "HEAD"]);
@@ -92,9 +92,9 @@ describe("collectClawHubVersionGateErrors", () => {
     ]);
     const headRef = git(repoDir, ["rev-parse", "HEAD"]);
 
-    const errors = collectClawHubVersionGateErrors({
+    const errors = collectLittleBabyHubVersionGateErrors({
       rootDir: repoDir,
-      plugins: collectClawHubPublishablePluginPackages(repoDir),
+      plugins: collectLittleBabyHubPublishablePluginPackages(repoDir),
       gitRange: { baseRef, headRef },
     });
 
@@ -103,9 +103,9 @@ describe("collectClawHubVersionGateErrors", () => {
     ]);
   });
 
-  it("does not require a version bump for the first ClawHub opt-in", () => {
+  it("does not require a version bump for the first LittleBabyHub opt-in", () => {
     const repoDir = createTempPluginRepo({
-      publishToClawHub: false,
+      publishToLittleBabyHub: false,
     });
     const baseRef = git(repoDir, ["rev-parse", "HEAD"]);
 
@@ -124,7 +124,7 @@ describe("collectClawHubVersionGateErrors", () => {
               littlebabyVersion: "2026.4.1",
             },
             release: {
-              publishToClawHub: true,
+              publishToLittleBabyHub: true,
             },
           },
         },
@@ -144,9 +144,9 @@ describe("collectClawHubVersionGateErrors", () => {
     ]);
     const headRef = git(repoDir, ["rev-parse", "HEAD"]);
 
-    const errors = collectClawHubVersionGateErrors({
+    const errors = collectLittleBabyHubVersionGateErrors({
       rootDir: repoDir,
-      plugins: collectClawHubPublishablePluginPackages(repoDir),
+      plugins: collectLittleBabyHubPublishablePluginPackages(repoDir),
       gitRange: { baseRef, headRef },
     });
 
@@ -158,7 +158,7 @@ describe("collectClawHubVersionGateErrors", () => {
     const baseRef = git(repoDir, ["rev-parse", "HEAD"]);
 
     mkdirSync(join(repoDir, "scripts"), { recursive: true });
-    writeFileSync(join(repoDir, "scripts", "plugin-clawhub-publish.sh"), "#!/usr/bin/env bash\n");
+    writeFileSync(join(repoDir, "scripts", "plugin-littlebabyhub-publish.sh"), "#!/usr/bin/env bash\n");
     git(repoDir, ["add", "."]);
     git(repoDir, [
       "-c",
@@ -171,9 +171,9 @@ describe("collectClawHubVersionGateErrors", () => {
     ]);
     const headRef = git(repoDir, ["rev-parse", "HEAD"]);
 
-    const errors = collectClawHubVersionGateErrors({
+    const errors = collectLittleBabyHubVersionGateErrors({
       rootDir: repoDir,
-      plugins: collectClawHubPublishablePluginPackages(repoDir),
+      plugins: collectLittleBabyHubPublishablePluginPackages(repoDir),
       gitRange: { baseRef, headRef },
     });
 
@@ -181,7 +181,7 @@ describe("collectClawHubVersionGateErrors", () => {
   });
 });
 
-describe("resolveSelectedClawHubPublishablePluginPackages", () => {
+describe("resolveSelectedLittleBabyHubPublishablePluginPackages", () => {
   it("selects all publishable plugins when shared release tooling changes", () => {
     const repoDir = createTempPluginRepo({
       extraExtensionIds: ["demo-two"],
@@ -189,7 +189,7 @@ describe("resolveSelectedClawHubPublishablePluginPackages", () => {
     const baseRef = git(repoDir, ["rev-parse", "HEAD"]);
 
     mkdirSync(join(repoDir, "scripts"), { recursive: true });
-    writeFileSync(join(repoDir, "scripts", "plugin-clawhub-publish.sh"), "#!/usr/bin/env bash\n");
+    writeFileSync(join(repoDir, "scripts", "plugin-littlebabyhub-publish.sh"), "#!/usr/bin/env bash\n");
     git(repoDir, ["add", "."]);
     git(repoDir, [
       "-c",
@@ -202,9 +202,9 @@ describe("resolveSelectedClawHubPublishablePluginPackages", () => {
     ]);
     const headRef = git(repoDir, ["rev-parse", "HEAD"]);
 
-    const selected = resolveSelectedClawHubPublishablePluginPackages({
+    const selected = resolveSelectedLittleBabyHubPublishablePluginPackages({
       rootDir: repoDir,
-      plugins: collectClawHubPublishablePluginPackages(repoDir),
+      plugins: collectLittleBabyHubPublishablePluginPackages(repoDir),
       gitRange: { baseRef, headRef },
     });
 
@@ -234,9 +234,9 @@ describe("resolveSelectedClawHubPublishablePluginPackages", () => {
     ]);
     const headRef = git(repoDir, ["rev-parse", "HEAD"]);
 
-    const selected = resolveSelectedClawHubPublishablePluginPackages({
+    const selected = resolveSelectedLittleBabyHubPublishablePluginPackages({
       rootDir: repoDir,
-      plugins: collectClawHubPublishablePluginPackages(repoDir),
+      plugins: collectLittleBabyHubPublishablePluginPackages(repoDir),
       gitRange: { baseRef, headRef },
     });
 
@@ -244,15 +244,15 @@ describe("resolveSelectedClawHubPublishablePluginPackages", () => {
   });
 });
 
-describe("collectPluginClawHubReleasePlan", () => {
-  it("skips versions that already exist on ClawHub", async () => {
+describe("collectPluginLittleBabyHubReleasePlan", () => {
+  it("skips versions that already exist on LittleBabyHub", async () => {
     const repoDir = createTempPluginRepo();
 
-    const plan = await collectPluginClawHubReleasePlan({
+    const plan = await collectPluginLittleBabyHubReleasePlan({
       rootDir: repoDir,
       selection: ["@littlebaby/demo-plugin"],
       fetchImpl: async () => new Response("{}", { status: 200 }),
-      registryBaseUrl: "https://clawhub.ai",
+      registryBaseUrl: "https://littlebabyhub.ai",
     });
 
     expect(plan.candidates).toEqual([]);
@@ -264,13 +264,13 @@ describe("collectPluginClawHubReleasePlan", () => {
   });
 });
 
-describe("collectPluginClawHubReleasePathsFromGitRange", () => {
+describe("collectPluginLittleBabyHubReleasePathsFromGitRange", () => {
   it("rejects unsafe git refs", () => {
     const repoDir = createTempPluginRepo();
     const headRef = git(repoDir, ["rev-parse", "HEAD"]);
 
     expect(() =>
-      collectPluginClawHubReleasePathsFromGitRange({
+      collectPluginLittleBabyHubReleasePathsFromGitRange({
         rootDir: repoDir,
         gitRange: {
           baseRef: "--not-a-ref",
@@ -285,11 +285,11 @@ function createTempPluginRepo(
   options: {
     extensionId?: string;
     extraExtensionIds?: string[];
-    publishToClawHub?: boolean;
-    includeClawHubContract?: boolean;
+    publishToLittleBabyHub?: boolean;
+    includeLittleBabyHubContract?: boolean;
   } = {},
 ) {
-  const repoDir = makeTempRepoRoot(tempDirs, "littlebaby-clawhub-release-");
+  const repoDir = makeTempRepoRoot(tempDirs, "littlebaby-littlebabyhub-release-");
   const extensionId = options.extensionId ?? "demo-plugin";
   const extensionIds = [extensionId, ...(options.extraExtensionIds ?? [])];
 
@@ -308,7 +308,7 @@ function createTempPluginRepo(
           version: "2026.4.1",
           littlebaby: {
             extensions: ["./index.ts"],
-            ...(options.includeClawHubContract === false
+            ...(options.includeLittleBabyHubContract === false
               ? {}
               : {
                   compat: {
@@ -319,7 +319,7 @@ function createTempPluginRepo(
                   },
                 }),
             release: {
-              publishToClawHub: options.publishToClawHub ?? true,
+              publishToLittleBabyHub: options.publishToLittleBabyHub ?? true,
             },
           },
         },

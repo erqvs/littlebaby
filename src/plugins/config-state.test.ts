@@ -56,7 +56,7 @@ describe("normalizePluginsConfig", () => {
 
   it.each([
     [{}, undefined],
-    [{ slots: { contextEngine: "lossless-claw" } }, "lossless-claw"],
+    [{ slots: { contextEngine: "lossless-littlebaby" } }, "lossless-littlebaby"],
     [{ slots: { contextEngine: "none" } }, null],
     [{ slots: { contextEngine: "  cortex  " } }, "cortex"],
     [{ slots: { contextEngine: "" } }, undefined],
@@ -447,14 +447,14 @@ describe("resolveEffectivePluginActivationState", () => {
     const rawConfig = {
       plugins: {
         slots: {
-          contextEngine: "lossless-claw",
+          contextEngine: "lossless-littlebaby",
         },
       },
     };
 
     expect(
       resolveEffectivePluginActivationState({
-        id: "lossless-claw",
+        id: "lossless-littlebaby",
         origin: "workspace",
         config: normalizePluginsConfig(rawConfig.plugins),
         rootConfig: rawConfig,
@@ -564,11 +564,11 @@ describe("resolveEnableState", () => {
 
   it("keeps an explicitly selected workspace context engine enabled when omitted from plugins.allow", () => {
     expectNormalizedEnableState({
-      id: "lossless-claw",
+      id: "lossless-littlebaby",
       origin: "workspace",
       config: {
         allow: ["telegram"],
-        slots: { contextEngine: "lossless-claw" },
+        slots: { contextEngine: "lossless-littlebaby" },
       },
       expected: {
         enabled: true,

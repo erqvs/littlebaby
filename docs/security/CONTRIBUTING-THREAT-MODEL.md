@@ -19,7 +19,7 @@ Spotted an attack vector or risk we haven't covered? Open an issue on [littlebab
 **Helpful to include (but not required):**
 
 - The attack scenario and how it could be exploited
-- Which parts of LittleBaby are affected (CLI, gateway, channels, ClawHub, MCP servers, etc.)
+- Which parts of LittleBaby are affected (CLI, gateway, channels, LittleBabyHub, MCP servers, etc.)
 - How severe you think it is (low / medium / high / critical)
 - Any links to related research, CVEs, or real-world examples
 

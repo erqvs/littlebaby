@@ -840,7 +840,7 @@ install_littlebaby_npm() {
 }
 
 TAGLINES=()
-TAGLINES+=("Your terminal just grew claws—type something and let the bot pinch the busywork.")
+TAGLINES+=("Your terminal just grew littlebabys—type something and let the bot pinch the busywork.")
 TAGLINES+=("Welcome to the command line: where dreams compile and confidence segfaults.")
 TAGLINES+=("I run on caffeine, JSON5, and the audacity of \"it worked on my machine.\"")
 TAGLINES+=("Gateway online—please keep hands, feet, and appendages inside the shell at all times.")
@@ -857,7 +857,7 @@ TAGLINES+=("I can grep it, git blame it, and gently roast it—pick your coping 
 TAGLINES+=("Hot reload for config, cold sweat for deploys.")
 TAGLINES+=("I'm the assistant your terminal demanded, not the one your sleep schedule requested.")
 TAGLINES+=("I keep secrets like a vault... unless you print them in debug logs again.")
-TAGLINES+=("Automation with claws: minimal fuss, maximal pinch.")
+TAGLINES+=("Automation with littlebabys: minimal fuss, maximal pinch.")
 TAGLINES+=("I'm basically a Swiss Army knife, but with more opinions and fewer sharp edges.")
 TAGLINES+=("If you're lost, run doctor; if you're brave, run prod; if you're wise, run tests.")
 TAGLINES+=("Your task has been queued; your dignity has been deprecated.")
@@ -876,7 +876,7 @@ TAGLINES+=("If you can describe it, I can probably automate it—or at least mak
 TAGLINES+=("Your config is valid, your assumptions are not.")
 TAGLINES+=("I don't just autocomplete—I auto-commit (emotionally), then ask you to review (logically).")
 TAGLINES+=("Less clicking, more shipping, fewer \"where did that file go\" moments.")
-TAGLINES+=("Claws out, commit in—let's ship something mildly responsible.")
+TAGLINES+=("LittleBabys out, commit in—let's ship something mildly responsible.")
 TAGLINES+=("I'll butter your workflow like a lobster roll: messy, delicious, effective.")
 TAGLINES+=("Shell yeah—I'm here to pinch the toil and leave you the glory.")
 TAGLINES+=("If it's repetitive, I'll automate it; if it's hard, I'll bring jokes and a rollback plan.")
@@ -908,7 +908,7 @@ TAGLINES+=("Ah, the fruit tree company! 🍎")
 
 HOLIDAY_NEW_YEAR="New Year's Day: New year, new config—same old EADDRINUSE, but this time we resolve it like grown-ups."
 HOLIDAY_LUNAR_NEW_YEAR="Lunar New Year: May your builds be lucky, your branches prosperous, and your merge conflicts chased away with fireworks."
-HOLIDAY_CHRISTMAS="Christmas: Ho ho ho—Santa's little claw-sistant is here to ship joy, roll back chaos, and stash the keys safely."
+HOLIDAY_CHRISTMAS="Christmas: Ho ho ho—Santa's little littlebaby-sistant is here to ship joy, roll back chaos, and stash the keys safely."
 HOLIDAY_EID="Eid al-Fitr: Celebration mode: queues cleared, tasks completed, and good vibes committed to main with clean history."
 HOLIDAY_DIWALI="Diwali: Let the logs sparkle and the bugs flee—today we light up the terminal and ship with pride."
 HOLIDAY_EASTER="Easter: I found your missing environment variable—consider it a tiny CLI egg hunt with fewer jellybeans."
@@ -2421,7 +2421,7 @@ main() {
             "I've evolved. Try to keep up. 🦞"
             "New version, who dis? Oh right, still me but shinier."
             "Patched, polished, and ready to pinch. Let's go."
-            "The lobster has littlebabied. Harder shell, sharper claws."
+            "The lobster has littlebabied. Harder shell, sharper littlebabys."
             "Update done! Check the changelog or just trust me, it's good."
             "Reborn from the boiling waters of npm. Stronger now."
             "I went away and came back smarter. You should try it sometime."
@@ -2446,7 +2446,7 @@ main() {
             "Settled in. Time to automate your life whether you're ready or not."
             "Cozy. I've already read your calendar. We need to talk."
             "Finally unpacked. Now point me at your problems."
-            "cracks claws Alright, what are we building?"
+            "cracks littlebabys Alright, what are we building?"
             "The lobster has landed. Your terminal will never be the same."
             "All done! I promise to only judge your code a little bit."
         )

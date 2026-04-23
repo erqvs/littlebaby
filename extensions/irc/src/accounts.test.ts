@@ -89,7 +89,7 @@ describe("resolveIrcAccount", () => {
             accounts: {
               "Ops Team": {
                 host: "irc.example.com",
-                nick: "claw",
+                nick: "littlebaby",
               },
             },
           },
@@ -100,7 +100,7 @@ describe("resolveIrcAccount", () => {
 
     expect(account.accountId).toBe("ops-team");
     expect(account.host).toBe("irc.example.com");
-    expect(account.nick).toBe("claw");
+    expect(account.nick).toBe("littlebaby");
     expect(account.configured).toBe(true);
   });
 
@@ -114,7 +114,7 @@ describe("resolveIrcAccount", () => {
           channels: {
             irc: {
               host: "irc.example.com",
-              nick: "claw",
+              nick: "littlebaby",
             },
           },
         }),
@@ -141,7 +141,7 @@ describe("resolveIrcAccount", () => {
       channels: {
         irc: {
           host: "irc.example.com",
-          nick: "claw",
+          nick: "littlebaby",
           passwordFile: passwordLink,
         },
       },
@@ -159,7 +159,7 @@ describe("resolveIrcAccount", () => {
         channels: {
           irc: {
             host: "irc.example.com",
-            nick: "claw",
+            nick: "littlebaby",
             nickserv: {
               service: "NickServ",
             },
