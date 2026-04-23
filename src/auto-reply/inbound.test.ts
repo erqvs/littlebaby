@@ -763,7 +763,7 @@ describe("mention helpers", () => {
   });
 
   it("normalizes zero-width characters", () => {
-    expect(normalizeMentionText("open\u200bclaw")).toBe("littlebaby");
+    expect(normalizeMentionText("open\u200blittlebaby")).toBe("littlebaby");
   });
 
   it("matches patterns case-insensitively", () => {
