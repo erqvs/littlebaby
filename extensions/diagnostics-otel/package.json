@@ -19,7 +19,7 @@
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],

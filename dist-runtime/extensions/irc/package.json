@@ -3,14 +3,14 @@
   "version": "2026.4.20",
   "description": "OpenClaw IRC channel plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
     "install": {
       "minHostVersion": ">=2026.4.10"
     },
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "irc",
       "label": "IRC",

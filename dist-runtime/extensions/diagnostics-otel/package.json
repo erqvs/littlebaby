@@ -16,9 +16,9 @@
     "@opentelemetry/sdk-trace-base": "^2.7.0",
     "@opentelemetry/semantic-conventions": "^1.40.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
     "compat": {
       "pluginApi": ">=2026.4.20"

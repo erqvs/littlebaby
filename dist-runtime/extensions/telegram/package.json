@@ -9,11 +9,11 @@
     "@grammyjs/transformer-throttler": "^1.2.1",
     "grammy": "^1.42.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "setupFeatures": {
       "legacyStateMigrations": true
     },

@@ -7,11 +7,11 @@
     "@sinclair/typebox": "0.34.49",
     "ws": "^8.20.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "mattermost",
       "label": "Mattermost",

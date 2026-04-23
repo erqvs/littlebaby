@@ -4,9 +4,9 @@
   "private": true,
   "description": "OpenClaw ElevenLabs speech plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

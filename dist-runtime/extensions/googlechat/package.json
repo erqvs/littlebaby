@@ -7,11 +7,11 @@
   "dependencies": {
     "google-auth-library": "^10.6.2"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "googlechat",
       "label": "Google Chat",

@@ -9,11 +9,11 @@
     "@tloncorp/tlon-skill": "0.3.5",
     "@urbit/aura": "^3.0.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "tlon",
       "label": "Tlon",

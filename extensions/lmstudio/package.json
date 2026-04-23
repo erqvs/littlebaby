@@ -4,7 +4,7 @@
   "private": true,
   "description": "OpenClaw LM Studio provider plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

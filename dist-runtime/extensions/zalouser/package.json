@@ -7,11 +7,11 @@
     "@sinclair/typebox": "0.34.49",
     "zca-js": "2.1.2"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "zalouser",
       "label": "Zalo Personal",

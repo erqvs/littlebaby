@@ -9,11 +9,11 @@
     "silk-wasm": "^3.7.1",
     "ws": "^8.20.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "qqbot",
       "label": "QQ Bot",

@@ -4,9 +4,9 @@
   "private": true,
   "description": "OpenClaw core memory search plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

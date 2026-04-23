@@ -381,6 +381,8 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
           info?.kind === "final" && hasText && deliveredFinalTexts.has(text);
         const shouldDeliverText = hasText && !skipTextForDuplicateFinal;
 
+        params.runtime.log?.(`feishu: deliver kind=${info?.kind} hasText=${hasText} hasMedia=${hasMedia} shouldDeliver=${shouldDeliverText} text=${text?.slice(0, 80)}`);
+
         if (!shouldDeliverText && !hasMedia) {
           return;
         }
@@ -446,6 +448,42 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
                 });
               },
             });
+          } else if (info?.kind === "final") {
+            const lines = text.split(/\n/).filter((p: string) => p.trim());
+            if (lines.length > 1) {
+              for (const [idx, line] of lines.entries()) {
+                const isFirst = idx === 0;
+                if (idx > 0) {
+                  await new Promise((r) => setTimeout(r, 300 + Math.random() * 500));
+                }
+                await sendMessageFeishu({
+                  cfg,
+                  to: chatId,
+                  text: line.trim(),
+                  replyToMessageId: isFirst ? sendReplyToMessageId : undefined,
+                  replyInThread: effectiveReplyInThread,
+                  mentions: isFirst ? mentionTargets : undefined,
+                  accountId,
+                });
+              }
+            } else {
+              await sendChunkedTextReply({
+                text,
+                useCard: false,
+                infoKind: info?.kind,
+                sendChunk: async ({ chunk, isFirst }) => {
+                  await sendMessageFeishu({
+                    cfg,
+                    to: chatId,
+                    text: chunk,
+                    replyToMessageId: sendReplyToMessageId,
+                    replyInThread: effectiveReplyInThread,
+                    mentions: isFirst ? mentionTargets : undefined,
+                    accountId,
+                  });
+                },
+              });
+            }
           } else {
             await sendChunkedTextReply({
               text,

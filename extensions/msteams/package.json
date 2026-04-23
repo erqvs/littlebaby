@@ -15,17 +15,17 @@
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*",
     "@types/jsonwebtoken": "^9.0.10",
-    "littlebaby": "workspace:*"
+    "openclaw": "workspace:*"
   },
   "peerDependencies": {
-    "littlebaby": ">=2026.4.20"
+    "openclaw": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],

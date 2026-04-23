@@ -7,9 +7,9 @@
     "@clawdbot/lobster": "2026.4.6",
     "@sinclair/typebox": "0.34.49"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
     "compat": {
       "pluginApi": ">=2026.4.20"

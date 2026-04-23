@@ -3,11 +3,11 @@
   "version": "2026.4.20",
   "description": "OpenClaw BlueBubbles channel plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "bluebubbles",
       "label": "BlueBubbles",
