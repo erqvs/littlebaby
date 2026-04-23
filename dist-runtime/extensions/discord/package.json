@@ -14,11 +14,11 @@
   "optionalDependencies": {
     "@discordjs/opus": "^0.10.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "discord",
       "label": "Discord",

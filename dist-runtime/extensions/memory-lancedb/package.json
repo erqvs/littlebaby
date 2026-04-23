@@ -8,9 +8,9 @@
     "@sinclair/typebox": "0.34.49",
     "openai": "^6.34.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
     "install": {
       "npmSpec": "@openclaw/memory-lancedb",

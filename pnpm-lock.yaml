@@ -309,7 +309,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -466,7 +466,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
     optionalDependencies:
@@ -513,7 +513,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -554,7 +554,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -609,7 +609,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -671,7 +671,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -687,7 +687,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -702,7 +702,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -731,7 +731,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -799,7 +799,7 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -808,7 +808,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -821,7 +821,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -892,7 +892,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -908,7 +908,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -920,7 +920,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -948,7 +948,7 @@ importers:
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -1062,7 +1062,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -1127,7 +1127,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -1174,7 +1174,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -1205,7 +1205,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -1221,7 +1221,7 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      littlebaby:
+      openclaw:
         specifier: workspace:*
         version: link:../..
 

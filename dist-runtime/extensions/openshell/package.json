@@ -7,9 +7,9 @@
   "dependencies": {
     "openshell": "0.1.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

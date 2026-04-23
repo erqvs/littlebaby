@@ -12,7 +12,7 @@
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],
@@ -27,7 +27,7 @@
       "detailLabel": "Telegram Bot",
       "docsPath": "/channels/telegram",
       "docsLabel": "telegram",
-      "blurb": "simplest way to get started — register a bot with @BotFather and get going.",
+      "blurb": "simplest way to get started \u2014 register a bot with @BotFather and get going.",
       "systemImage": "paperplane",
       "selectionDocsPrefix": "",
       "selectionDocsOmitLabel": true,

@@ -12,7 +12,7 @@
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*"
   },
-  "littlebaby": {
+  "openclaw": {
     "bundle": {
       "stageRuntimeDependencies": true
     },

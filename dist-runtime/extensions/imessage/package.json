@@ -4,11 +4,11 @@
   "private": true,
   "description": "OpenClaw iMessage channel plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "imessage",
       "label": "iMessage",

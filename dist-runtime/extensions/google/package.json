@@ -7,12 +7,12 @@
   "dependencies": {
     "@google/genai": "^1.50.1"
   },
-  "littlebaby": {
+  "openclaw": {
     "bundle": {
       "stageRuntimeDependencies": true
     },
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

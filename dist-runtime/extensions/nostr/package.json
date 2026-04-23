@@ -6,11 +6,11 @@
   "dependencies": {
     "nostr-tools": "^2.23.3"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "nostr",
       "label": "Nostr",

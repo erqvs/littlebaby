@@ -6,9 +6,9 @@
   "dependencies": {
     "acpx": "0.5.3"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

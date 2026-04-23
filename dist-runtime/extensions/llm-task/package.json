@@ -8,9 +8,9 @@
     "@sinclair/typebox": "0.34.49",
     "ajv": "^8.18.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

@@ -7,12 +7,12 @@
   "dependencies": {
     "@aws/bedrock-token-generator": "^1.1.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "bundle": {
       "stageRuntimeDependencies": true
     },
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

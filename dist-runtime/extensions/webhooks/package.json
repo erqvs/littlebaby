@@ -7,12 +7,12 @@
   "dependencies": {
     "zod": "^4.3.6"
   },
-  "littlebaby": {
+  "openclaw": {
     "bundle": {
       "stageRuntimeDependencies": true
     },
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

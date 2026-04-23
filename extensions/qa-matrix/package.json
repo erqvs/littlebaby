@@ -7,17 +7,17 @@
   "devDependencies": {
     "@openclaw/matrix": "workspace:*",
     "@openclaw/plugin-sdk": "workspace:*",
-    "littlebaby": "workspace:*"
+    "openclaw": "workspace:*"
   },
   "peerDependencies": {
-    "littlebaby": ">=2026.4.20"
+    "openclaw": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],
