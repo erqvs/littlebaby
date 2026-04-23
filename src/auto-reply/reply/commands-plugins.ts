@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import { buildNpmInstallRecordFields } from "../../cli/npm-resolution.js";
 import {
-  buildPreferredClawHubSpec,
+  buildPreferredLittleBabyHubSpec,
   createPluginInstallLogger,
-  decidePreferredClawHubFallback,
+  decidePreferredLittleBabyHubFallback,
   resolveFileNpmSpecToLocalPath,
 } from "../../cli/plugins-command-helpers.js";
 import { persistPluginInstall } from "../../cli/plugins-install-persist.js";
@@ -15,8 +15,8 @@ import {
 import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import { resolveArchiveKind } from "../../infra/archive.js";
-import { parseClawHubPluginSpec } from "../../infra/clawhub.js";
-import { installPluginFromClawHub } from "../../plugins/clawhub.js";
+import { parseLittleBabyHubPluginSpec } from "../../infra/littlebabyhub.js";
+import { installPluginFromLittleBabyHub } from "../../plugins/littlebabyhub.js";
 import { installPluginFromNpmSpec, installPluginFromPath } from "../../plugins/install.js";
 import { clearPluginManifestRegistryCache } from "../../plugins/manifest-registry.js";
 import type { PluginRecord } from "../../plugins/registry.js";
@@ -194,9 +194,9 @@ async function installPluginFromPluginsCommand(params: {
     return { ok: false, error: `Path not found: ${resolved}` };
   }
 
-  const clawhubSpec = parseClawHubPluginSpec(params.raw);
-  if (clawhubSpec) {
-    const result = await installPluginFromClawHub({
+  const littlebabyhubSpec = parseLittleBabyHubPluginSpec(params.raw);
+  if (littlebabyhubSpec) {
+    const result = await installPluginFromLittleBabyHub({
       spec: params.raw,
       logger: createPluginInstallLogger(),
     });
@@ -208,49 +208,49 @@ async function installPluginFromPluginsCommand(params: {
       config: params.config,
       pluginId: result.pluginId,
       install: {
-        source: "clawhub",
+        source: "littlebabyhub",
         spec: params.raw,
         installPath: result.targetDir,
         version: result.version,
-        integrity: result.clawhub.integrity,
-        resolvedAt: result.clawhub.resolvedAt,
-        clawhubUrl: result.clawhub.clawhubUrl,
-        clawhubPackage: result.clawhub.clawhubPackage,
-        clawhubFamily: result.clawhub.clawhubFamily,
-        clawhubChannel: result.clawhub.clawhubChannel,
+        integrity: result.littlebabyhub.integrity,
+        resolvedAt: result.littlebabyhub.resolvedAt,
+        littlebabyhubUrl: result.littlebabyhub.littlebabyhubUrl,
+        littlebabyhubPackage: result.littlebabyhub.littlebabyhubPackage,
+        littlebabyhubFamily: result.littlebabyhub.littlebabyhubFamily,
+        littlebabyhubChannel: result.littlebabyhub.littlebabyhubChannel,
       },
     });
     return { ok: true, pluginId: result.pluginId };
   }
 
-  const preferredClawHubSpec = buildPreferredClawHubSpec(params.raw);
-  if (preferredClawHubSpec) {
-    const clawhubResult = await installPluginFromClawHub({
-      spec: preferredClawHubSpec,
+  const preferredLittleBabyHubSpec = buildPreferredLittleBabyHubSpec(params.raw);
+  if (preferredLittleBabyHubSpec) {
+    const littlebabyhubResult = await installPluginFromLittleBabyHub({
+      spec: preferredLittleBabyHubSpec,
       logger: createPluginInstallLogger(),
     });
-    if (clawhubResult.ok) {
+    if (littlebabyhubResult.ok) {
       clearPluginManifestRegistryCache();
       await persistPluginInstall({
         config: params.config,
-        pluginId: clawhubResult.pluginId,
+        pluginId: littlebabyhubResult.pluginId,
         install: {
-          source: "clawhub",
-          spec: preferredClawHubSpec,
-          installPath: clawhubResult.targetDir,
-          version: clawhubResult.version,
-          integrity: clawhubResult.clawhub.integrity,
-          resolvedAt: clawhubResult.clawhub.resolvedAt,
-          clawhubUrl: clawhubResult.clawhub.clawhubUrl,
-          clawhubPackage: clawhubResult.clawhub.clawhubPackage,
-          clawhubFamily: clawhubResult.clawhub.clawhubFamily,
-          clawhubChannel: clawhubResult.clawhub.clawhubChannel,
+          source: "littlebabyhub",
+          spec: preferredLittleBabyHubSpec,
+          installPath: littlebabyhubResult.targetDir,
+          version: littlebabyhubResult.version,
+          integrity: littlebabyhubResult.littlebabyhub.integrity,
+          resolvedAt: littlebabyhubResult.littlebabyhub.resolvedAt,
+          littlebabyhubUrl: littlebabyhubResult.littlebabyhub.littlebabyhubUrl,
+          littlebabyhubPackage: littlebabyhubResult.littlebabyhub.littlebabyhubPackage,
+          littlebabyhubFamily: littlebabyhubResult.littlebabyhub.littlebabyhubFamily,
+          littlebabyhubChannel: littlebabyhubResult.littlebabyhub.littlebabyhubChannel,
         },
       });
-      return { ok: true, pluginId: clawhubResult.pluginId };
+      return { ok: true, pluginId: littlebabyhubResult.pluginId };
     }
-    if (decidePreferredClawHubFallback(clawhubResult) !== "fallback_to_npm") {
-      return { ok: false, error: clawhubResult.error };
+    if (decidePreferredLittleBabyHubFallback(littlebabyhubResult) !== "fallback_to_npm") {
+      return { ok: false, error: littlebabyhubResult.error };
     }
   }
 

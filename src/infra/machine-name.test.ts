@@ -46,8 +46,8 @@ describe("getMachineDisplayName", () => {
     {
       name: "uses the hostname fallback in test mode and strips a trimmed .local suffix",
       scope: "test-fallback",
-      hostname: "  clawbox.LOCAL  ",
-      expected: "clawbox",
+      hostname: "  littlebabybox.LOCAL  ",
+      expected: "littlebabybox",
       expectedCalls: 1,
       repeatLookup: true,
     },

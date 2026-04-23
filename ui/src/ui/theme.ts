@@ -1,4 +1,4 @@
-export type ThemeName = "claw" | "knot" | "dash";
+export type ThemeName = "littlebaby" | "knot" | "dash";
 export type ThemeMode = "system" | "light" | "dark";
 export type ResolvedTheme =
   | "dark"
@@ -8,23 +8,23 @@ export type ResolvedTheme =
   | "dash"
   | "dash-light";
 
-export const VALID_THEME_NAMES = new Set<ThemeName>(["claw", "knot", "dash"]);
+export const VALID_THEME_NAMES = new Set<ThemeName>(["littlebaby", "knot", "dash"]);
 export const VALID_THEME_MODES = new Set<ThemeMode>(["system", "light", "dark"]);
 
 type ThemeSelection = { theme: ThemeName; mode: ThemeMode };
 
 const LEGACY_MAP: Record<string, ThemeSelection> = {
-  defaultTheme: { theme: "claw", mode: "dark" },
-  docsTheme: { theme: "claw", mode: "light" },
+  defaultTheme: { theme: "littlebaby", mode: "dark" },
+  docsTheme: { theme: "littlebaby", mode: "light" },
   lightTheme: { theme: "knot", mode: "dark" },
   landingTheme: { theme: "knot", mode: "dark" },
   newTheme: { theme: "knot", mode: "dark" },
-  dark: { theme: "claw", mode: "dark" },
-  light: { theme: "claw", mode: "light" },
+  dark: { theme: "littlebaby", mode: "dark" },
+  light: { theme: "littlebaby", mode: "light" },
   openknot: { theme: "knot", mode: "dark" },
   fieldmanual: { theme: "dash", mode: "dark" },
   littlebabyash: { theme: "dash", mode: "light" },
-  system: { theme: "claw", mode: "system" },
+  system: { theme: "littlebaby", mode: "system" },
 };
 
 export function prefersLightScheme(): boolean {
@@ -47,7 +47,7 @@ export function parseThemeSelection(
 
   const normalizedTheme = VALID_THEME_NAMES.has(theme as ThemeName)
     ? (theme as ThemeName)
-    : (LEGACY_MAP[theme]?.theme ?? "claw");
+    : (LEGACY_MAP[theme]?.theme ?? "littlebaby");
   const normalizedMode = VALID_THEME_MODES.has(mode as ThemeMode)
     ? (mode as ThemeMode)
     : (LEGACY_MAP[theme]?.mode ?? "system");
@@ -64,7 +64,7 @@ function resolveMode(mode: ThemeMode): "light" | "dark" {
 
 export function resolveTheme(theme: ThemeName, mode: ThemeMode): ResolvedTheme {
   const resolvedMode = resolveMode(mode);
-  if (theme === "claw") {
+  if (theme === "littlebaby") {
     return resolvedMode === "light" ? "light" : "dark";
   }
   if (theme === "knot") {

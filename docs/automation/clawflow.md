@@ -1,8 +1,8 @@
 ---
 summary: "Redirect to Task Flow"
-title: "ClawFlow"
+title: "LittleBabyFlow"
 ---
 
-# ClawFlow
+# LittleBabyFlow
 
-ClawFlow was renamed to [Task Flow](/automation/taskflow). See [Task Flow](/automation/taskflow) for the current documentation.
+LittleBabyFlow was renamed to [Task Flow](/automation/taskflow). See [Task Flow](/automation/taskflow) for the current documentation.

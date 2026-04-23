@@ -5,17 +5,17 @@ import {
 } from "../../agents/agent-scope.js";
 import { canExecRequestNode } from "../../agents/exec-defaults.js";
 import {
-  installSkillFromClawHub,
-  searchSkillsFromClawHub,
-  updateSkillsFromClawHub,
-} from "../../agents/skills-clawhub.js";
+  installSkillFromLittleBabyHub,
+  searchSkillsFromLittleBabyHub,
+  updateSkillsFromLittleBabyHub,
+} from "../../agents/skills-littlebabyhub.js";
 import { installSkill } from "../../agents/skills-install.js";
 import { buildWorkspaceSkillStatus } from "../../agents/skills-status.js";
 import { loadWorkspaceSkillEntries, type SkillEntry } from "../../agents/skills.js";
 import { listAgentWorkspaceDirs } from "../../agents/workspace-dirs.js";
 import { loadConfig, writeConfigFile } from "../../config/config.js";
 import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
-import { fetchClawHubSkillDetail } from "../../infra/clawhub.js";
+import { fetchLittleBabyHubSkillDetail } from "../../infra/littlebabyhub.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { getRemoteSkillEligibility } from "../../infra/skills-remote.js";
 import { normalizeAgentId } from "../../routing/session-key.js";
@@ -142,7 +142,7 @@ export const skillsHandlers: GatewayRequestHandlers = {
       return;
     }
     try {
-      const results = await searchSkillsFromClawHub({
+      const results = await searchSkillsFromLittleBabyHub({
         query: (params as { query?: string }).query,
         limit: (params as { limit?: number }).limit,
       });
@@ -164,7 +164,7 @@ export const skillsHandlers: GatewayRequestHandlers = {
       return;
     }
     try {
-      const detail = await fetchClawHubSkillDetail({
+      const detail = await fetchLittleBabyHubSkillDetail({
         slug: (params as { slug: string }).slug,
       });
       respond(true, detail, undefined);
@@ -186,14 +186,14 @@ export const skillsHandlers: GatewayRequestHandlers = {
     }
     const cfg = loadConfig();
     const workspaceDirRaw = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
-    if (params && typeof params === "object" && "source" in params && params.source === "clawhub") {
+    if (params && typeof params === "object" && "source" in params && params.source === "littlebabyhub") {
       const p = params as {
-        source: "clawhub";
+        source: "littlebabyhub";
         slug: string;
         version?: string;
         force?: boolean;
       };
-      const result = await installSkillFromClawHub({
+      const result = await installSkillFromLittleBabyHub({
         workspaceDir: workspaceDirRaw,
         slug: p.slug,
         version: p.version,
@@ -249,9 +249,9 @@ export const skillsHandlers: GatewayRequestHandlers = {
       );
       return;
     }
-    if (params && typeof params === "object" && "source" in params && params.source === "clawhub") {
+    if (params && typeof params === "object" && "source" in params && params.source === "littlebabyhub") {
       const p = params as {
-        source: "clawhub";
+        source: "littlebabyhub";
         slug?: string;
         all?: boolean;
       };
@@ -259,7 +259,7 @@ export const skillsHandlers: GatewayRequestHandlers = {
         respond(
           false,
           undefined,
-          errorShape(ErrorCodes.INVALID_REQUEST, 'clawhub skills.update requires "slug" or "all"'),
+          errorShape(ErrorCodes.INVALID_REQUEST, 'littlebabyhub skills.update requires "slug" or "all"'),
         );
         return;
       }
@@ -269,14 +269,14 @@ export const skillsHandlers: GatewayRequestHandlers = {
           undefined,
           errorShape(
             ErrorCodes.INVALID_REQUEST,
-            'clawhub skills.update accepts either "slug" or "all", not both',
+            'littlebabyhub skills.update accepts either "slug" or "all", not both',
           ),
         );
         return;
       }
       const cfg = loadConfig();
       const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
-      const results = await updateSkillsFromClawHub({
+      const results = await updateSkillsFromLittleBabyHub({
         workspaceDir,
         slug: p.slug,
       });
@@ -287,7 +287,7 @@ export const skillsHandlers: GatewayRequestHandlers = {
           ok: errors.length === 0,
           skillKey: p.slug ?? "*",
           config: {
-            source: "clawhub",
+            source: "littlebabyhub",
             results,
           },
         },

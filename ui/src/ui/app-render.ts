@@ -106,14 +106,14 @@ import {
   toggleSessionCompactionCheckpoints,
 } from "./controllers/sessions.ts";
 import {
-  closeClawHubDetail,
-  installFromClawHub,
+  closeLittleBabyHubDetail,
+  installFromLittleBabyHub,
   installSkill,
-  loadClawHubDetail,
+  loadLittleBabyHubDetail,
   loadSkills,
   saveSkillApiKey,
-  searchClawHub,
-  setClawHubSearchQuery,
+  searchLittleBabyHub,
+  setLittleBabyHubSearchQuery,
   updateSkillEdit,
   updateSkillEnabled,
 } from "./controllers/skills.ts";
@@ -206,7 +206,7 @@ function resolveDreamingNextCycle(
   return formatDreamNextCycle(nextRunAtMs);
 }
 
-let clawhubSearchTimer: ReturnType<typeof setTimeout> | null = null;
+let littlebabyhubSearchTimer: ReturnType<typeof setTimeout> | null = null;
 function lazyRender<M>(getter: () => M | null, render: (mod: M) => unknown) {
   const mod = getter();
   return mod ? render(mod) : nothing;
@@ -2081,16 +2081,16 @@ export function renderApp(state: AppViewState) {
                 messages: state.skillMessages,
                 busyKey: state.skillsBusyKey,
                 detailKey: state.skillsDetailKey,
-                clawhubQuery: state.clawhubSearchQuery,
-                clawhubResults: state.clawhubSearchResults,
-                clawhubSearchLoading: state.clawhubSearchLoading,
-                clawhubSearchError: state.clawhubSearchError,
-                clawhubDetail: state.clawhubDetail,
-                clawhubDetailSlug: state.clawhubDetailSlug,
-                clawhubDetailLoading: state.clawhubDetailLoading,
-                clawhubDetailError: state.clawhubDetailError,
-                clawhubInstallSlug: state.clawhubInstallSlug,
-                clawhubInstallMessage: state.clawhubInstallMessage,
+                littlebabyhubQuery: state.littlebabyhubSearchQuery,
+                littlebabyhubResults: state.littlebabyhubSearchResults,
+                littlebabyhubSearchLoading: state.littlebabyhubSearchLoading,
+                littlebabyhubSearchError: state.littlebabyhubSearchError,
+                littlebabyhubDetail: state.littlebabyhubDetail,
+                littlebabyhubDetailSlug: state.littlebabyhubDetailSlug,
+                littlebabyhubDetailLoading: state.littlebabyhubDetailLoading,
+                littlebabyhubDetailError: state.littlebabyhubDetailError,
+                littlebabyhubInstallSlug: state.littlebabyhubInstallSlug,
+                littlebabyhubInstallMessage: state.littlebabyhubInstallMessage,
                 onFilterChange: (next) => (state.skillsFilter = next),
                 onStatusFilterChange: (next) => (state.skillsStatusFilter = next),
                 onRefresh: () => loadSkills(state, { clearMessages: true }),
@@ -2101,16 +2101,16 @@ export function renderApp(state: AppViewState) {
                   installSkill(state, skillKey, name, installId),
                 onDetailOpen: (key) => (state.skillsDetailKey = key),
                 onDetailClose: () => (state.skillsDetailKey = null),
-                onClawHubQueryChange: (query) => {
-                  setClawHubSearchQuery(state, query);
-                  if (clawhubSearchTimer) {
-                    clearTimeout(clawhubSearchTimer);
+                onLittleBabyHubQueryChange: (query) => {
+                  setLittleBabyHubSearchQuery(state, query);
+                  if (littlebabyhubSearchTimer) {
+                    clearTimeout(littlebabyhubSearchTimer);
                   }
-                  clawhubSearchTimer = setTimeout(() => searchClawHub(state, query), 300);
+                  littlebabyhubSearchTimer = setTimeout(() => searchLittleBabyHub(state, query), 300);
                 },
-                onClawHubDetailOpen: (slug) => loadClawHubDetail(state, slug),
-                onClawHubDetailClose: () => closeClawHubDetail(state),
-                onClawHubInstall: (slug) => installFromClawHub(state, slug),
+                onLittleBabyHubDetailOpen: (slug) => loadLittleBabyHubDetail(state, slug),
+                onLittleBabyHubDetailClose: () => closeLittleBabyHubDetail(state),
+                onLittleBabyHubInstall: (slug) => installFromLittleBabyHub(state, slug),
               }),
             )
           : nothing}

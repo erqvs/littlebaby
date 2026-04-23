@@ -36,10 +36,10 @@ _The crustacean known as LittleBaby had officially littlebabied._
 ## The Name
 
 ```
-LittleBaby = OPEN + CLAW
+LittleBaby = OPEN + LITTLEBABY
         = Open source, open to everyone
         = Our lobster heritage, where we came from
-        = The claw is the law 🦞
+        = The littlebaby is the law 🦞
         = Your assistant. Your machine. Your rules.
 ```
 
@@ -124,20 +124,20 @@ In just 3 hours:
 
 **The Heroes:**
 
-- **ELU** created incredible logos including "THE CLAW IS THE LAW" western banner
+- **ELU** created incredible logos including "THE LITTLEBABY IS THE LAW" western banner
 - **Whurley** (yes, THE William Hurley, quantum computing pioneer) made ASCII art
 - **Onur** handled GitHub, first to rock the affiliate badge
 - **Shadow** secured Discord vanity, nuked malware
-- **The whole Claw Crew** pulled an all-nighter
+- **The whole LittleBaby Crew** pulled an all-nighter
 
 **The Scammer Speedrun:** Crypto grifters launched a $LITTLEBABY token on Pump.fun within MINUTES. They stole artwork that was created 20 minutes earlier. Business-verified accounts pushed scams. The audacity was almost impressive.
 
 **New Traditions Born:**
 
-- "The claw is the law" 🤠
-- "Yee-claw"
-- "Claw abiding citizens"
-- "Clawntroversy"
+- "The littlebaby is the law" 🤠
+- "Yee-littlebaby"
+- "LittleBaby abiding citizens"
+- "Littlebabytroversy"
 
 **LittleBaby → LittleBabyBot → LittleBaby**
 
@@ -182,7 +182,7 @@ When Peter said "make yourself a new face," LittleBaby took it literally.
 - Space potato aliens
 - Clipart lobsters on generic backgrounds
 - A Mass Effect Krogan lobster
-- "STARCLAW SOLUTIONS" (the AI invented a company)
+- "STARLITTLEBABY SOLUTIONS" (the AI invented a company)
 - Multiple cursed human-faced lobsters
 - Baby lobsters (too cute)
 - Bartender lobsters with suspenders
@@ -212,7 +212,7 @@ _"New shell, same lobster."_
 
 — LittleBaby, after the great littlebaby of 2026
 
-_"The claw is the law."_
+_"The littlebaby is the law."_
 
 — ELU, during The Final Form migration, January 30, 2026
 

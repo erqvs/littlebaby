@@ -10,7 +10,7 @@ function appBundledPluginRoot(pluginId: string): string {
 
 const installPluginFromNpmSpecMock = vi.fn();
 const installPluginFromMarketplaceMock = vi.fn();
-const installPluginFromClawHubMock = vi.fn();
+const installPluginFromLittleBabyHubMock = vi.fn();
 const resolveBundledPluginSourcesMock = vi.fn();
 
 vi.mock("./install.js", () => ({
@@ -25,8 +25,8 @@ vi.mock("./marketplace.js", () => ({
   installPluginFromMarketplace: (...args: unknown[]) => installPluginFromMarketplaceMock(...args),
 }));
 
-vi.mock("./clawhub.js", () => ({
-  installPluginFromClawHub: (...args: unknown[]) => installPluginFromClawHubMock(...args),
+vi.mock("./littlebabyhub.js", () => ({
+  installPluginFromLittleBabyHub: (...args: unknown[]) => installPluginFromLittleBabyHubMock(...args),
 }));
 
 vi.mock("./bundled-sources.js", () => ({
@@ -101,25 +101,25 @@ function createMarketplaceInstallConfig(params: {
   };
 }
 
-function createClawHubInstallConfig(params: {
+function createLittleBabyHubInstallConfig(params: {
   pluginId: string;
   installPath: string;
-  clawhubUrl: string;
-  clawhubPackage: string;
-  clawhubFamily: "bundle-plugin" | "code-plugin";
-  clawhubChannel: "community" | "official" | "private";
+  littlebabyhubUrl: string;
+  littlebabyhubPackage: string;
+  littlebabyhubFamily: "bundle-plugin" | "code-plugin";
+  littlebabyhubChannel: "community" | "official" | "private";
 }): LittleBabyConfig {
   return {
     plugins: {
       installs: {
         [params.pluginId]: {
-          source: "clawhub" as const,
-          spec: `clawhub:${params.clawhubPackage}`,
+          source: "littlebabyhub" as const,
+          spec: `littlebabyhub:${params.littlebabyhubPackage}`,
           installPath: params.installPath,
-          clawhubUrl: params.clawhubUrl,
-          clawhubPackage: params.clawhubPackage,
-          clawhubFamily: params.clawhubFamily,
-          clawhubChannel: params.clawhubChannel,
+          littlebabyhubUrl: params.littlebabyhubUrl,
+          littlebabyhubPackage: params.littlebabyhubPackage,
+          littlebabyhubFamily: params.littlebabyhubFamily,
+          littlebabyhubChannel: params.littlebabyhubChannel,
         },
       },
     },
@@ -229,7 +229,7 @@ describe("updateNpmInstalledPlugins", () => {
   beforeEach(() => {
     installPluginFromNpmSpecMock.mockReset();
     installPluginFromMarketplaceMock.mockReset();
-    installPluginFromClawHubMock.mockReset();
+    installPluginFromLittleBabyHubMock.mockReset();
     resolveBundledPluginSourcesMock.mockReset();
   });
 
@@ -426,51 +426,51 @@ describe("updateNpmInstalledPlugins", () => {
     },
   );
 
-  it("updates ClawHub-installed plugins via recorded package metadata", async () => {
-    installPluginFromClawHubMock.mockResolvedValue({
+  it("updates LittleBabyHub-installed plugins via recorded package metadata", async () => {
+    installPluginFromLittleBabyHubMock.mockResolvedValue({
       ok: true,
       pluginId: "demo",
       targetDir: "/tmp/demo",
       version: "1.2.4",
-      clawhub: {
-        source: "clawhub",
-        clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "demo",
-        clawhubFamily: "code-plugin",
-        clawhubChannel: "official",
+      littlebabyhub: {
+        source: "littlebabyhub",
+        littlebabyhubUrl: "https://littlebabyhub.ai",
+        littlebabyhubPackage: "demo",
+        littlebabyhubFamily: "code-plugin",
+        littlebabyhubChannel: "official",
         integrity: "sha256-next",
         resolvedAt: "2026-03-22T00:00:00.000Z",
       },
     });
 
     const result = await updateNpmInstalledPlugins({
-      config: createClawHubInstallConfig({
+      config: createLittleBabyHubInstallConfig({
         pluginId: "demo",
         installPath: "/tmp/demo",
-        clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "demo",
-        clawhubFamily: "code-plugin",
-        clawhubChannel: "official",
+        littlebabyhubUrl: "https://littlebabyhub.ai",
+        littlebabyhubPackage: "demo",
+        littlebabyhubFamily: "code-plugin",
+        littlebabyhubChannel: "official",
       }),
       pluginIds: ["demo"],
     });
 
-    expect(installPluginFromClawHubMock).toHaveBeenCalledWith(
+    expect(installPluginFromLittleBabyHubMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:demo",
-        baseUrl: "https://clawhub.ai",
+        spec: "littlebabyhub:demo",
+        baseUrl: "https://littlebabyhub.ai",
         expectedPluginId: "demo",
         mode: "update",
       }),
     );
     expect(result.config.plugins?.installs?.demo).toMatchObject({
-      source: "clawhub",
-      spec: "clawhub:demo",
+      source: "littlebabyhub",
+      spec: "littlebabyhub:demo",
       installPath: "/tmp/demo",
       version: "1.2.4",
-      clawhubPackage: "demo",
-      clawhubFamily: "code-plugin",
-      clawhubChannel: "official",
+      littlebabyhubPackage: "demo",
+      littlebabyhubFamily: "code-plugin",
+      littlebabyhubChannel: "official",
       integrity: "sha256-next",
     });
   });

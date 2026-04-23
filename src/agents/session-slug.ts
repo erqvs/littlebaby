@@ -53,7 +53,7 @@ const SLUG_NOUNS = [
   "breeze",
   "canyon",
   "cedar",
-  "claw",
+  "littlebaby",
   "cloud",
   "comet",
   "coral",

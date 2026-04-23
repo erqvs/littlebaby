@@ -5,11 +5,11 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 const API_BASE_URL =
-  process.env.TERMINAL_CLAW_API_BASE_URL?.trim() || "http://127.0.0.1:3000/api/ai";
-const API_KEY = process.env.TERMINAL_CLAW_API_KEY?.trim();
+  process.env.TERMINAL_LITTLEBABY_API_BASE_URL?.trim() || "http://127.0.0.1:3000/api/ai";
+const API_KEY = process.env.TERMINAL_LITTLEBABY_API_KEY?.trim();
 
 if (!API_KEY) {
-  throw new Error("TERMINAL_CLAW_API_KEY is required.");
+  throw new Error("TERMINAL_LITTLEBABY_API_KEY is required.");
 }
 
 const dateString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
@@ -93,7 +93,7 @@ function normalizeDigestRecordPayload(payload) {
     digest_type: payload.digest_type,
     message: payload.message || "简报历史已记录",
     note:
-      "These items have now been written to digest history. Treat this as a write confirmation only. Do not use this response to judge whether the items were duplicates before sending; use terminal_claw_check_digest_history for freshness decisions.",
+      "These items have now been written to digest history. Treat this as a write confirmation only. Do not use this response to judge whether the items were duplicates before sending; use terminal_littlebaby_check_digest_history for freshness decisions.",
     items_recorded: payload.items.length,
     items: payload.items.map((item) => ({
       index: item?.index,
@@ -189,13 +189,13 @@ const server = new McpServer({
 });
 
 server.tool(
-  "terminal_claw_context",
+  "terminal_littlebaby_context",
   "Read finance context including categories, accounts, and today's date from terminal-claw.",
   async () => callApi("/context"),
 );
 
 server.tool(
-  "terminal_claw_recent_transactions",
+  "terminal_littlebaby_recent_transactions",
   "Read recent transactions from terminal-claw for a recent time window.",
   {
     limit: z.number().int().min(1).max(100).optional(),
@@ -208,13 +208,13 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_balance",
+  "terminal_littlebaby_balance",
   "Read all account balances and net worth summary from terminal-claw.",
   async () => callApi("/balance"),
 );
 
 server.tool(
-  "terminal_claw_course_info",
+  "terminal_littlebaby_course_info",
   "Read course information for a date/time from terminal-claw. day_of_week uses monday=0, and each returned course also includes weekday_name plus weekday_label for clarity. Use current for the class happening right now, next for the next upcoming class block, today for all classes today, and remaining for the classes still left today including the current class if one is in progress. For requests like '我现在还有课吗' or '今天后面还有课吗', prefer remaining. owner defaults to 'me' (his schedule); use 'partner' for her schedule.",
   {
     date: dateString.optional(),
@@ -242,7 +242,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_create_transaction",
+  "terminal_littlebaby_create_transaction",
   "Create a new transaction in terminal-claw and update the linked account balance.",
   {
     amount: z.number().positive(),
@@ -260,7 +260,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_transactions",
+  "terminal_littlebaby_transactions",
   "List transactions from terminal-claw with optional filters and summary totals.",
   {
     start_date: dateString.optional(),
@@ -278,7 +278,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_update_transaction",
+  "terminal_littlebaby_update_transaction",
   "Update an existing transaction in terminal-claw and reconcile account balances.",
   {
     id: positiveInt,
@@ -296,7 +296,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_delete_transaction",
+  "terminal_littlebaby_delete_transaction",
   "Delete a transaction from terminal-claw and restore the affected account balance.",
   {
     id: positiveInt,
@@ -308,7 +308,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_sync_balance",
+  "terminal_littlebaby_sync_balance",
   "Set balances for one or more accounts directly in terminal-claw without creating transactions.",
   {
     accounts: z
@@ -329,7 +329,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_create_account",
+  "terminal_littlebaby_create_account",
   "Create a new account in terminal-claw.",
   {
     name: z.string().min(1),
@@ -347,7 +347,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_update_account",
+  "terminal_littlebaby_update_account",
   "Update an existing account in terminal-claw.",
   {
     id: positiveInt,
@@ -366,7 +366,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_delete_account",
+  "terminal_littlebaby_delete_account",
   "Delete an account from terminal-claw.",
   {
     id: positiveInt,
@@ -378,7 +378,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_categories",
+  "terminal_littlebaby_categories",
   "List categories from terminal-claw. Supports ordinary categories and group categories.",
   {
     type: financeType.optional(),
@@ -392,7 +392,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_create_category",
+  "terminal_littlebaby_create_category",
   "Create a new category in terminal-claw. Use kind=group with member_ids to create a grouped category.",
   {
     name: z.string().min(1),
@@ -409,7 +409,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_update_category",
+  "terminal_littlebaby_update_category",
   "Update an existing category in terminal-claw. Group categories may update member_ids.",
   {
     id: positiveInt,
@@ -426,7 +426,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_delete_category",
+  "terminal_littlebaby_delete_category",
   "Delete a category from terminal-claw.",
   {
     id: positiveInt,
@@ -438,7 +438,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_budgets",
+  "terminal_littlebaby_budgets",
   "List monthly budgets from terminal-claw for a given year and month. Defaults to the current month when omitted.",
   {
     year: yearInt.optional(),
@@ -451,7 +451,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_create_budget",
+  "terminal_littlebaby_create_budget",
   "Create a new monthly budget in terminal-claw.",
   {
     category_id: positiveInt,
@@ -470,7 +470,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_update_budget",
+  "terminal_littlebaby_update_budget",
   "Update an existing monthly budget in terminal-claw.",
   {
     id: positiveInt,
@@ -490,7 +490,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_delete_budget",
+  "terminal_littlebaby_delete_budget",
   "Delete a monthly budget from terminal-claw.",
   {
     id: positiveInt,
@@ -502,13 +502,13 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_goals",
+  "terminal_littlebaby_goals",
   "List all goals from terminal-claw.",
   async () => callApi("/goals"),
 );
 
 server.tool(
-  "terminal_claw_reorder_goals",
+  "terminal_littlebaby_reorder_goals",
   "Reorder all goals in terminal-claw. goal_ids must include every goal exactly once in the desired order.",
   {
     goal_ids: z.array(positiveInt).min(1),
@@ -521,7 +521,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_create_goal",
+  "terminal_littlebaby_create_goal",
   "Create a new goal in terminal-claw.",
   {
     name: z.string().min(1),
@@ -539,7 +539,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_update_goal",
+  "terminal_littlebaby_update_goal",
   "Update an existing goal in terminal-claw.",
   {
     id: positiveInt,
@@ -558,7 +558,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_delete_goal",
+  "terminal_littlebaby_delete_goal",
   "Delete a goal from terminal-claw.",
   {
     id: positiveInt,
@@ -570,7 +570,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_check_digest_history",
+  "terminal_littlebaby_check_digest_history",
   "Check whether digest items have appeared recently in terminal-claw. Use this before sending news, GitHub, or paper briefs to avoid repeats.",
   {
     digest_type: digestType,
@@ -589,7 +589,7 @@ server.tool(
 );
 
 server.tool(
-  "terminal_claw_record_digest_history",
+  "terminal_littlebaby_record_digest_history",
   "Record digest items that have just been sent in terminal-claw so future briefs can deduplicate them. This is a write-confirmation tool, not a freshness-check tool. After a successful write, the stored history will naturally show the items as already seen; do not use this response to decide whether they were duplicates before sending.",
   {
     digest_type: digestType,

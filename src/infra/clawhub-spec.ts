@@ -1,15 +1,15 @@
 import { normalizeLowercaseStringOrEmpty } from "../shared/string-coerce.js";
 
-export function parseClawHubPluginSpec(raw: string): {
+export function parseLittleBabyHubPluginSpec(raw: string): {
   name: string;
   version?: string;
   baseUrl?: string;
 } | null {
   const trimmed = raw.trim();
-  if (!normalizeLowercaseStringOrEmpty(trimmed).startsWith("clawhub:")) {
+  if (!normalizeLowercaseStringOrEmpty(trimmed).startsWith("littlebabyhub:")) {
     return null;
   }
-  const spec = trimmed.slice("clawhub:".length).trim();
+  const spec = trimmed.slice("littlebabyhub:".length).trim();
   if (!spec) {
     return null;
   }

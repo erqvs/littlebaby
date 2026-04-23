@@ -3,14 +3,14 @@ import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { registerQrCli } from "./qr-cli.js";
 
-export function registerClawbotCli(program: Command) {
-  const clawbot = program
-    .command("clawbot")
-    .description("Legacy clawbot command aliases")
+export function registerLittlebabybotCli(program: Command) {
+  const littlebabybot = program
+    .command("littlebabybot")
+    .description("Legacy littlebabybot command aliases")
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/clawbot", "docs.littlebaby.ai/cli/clawbot")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/littlebabybot", "docs.littlebaby.ai/cli/littlebabybot")}\n`,
     );
-  registerQrCli(clawbot);
+  registerQrCli(littlebabybot);
 }

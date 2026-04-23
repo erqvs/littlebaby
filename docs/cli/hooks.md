@@ -196,7 +196,7 @@ littlebaby hooks disable command-logger
 ## Install Hook Packs
 
 ```bash
-littlebaby plugins install <package>        # ClawHub first, then npm
+littlebaby plugins install <package>        # LittleBabyHub first, then npm
 littlebaby plugins install <package> --pin  # pin version
 littlebaby plugins install <path>           # local path
 ```

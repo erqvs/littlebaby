@@ -36,7 +36,7 @@ publish_tag="${PACKAGE_TAG:-latest}"
 source_repo="${SOURCE_REPO:-${GITHUB_REPOSITORY:-littlebaby/littlebaby}}"
 source_commit="${SOURCE_COMMIT:-$(git rev-parse HEAD)}"
 source_ref="${SOURCE_REF:-$(git symbolic-ref -q HEAD || true)}"
-littlebabyhub_workdir="${LITTLEBABYHUB_WORKDIR:-${CLAWHUB_WORKDIR:-$(pwd)}}"
+littlebabyhub_workdir="${LITTLEBABYHUB_WORKDIR:-${LITTLEBABYHUB_WORKDIR:-$(pwd)}}"
 publish_source="${package_dir}"
 
 if [[ "${publish_source}" != /* && "${publish_source}" != ./* ]]; then
@@ -81,8 +81,8 @@ printf ' %q' "${publish_cmd[@]}"
 printf '\n'
 
 if [[ "${mode}" == "--dry-run" ]]; then
-  CLAWHUB_WORKDIR="${littlebabyhub_workdir}" "${publish_cmd[@]}" --dry-run
+  LITTLEBABYHUB_WORKDIR="${littlebabyhub_workdir}" "${publish_cmd[@]}" --dry-run
   exit 0
 fi
 
-CLAWHUB_WORKDIR="${littlebabyhub_workdir}" "${publish_cmd[@]}"
+LITTLEBABYHUB_WORKDIR="${littlebabyhub_workdir}" "${publish_cmd[@]}"

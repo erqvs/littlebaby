@@ -309,7 +309,7 @@ Check for missing binaries (PATH), environment variables, config values, or OS c
 
 1. Verify the hook is enabled: `littlebaby hooks list`
 2. Restart your gateway process so hooks reload.
-3. Check gateway logs: `./scripts/clawlog.sh | grep hook`
+3. Check gateway logs: `./scripts/littlebabylog.sh | grep hook`
 
 ## Related
 

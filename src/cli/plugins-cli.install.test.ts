@@ -11,13 +11,13 @@ import {
   enablePluginInConfig,
   installHooksFromNpmSpec,
   installHooksFromPath,
-  installPluginFromClawHub,
+  installPluginFromLittleBabyHub,
   installPluginFromMarketplace,
   installPluginFromNpmSpec,
   installPluginFromPath,
   loadConfig,
   readConfigFileSnapshot,
-  parseClawHubPluginSpec,
+  parseLittleBabyHubPluginSpec,
   recordHookInstall,
   recordPluginInstall,
   resetPluginsCliTestState,
@@ -53,7 +53,7 @@ function createEmptyPluginConfig(): LittleBabyConfig {
   } as LittleBabyConfig;
 }
 
-function createClawHubInstalledConfig(params: {
+function createLittleBabyHubInstalledConfig(params: {
   pluginId: string;
   install: Record<string, unknown>;
 }): LittleBabyConfig {
@@ -69,24 +69,24 @@ function createClawHubInstalledConfig(params: {
   } as LittleBabyConfig;
 }
 
-function createClawHubInstallResult(params: {
+function createLittleBabyHubInstallResult(params: {
   pluginId: string;
   packageName: string;
   version: string;
   channel: string;
-}): Awaited<ReturnType<typeof installPluginFromClawHub>> {
+}): Awaited<ReturnType<typeof installPluginFromLittleBabyHub>> {
   return {
     ok: true,
     pluginId: params.pluginId,
     targetDir: cliInstallPath(params.pluginId),
     version: params.version,
     packageName: params.packageName,
-    clawhub: {
-      source: "clawhub",
-      clawhubUrl: "https://clawhub.ai",
-      clawhubPackage: params.packageName,
-      clawhubFamily: "code-plugin",
-      clawhubChannel: params.channel,
+    littlebabyhub: {
+      source: "littlebabyhub",
+      littlebabyhubUrl: "https://littlebabyhub.ai",
+      littlebabyhubPackage: params.packageName,
+      littlebabyhubFamily: "code-plugin",
+      littlebabyhubChannel: params.channel,
       version: params.version,
       integrity: "sha256-abc",
       resolvedAt: "2026-03-22T00:00:00.000Z",
@@ -110,10 +110,10 @@ function createNpmPluginInstallResult(
   };
 }
 
-function mockClawHubPackageNotFound(packageName: string) {
-  installPluginFromClawHub.mockResolvedValue({
+function mockLittleBabyHubPackageNotFound(packageName: string) {
+  installPluginFromLittleBabyHub.mockResolvedValue({
     ok: false,
-    error: `ClawHub /api/v1/packages/${packageName} failed (404): Package not found`,
+    error: `LittleBabyHub /api/v1/packages/${packageName} failed (404): Package not found`,
     code: "package_not_found",
   });
 }
@@ -123,7 +123,7 @@ function primeNpmPluginFallback(pluginId = "demo") {
   const enabledCfg = createEnabledPluginConfig(pluginId);
 
   loadConfig.mockReturnValue(cfg);
-  mockClawHubPackageNotFound(pluginId);
+  mockLittleBabyHubPackageNotFound(pluginId);
   installPluginFromNpmSpec.mockResolvedValue(createNpmPluginInstallResult(pluginId));
   enablePluginInConfig.mockReturnValue({ config: enabledCfg });
   recordPluginInstall.mockReturnValue(enabledCfg);
@@ -187,7 +187,7 @@ function primeHookPackNpmFallback() {
   const installedCfg = createNpmHookPackInstalledConfig();
 
   loadConfig.mockReturnValue(cfg);
-  mockClawHubPackageNotFound("@acme/demo-hooks");
+  mockLittleBabyHubPackageNotFound("@acme/demo-hooks");
   installPluginFromNpmSpec.mockResolvedValue({
     ok: false,
     error: "package.json missing littlebaby.plugin.json",
@@ -377,29 +377,29 @@ describe("plugins cli install", () => {
     );
   });
 
-  it("installs ClawHub plugins and persists source metadata", async () => {
+  it("installs LittleBabyHub plugins and persists source metadata", async () => {
     const cfg = {
       plugins: {
         entries: {},
       },
     } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
-    const installedCfg = createClawHubInstalledConfig({
+    const installedCfg = createLittleBabyHubInstalledConfig({
       pluginId: "demo",
       install: {
-        source: "clawhub",
-        spec: "clawhub:demo@1.2.3",
+        source: "littlebabyhub",
+        spec: "littlebabyhub:demo@1.2.3",
         installPath: cliInstallPath("demo"),
-        clawhubPackage: "demo",
-        clawhubFamily: "code-plugin",
-        clawhubChannel: "official",
+        littlebabyhubPackage: "demo",
+        littlebabyhubFamily: "code-plugin",
+        littlebabyhubChannel: "official",
       },
     });
 
     loadConfig.mockReturnValue(cfg);
-    parseClawHubPluginSpec.mockReturnValue({ name: "demo" });
-    installPluginFromClawHub.mockResolvedValue(
-      createClawHubInstallResult({
+    parseLittleBabyHubPluginSpec.mockReturnValue({ name: "demo" });
+    installPluginFromLittleBabyHub.mockResolvedValue(
+      createLittleBabyHubInstallResult({
         pluginId: "demo",
         packageName: "demo",
         version: "1.2.3",
@@ -413,22 +413,22 @@ describe("plugins cli install", () => {
       warnings: [],
     });
 
-    await runPluginsCommand(["plugins", "install", "clawhub:demo"]);
+    await runPluginsCommand(["plugins", "install", "littlebabyhub:demo"]);
 
-    expect(installPluginFromClawHub).toHaveBeenCalledWith(
+    expect(installPluginFromLittleBabyHub).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:demo",
+        spec: "littlebabyhub:demo",
       }),
     );
     expect(recordPluginInstall).toHaveBeenCalledWith(
       enabledCfg,
       expect.objectContaining({
         pluginId: "demo",
-        source: "clawhub",
-        spec: "clawhub:demo@1.2.3",
-        clawhubPackage: "demo",
-        clawhubFamily: "code-plugin",
-        clawhubChannel: "official",
+        source: "littlebabyhub",
+        spec: "littlebabyhub:demo@1.2.3",
+        littlebabyhubPackage: "demo",
+        littlebabyhubFamily: "code-plugin",
+        littlebabyhubChannel: "official",
       }),
     );
     expect(writeConfigFile).toHaveBeenCalledWith(installedCfg);
@@ -436,7 +436,7 @@ describe("plugins cli install", () => {
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
   });
 
-  it("passes force through as overwrite mode for ClawHub installs", async () => {
+  it("passes force through as overwrite mode for LittleBabyHub installs", async () => {
     const cfg = {
       plugins: {
         entries: {},
@@ -445,9 +445,9 @@ describe("plugins cli install", () => {
     const enabledCfg = createEnabledPluginConfig("demo");
 
     loadConfig.mockReturnValue(cfg);
-    parseClawHubPluginSpec.mockReturnValue({ name: "demo" });
-    installPluginFromClawHub.mockResolvedValue(
-      createClawHubInstallResult({
+    parseLittleBabyHubPluginSpec.mockReturnValue({ name: "demo" });
+    installPluginFromLittleBabyHub.mockResolvedValue(
+      createLittleBabyHubInstallResult({
         pluginId: "demo",
         packageName: "demo",
         version: "1.2.3",
@@ -461,36 +461,36 @@ describe("plugins cli install", () => {
       warnings: [],
     });
 
-    await runPluginsCommand(["plugins", "install", "clawhub:demo", "--force"]);
+    await runPluginsCommand(["plugins", "install", "littlebabyhub:demo", "--force"]);
 
-    expect(installPluginFromClawHub).toHaveBeenCalledWith(
+    expect(installPluginFromLittleBabyHub).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:demo",
+        spec: "littlebabyhub:demo",
         mode: "update",
       }),
     );
   });
 
-  it("prefers ClawHub before npm for bare plugin specs", async () => {
+  it("prefers LittleBabyHub before npm for bare plugin specs", async () => {
     const cfg = {
       plugins: {
         entries: {},
       },
     } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
-    const installedCfg = createClawHubInstalledConfig({
+    const installedCfg = createLittleBabyHubInstalledConfig({
       pluginId: "demo",
       install: {
-        source: "clawhub",
-        spec: "clawhub:demo@1.2.3",
+        source: "littlebabyhub",
+        spec: "littlebabyhub:demo@1.2.3",
         installPath: cliInstallPath("demo"),
-        clawhubPackage: "demo",
+        littlebabyhubPackage: "demo",
       },
     });
 
     loadConfig.mockReturnValue(cfg);
-    installPluginFromClawHub.mockResolvedValue(
-      createClawHubInstallResult({
+    installPluginFromLittleBabyHub.mockResolvedValue(
+      createLittleBabyHubInstallResult({
         pluginId: "demo",
         packageName: "demo",
         version: "1.2.3",
@@ -506,23 +506,23 @@ describe("plugins cli install", () => {
 
     await runPluginsCommand(["plugins", "install", "demo"]);
 
-    expect(installPluginFromClawHub).toHaveBeenCalledWith(
+    expect(installPluginFromLittleBabyHub).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:demo",
+        spec: "littlebabyhub:demo",
       }),
     );
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
     expect(writeConfigFile).toHaveBeenCalledWith(installedCfg);
   });
 
-  it("falls back to npm when ClawHub does not have the package", async () => {
+  it("falls back to npm when LittleBabyHub does not have the package", async () => {
     primeNpmPluginFallback();
 
     await runPluginsCommand(["plugins", "install", "demo"]);
 
-    expect(installPluginFromClawHub).toHaveBeenCalledWith(
+    expect(installPluginFromLittleBabyHub).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:demo",
+        spec: "littlebabyhub:demo",
       }),
     );
     expect(installPluginFromNpmSpec).toHaveBeenCalledWith(
@@ -813,9 +813,9 @@ describe("plugins cli install", () => {
     const pluginInstallError = "plugin blocked by security scan";
 
     loadConfig.mockReturnValue(cfg);
-    installPluginFromClawHub.mockResolvedValue({
+    installPluginFromLittleBabyHub.mockResolvedValue({
       ok: false,
-      error: "ClawHub /api/v1/packages/demo failed (404): Package not found",
+      error: "LittleBabyHub /api/v1/packages/demo failed (404): Package not found",
       code: "package_not_found",
     });
     installPluginFromNpmSpec.mockResolvedValue({
@@ -837,9 +837,9 @@ describe("plugins cli install", () => {
     const pluginInstallError = "plugin security scan failed";
 
     loadConfig.mockReturnValue(cfg);
-    installPluginFromClawHub.mockResolvedValue({
+    installPluginFromLittleBabyHub.mockResolvedValue({
       ok: false,
-      error: "ClawHub /api/v1/packages/demo failed (404): Package not found",
+      error: "LittleBabyHub /api/v1/packages/demo failed (404): Package not found",
       code: "package_not_found",
     });
     installPluginFromNpmSpec.mockResolvedValue({
@@ -922,9 +922,9 @@ describe("plugins cli install", () => {
     } as LittleBabyConfig;
 
     loadConfig.mockReturnValue(cfg);
-    installPluginFromClawHub.mockResolvedValue({
+    installPluginFromLittleBabyHub.mockResolvedValue({
       ok: false,
-      error: "ClawHub /api/v1/packages/@acme/demo-hooks failed (404): Package not found",
+      error: "LittleBabyHub /api/v1/packages/@acme/demo-hooks failed (404): Package not found",
       code: "package_not_found",
     });
     installPluginFromNpmSpec.mockResolvedValue({
@@ -961,8 +961,8 @@ describe("plugins cli install", () => {
     expect(runtimeLogs.some((line) => line.includes("Installed hook pack: demo-hooks"))).toBe(true);
   });
 
-  it("does not fall back to npm when ClawHub rejects a real package", async () => {
-    installPluginFromClawHub.mockResolvedValue({
+  it("does not fall back to npm when LittleBabyHub rejects a real package", async () => {
+    installPluginFromLittleBabyHub.mockResolvedValue({
       ok: false,
       error: 'Use "littlebaby skills install demo" instead.',
       code: "skill_package",

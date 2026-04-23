@@ -11,7 +11,7 @@ import { compareComparableSemver, parseComparableSemver } from "./semver-compare
 import { createTempDownloadTarget } from "./temp-download.js";
 export { parseLittleBabyHubPluginSpec } from "./littlebabyhub-spec.js";
 
-const DEFAULT_CLAWHUB_URL = "https://littlebabyhub.ai";
+const DEFAULT_LITTLEBABYHUB_URL = "https://littlebabyhub.ai";
 const DEFAULT_FETCH_TIMEOUT_MS = 30_000;
 
 export type LittleBabyHubPackageFamily = "skill" | "code-plugin" | "bundle-plugin";
@@ -210,11 +210,11 @@ export class LittleBabyHubRequestError extends Error {
 
 function normalizeBaseUrl(baseUrl?: string): string {
   const envValue =
-    normalizeOptionalString(process.env.LITTLEBABY_CLAWHUB_URL) ||
-    normalizeOptionalString(process.env.CLAWHUB_URL) ||
-    DEFAULT_CLAWHUB_URL;
+    normalizeOptionalString(process.env.LITTLEBABY_LITTLEBABYHUB_URL) ||
+    normalizeOptionalString(process.env.LITTLEBABYHUB_URL) ||
+    DEFAULT_LITTLEBABYHUB_URL;
   const value = (normalizeOptionalString(baseUrl) || envValue).replace(/\/+$/, "");
-  return value || DEFAULT_CLAWHUB_URL;
+  return value || DEFAULT_LITTLEBABYHUB_URL;
 }
 
 function extractTokenFromLittleBabyHubConfig(value: unknown): string | undefined {
@@ -236,8 +236,8 @@ function extractTokenFromLittleBabyHubConfig(value: unknown): string | undefined
 
 function resolveLittleBabyHubConfigPaths(): string[] {
   const explicit =
-    normalizeOptionalString(process.env.LITTLEBABY_CLAWHUB_CONFIG_PATH) ||
-    normalizeOptionalString(process.env.CLAWHUB_CONFIG_PATH) ||
+    normalizeOptionalString(process.env.LITTLEBABY_LITTLEBABYHUB_CONFIG_PATH) ||
+    normalizeOptionalString(process.env.LITTLEBABYHUB_CONFIG_PATH) ||
     normalizeOptionalString(process.env.LITTLEBABYHUB_CONFIG_PATH); // legacy misspelling from older littlebabyhub CLI builds; keep for back-compat
   if (explicit) {
     return [explicit];
@@ -260,9 +260,9 @@ function resolveLittleBabyHubConfigPaths(): string[] {
 
 export async function resolveLittleBabyHubAuthToken(): Promise<string | undefined> {
   const envToken =
-    normalizeOptionalString(process.env.LITTLEBABY_CLAWHUB_TOKEN) ||
-    normalizeOptionalString(process.env.CLAWHUB_TOKEN) ||
-    normalizeOptionalString(process.env.CLAWHUB_AUTH_TOKEN);
+    normalizeOptionalString(process.env.LITTLEBABY_LITTLEBABYHUB_TOKEN) ||
+    normalizeOptionalString(process.env.LITTLEBABYHUB_TOKEN) ||
+    normalizeOptionalString(process.env.LITTLEBABYHUB_AUTH_TOKEN);
   if (envToken) {
     return envToken;
   }

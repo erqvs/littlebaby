@@ -6,7 +6,7 @@ import {
 import type { UpdateChannel } from "../infra/update-channels.js";
 import { resolveUserPath } from "../utils.js";
 import { resolveBundledPluginSources } from "./bundled-sources.js";
-import { installPluginFromClawHub } from "./clawhub.js";
+import { installPluginFromLittleBabyHub } from "./littlebabyhub.js";
 import {
   installPluginFromNpmSpec,
   PLUGIN_INSTALL_ERROR_CODE,
@@ -85,13 +85,13 @@ function formatMarketplaceInstallFailure(params: {
   );
 }
 
-function formatClawHubInstallFailure(params: {
+function formatLittleBabyHubInstallFailure(params: {
   pluginId: string;
   spec: string;
   phase: "check" | "update";
   error: string;
 }): string {
-  return `Failed to ${params.phase} ${params.pluginId}: ${params.error} (ClawHub ${params.spec}).`;
+  return `Failed to ${params.phase} ${params.pluginId}: ${params.error} (LittleBabyHub ${params.spec}).`;
 }
 
 type InstallIntegrityDrift = {
@@ -289,7 +289,7 @@ export async function updateNpmInstalledPlugins(params: {
       continue;
     }
 
-    if (record.source !== "npm" && record.source !== "marketplace" && record.source !== "clawhub") {
+    if (record.source !== "npm" && record.source !== "marketplace" && record.source !== "littlebabyhub") {
       outcomes.push({
         pluginId,
         status: "skipped",
@@ -314,11 +314,11 @@ export async function updateNpmInstalledPlugins(params: {
       continue;
     }
 
-    if (record.source === "clawhub" && !record.clawhubPackage) {
+    if (record.source === "littlebabyhub" && !record.littlebabyhubPackage) {
       outcomes.push({
         pluginId,
         status: "skipped",
-        message: `Skipping "${pluginId}" (missing ClawHub package metadata).`,
+        message: `Skipping "${pluginId}" (missing LittleBabyHub package metadata).`,
       });
       continue;
     }
@@ -351,7 +351,7 @@ export async function updateNpmInstalledPlugins(params: {
     if (params.dryRun) {
       let probe:
         | Awaited<ReturnType<typeof installPluginFromNpmSpec>>
-        | Awaited<ReturnType<typeof installPluginFromClawHub>>
+        | Awaited<ReturnType<typeof installPluginFromLittleBabyHub>>
         | Awaited<ReturnType<typeof installPluginFromMarketplace>>;
       try {
         probe =
@@ -371,10 +371,10 @@ export async function updateNpmInstalledPlugins(params: {
                 }),
                 logger,
               })
-            : record.source === "clawhub"
-              ? await installPluginFromClawHub({
-                  spec: effectiveSpec ?? `clawhub:${record.clawhubPackage!}`,
-                  baseUrl: record.clawhubUrl,
+            : record.source === "littlebabyhub"
+              ? await installPluginFromLittleBabyHub({
+                  spec: effectiveSpec ?? `littlebabyhub:${record.littlebabyhubPackage!}`,
+                  baseUrl: record.littlebabyhubUrl,
                   mode: "update",
                   dryRun: true,
                   dangerouslyForceUnsafeInstall: params.dangerouslyForceUnsafeInstall,
@@ -410,10 +410,10 @@ export async function updateNpmInstalledPlugins(params: {
                   phase: "check",
                   result: probe,
                 })
-              : record.source === "clawhub"
-                ? formatClawHubInstallFailure({
+              : record.source === "littlebabyhub"
+                ? formatLittleBabyHubInstallFailure({
                     pluginId,
-                    spec: effectiveSpec ?? `clawhub:${record.clawhubPackage!}`,
+                    spec: effectiveSpec ?? `littlebabyhub:${record.littlebabyhubPackage!}`,
                     phase: "check",
                     error: probe.error,
                   })
@@ -452,7 +452,7 @@ export async function updateNpmInstalledPlugins(params: {
 
     let result:
       | Awaited<ReturnType<typeof installPluginFromNpmSpec>>
-      | Awaited<ReturnType<typeof installPluginFromClawHub>>
+      | Awaited<ReturnType<typeof installPluginFromLittleBabyHub>>
       | Awaited<ReturnType<typeof installPluginFromMarketplace>>;
     try {
       result =
@@ -471,10 +471,10 @@ export async function updateNpmInstalledPlugins(params: {
               }),
               logger,
             })
-          : record.source === "clawhub"
-            ? await installPluginFromClawHub({
-                spec: effectiveSpec ?? `clawhub:${record.clawhubPackage!}`,
-                baseUrl: record.clawhubUrl,
+          : record.source === "littlebabyhub"
+            ? await installPluginFromLittleBabyHub({
+                spec: effectiveSpec ?? `littlebabyhub:${record.littlebabyhubPackage!}`,
+                baseUrl: record.littlebabyhubUrl,
                 mode: "update",
                 dangerouslyForceUnsafeInstall: params.dangerouslyForceUnsafeInstall,
                 expectedPluginId: pluginId,
@@ -508,10 +508,10 @@ export async function updateNpmInstalledPlugins(params: {
                 phase: "update",
                 result: result,
               })
-            : record.source === "clawhub"
-              ? formatClawHubInstallFailure({
+            : record.source === "littlebabyhub"
+              ? formatLittleBabyHubInstallFailure({
                   pluginId,
-                  spec: effectiveSpec ?? `clawhub:${record.clawhubPackage!}`,
+                  spec: effectiveSpec ?? `littlebabyhub:${record.littlebabyhubPackage!}`,
                   phase: "update",
                   error: result.error,
                 })
@@ -541,23 +541,23 @@ export async function updateNpmInstalledPlugins(params: {
         version: nextVersion,
         ...buildNpmResolutionInstallFields(result.npmResolution),
       });
-    } else if (record.source === "clawhub") {
-      const clawhubResult = result as Extract<
-        Awaited<ReturnType<typeof installPluginFromClawHub>>,
+    } else if (record.source === "littlebabyhub") {
+      const littlebabyhubResult = result as Extract<
+        Awaited<ReturnType<typeof installPluginFromLittleBabyHub>>,
         { ok: true }
       >;
       next = recordPluginInstall(next, {
         pluginId: resolvedPluginId,
-        source: "clawhub",
-        spec: effectiveSpec ?? record.spec ?? `clawhub:${record.clawhubPackage!}`,
+        source: "littlebabyhub",
+        spec: effectiveSpec ?? record.spec ?? `littlebabyhub:${record.littlebabyhubPackage!}`,
         installPath: result.targetDir,
         version: nextVersion,
-        integrity: clawhubResult.clawhub.integrity,
-        resolvedAt: clawhubResult.clawhub.resolvedAt,
-        clawhubUrl: clawhubResult.clawhub.clawhubUrl,
-        clawhubPackage: clawhubResult.clawhub.clawhubPackage,
-        clawhubFamily: clawhubResult.clawhub.clawhubFamily,
-        clawhubChannel: clawhubResult.clawhub.clawhubChannel,
+        integrity: littlebabyhubResult.littlebabyhub.integrity,
+        resolvedAt: littlebabyhubResult.littlebabyhub.resolvedAt,
+        littlebabyhubUrl: littlebabyhubResult.littlebabyhub.littlebabyhubUrl,
+        littlebabyhubPackage: littlebabyhubResult.littlebabyhub.littlebabyhubPackage,
+        littlebabyhubFamily: littlebabyhubResult.littlebabyhub.littlebabyhubFamily,
+        littlebabyhubChannel: littlebabyhubResult.littlebabyhub.littlebabyhubChannel,
       });
     } else {
       const marketplaceResult = result as Extract<

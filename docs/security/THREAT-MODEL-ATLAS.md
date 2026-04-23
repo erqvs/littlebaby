@@ -121,7 +121,7 @@ Nothing is explicitly out of scope for this threat model.
 ┌─────────────────────────────────────────────────────────────────┐
 │                 TRUST BOUNDARY 5: Supply Chain                   │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │                      CLAWHUB                              │   │
+│  │                      LITTLEBABYHUB                              │   │
 │  │  • Skill publishing (semver, SKILL.md required)           │   │
 │  │  • Pattern-based moderation flags                         │   │
 │  │  • VirusTotal scanning (coming soon)                      │   │
