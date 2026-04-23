@@ -1,25 +1,25 @@
-import { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
+import { createChannelPairingController } from "littlebaby/plugin-sdk/channel-pairing";
 import {
   ensureConfiguredBindingRouteReady,
   resolveConfiguredBindingRoute,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { getSessionBindingService } from "openclaw/plugin-sdk/conversation-runtime";
-import { resolveAgentOutboundIdentity } from "openclaw/plugin-sdk/outbound-runtime";
+} from "littlebaby/plugin-sdk/conversation-runtime";
+import { getSessionBindingService } from "littlebaby/plugin-sdk/conversation-runtime";
+import { resolveAgentOutboundIdentity } from "littlebaby/plugin-sdk/outbound-runtime";
 import {
   buildPendingHistoryContextFromMap,
   clearHistoryEntriesIfEnabled,
   DEFAULT_GROUP_HISTORY_LIMIT,
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from "openclaw/plugin-sdk/reply-history";
-import { deriveLastRoutePolicy } from "openclaw/plugin-sdk/routing";
-import { resolveAgentIdFromSessionKey } from "openclaw/plugin-sdk/routing";
+} from "littlebaby/plugin-sdk/reply-history";
+import { deriveLastRoutePolicy } from "littlebaby/plugin-sdk/routing";
+import { resolveAgentIdFromSessionKey } from "littlebaby/plugin-sdk/routing";
 import {
   resolveDefaultGroupPolicy,
   resolveOpenProviderRuntimeGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "openclaw/plugin-sdk/runtime-group-policy";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/runtime-group-policy";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { resolveFeishuRuntimeAccount } from "./accounts.js";
 import {
   checkBotMentioned,
@@ -1398,7 +1398,7 @@ export async function handleFeishuMessage(params: {
         // Capture bot's last reply from session jsonl and write to history
         let botReply: string | null = null;
         try {
-          const sessDir = "/home/openclaw-custom/.littlebaby/agents/main/sessions/";
+          const sessDir = "/home/littlebaby-custom/.littlebaby/agents/main/sessions/";
           const sessFiles = fs
             .readdirSync(sessDir)
             .filter((f) => f.endsWith(".jsonl"))

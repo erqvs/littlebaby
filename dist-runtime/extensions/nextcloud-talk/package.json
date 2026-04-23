@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/nextcloud-talk",
+  "name": "@littlebaby/nextcloud-talk",
   "version": "2026.4.20",
-  "description": "OpenClaw Nextcloud Talk channel plugin",
+  "description": "LittleBaby Nextcloud Talk channel plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -23,7 +23,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/nextcloud-talk",
+      "npmSpec": "@littlebaby/nextcloud-talk",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -31,7 +31,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

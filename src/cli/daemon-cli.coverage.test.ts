@@ -164,8 +164,8 @@ describe("daemon-cli coverage", () => {
       "LITTLEBABY_GATEWAY_PORT",
       "LITTLEBABY_PROFILE",
     ]);
-    process.env.LITTLEBABY_STATE_DIR = "/tmp/openclaw-cli-state";
-    process.env.LITTLEBABY_CONFIG_PATH = "/tmp/openclaw-cli-state/openclaw.json";
+    process.env.LITTLEBABY_STATE_DIR = "/tmp/littlebaby-cli-state";
+    process.env.LITTLEBABY_CONFIG_PATH = "/tmp/littlebaby-cli-state/littlebaby.json";
     delete process.env.LITTLEBABY_GATEWAY_PORT;
     delete process.env.LITTLEBABY_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
@@ -201,11 +201,11 @@ describe("daemon-cli coverage", () => {
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
         LITTLEBABY_PROFILE: "dev",
-        LITTLEBABY_STATE_DIR: "/tmp/openclaw-daemon-state",
-        LITTLEBABY_CONFIG_PATH: "/tmp/openclaw-daemon-state/openclaw.json",
+        LITTLEBABY_STATE_DIR: "/tmp/littlebaby-daemon-state",
+        LITTLEBABY_CONFIG_PATH: "/tmp/littlebaby-daemon-state/littlebaby.json",
         LITTLEBABY_GATEWAY_PORT: "19001",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.littlebaby.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "status", "--json"]);
@@ -277,7 +277,7 @@ describe("daemon-cli coverage", () => {
         GOPATH: "/Users/test/.local/gopath",
         GOBIN: "/Users/test/.local/gopath/bin",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.littlebaby.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "install", "--force", "--json"]);

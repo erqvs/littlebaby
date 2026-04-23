@@ -7,7 +7,7 @@ import {
   resolveWriteEnvSnapshotForPath,
   unsetPathForWrite,
 } from "./io.write-prepare.js";
-import type { OpenClawConfig } from "./types.js";
+import type { LittleBabyConfig } from "./types.js";
 
 describe("config io write prepare", () => {
   it("persists caller changes onto resolved config without leaking runtime defaults", () => {
@@ -44,8 +44,8 @@ describe("config io write prepare", () => {
       'channels.telegram.dmPolicy = "open" requires channels.telegram.allowFrom to include "*"',
     );
 
-    expect(message).toContain("openclaw config set channels.telegram.allowFrom '[\"*\"]'");
-    expect(message).toContain('openclaw config set channels.telegram.dmPolicy "pairing"');
+    expect(message).toContain("littlebaby config set channels.telegram.allowFrom '[\"*\"]'");
+    expect(message).toContain('littlebaby config set channels.telegram.dmPolicy "pairing"');
   });
 
   it("unsets explicit paths when runtime defaults would otherwise reappear", () => {
@@ -62,10 +62,10 @@ describe("config io write prepare", () => {
   });
 
   it("does not mutate caller config when unsetting existing config objects", () => {
-    const input: OpenClawConfig = {
+    const input: LittleBabyConfig = {
       gateway: { mode: "local" },
       commands: { ownerDisplay: "hash" },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const next = unsetPathForWrite(input, ["commands", "ownerDisplay"]);
 
@@ -77,10 +77,10 @@ describe("config io write prepare", () => {
   });
 
   it("keeps caller arrays immutable when unsetting array entries", () => {
-    const input: OpenClawConfig = {
+    const input: LittleBabyConfig = {
       gateway: { mode: "local" },
       tools: { alsoAllow: ["exec", "fetch", "read"] },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const next = unsetPathForWrite(input, ["tools", "alsoAllow", "1"]);
 
@@ -92,10 +92,10 @@ describe("config io write prepare", () => {
   });
 
   it("treats missing unset paths as no-op without mutating caller config", () => {
-    const input: OpenClawConfig = {
+    const input: LittleBabyConfig = {
       gateway: { mode: "local" },
       commands: { ownerDisplay: "hash" },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const next = unsetPathForWrite(input, ["commands", "missingKey"]);
 
@@ -108,10 +108,10 @@ describe("config io write prepare", () => {
   });
 
   it("ignores blocked prototype-key unset path segments", () => {
-    const input: OpenClawConfig = {
+    const input: LittleBabyConfig = {
       gateway: { mode: "local" },
       commands: { ownerDisplay: "hash" },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const blocked = [
       ["commands", "__proto__"],
@@ -253,8 +253,8 @@ describe("config io write prepare", () => {
     const snapshot = { OPENAI_API_KEY: "sk-secret" };
     expect(
       resolveWriteEnvSnapshotForPath({
-        actualConfigPath: "/tmp/openclaw.json",
-        expectedConfigPath: "/tmp/openclaw.json",
+        actualConfigPath: "/tmp/littlebaby.json",
+        expectedConfigPath: "/tmp/littlebaby.json",
         envSnapshotForRestore: snapshot,
       }),
     ).toBe(snapshot);
@@ -263,7 +263,7 @@ describe("config io write prepare", () => {
   it("drops the read-time env snapshot when writing a different config path", () => {
     expect(
       resolveWriteEnvSnapshotForPath({
-        actualConfigPath: "/tmp/openclaw.json",
+        actualConfigPath: "/tmp/littlebaby.json",
         expectedConfigPath: "/tmp/other.json",
         envSnapshotForRestore: { OPENAI_API_KEY: "sk-secret" },
       }),
@@ -279,9 +279,9 @@ describe("config io write prepare", () => {
           password: "test-password",
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: LittleBabyConfig = {
       gateway: { port: 18789 },
       channels: {
         bluebubbles: {
@@ -290,9 +290,9 @@ describe("config io write prepare", () => {
           enrichGroupParticipantsFromContacts: true,
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
-    const nextConfig: OpenClawConfig = structuredClone(runtimeConfig);
+    const nextConfig: LittleBabyConfig = structuredClone(runtimeConfig);
     nextConfig.gateway = {
       ...nextConfig.gateway,
       auth: { mode: "token" },
@@ -316,7 +316,7 @@ describe("config io write prepare", () => {
   });
 
   it("does not reintroduce legacy nested dm.policy defaults in the persisted candidate", () => {
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: LittleBabyConfig = {
       channels: {
         discord: {
           dmPolicy: "pairing",
@@ -328,7 +328,7 @@ describe("config io write prepare", () => {
         },
       },
       gateway: { port: 18789 },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const nextConfig = structuredClone(sourceConfig);
     delete (nextConfig.channels?.discord?.dm as { enabled?: boolean; policy?: string } | undefined)
@@ -382,9 +382,9 @@ describe("config io write prepare", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
-    const nextConfig: OpenClawConfig = {
+    const nextConfig: LittleBabyConfig = {
       ...structuredClone(sourceConfig),
       gateway: {
         auth: { mode: "token" },
@@ -417,26 +417,26 @@ describe("config io write prepare", () => {
   });
 
   it("preserves root $schema during unrelated partial writes", () => {
-    const sourceConfig: OpenClawConfig = {
-      $schema: "https://openclaw.ai/config.json",
+    const sourceConfig: LittleBabyConfig = {
+      $schema: "https://littlebaby.ai/config.json",
       gateway: { mode: "local" },
-    } satisfies OpenClawConfig;
+    } satisfies LittleBabyConfig;
 
     const persisted = resolvePersistCandidateForWrite({
       runtimeConfig: sourceConfig,
       sourceConfig,
       nextConfig: {
         gateway: { mode: "local", port: 18789 },
-      } satisfies OpenClawConfig,
-    }) as OpenClawConfig;
+      } satisfies LittleBabyConfig,
+    }) as LittleBabyConfig;
 
-    expect(persisted.$schema).toBe("https://openclaw.ai/config.json");
+    expect(persisted.$schema).toBe("https://littlebaby.ai/config.json");
     expect(persisted.gateway).toEqual({ mode: "local", port: 18789 });
   });
 
   it("does not preserve include-only $schema into the root persisted candidate", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config-from-include.json",
+      $schema: "https://littlebaby.ai/config-from-include.json",
       gateway: { mode: "local" },
     };
 
@@ -458,7 +458,7 @@ describe("config io write prepare", () => {
 
   it("does not restore root $schema when the next config explicitly clears it", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://littlebaby.ai/config.json",
       gateway: { mode: "local" },
     };
 
@@ -477,7 +477,7 @@ describe("config io write prepare", () => {
 
   it("does not restore root $schema when the next config sets an invalid value", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://littlebaby.ai/config.json",
       gateway: { mode: "local" },
     };
 

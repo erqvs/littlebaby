@@ -4,10 +4,10 @@ import path from "node:path";
 import { getModel } from "@mariozechner/pi-ai";
 import { AuthStorage, ModelRegistry } from "@mariozechner/pi-coding-agent";
 import OpenAI from "openai";
-import type { ResolvedTtsConfig } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { loadConfig } from "openclaw/plugin-sdk/config-runtime";
-import { encodePngRgba, fillPixel } from "openclaw/plugin-sdk/media-runtime";
+import type { ResolvedTtsConfig } from "littlebaby/plugin-sdk/agent-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { loadConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { encodePngRgba, fillPixel } from "littlebaby/plugin-sdk/media-runtime";
 import { describe, expect, it } from "vitest";
 import {
   registerProviderPlugin,
@@ -89,7 +89,7 @@ function createReferencePng(): Buffer {
   return encodePngRgba(buf, width, height);
 }
 
-function createLiveConfig(): OpenClawConfig {
+function createLiveConfig(): LittleBabyConfig {
   const cfg = loadConfig();
   return {
     ...cfg,
@@ -104,7 +104,7 @@ function createLiveConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 function createLiveTtsConfig(): ResolvedTtsConfig {
@@ -195,7 +195,7 @@ describeLive("openai plugin live", () => {
     const ttsConfig = createLiveTtsConfig();
 
     const audioFile = await speechProvider.synthesize({
-      text: "OpenClaw integration test OK.",
+      text: "LittleBaby integration test OK.",
       cfg,
       providerConfig: ttsConfig.providerConfigs.openai ?? {},
       target: "audio-file",
@@ -225,7 +225,7 @@ describeLive("openai plugin live", () => {
     const ttsConfig = createLiveTtsConfig();
 
     const synthesized = await speechProvider.synthesize({
-      text: "OpenClaw integration test OK.",
+      text: "LittleBaby integration test OK.",
       cfg,
       providerConfig: ttsConfig.providerConfigs.openai ?? {},
       target: "audio-file",

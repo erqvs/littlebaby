@@ -1,7 +1,7 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildMicrosoftSpeechProvider,
@@ -10,7 +10,7 @@ import {
 } from "./speech-provider.js";
 import * as ttsModule from "./tts.js";
 
-const TEST_CFG = {} as OpenClawConfig;
+const TEST_CFG = {} as LittleBabyConfig;
 
 describe("listMicrosoftVoices", () => {
   const originalFetch = globalThis.fetch;

@@ -69,7 +69,7 @@ vi.mock("../../config/io.js", () => ({
   loadConfig: loadConfigMock,
   readConfigFileSnapshotForWrite: vi.fn(async () => ({
     snapshot: await readConfigFileSnapshotMock(),
-    writeOptions: { expectedConfigPath: "/tmp/openclaw.json" },
+    writeOptions: { expectedConfigPath: "/tmp/littlebaby.json" },
   })),
 }));
 
@@ -82,7 +82,7 @@ vi.mock("../../commands/gateway-install-token.persist.runtime.js", () => ({
   readConfigFileSnapshot: readConfigFileSnapshotMock,
   readConfigFileSnapshotForWrite: vi.fn(async () => ({
     snapshot: await readConfigFileSnapshotMock(),
-    writeOptions: { expectedConfigPath: "/tmp/openclaw.json" },
+    writeOptions: { expectedConfigPath: "/tmp/littlebaby.json" },
   })),
   writeConfigFile: writeConfigFileMock,
 }));

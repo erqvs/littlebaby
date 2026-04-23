@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/copilot-proxy",
+  "name": "@littlebaby/copilot-proxy",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Copilot Proxy provider plugin",
+  "description": "LittleBaby Copilot Proxy provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

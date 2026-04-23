@@ -2,16 +2,16 @@ import {
   definePluginEntry,
   type ProviderResolveDynamicModelContext,
   type ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
+} from "littlebaby/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "littlebaby/plugin-sdk/provider-auth-api-key";
 import {
   DEFAULT_CONTEXT_TOKENS,
   PASSTHROUGH_GEMINI_REPLAY_HOOKS,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "littlebaby/plugin-sdk/provider-model-shared";
 import {
   getOpenRouterModelCapabilities,
   loadOpenRouterModelCapabilities,
-} from "openclaw/plugin-sdk/provider-stream-family";
+} from "littlebaby/plugin-sdk/provider-stream-family";
 import { openrouterMediaUnderstandingProvider } from "./media-understanding-provider.js";
 import { applyOpenrouterConfig, OPENROUTER_DEFAULT_MODEL_REF } from "./onboard.js";
 import {

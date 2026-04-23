@@ -1,7 +1,7 @@
 ---
-summary: "Uninstall OpenClaw completely (CLI, service, state, workspace)"
+summary: "Uninstall LittleBaby completely (CLI, service, state, workspace)"
 read_when:
-  - You want to remove OpenClaw from a machine
+  - You want to remove LittleBaby from a machine
   - The gateway service is still running after uninstall
 title: "Uninstall"
 ---
@@ -10,7 +10,7 @@ title: "Uninstall"
 
 Two paths:
 
-- **Easy path** if `openclaw` is still installed.
+- **Easy path** if `littlebaby` is still installed.
 - **Manual service removal** if the CLI is gone but the service is still running.
 
 ## Easy path (CLI still installed)
@@ -18,14 +18,14 @@ Two paths:
 Recommended: use the built-in uninstaller:
 
 ```bash
-openclaw uninstall
+littlebaby uninstall
 ```
 
 Non-interactive (automation / npx):
 
 ```bash
-openclaw uninstall --all --yes --non-interactive
-npx -y openclaw uninstall --all --yes --non-interactive
+littlebaby uninstall --all --yes --non-interactive
+npx -y littlebaby uninstall --all --yes --non-interactive
 ```
 
 Manual steps (same result):
@@ -33,13 +33,13 @@ Manual steps (same result):
 1. Stop the gateway service:
 
 ```bash
-openclaw gateway stop
+littlebaby gateway stop
 ```
 
 2. Uninstall the gateway service (launchd/systemd/schtasks):
 
 ```bash
-openclaw gateway uninstall
+littlebaby gateway uninstall
 ```
 
 3. Delete state + config:
@@ -59,15 +59,15 @@ rm -rf ~/.littlebaby/workspace
 5. Remove the CLI install (pick the one you used):
 
 ```bash
-npm rm -g openclaw
-pnpm remove -g openclaw
-bun remove -g openclaw
+npm rm -g littlebaby
+pnpm remove -g littlebaby
+bun remove -g littlebaby
 ```
 
 6. If you installed the macOS app:
 
 ```bash
-rm -rf /Applications/OpenClaw.app
+rm -rf /Applications/LittleBaby.app
 ```
 
 Notes:
@@ -77,18 +77,18 @@ Notes:
 
 ## Manual service removal (CLI not installed)
 
-Use this if the gateway service keeps running but `openclaw` is missing.
+Use this if the gateway service keeps running but `littlebaby` is missing.
 
 ### macOS (launchd)
 
-Default label is `ai.openclaw.gateway` (or `ai.openclaw.<profile>`; legacy `com.openclaw.*` may still exist):
+Default label is `ai.littlebaby.gateway` (or `ai.littlebaby.<profile>`; legacy `com.littlebaby.*` may still exist):
 
 ```bash
-launchctl bootout gui/$UID/ai.openclaw.gateway
-rm -f ~/Library/LaunchAgents/ai.openclaw.gateway.plist
+launchctl bootout gui/$UID/ai.littlebaby.gateway
+rm -f ~/Library/LaunchAgents/ai.littlebaby.gateway.plist
 ```
 
-If you used a profile, replace the label and plist name with `ai.openclaw.<profile>`. Remove any legacy `com.openclaw.*` plists if present.
+If you used a profile, replace the label and plist name with `ai.littlebaby.<profile>`. Remove any legacy `com.littlebaby.*` plists if present.
 
 ### Linux (systemd user unit)
 
@@ -102,26 +102,26 @@ systemctl --user daemon-reload
 
 ### Windows (Scheduled Task)
 
-Default task name is `OpenClaw Gateway` (or `OpenClaw Gateway (<profile>)`).
+Default task name is `LittleBaby Gateway` (or `LittleBaby Gateway (<profile>)`).
 The task script lives under your state dir.
 
 ```powershell
-schtasks /Delete /F /TN "OpenClaw Gateway"
-Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd"
+schtasks /Delete /F /TN "LittleBaby Gateway"
+Remove-Item -Force "$env:USERPROFILE\.littlebaby\gateway.cmd"
 ```
 
-If you used a profile, delete the matching task name and `~\.openclaw-<profile>\gateway.cmd`.
+If you used a profile, delete the matching task name and `~\.littlebaby-<profile>\gateway.cmd`.
 
 ## Normal install vs source checkout
 
 ### Normal install (install.sh / npm / pnpm / bun)
 
-If you used `https://openclaw.ai/install.sh` or `install.ps1`, the CLI was installed with `npm install -g openclaw@latest`.
-Remove it with `npm rm -g openclaw` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
+If you used `https://littlebaby.ai/install.sh` or `install.ps1`, the CLI was installed with `npm install -g littlebaby@latest`.
+Remove it with `npm rm -g littlebaby` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
 
 ### Source checkout (git clone)
 
-If you run from a repo checkout (`git clone` + `openclaw ...` / `bun run openclaw ...`):
+If you run from a repo checkout (`git clone` + `littlebaby ...` / `bun run littlebaby ...`):
 
 1. Uninstall the gateway service **before** deleting the repo (use the easy path above or manual service removal).
 2. Delete the repo directory.

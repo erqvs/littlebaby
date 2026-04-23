@@ -5,11 +5,11 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import { captureFullEnv } from "../test-utils/env.js";
 
 const spawnMock = vi.hoisted(() => vi.fn());
-const resolvePreferredOpenClawTmpDirMock = vi.hoisted(() => vi.fn(() => os.tmpdir()));
+const resolvePreferredLittleBabyTmpDirMock = vi.hoisted(() => vi.fn(() => os.tmpdir()));
 const resolveTaskScriptPathMock = vi.hoisted(() =>
   vi.fn((env: Record<string, string | undefined>) => {
     const home = env.USERPROFILE || env.HOME || os.homedir();
-    return path.join(home, ".openclaw", "gateway.cmd");
+    return path.join(home, ".littlebaby", "gateway.cmd");
   }),
 );
 
@@ -22,8 +22,8 @@ vi.mock("node:child_process", async () => {
     },
   );
 });
-vi.mock("./tmp-openclaw-dir.js", () => ({
-  resolvePreferredOpenClawTmpDir: () => resolvePreferredOpenClawTmpDirMock(),
+vi.mock("./tmp-littlebaby-dir.js", () => ({
+  resolvePreferredLittleBabyTmpDir: () => resolvePreferredLittleBabyTmpDirMock(),
 }));
 vi.mock("../daemon/schtasks.js", () => ({
   resolveTaskScriptPath: (env: Record<string, string | undefined>) =>
@@ -72,12 +72,12 @@ describe("relaunchGatewayScheduledTask", () => {
 
   beforeEach(() => {
     spawnMock.mockReset();
-    resolvePreferredOpenClawTmpDirMock.mockReset();
-    resolvePreferredOpenClawTmpDirMock.mockReturnValue(os.tmpdir());
+    resolvePreferredLittleBabyTmpDirMock.mockReset();
+    resolvePreferredLittleBabyTmpDirMock.mockReturnValue(os.tmpdir());
     resolveTaskScriptPathMock.mockReset();
     resolveTaskScriptPathMock.mockImplementation((env: Record<string, string | undefined>) => {
       const home = env.USERPROFILE || env.HOME || os.homedir();
-      return path.join(home, ".openclaw", "gateway.cmd");
+      return path.join(home, ".littlebaby", "gateway.cmd");
     });
   });
 
@@ -95,7 +95,7 @@ describe("relaunchGatewayScheduledTask", () => {
     expect(result).toMatchObject({
       ok: true,
       method: "schtasks",
-      tried: expect.arrayContaining(['schtasks /Run /TN "OpenClaw Gateway (work)"']),
+      tried: expect.arrayContaining(['schtasks /Run /TN "LittleBaby Gateway (work)"']),
     });
     expect(result.tried).toContain(`cmd.exe /d /s /c ${seenCommandArg}`);
     expect(spawnMock).toHaveBeenCalledWith(
@@ -115,9 +115,9 @@ describe("relaunchGatewayScheduledTask", () => {
     expect(script).toContain("timeout /t 1 /nobreak >nul");
     expect(script).toContain("gateway-restart.log");
     expect(script).toContain(
-      'openclaw restart attempt source=windows-task-handoff target="OpenClaw Gateway (work)"',
+      'littlebaby restart attempt source=windows-task-handoff target="LittleBaby Gateway (work)"',
     );
-    expect(script).toContain('schtasks /Run /TN "OpenClaw Gateway (work)" >>');
+    expect(script).toContain('schtasks /Run /TN "LittleBaby Gateway (work)" >>');
     expect(script).toContain('del "%~f0" >nul 2>&1');
   });
 
@@ -129,12 +129,12 @@ describe("relaunchGatewayScheduledTask", () => {
 
     relaunchGatewayScheduledTask({
       LITTLEBABY_PROFILE: "work",
-      LITTLEBABY_WINDOWS_TASK_NAME: "OpenClaw Gateway (custom)",
+      LITTLEBABY_WINDOWS_TASK_NAME: "LittleBaby Gateway (custom)",
     });
 
     const scriptPath = [...createdScriptPaths][0];
     const script = fs.readFileSync(scriptPath, "utf8");
-    expect(script).toContain('schtasks /Run /TN "OpenClaw Gateway (custom)" >>');
+    expect(script).toContain('schtasks /Run /TN "LittleBaby Gateway (custom)" >>');
   });
 
   it("returns failed when the helper cannot be spawned", () => {
@@ -151,9 +151,9 @@ describe("relaunchGatewayScheduledTask", () => {
 
   it("quotes the cmd /c script path when temp paths contain metacharacters", () => {
     const unref = vi.fn();
-    const metacharTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw&(restart)-"));
+    const metacharTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby&(restart)-"));
     createdTmpDirs.add(metacharTmpDir);
-    resolvePreferredOpenClawTmpDirMock.mockReturnValue(metacharTmpDir);
+    resolvePreferredLittleBabyTmpDirMock.mockReturnValue(metacharTmpDir);
     spawnMock.mockReturnValue({ unref });
 
     relaunchGatewayScheduledTask({ LITTLEBABY_PROFILE: "work" });
@@ -166,7 +166,7 @@ describe("relaunchGatewayScheduledTask", () => {
   });
 
   it("includes startup fallback", () => {
-    const taskScriptDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-state-"));
+    const taskScriptDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-state-"));
     createdTmpDirs.add(taskScriptDir);
     const taskScriptPath = path.join(taskScriptDir, "gateway.cmd");
     fs.writeFileSync(taskScriptPath, "@echo off\r\nrem placeholder\r\n", "utf8");

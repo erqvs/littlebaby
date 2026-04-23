@@ -10,4 +10,4 @@ export {
   stripInvalidGoogleThinkingBudget,
   type GoogleThinkingInputLevel,
   type GoogleThinkingLevel,
-} from "openclaw/plugin-sdk/provider-stream-shared";
+} from "littlebaby/plugin-sdk/provider-stream-shared";

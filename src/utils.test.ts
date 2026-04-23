@@ -14,7 +14,7 @@ import {
 
 describe("ensureDir", () => {
   it("creates nested directory", async () => {
-    await withTempDir({ prefix: "openclaw-test-" }, async (tmp) => {
+    await withTempDir({ prefix: "littlebaby-test-" }, async (tmp) => {
       const target = path.join(tmp, "nested", "dir");
       await ensureDir(target);
       expect(fs.existsSync(target)).toBe(true);
@@ -34,8 +34,8 @@ describe("sleep", () => {
 
 describe("resolveConfigDir", () => {
   it("prefers ~/.littlebaby when legacy dir is missing", async () => {
-    await withTempDir({ prefix: "openclaw-config-dir-" }, async (root) => {
-      const newDir = path.join(root, ".openclaw");
+    await withTempDir({ prefix: "littlebaby-config-dir-" }, async (root) => {
+      const newDir = path.join(root, ".littlebaby");
       await fs.promises.mkdir(newDir, { recursive: true });
       const resolved = resolveConfigDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(newDir);
@@ -44,29 +44,29 @@ describe("resolveConfigDir", () => {
 
   it("expands LITTLEBABY_STATE_DIR using the provided env", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
+      HOME: "/tmp/littlebaby-home",
       LITTLEBABY_STATE_DIR: "~/state",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/openclaw-home", "state"));
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/littlebaby-home", "state"));
   });
 
   it("falls back to the config file directory when only LITTLEBABY_CONFIG_PATH is set", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      LITTLEBABY_CONFIG_PATH: "~/profiles/dev/openclaw.json",
+      HOME: "/tmp/littlebaby-home",
+      LITTLEBABY_CONFIG_PATH: "~/profiles/dev/littlebaby.json",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/openclaw-home", "profiles", "dev"));
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/littlebaby-home", "profiles", "dev"));
   });
 });
 
 describe("resolveHomeDir", () => {
   it("prefers LITTLEBABY_HOME over HOME", () => {
-    vi.stubEnv("LITTLEBABY_HOME", "/srv/openclaw-home");
+    vi.stubEnv("LITTLEBABY_HOME", "/srv/littlebaby-home");
     vi.stubEnv("HOME", "/home/other");
 
-    expect(resolveHomeDir()).toBe(path.resolve("/srv/openclaw-home"));
+    expect(resolveHomeDir()).toBe(path.resolve("/srv/littlebaby-home"));
 
     vi.unstubAllEnvs();
   });
@@ -74,11 +74,11 @@ describe("resolveHomeDir", () => {
 
 describe("shortenHomePath", () => {
   it("uses $LITTLEBABY_HOME prefix when LITTLEBABY_HOME is set", () => {
-    vi.stubEnv("LITTLEBABY_HOME", "/srv/openclaw-home");
+    vi.stubEnv("LITTLEBABY_HOME", "/srv/littlebaby-home");
     vi.stubEnv("HOME", "/home/other");
 
-    expect(shortenHomePath(`${path.resolve("/srv/openclaw-home")}/.littlebaby/openclaw.json`)).toBe(
-      "$LITTLEBABY_HOME/.littlebaby/openclaw.json",
+    expect(shortenHomePath(`${path.resolve("/srv/littlebaby-home")}/.littlebaby/littlebaby.json`)).toBe(
+      "$LITTLEBABY_HOME/.littlebaby/littlebaby.json",
     );
 
     vi.unstubAllEnvs();
@@ -87,12 +87,12 @@ describe("shortenHomePath", () => {
 
 describe("shortenHomeInString", () => {
   it("uses $LITTLEBABY_HOME replacement when LITTLEBABY_HOME is set", () => {
-    vi.stubEnv("LITTLEBABY_HOME", "/srv/openclaw-home");
+    vi.stubEnv("LITTLEBABY_HOME", "/srv/littlebaby-home");
     vi.stubEnv("HOME", "/home/other");
 
     expect(
-      shortenHomeInString(`config: ${path.resolve("/srv/openclaw-home")}/.littlebaby/openclaw.json`),
-    ).toBe("config: $LITTLEBABY_HOME/.littlebaby/openclaw.json");
+      shortenHomeInString(`config: ${path.resolve("/srv/littlebaby-home")}/.littlebaby/littlebaby.json`),
+    ).toBe("config: $LITTLEBABY_HOME/.littlebaby/littlebaby.json");
 
     vi.unstubAllEnvs();
   });
@@ -104,7 +104,7 @@ describe("resolveUserPath", () => {
   });
 
   it("expands ~/ to home dir", () => {
-    expect(resolveUserPath("~/openclaw", {}, () => "/Users/thoffman")).toBe(
+    expect(resolveUserPath("~/littlebaby", {}, () => "/Users/thoffman")).toBe(
       path.resolve("/Users/thoffman", "littlebaby"),
     );
   });
@@ -114,21 +114,21 @@ describe("resolveUserPath", () => {
   });
 
   it("prefers LITTLEBABY_HOME for tilde expansion", () => {
-    vi.stubEnv("LITTLEBABY_HOME", "/srv/openclaw-home");
+    vi.stubEnv("LITTLEBABY_HOME", "/srv/littlebaby-home");
     vi.stubEnv("HOME", "/home/other");
 
-    expect(resolveUserPath("~/openclaw")).toBe(path.resolve("/srv/openclaw-home", "littlebaby"));
+    expect(resolveUserPath("~/littlebaby")).toBe(path.resolve("/srv/littlebaby-home", "littlebaby"));
 
     vi.unstubAllEnvs();
   });
 
   it("uses the provided env for tilde expansion", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      LITTLEBABY_HOME: "/srv/openclaw-home",
+      HOME: "/tmp/littlebaby-home",
+      LITTLEBABY_HOME: "/srv/littlebaby-home",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveUserPath("~/openclaw", env)).toBe(path.resolve("/srv/openclaw-home", "littlebaby"));
+    expect(resolveUserPath("~/littlebaby", env)).toBe(path.resolve("/srv/littlebaby-home", "littlebaby"));
   });
 
   it("keeps blank paths blank", () => {

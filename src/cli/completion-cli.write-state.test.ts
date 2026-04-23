@@ -81,8 +81,8 @@ describe("completion-cli write-state", () => {
 
   it("keeps completion cache generation alive when a subcli fails to register", async () => {
     const { registerCompletionCli } = await import("./completion-cli.js");
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-state-"));
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-home-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-completion-state-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-completion-home-"));
 
     process.env.LITTLEBABY_STATE_DIR = stateDir;
     process.env.HOME = homeDir;
@@ -95,7 +95,7 @@ describe("completion-cli write-state", () => {
 
     const cacheDir = path.join(stateDir, "completions");
     expect(await fs.readdir(cacheDir)).toEqual(
-      expect.arrayContaining(["openclaw.bash", "openclaw.fish", "openclaw.ps1", "openclaw.zsh"]),
+      expect.arrayContaining(["littlebaby.bash", "littlebaby.fish", "littlebaby.ps1", "littlebaby.zsh"]),
     );
     expect(registerSubCliByNameMock).toHaveBeenCalledWith(program, "qa");
     expect(registerPluginCliCommandsFromValidatedConfigMock).toHaveBeenCalledTimes(1);

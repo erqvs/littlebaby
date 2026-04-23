@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../../src/config/config.js";
+import type { LittleBabyConfig } from "../../../src/config/config.js";
 import type { SecurityAuditFinding } from "../../../src/security/audit.types.js";
 import {
   loadBundledPluginPublicSurfaceSync,
@@ -14,15 +14,15 @@ type SecurityAuditAccount = {
   [key: string]: unknown;
 };
 type FlexibleSecurityAuditParams = {
-  cfg?: OpenClawConfig;
-  sourceConfig?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
+  sourceConfig?: LittleBabyConfig;
   account: SecurityAuditAccount;
   accountId?: string | null;
   orderedAccountIds?: string[];
   hasExplicitAccountPath?: boolean;
 };
 type ConfigSecurityAuditParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
 };
 type AsyncChannelSecurityAuditCollector = (
   params: FlexibleSecurityAuditParams,

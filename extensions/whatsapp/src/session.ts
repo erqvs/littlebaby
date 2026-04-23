@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import fsSync from "node:fs";
 import type { Agent } from "node:https";
-import { formatCliCommand } from "openclaw/plugin-sdk/cli-runtime";
-import { VERSION } from "openclaw/plugin-sdk/cli-runtime";
-import { resolveAmbientNodeProxyAgent } from "openclaw/plugin-sdk/extension-shared";
-import { danger, success } from "openclaw/plugin-sdk/runtime-env";
-import { getChildLogger, toPinoLikeLogger } from "openclaw/plugin-sdk/runtime-env";
-import { ensureDir, resolveUserPath } from "openclaw/plugin-sdk/text-runtime";
+import { formatCliCommand } from "littlebaby/plugin-sdk/cli-runtime";
+import { VERSION } from "littlebaby/plugin-sdk/cli-runtime";
+import { resolveAmbientNodeProxyAgent } from "littlebaby/plugin-sdk/extension-shared";
+import { danger, success } from "littlebaby/plugin-sdk/runtime-env";
+import { getChildLogger, toPinoLikeLogger } from "littlebaby/plugin-sdk/runtime-env";
+import { ensureDir, resolveUserPath } from "littlebaby/plugin-sdk/text-runtime";
 import {
   readCredsJsonRaw,
   restoreCredsFromBackupIfNeeded,
@@ -181,7 +181,7 @@ export async function createWaSocket(
           if (status === LOGGED_OUT_STATUS) {
             console.error(
               danger(
-                `WhatsApp session logged out. Run: ${formatCliCommand("openclaw channels login")}`,
+                `WhatsApp session logged out. Run: ${formatCliCommand("littlebaby channels login")}`,
               ),
             );
           }

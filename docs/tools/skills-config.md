@@ -9,7 +9,7 @@ title: "Skills Config"
 # Skills Config
 
 Most skills loader/install configuration lives under `skills` in
-`~/.littlebaby/openclaw.json`. Agent-specific skill visibility lives under
+`~/.littlebaby/littlebaby.json`. Agent-specific skill visibility lives under
 `agents.defaults.skills` and `agents.list[].skills`.
 
 ```json5
@@ -95,7 +95,7 @@ Rules:
 - `install.nodeManager`: node installer preference (`npm` | `pnpm` | `yarn` | `bun`, default: npm).
   This only affects **skill installs**; the Gateway runtime should still be Node
   (Bun not recommended for WhatsApp/Telegram).
-  - `openclaw setup --node-manager` is narrower and currently accepts `npm`,
+  - `littlebaby setup --node-manager` is narrower and currently accepts `npm`,
     `pnpm`, or `bun`. Set `skills.install.nodeManager: "yarn"` manually if you
     want Yarn-backed skill installs.
 - `entries.<skillKey>`: per-skill overrides.
@@ -114,7 +114,7 @@ Per-skill fields:
 ## Notes
 
 - Keys under `entries` map to the skill name by default. If a skill defines
-  `metadata.openclaw.skillKey`, use that key instead.
+  `metadata.littlebaby.skillKey`, use that key instead.
 - Load precedence is `<workspace>/skills` → `<workspace>/.agents/skills` →
   `~/.agents/skills` → `~/.littlebaby/skills` → bundled skills →
   `skills.load.extraDirs`.

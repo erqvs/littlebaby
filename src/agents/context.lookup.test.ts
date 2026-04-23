@@ -7,7 +7,7 @@ const contextTestState = vi.hoisted(() => {
   const state = {
     loadConfigImpl: () => ({}) as unknown,
     discoveredModels: [] as DiscoveredModel[],
-    ensureOpenClawModelsJson: vi.fn(async () => {}),
+    ensureLittleBabyModelsJson: vi.fn(async () => {}),
     discoverAuthStorage: vi.fn(() => ({})),
     discoverModels: vi.fn(() => ({
       getAll: () => state.discoveredModels,
@@ -21,11 +21,11 @@ vi.mock("../config/config.js", () => ({
 }));
 
 vi.mock("./models-config.js", () => ({
-  ensureOpenClawModelsJson: contextTestState.ensureOpenClawModelsJson,
+  ensureLittleBabyModelsJson: contextTestState.ensureLittleBabyModelsJson,
 }));
 
 vi.mock("./agent-paths.js", () => ({
-  resolveOpenClawAgentDir: () => "/tmp/openclaw-agent",
+  resolveLittleBabyAgentDir: () => "/tmp/littlebaby-agent",
 }));
 
 vi.mock("./pi-model-discovery-runtime.js", () => ({
@@ -39,8 +39,8 @@ function mockContextDeps(params: {
 }) {
   contextTestState.loadConfigImpl = params.loadConfig;
   contextTestState.discoveredModels = params.discoveredModels ?? [];
-  contextTestState.ensureOpenClawModelsJson.mockClear();
-  return { ensureOpenClawModelsJson: contextTestState.ensureOpenClawModelsJson };
+  contextTestState.ensureLittleBabyModelsJson.mockClear();
+  return { ensureLittleBabyModelsJson: contextTestState.ensureLittleBabyModelsJson };
 }
 
 function mockContextModuleDeps(loadConfigImpl: () => unknown) {
@@ -105,7 +105,7 @@ describe("lookupContextTokens", () => {
   beforeEach(() => {
     contextTestState.loadConfigImpl = () => ({});
     contextTestState.discoveredModels = [];
-    contextTestState.ensureOpenClawModelsJson.mockClear();
+    contextTestState.ensureLittleBabyModelsJson.mockClear();
     contextTestState.discoverAuthStorage.mockClear();
     contextTestState.discoverModels.mockClear();
     contextModule.resetContextWindowCacheForTest();
@@ -195,7 +195,7 @@ describe("lookupContextTokens", () => {
     expect(secondLoadConfigMock).not.toHaveBeenCalled();
   });
 
-  it("only warms eagerly for real openclaw startup commands that need model metadata", async () => {
+  it("only warms eagerly for real littlebaby startup commands that need model metadata", async () => {
     const argvSnapshot = process.argv;
     try {
       for (const scenario of [
@@ -221,11 +221,11 @@ describe("lookupContextTokens", () => {
         },
       ]) {
         const loadConfigMock = vi.fn(() => ({ models: {} }));
-        const { ensureOpenClawModelsJson } = mockContextModuleDeps(loadConfigMock);
+        const { ensureLittleBabyModelsJson } = mockContextModuleDeps(loadConfigMock);
         process.argv = scenario.argv;
         await importFreshContextModule();
         expect(loadConfigMock).toHaveBeenCalledTimes(scenario.expectedCalls);
-        expect(ensureOpenClawModelsJson).toHaveBeenCalledTimes(scenario.expectedCalls);
+        expect(ensureLittleBabyModelsJson).toHaveBeenCalledTimes(scenario.expectedCalls);
       }
     } finally {
       process.argv = argvSnapshot;

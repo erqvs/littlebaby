@@ -338,7 +338,7 @@ export function getChromeMcpMocks(): Record<string, MockFn> {
   return chromeMcpMocks as unknown as Record<string, MockFn>;
 }
 
-const chromeUserDataDir = vi.hoisted(() => ({ dir: "/tmp/openclaw" }));
+const chromeUserDataDir = vi.hoisted(() => ({ dir: "/tmp/littlebaby" }));
 installChromeUserDataDirHooks(chromeUserDataDir);
 
 type BrowserServerModule = typeof import("../server.js");
@@ -381,7 +381,7 @@ function defaultBrowserCdpPortForState(testPort: number): number {
 
 function defaultProfilesForState(testPort: number): HarnessState["cfgProfiles"] {
   return {
-    openclaw: { cdpPort: defaultBrowserCdpPortForState(testPort), color: "#FF4500" },
+    littlebaby: { cdpPort: defaultBrowserCdpPortForState(testPort), color: "#FF4500" },
   };
 }
 
@@ -426,7 +426,7 @@ export function getLaunchCalls() {
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => state.reachable),
   isChromeReachable: vi.fn(async () => state.reachable),
-  launchOpenClawChrome: vi.fn(async (_resolved: unknown, profile: { cdpPort: number }) => {
+  launchLittleBabyChrome: vi.fn(async (_resolved: unknown, profile: { cdpPort: number }) => {
     launchCalls.push({ port: profile.cdpPort });
     state.reachable = true;
     return {
@@ -438,8 +438,8 @@ vi.mock("./chrome.js", () => ({
       proc,
     };
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => chromeUserDataDir.dir),
-  stopOpenClawChrome: vi.fn(async () => {
+  resolveLittleBabyUserDataDir: vi.fn(() => chromeUserDataDir.dir),
+  stopLittleBabyChrome: vi.fn(async () => {
     state.reachable = false;
   }),
 }));

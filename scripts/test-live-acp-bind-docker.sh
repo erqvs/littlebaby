@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/scripts/lib/live-docker-auth.sh"
-IMAGE_NAME="${LITTLEBABY_IMAGE:-openclaw:local}"
+IMAGE_NAME="${LITTLEBABY_IMAGE:-littlebaby:local}"
 LIVE_IMAGE_NAME="${LITTLEBABY_LIVE_IMAGE:-${IMAGE_NAME}-live}"
 CONFIG_DIR="${LITTLEBABY_CONFIG_DIR:-$HOME/.littlebaby}"
 WORKSPACE_DIR="${LITTLEBABY_WORKSPACE_DIR:-$HOME/.littlebaby/workspace}"
@@ -14,7 +14,7 @@ DOCKER_USER="${LITTLEBABY_DOCKER_USER:-node}"
 DOCKER_HOME_MOUNT=()
 DOCKER_AUTH_PRESTAGED=0
 
-openclaw_live_acp_bind_resolve_auth_provider() {
+littlebaby_live_acp_bind_resolve_auth_provider() {
   case "${1:-}" in
     claude) printf '%s\n' "claude-cli" ;;
     codex) printf '%s\n' "codex-cli" ;;
@@ -26,7 +26,7 @@ openclaw_live_acp_bind_resolve_auth_provider() {
   esac
 }
 
-openclaw_live_acp_bind_resolve_agent_command() {
+littlebaby_live_acp_bind_resolve_agent_command() {
   case "${1:-}" in
     claude) printf '%s' "${LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND_CLAUDE:-${LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
     codex) printf '%s' "${LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND_CODEX:-${LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
@@ -45,18 +45,18 @@ trap cleanup_temp_dirs EXIT
 if [[ -n "${LITTLEBABY_DOCKER_CLI_TOOLS_DIR:-}" ]]; then
   CLI_TOOLS_DIR="${LITTLEBABY_DOCKER_CLI_TOOLS_DIR}"
 elif [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
-  CLI_TOOLS_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cli-tools.XXXXXX")"
+  CLI_TOOLS_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/littlebaby-docker-cli-tools.XXXXXX")"
   TEMP_DIRS+=("$CLI_TOOLS_DIR")
 else
-  CLI_TOOLS_DIR="$HOME/.cache/openclaw/docker-cli-tools"
+  CLI_TOOLS_DIR="$HOME/.cache/littlebaby/docker-cli-tools"
 fi
 if [[ -n "${LITTLEBABY_DOCKER_CACHE_HOME_DIR:-}" ]]; then
   CACHE_HOME_DIR="${LITTLEBABY_DOCKER_CACHE_HOME_DIR}"
 elif [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
-  CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cache.XXXXXX")"
+  CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/littlebaby-docker-cache.XXXXXX")"
   TEMP_DIRS+=("$CACHE_HOME_DIR")
 else
-  CACHE_HOME_DIR="$HOME/.cache/openclaw/docker-cache"
+  CACHE_HOME_DIR="$HOME/.cache/littlebaby/docker-cache"
 fi
 
 mkdir -p "$CLI_TOOLS_DIR"
@@ -154,7 +154,7 @@ cleanup() {
 }
 trap cleanup EXIT
 source /src/scripts/lib/live-docker-stage.sh
-openclaw_live_stage_source_tree "$tmp_dir"
+littlebaby_live_stage_source_tree "$tmp_dir"
 # Use a writable node_modules overlay in the temp repo. Vite writes bundled
 # config artifacts under the nearest node_modules/.vite-temp path, and the
 # build-stage /app/node_modules tree is root-owned in this Docker lane.
@@ -162,9 +162,9 @@ mkdir -p "$tmp_dir/node_modules"
 cp -aRs /app/node_modules/. "$tmp_dir/node_modules"
 rm -rf "$tmp_dir/node_modules/.vite-temp"
 mkdir -p "$tmp_dir/node_modules/.vite-temp"
-openclaw_live_link_runtime_tree "$tmp_dir"
-openclaw_live_stage_state_dir "$tmp_dir/.littlebaby-state"
-openclaw_live_prepare_staged_config
+littlebaby_live_link_runtime_tree "$tmp_dir"
+littlebaby_live_stage_state_dir "$tmp_dir/.littlebaby-state"
+littlebaby_live_prepare_staged_config
 cd "$tmp_dir"
 export LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND="${LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND:-}"
 pnpm test:live src/gateway/gateway-acp-bind.live.test.ts
@@ -175,9 +175,9 @@ EOF
 IFS=',' read -r -a ACP_AGENT_TOKENS <<<"$ACP_AGENT_LIST_RAW"
 ACP_AGENTS=()
 for token in "${ACP_AGENT_TOKENS[@]}"; do
-  agent="$(openclaw_live_trim "$token")"
+  agent="$(littlebaby_live_trim "$token")"
   [[ -n "$agent" ]] || continue
-  openclaw_live_acp_bind_resolve_auth_provider "$agent" >/dev/null
+  littlebaby_live_acp_bind_resolve_auth_provider "$agent" >/dev/null
   ACP_AGENTS+=("$agent")
 done
 
@@ -187,8 +187,8 @@ if ((${#ACP_AGENTS[@]} == 0)); then
 fi
 
 for ACP_AGENT in "${ACP_AGENTS[@]}"; do
-  AUTH_PROVIDER="$(openclaw_live_acp_bind_resolve_auth_provider "$ACP_AGENT")"
-  AGENT_COMMAND="$(openclaw_live_acp_bind_resolve_agent_command "$ACP_AGENT")"
+  AUTH_PROVIDER="$(littlebaby_live_acp_bind_resolve_auth_provider "$ACP_AGENT")"
+  AGENT_COMMAND="$(littlebaby_live_acp_bind_resolve_agent_command "$ACP_AGENT")"
 
   AUTH_DIRS=()
   AUTH_FILES=()
@@ -196,48 +196,48 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
     while IFS= read -r auth_dir; do
       [[ -n "$auth_dir" ]] || continue
       AUTH_DIRS+=("$auth_dir")
-    done < <(openclaw_live_collect_auth_dirs)
+    done < <(littlebaby_live_collect_auth_dirs)
     while IFS= read -r auth_file; do
       [[ -n "$auth_file" ]] || continue
       AUTH_FILES+=("$auth_file")
-    done < <(openclaw_live_collect_auth_files)
+    done < <(littlebaby_live_collect_auth_files)
   else
     while IFS= read -r auth_dir; do
       [[ -n "$auth_dir" ]] || continue
       AUTH_DIRS+=("$auth_dir")
-    done < <(openclaw_live_collect_auth_dirs_from_csv "$AUTH_PROVIDER")
+    done < <(littlebaby_live_collect_auth_dirs_from_csv "$AUTH_PROVIDER")
     while IFS= read -r auth_file; do
       [[ -n "$auth_file" ]] || continue
       AUTH_FILES+=("$auth_file")
-    done < <(openclaw_live_collect_auth_files_from_csv "$AUTH_PROVIDER")
+    done < <(littlebaby_live_collect_auth_files_from_csv "$AUTH_PROVIDER")
   fi
 
   AUTH_DIRS_CSV=""
   if ((${#AUTH_DIRS[@]} > 0)); then
-    AUTH_DIRS_CSV="$(openclaw_live_join_csv "${AUTH_DIRS[@]}")"
+    AUTH_DIRS_CSV="$(littlebaby_live_join_csv "${AUTH_DIRS[@]}")"
   fi
   AUTH_FILES_CSV=""
   if ((${#AUTH_FILES[@]} > 0)); then
-    AUTH_FILES_CSV="$(openclaw_live_join_csv "${AUTH_FILES[@]}")"
+    AUTH_FILES_CSV="$(littlebaby_live_join_csv "${AUTH_FILES[@]}")"
   fi
 
   DOCKER_HOME_MOUNT=()
   DOCKER_AUTH_PRESTAGED=0
   if [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
-    DOCKER_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-home.XXXXXX")"
+    DOCKER_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/littlebaby-docker-home.XXXXXX")"
     TEMP_DIRS+=("$DOCKER_HOME_DIR")
     DOCKER_HOME_MOUNT=(-v "$DOCKER_HOME_DIR":/home/node)
   fi
 
   if [[ -n "${DOCKER_HOME_DIR:-}" ]]; then
-    openclaw_live_stage_auth_into_home "$DOCKER_HOME_DIR" "${AUTH_DIRS[@]}" --files "${AUTH_FILES[@]}"
+    littlebaby_live_stage_auth_into_home "$DOCKER_HOME_DIR" "${AUTH_DIRS[@]}" --files "${AUTH_FILES[@]}"
     DOCKER_AUTH_PRESTAGED=1
   fi
 
   EXTERNAL_AUTH_MOUNTS=()
   if ((${#AUTH_DIRS[@]} > 0)); then
     for auth_dir in "${AUTH_DIRS[@]}"; do
-      auth_dir="$(openclaw_live_validate_relative_home_path "$auth_dir")"
+      auth_dir="$(littlebaby_live_validate_relative_home_path "$auth_dir")"
       host_path="$HOME/$auth_dir"
       if [[ -d "$host_path" ]]; then
         EXTERNAL_AUTH_MOUNTS+=(-v "$host_path":/host-auth/"$auth_dir":ro)
@@ -246,7 +246,7 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
   fi
   if ((${#AUTH_FILES[@]} > 0)); then
     for auth_file in "${AUTH_FILES[@]}"; do
-      auth_file="$(openclaw_live_validate_relative_home_path "$auth_file")"
+      auth_file="$(littlebaby_live_validate_relative_home_path "$auth_file")"
       host_path="$HOME/$auth_file"
       if [[ -f "$host_path" ]]; then
         EXTERNAL_AUTH_MOUNTS+=(-v "$host_path":/host-auth-files/"$auth_file":ro)

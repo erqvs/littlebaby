@@ -1,10 +1,10 @@
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "openclaw/plugin-sdk/reply-payload";
+} from "littlebaby/plugin-sdk/reply-payload";
 import {
   getAgentScopedMediaLocalRoots,
-  type OpenClawConfig,
+  type LittleBabyConfig,
   type PluginRuntime,
   type ReplyPayload,
 } from "./runtime-api.js";
@@ -15,7 +15,7 @@ type SendMattermostMessage = (
   to: string,
   text: string,
   opts: {
-    cfg?: OpenClawConfig;
+    cfg?: LittleBabyConfig;
     accountId?: string;
     mediaUrl?: string;
     mediaLocalRoots?: readonly string[];
@@ -25,7 +25,7 @@ type SendMattermostMessage = (
 
 export async function deliverMattermostReplyPayload(params: {
   core: PluginRuntime;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   payload: ReplyPayload;
   to: string;
   accountId: string;

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import type { CommandArgValues } from "./commands-args.types.js";
 
 export type { CommandArgValue, CommandArgValues, CommandArgs } from "./commands-args.types.js";
@@ -25,7 +25,7 @@ export type CommandCategory =
 export type CommandArgType = "string" | "number" | "boolean";
 
 export type CommandArgChoiceContext = {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   provider?: string;
   model?: string;
   command: ChatCommandDefinition;
@@ -86,7 +86,7 @@ export type CommandDetection = {
 };
 
 export type ShouldHandleTextCommandsParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   surface: string;
   commandSource?: "text" | "native";
 };

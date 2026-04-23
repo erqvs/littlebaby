@@ -33,7 +33,7 @@ metadata:
     expect(result.metadata).toBeDefined();
 
     const parsed = JSON5.parse(result.metadata ?? "");
-    expect(parsed.openclaw?.emoji).toBe("disk");
+    expect(parsed.littlebaby?.emoji).toBe("disk");
   });
 
   it("preserves inline JSON values", () => {
@@ -55,7 +55,7 @@ tags:
   - alpha
   - beta
 metadata:
-  openclaw:
+  littlebaby:
     events:
       - command:new
 ---
@@ -65,7 +65,7 @@ metadata:
     expect(result.retries).toBe("3");
     expect(JSON.parse(result.tags ?? "[]")).toEqual(["alpha", "beta"]);
     const parsed = JSON5.parse(result.metadata ?? "");
-    expect(parsed.openclaw?.events).toEqual(["command:new"]);
+    expect(parsed.littlebaby?.events).toEqual(["command:new"]);
   });
 
   it("preserves inline description values containing colons", () => {
@@ -91,7 +91,7 @@ description: |-
     const content = `---
 name: sample-skill
 metadata:
-  openclaw: true
+  littlebaby: true
 ---`;
     const result = parseFrontmatterBlock(content);
     expect(result.metadata).toBe('{"littlebaby":true}');

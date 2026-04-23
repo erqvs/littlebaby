@@ -1,15 +1,15 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-runtime";
+import type { LittleBabyPluginApi } from "littlebaby/plugin-sdk/plugin-runtime";
 
-type TestPluginApiInput = Partial<OpenClawPluginApi>;
+type TestPluginApiInput = Partial<LittleBabyPluginApi>;
 
-export function createTestPluginApi(api: TestPluginApiInput = {}): OpenClawPluginApi {
+export function createTestPluginApi(api: TestPluginApiInput = {}): LittleBabyPluginApi {
   return {
     id: "test-plugin",
     name: "test-plugin",
     source: "test",
     registrationMode: "full",
     config: {},
-    runtime: {} as OpenClawPluginApi["runtime"],
+    runtime: {} as LittleBabyPluginApi["runtime"],
     logger: { info() {}, warn() {}, error() {}, debug() {} },
     registerTool() {},
     registerHook() {},

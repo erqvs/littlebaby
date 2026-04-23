@@ -3,7 +3,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 // Capture every call to postTrustedWebToolsJson so we can assert on extraHeaders.
 const postTrustedWebToolsJson = vi.fn();
 
-vi.mock("openclaw/plugin-sdk/provider-web-search", () => ({
+vi.mock("littlebaby/plugin-sdk/provider-web-search", () => ({
   DEFAULT_CACHE_TTL_MINUTES: 5,
   normalizeCacheKey: (k: string) => k,
   postTrustedWebToolsJson,
@@ -12,7 +12,7 @@ vi.mock("openclaw/plugin-sdk/provider-web-search", () => ({
   writeCache: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/security-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/security-runtime", () => ({
   wrapExternalContent: (v: string) => v,
   wrapWebContent: (v: string) => v,
 }));
@@ -41,7 +41,7 @@ describe("tavily client X-Client-Source header", () => {
     );
   });
 
-  it("runTavilySearch sends X-Client-Source: openclaw", async () => {
+  it("runTavilySearch sends X-Client-Source: littlebaby", async () => {
     await runTavilySearch({ query: "test query" });
 
     expect(postTrustedWebToolsJson).toHaveBeenCalledOnce();
@@ -49,7 +49,7 @@ describe("tavily client X-Client-Source header", () => {
     expect(params.extraHeaders).toEqual({ "X-Client-Source": "littlebaby" });
   });
 
-  it("runTavilyExtract sends X-Client-Source: openclaw", async () => {
+  it("runTavilyExtract sends X-Client-Source: littlebaby", async () => {
     await runTavilyExtract({ urls: ["https://example.com"] });
 
     expect(postTrustedWebToolsJson).toHaveBeenCalledOnce();

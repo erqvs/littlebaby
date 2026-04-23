@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-logs.sh"
-IMAGE_NAME="openclaw-onboard-e2e"
+IMAGE_NAME="littlebaby-onboard-e2e"
 
 echo "Building Docker image..."
 run_logged onboard-build docker build -t "$IMAGE_NAME" -f "$ROOT_DIR/scripts/e2e/Dockerfile" "$ROOT_DIR"
@@ -27,9 +27,9 @@ docker run --rm -t "$IMAGE_NAME" bash -lc '
 	  export LITTLEBABY_ENTRY
 
   # Provide a minimal trash shim to avoid noisy "missing trash" logs in containers.
-  export PATH="/tmp/openclaw-bin:$PATH"
-  mkdir -p /tmp/openclaw-bin
-  cat > /tmp/openclaw-bin/trash <<'"'"'TRASH'"'"'
+  export PATH="/tmp/littlebaby-bin:$PATH"
+  mkdir -p /tmp/littlebaby-bin
+  cat > /tmp/littlebaby-bin/trash <<'"'"'TRASH'"'"'
 #!/usr/bin/env bash
 set -euo pipefail
 trash_dir="$HOME/.Trash"
@@ -44,7 +44,7 @@ for target in "$@"; do
   mv "$target" "$dest"
 done
 TRASH
-  chmod +x /tmp/openclaw-bin/trash
+  chmod +x /tmp/littlebaby-bin/trash
 
   send() {
     local payload="$1"
@@ -167,11 +167,11 @@ TRASH
     local validate_fn="${6:-}"
 
     echo "== Wizard case: $case_name =="
-    set_isolated_openclaw_env "$home_dir"
+    set_isolated_littlebaby_env "$home_dir"
 
-    input_fifo="$(mktemp -u "/tmp/openclaw-onboard-${case_name}.XXXXXX")"
+    input_fifo="$(mktemp -u "/tmp/littlebaby-onboard-${case_name}.XXXXXX")"
     mkfifo "$input_fifo"
-    local log_path="/tmp/openclaw-onboard-${case_name}.log"
+    local log_path="/tmp/littlebaby-onboard-${case_name}.log"
     WIZARD_LOG_PATH="$log_path"
     export WIZARD_LOG_PATH
     # Run under script to keep an interactive TTY for clack prompts.
@@ -218,15 +218,15 @@ TRASH
 	  }
 
   make_home() {
-    mktemp -d "/tmp/openclaw-e2e-$1.XXXXXX"
+    mktemp -d "/tmp/littlebaby-e2e-$1.XXXXXX"
   }
 
-  set_isolated_openclaw_env() {
+  set_isolated_littlebaby_env() {
     local home_dir="$1"
     export HOME="$home_dir"
     export LITTLEBABY_HOME="$home_dir"
     export LITTLEBABY_STATE_DIR="$home_dir/.littlebaby"
-    export LITTLEBABY_CONFIG_PATH="$LITTLEBABY_STATE_DIR/openclaw.json"
+    export LITTLEBABY_CONFIG_PATH="$LITTLEBABY_STATE_DIR/littlebaby.json"
     mkdir -p "$LITTLEBABY_STATE_DIR"
   }
 
@@ -249,7 +249,7 @@ TRASH
   run_case_logged() {
     local label="$1"
     shift
-    local log_path="/tmp/openclaw-onboard-${label}.log"
+    local log_path="/tmp/littlebaby-onboard-${label}.log"
     if ! "$@" >"$log_path" 2>&1; then
       cat "$log_path"
       exit 1
@@ -308,7 +308,7 @@ TRASH
   run_case_local_basic() {
     local home_dir
     home_dir="$(make_home local-basic)"
-    set_isolated_openclaw_env "$home_dir"
+    set_isolated_littlebaby_env "$home_dir"
     run_case_logged local-basic node "$LITTLEBABY_ENTRY" onboard \
 	      --non-interactive \
 	      --accept-risk \
@@ -383,7 +383,7 @@ NODE
   run_case_remote_non_interactive() {
     local home_dir
     home_dir="$(make_home remote-non-interactive)"
-    set_isolated_openclaw_env "$home_dir"
+    set_isolated_littlebaby_env "$home_dir"
 	    # Smoke test non-interactive remote config write.
 	    run_case_logged remote-non-interactive node "$LITTLEBABY_ENTRY" onboard --non-interactive --accept-risk \
 	      --mode remote \
@@ -425,7 +425,7 @@ NODE
   run_case_reset() {
     local home_dir
     home_dir="$(make_home reset-config)"
-    set_isolated_openclaw_env "$home_dir"
+    set_isolated_littlebaby_env "$home_dir"
     # Seed a remote config to exercise reset path.
 	    cat > "$LITTLEBABY_CONFIG_PATH" <<'"'"'JSON'"'"'
 {
@@ -520,7 +520,7 @@ NODE
   run_case_skills() {
     local home_dir
     home_dir="$(make_home skills)"
-    set_isolated_openclaw_env "$home_dir"
+    set_isolated_littlebaby_env "$home_dir"
     # Seed skills config to ensure it survives the wizard.
 	    cat > "$LITTLEBABY_CONFIG_PATH" <<'"'"'JSON'"'"'
 {

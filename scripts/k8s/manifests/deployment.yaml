@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openclaw
+  name: littlebaby
   labels:
-    app: openclaw
+    app: littlebaby
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: openclaw
+      app: littlebaby
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: openclaw
+        app: littlebaby
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -29,7 +29,7 @@ spec:
             - sh
             - -c
             - |
-              cp /config/openclaw.json /home/node/.littlebaby/openclaw.json
+              cp /config/littlebaby.json /home/node/.littlebaby/littlebaby.json
               mkdir -p /home/node/.littlebaby/workspace
               cp /config/AGENTS.md /home/node/.littlebaby/workspace/AGENTS.md
           securityContext:
@@ -43,13 +43,13 @@ spec:
               memory: 64Mi
               cpu: 100m
           volumeMounts:
-            - name: openclaw-home
+            - name: littlebaby-home
               mountPath: /home/node/.littlebaby
             - name: config
               mountPath: /config
       containers:
         - name: gateway
-          image: ghcr.io/openclaw/openclaw:slim
+          image: ghcr.io/littlebaby/littlebaby:slim
           imagePullPolicy: IfNotPresent
           command:
             - node
@@ -70,30 +70,30 @@ spec:
             - name: LITTLEBABY_GATEWAY_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: littlebaby-secrets
                   key: LITTLEBABY_GATEWAY_TOKEN
             - name: ANTHROPIC_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: littlebaby-secrets
                   key: ANTHROPIC_API_KEY
                   optional: true
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: littlebaby-secrets
                   key: OPENAI_API_KEY
                   optional: true
             - name: GEMINI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: littlebaby-secrets
                   key: GEMINI_API_KEY
                   optional: true
             - name: OPENROUTER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: littlebaby-secrets
                   key: OPENROUTER_API_KEY
                   optional: true
           resources:
@@ -122,7 +122,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
           volumeMounts:
-            - name: openclaw-home
+            - name: littlebaby-home
               mountPath: /home/node/.littlebaby
             - name: tmp-volume
               mountPath: /tmp
@@ -136,11 +136,11 @@ spec:
               drop:
                 - ALL
       volumes:
-        - name: openclaw-home
+        - name: littlebaby-home
           persistentVolumeClaim:
-            claimName: openclaw-home-pvc
+            claimName: littlebaby-home-pvc
         - name: config
           configMap:
-            name: openclaw-config
+            name: littlebaby-config
         - name: tmp-volume
           emptyDir: {}

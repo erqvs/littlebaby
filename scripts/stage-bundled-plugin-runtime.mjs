@@ -73,7 +73,7 @@ function writeJsonFile(targetPath, value) {
   fs.writeFileSync(targetPath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-function removeStaleOpenClawSelfReference(sourcePluginNodeModulesDir, repoRoot) {
+function removeStaleLittleBabySelfReference(sourcePluginNodeModulesDir, repoRoot) {
   if (!fs.existsSync(sourcePluginNodeModulesDir)) {
     return;
   }
@@ -94,7 +94,7 @@ function removeStaleOpenClawSelfReference(sourcePluginNodeModulesDir, repoRoot) 
   }
 }
 
-function ensureOpenClawExtensionAlias(params) {
+function ensureLittleBabyExtensionAlias(params) {
   const pluginSdkDir = path.join(params.repoRoot, "dist", "plugin-sdk");
   if (!fs.existsSync(pluginSdkDir)) {
     return;
@@ -132,7 +132,7 @@ function shouldCopyRuntimeFile(sourcePath) {
   const relativePath = sourcePath.replace(/\\/g, "/");
   return (
     relativePath.endsWith("/package.json") ||
-    relativePath.endsWith("/openclaw.plugin.json") ||
+    relativePath.endsWith("/littlebaby.plugin.json") ||
     relativePath.endsWith("/.codex-plugin/plugin.json") ||
     relativePath.endsWith("/.claude-plugin/plugin.json") ||
     relativePath.endsWith("/.cursor-plugin/plugin.json") ||
@@ -200,7 +200,7 @@ function linkPluginNodeModules(params) {
   if (!fs.existsSync(params.sourcePluginNodeModulesDir)) {
     return;
   }
-  removeStaleOpenClawSelfReference(params.sourcePluginNodeModulesDir, params.repoRoot);
+  removeStaleLittleBabySelfReference(params.sourcePluginNodeModulesDir, params.repoRoot);
   ensureSymlink(
     params.sourcePluginNodeModulesDir,
     runtimeNodeModulesDir,
@@ -223,7 +223,7 @@ export function stageBundledPluginRuntime(params = {}) {
 
   removePathIfExists(runtimeRoot);
   fs.mkdirSync(runtimeExtensionsRoot, { recursive: true });
-  ensureOpenClawExtensionAlias({ repoRoot, distExtensionsRoot });
+  ensureLittleBabyExtensionAlias({ repoRoot, distExtensionsRoot });
 
   for (const dirent of fs.readdirSync(distExtensionsRoot, { withFileTypes: true })) {
     if (!dirent.isDirectory() || dirent.name === "node_modules") {

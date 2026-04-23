@@ -15,7 +15,7 @@ Quick provider overview + examples: [/concepts/model-providers](/concepts/model-
 
 ## How model selection works
 
-OpenClaw selects models in this order:
+LittleBaby selects models in this order:
 
 1. **Primary** model (`agents.defaults.model.primary` or `agents.defaults.model`).
 2. **Fallbacks** in `agents.defaults.model.fallbacks` (in order).
@@ -24,7 +24,7 @@ OpenClaw selects models in this order:
 
 Related:
 
-- `agents.defaults.models` is the allowlist/catalog of models OpenClaw can use (plus aliases).
+- `agents.defaults.models` is the allowlist/catalog of models LittleBaby can use (plus aliases).
 - `agents.defaults.imageModel` is used **only when** the primary model can’t accept images.
 - `agents.defaults.pdfModel` is used by the `pdf` tool. If omitted, the tool
   falls back to `agents.defaults.imageModel`, then the resolved session/default
@@ -45,7 +45,7 @@ Related:
 If you don’t want to hand-edit config, run onboarding:
 
 ```bash
-openclaw onboard
+littlebaby onboard
 ```
 
 It can set up model + auth for common providers, including **OpenAI Code (Codex)
@@ -71,7 +71,7 @@ Provider configuration examples (including OpenCode) live in
 
 If `agents.defaults.models` is set, it becomes the **allowlist** for `/model` and for
 session overrides. When a user selects a model that isn’t in that allowlist,
-OpenClaw returns:
+LittleBaby returns:
 
 ```
 Model "provider/model" is not allowed. Use /model to list available models.
@@ -117,16 +117,16 @@ Notes:
 - `/model <#>` selects from that picker.
 - `/model` persists the new session selection immediately.
 - If the agent is idle, the next run uses the new model right away.
-- If a run is already active, OpenClaw marks a live switch as pending and only restarts into the new model at a clean retry point.
+- If a run is already active, LittleBaby marks a live switch as pending and only restarts into the new model at a clean retry point.
 - If tool activity or reply output has already started, the pending switch can stay queued until a later retry opportunity or the next user turn.
 - `/model status` is the detailed view (auth candidates and, when configured, provider endpoint `baseUrl` + `api` mode).
 - Model refs are parsed by splitting on the **first** `/`. Use `provider/model` when typing `/model <ref>`.
 - If the model ID itself contains `/` (OpenRouter-style), you must include the provider prefix (example: `/model openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, OpenClaw resolves the input in this order:
+- If you omit the provider, LittleBaby resolves the input in this order:
   1. alias match
   2. unique configured-provider match for that exact unprefixed model id
   3. deprecated fallback to the configured default provider
-     If that provider no longer exposes the configured default model, OpenClaw
+     If that provider no longer exposes the configured default model, LittleBaby
      instead falls back to the first configured provider/model to avoid
      surfacing a stale removed-provider default.
 
@@ -135,27 +135,27 @@ Full command behavior/config: [Slash commands](/tools/slash-commands).
 ## CLI commands
 
 ```bash
-openclaw models list
-openclaw models status
-openclaw models set <provider/model>
-openclaw models set-image <provider/model>
+littlebaby models list
+littlebaby models status
+littlebaby models set <provider/model>
+littlebaby models set-image <provider/model>
 
-openclaw models aliases list
-openclaw models aliases add <alias> <provider/model>
-openclaw models aliases remove <alias>
+littlebaby models aliases list
+littlebaby models aliases add <alias> <provider/model>
+littlebaby models aliases remove <alias>
 
-openclaw models fallbacks list
-openclaw models fallbacks add <provider/model>
-openclaw models fallbacks remove <provider/model>
-openclaw models fallbacks clear
+littlebaby models fallbacks list
+littlebaby models fallbacks add <provider/model>
+littlebaby models fallbacks remove <provider/model>
+littlebaby models fallbacks clear
 
-openclaw models image-fallbacks list
-openclaw models image-fallbacks add <provider/model>
-openclaw models image-fallbacks remove <provider/model>
-openclaw models image-fallbacks clear
+littlebaby models image-fallbacks list
+littlebaby models image-fallbacks add <provider/model>
+littlebaby models image-fallbacks remove <provider/model>
+littlebaby models image-fallbacks clear
 ```
 
-`openclaw models` (no subcommand) is a shortcut for `models status`.
+`littlebaby models` (no subcommand) is a shortcut for `models status`.
 
 ### `models list`
 
@@ -193,12 +193,12 @@ Example (Claude CLI):
 
 ```bash
 claude auth login
-openclaw models status
+littlebaby models status
 ```
 
 ## Scanning (OpenRouter free models)
 
-`openclaw models scan` inspects OpenRouter’s **free model catalog** and can
+`littlebaby models scan` inspects OpenRouter’s **free model catalog** and can
 optionally probe models for tool and image support.
 
 Key flags:
@@ -246,8 +246,8 @@ Merge mode precedence for matching provider IDs:
 - Empty or missing agent `apiKey`/`baseUrl` fall back to config `models.providers`.
 - Other provider fields are refreshed from config and normalized catalog data.
 
-Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values.
-This applies whenever OpenClaw regenerates `models.json`, including command-driven paths like `openclaw agent`.
+Marker persistence is source-authoritative: LittleBaby writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values.
+This applies whenever LittleBaby regenerates `models.json`, including command-driven paths like `littlebaby agent`.
 
 ## Related
 

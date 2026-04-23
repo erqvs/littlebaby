@@ -1,8 +1,8 @@
 import {
   defineBundledChannelEntry,
-  type OpenClawPluginApi,
-} from "openclaw/plugin-sdk/channel-entry-contract";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+  type LittleBabyPluginApi,
+} from "littlebaby/plugin-sdk/channel-entry-contract";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
 import { registerMatrixCliMetadata } from "./cli-metadata.js";
 
 type MatrixHandlersRuntimeModule = typeof import("./plugin-entry.handlers.runtime.js");
@@ -21,7 +21,7 @@ function loadMatrixSubagentHooksModule() {
   return matrixSubagentHooksPromise;
 }
 
-export function registerMatrixFullRuntime(api: OpenClawPluginApi): void {
+export function registerMatrixFullRuntime(api: LittleBabyPluginApi): void {
   void loadMatrixHandlersRuntimeModule()
     .then(({ ensureMatrixCryptoRuntime }) =>
       ensureMatrixCryptoRuntime({ log: api.logger.info }).catch((err: unknown) => {

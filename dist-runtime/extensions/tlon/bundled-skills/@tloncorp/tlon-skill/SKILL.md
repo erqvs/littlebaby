@@ -7,9 +7,9 @@ description: Interact with Tlon/Urbit API. Use for reading activity, message his
 
 Use the `tlon` command for reading data, managing channels/groups/contacts, and administration.
 
-## OpenClaw
+## LittleBaby
 
-When running as an OpenClaw skill, use the built-in `message` tool for sending outbound messages (DMs and channel posts). The `tlon` command is for reading data, administration, and management — not for sending messages. The `message` tool routes through the proper delivery infrastructure (threading, bot profile, rate limiting).
+When running as an LittleBaby skill, use the built-in `message` tool for sending outbound messages (DMs and channel posts). The `tlon` command is for reading data, administration, and management — not for sending messages. The `message` tool routes through the proper delivery infrastructure (threading, bot profile, rate limiting).
 
 ## Installation
 
@@ -67,9 +67,9 @@ export URBIT_SHIP="~your-ship"
 export URBIT_CODE="sampel-ticlyt-migfun-falmel"
 ```
 
-**OpenClaw:** If configured with a Tlon channel, credentials load automatically.
+**LittleBaby:** If configured with a Tlon channel, credentials load automatically.
 
-**Resolution order:** CLI flags → `TLON_CONFIG_FILE` → `URL + COOKIE` → `URL + SHIP + CODE` → `--ship` with cache → OpenClaw config → cached ships (auto-select if only one)
+**Resolution order:** CLI flags → `TLON_CONFIG_FILE` → `URL + COOKIE` → `URL + SHIP + CODE` → `--ship` with cache → LittleBaby config → cached ships (auto-select if only one)
 
 **Cookie vs Code:**
 
@@ -402,9 +402,9 @@ Content type is auto-detected from file extension for local files. For stdin, `-
 
 Returns the uploaded URL for use in posts, profiles, etc.
 
-### Settings (OpenClaw)
+### Settings (LittleBaby)
 
-Manage OpenClaw's Tlon plugin config via Urbit settings-store. Changes apply immediately without gateway restart.
+Manage LittleBaby's Tlon plugin config via Urbit settings-store. Changes apply immediately without gateway restart.
 
 ```bash
 tlon settings get                                        # Show all settings

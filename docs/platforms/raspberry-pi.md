@@ -1,17 +1,17 @@
 ---
-summary: "OpenClaw on Raspberry Pi (budget self-hosted setup)"
+summary: "LittleBaby on Raspberry Pi (budget self-hosted setup)"
 read_when:
-  - Setting up OpenClaw on a Raspberry Pi
-  - Running OpenClaw on ARM devices
+  - Setting up LittleBaby on a Raspberry Pi
+  - Running LittleBaby on ARM devices
   - Building a cheap always-on personal AI
 title: "Raspberry Pi (Platform)"
 ---
 
-# OpenClaw on Raspberry Pi
+# LittleBaby on Raspberry Pi
 
 ## Goal
 
-Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi for **~$35-80** one-time cost (no monthly fees).
+Run a persistent, always-on LittleBaby Gateway on a Raspberry Pi for **~$35-80** one-time cost (no monthly fees).
 
 Perfect for:
 
@@ -107,19 +107,19 @@ echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 ```
 
-## 6) Install OpenClaw
+## 6) Install LittleBaby
 
 ### Option A: Standard Install (Recommended)
 
 ```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
+curl -fsSL https://littlebaby.ai/install.sh | bash
 ```
 
 ### Option B: Hackable Install (For tinkering)
 
 ```bash
-git clone https://github.com/openclaw/openclaw.git
-cd openclaw
+git clone https://github.com/littlebaby/littlebaby.git
+cd littlebaby
 npm install
 npm run build
 npm link
@@ -130,7 +130,7 @@ The hackable install gives you direct access to logs and code — useful for deb
 ## 7) Run Onboarding
 
 ```bash
-openclaw onboard --install-daemon
+littlebaby onboard --install-daemon
 ```
 
 Follow the wizard:
@@ -144,7 +144,7 @@ Follow the wizard:
 
 ```bash
 # Check status
-openclaw status
+littlebaby status
 
 # Check service (standard install = systemd user unit)
 systemctl --user status littlebaby-gateway.service
@@ -153,14 +153,14 @@ systemctl --user status littlebaby-gateway.service
 journalctl --user -u littlebaby-gateway.service -f
 ```
 
-## 9) Access the OpenClaw Dashboard
+## 9) Access the LittleBaby Dashboard
 
 Replace `user@gateway-host` with your Pi username and hostname or IP address.
 
 On your computer, ask the Pi to print a fresh dashboard URL:
 
 ```bash
-ssh user@gateway-host 'openclaw dashboard --no-open'
+ssh user@gateway-host 'littlebaby dashboard --no-open'
 ```
 
 The command prints `Dashboard URL:`. Depending on how `gateway.auth.token`
@@ -201,9 +201,9 @@ See [Pi USB boot guide](https://www.raspberrypi.com/documentation/computers/rasp
 On lower-power Pi hosts, enable Node's module compile cache so repeated CLI runs are faster:
 
 ```bash
-grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
-export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
-mkdir -p /var/tmp/openclaw-compile-cache
+grep -q 'NODE_COMPILE_CACHE=/var/tmp/littlebaby-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
+export NODE_COMPILE_CACHE=/var/tmp/littlebaby-compile-cache
+mkdir -p /var/tmp/littlebaby-compile-cache
 export LITTLEBABY_NO_RESPAWN=1
 EOF
 source ~/.bashrc
@@ -218,7 +218,7 @@ Notes:
 
 ### systemd startup tuning (optional)
 
-If this Pi is mostly running OpenClaw, add a service drop-in to reduce restart
+If this Pi is mostly running LittleBaby, add a service drop-in to reduce restart
 jitter and keep startup env stable:
 
 ```bash
@@ -228,7 +228,7 @@ systemctl --user edit littlebaby-gateway.service
 ```ini
 [Service]
 Environment=LITTLEBABY_NO_RESPAWN=1
-Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=NODE_COMPILE_CACHE=/var/tmp/littlebaby-compile-cache
 Restart=always
 RestartSec=2
 TimeoutStartSec=90
@@ -241,7 +241,7 @@ systemctl --user daemon-reload
 systemctl --user restart littlebaby-gateway.service
 ```
 
-If possible, keep OpenClaw state/cache on SSD-backed storage to avoid SD-card
+If possible, keep LittleBaby state/cache on SSD-backed storage to avoid SD-card
 random-I/O bottlenecks during cold starts.
 
 If this is a headless Pi, enable lingering once so the user service survives
@@ -283,7 +283,7 @@ htop
 
 ### Binary Compatibility
 
-Most OpenClaw features work on ARM64, but some external binaries may need ARM builds:
+Most LittleBaby features work on ARM64, but some external binaries may need ARM builds:
 
 | Tool               | ARM64 Status | Notes                               |
 | ------------------ | ------------ | ----------------------------------- |
@@ -369,7 +369,7 @@ free -h
 journalctl --user -u littlebaby-gateway.service --no-pager -n 100
 
 # Common fix: rebuild
-cd ~/openclaw  # if using hackable install
+cd ~/littlebaby  # if using hackable install
 npm run build
 systemctl --user restart littlebaby-gateway.service
 ```

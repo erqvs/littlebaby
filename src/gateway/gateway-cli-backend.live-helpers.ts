@@ -23,7 +23,7 @@ import {
   assertLiveImageProbeReply,
   buildLiveCronProbeMessage,
   createLiveCronProbeSpec,
-  runOpenClawCliJson,
+  runLittleBabyCliJson,
   type CronListJob,
 } from "./live-agent-probes.js";
 import { renderCatFacePngBase64 } from "./live-image-probe.js";
@@ -264,13 +264,13 @@ async function callLoopbackJsonRpc(params: {
     Authorization: `Bearer ${runtime.token}`,
     "Content-Type": "application/json",
     "x-session-key": params.sessionKey,
-    "x-openclaw-sender-is-owner": params.senderIsOwner ? "true" : "false",
+    "x-littlebaby-sender-is-owner": params.senderIsOwner ? "true" : "false",
   };
   if (params.messageProvider) {
-    headers["x-openclaw-message-channel"] = params.messageProvider;
+    headers["x-littlebaby-message-channel"] = params.messageProvider;
   }
   if (params.accountId) {
-    headers["x-openclaw-account-id"] = params.accountId;
+    headers["x-littlebaby-account-id"] = params.accountId;
   }
   const response = await fetch(`http://127.0.0.1:${runtime.port}/mcp`, {
     method: "POST",
@@ -398,7 +398,7 @@ export async function verifyCliCronMcpLoopbackPreflight(params: {
     expectedSessionKey: params.sessionKey,
   });
   if (createdJob.id) {
-    await runOpenClawCliJson(
+    await runLittleBabyCliJson(
       [
         "cron",
         "rm",
@@ -778,7 +778,7 @@ export async function verifyCliCronMcpProbe(params: {
     expectedSessionKey: params.sessionKey,
   });
   if (createdJob?.id) {
-    await runOpenClawCliJson(
+    await runLittleBabyCliJson(
       [
         "cron",
         "rm",

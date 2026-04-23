@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { Static, Type } from "@sinclair/typebox";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
-import type { AnyAgentTool, OpenClawPluginApi, OpenClawPluginToolContext } from "../api.js";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
+import type { AnyAgentTool, LittleBabyPluginApi, LittleBabyPluginToolContext } from "../api.js";
 import { PlaywrightDiffScreenshotter, type DiffScreenshotter } from "./browser.js";
 import { resolveDiffImageRenderOptions } from "./config.js";
 import { renderDiffDocument } from "./render.js";
@@ -141,12 +141,12 @@ type DiffsToolRawParams = DiffsToolParams & {
 };
 
 export function createDiffsTool(params: {
-  api: OpenClawPluginApi;
+  api: LittleBabyPluginApi;
   store: DiffArtifactStore;
   defaults: DiffToolDefaults;
   viewerBaseUrl?: string;
   screenshotter?: DiffScreenshotter;
-  context?: OpenClawPluginToolContext;
+  context?: LittleBabyPluginToolContext;
 }): AnyAgentTool {
   return {
     name: "diffs",
@@ -421,7 +421,7 @@ async function renderDiffArtifactFile(params: {
 }
 
 function buildArtifactContext(
-  context: OpenClawPluginToolContext | undefined,
+  context: LittleBabyPluginToolContext | undefined,
 ): DiffArtifactContext | undefined {
   if (!context) {
     return undefined;

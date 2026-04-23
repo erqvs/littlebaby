@@ -2,7 +2,7 @@
 
 Stop typing `docker-compose` commands. Just type `clawdock-start`.
 
-Inspired by Simon Willison's [Running OpenClaw in Docker](https://til.simonwillison.net/llms/openclaw-docker).
+Inspired by Simon Willison's [Running LittleBaby in Docker](https://til.simonwillison.net/llms/littlebaby-docker).
 
 - [Quickstart](#quickstart)
 - [Available Commands](#available-commands)
@@ -32,14 +32,14 @@ Inspired by Simon Willison's [Running OpenClaw in Docker](https://til.simonwilli
 **Install:**
 
 ```bash
-mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
+mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 ```
 
 ```bash
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-Canonical docs page: https://docs.openclaw.ai/install/clawdock
+Canonical docs page: https://docs.littlebaby.ai/install/clawdock
 
 If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helpers.sh`, rerun the install command above. The old raw GitHub path has been removed.
 
@@ -49,9 +49,9 @@ If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helper
 clawdock-help
 ```
 
-On first command, ClawDock auto-detects your OpenClaw directory:
+On first command, ClawDock auto-detects your LittleBaby directory:
 
-- Checks common paths (`~/openclaw`, `~/workspace/openclaw`, etc.)
+- Checks common paths (`~/littlebaby`, `~/workspace/littlebaby`, etc.)
 - If found, asks you to confirm
 - Saves to `~/.clawdock/config`
 
@@ -98,7 +98,7 @@ clawdock-approve <request-id>
 | Command                   | Description                                    |
 | ------------------------- | ---------------------------------------------- |
 | `clawdock-shell`          | Interactive shell inside the gateway container |
-| `clawdock-cli <command>`  | Run OpenClaw CLI commands                      |
+| `clawdock-cli <command>`  | Run LittleBaby CLI commands                      |
 | `clawdock-exec <command>` | Execute arbitrary commands in the container    |
 
 ### Web UI & Devices
@@ -129,8 +129,8 @@ clawdock-approve <request-id>
 | ---------------------- | ----------------------------------------- |
 | `clawdock-health`      | Run gateway health check                  |
 | `clawdock-token`       | Display the gateway authentication token  |
-| `clawdock-cd`          | Jump to the OpenClaw project directory    |
-| `clawdock-config`      | Open the OpenClaw config directory        |
+| `clawdock-cd`          | Jump to the LittleBaby project directory    |
+| `clawdock-config`      | Open the LittleBaby config directory        |
 | `clawdock-show-config` | Print config files with redacted values   |
 | `clawdock-workspace`   | Open the workspace directory              |
 | `clawdock-help`        | Show all available commands with examples |
@@ -143,8 +143,8 @@ The Docker setup uses three config files on the host. The container never stores
 
 | File                       | Purpose                                                                    |
 | -------------------------- | -------------------------------------------------------------------------- |
-| `Dockerfile`               | Builds the `openclaw:local` image (Node 22, pnpm, non-root `node` user)    |
-| `docker-compose.yml`       | Defines `littlebaby-gateway` and `openclaw-cli` services, bind-mounts, ports |
+| `Dockerfile`               | Builds the `littlebaby:local` image (Node 22, pnpm, non-root `node` user)    |
+| `docker-compose.yml`       | Defines `littlebaby-gateway` and `littlebaby-cli` services, bind-mounts, ports |
 | `docker-setup.sh`          | First-time setup — builds image, creates `.env` from `.env.example`        |
 | `.env.example`             | Template for `<project>/.env` with all supported vars and docs             |
 | `docker-compose.extra.yml` | Optional overrides — auto-loaded by ClawDock helpers if present            |
@@ -155,15 +155,15 @@ The Docker setup uses three config files on the host. The container never stores
 | --------------------------- | ------------------------------------------------ | ------------------------------------------------------------------- |
 | `<project>/.env`            | **Docker infra** — image, ports, gateway token   | `LITTLEBABY_GATEWAY_TOKEN`, `LITTLEBABY_IMAGE`, `LITTLEBABY_GATEWAY_PORT` |
 | `~/.littlebaby/.env`          | **Secrets** — API keys and bot tokens            | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`         |
-| `~/.littlebaby/openclaw.json` | **Behavior config** — models, channels, policies | Model selection, WhatsApp allowlists, agent settings                |
+| `~/.littlebaby/littlebaby.json` | **Behavior config** — models, channels, policies | Model selection, WhatsApp allowlists, agent settings                |
 
-**Do NOT** put API keys or bot tokens in `openclaw.json`. Use `~/.littlebaby/.env` for all secrets.
+**Do NOT** put API keys or bot tokens in `littlebaby.json`. Use `~/.littlebaby/.env` for all secrets.
 
 ### Initial Setup
 
 `./docker-setup.sh` (in the project root) handles first-time Docker configuration:
 
-- Builds the `openclaw:local` image from `Dockerfile`
+- Builds the `littlebaby:local` image from `Dockerfile`
 - Creates `<project>/.env` from `.env.example` with a generated gateway token
 - Sets up `~/.littlebaby` directories if they don't exist
 
@@ -196,12 +196,12 @@ volumes:
 
 This means:
 
-- `~/.littlebaby/.env` is available inside the container at `/home/node/.littlebaby/.env` — OpenClaw loads it automatically as the global env fallback
-- `~/.littlebaby/openclaw.json` is available at `/home/node/.littlebaby/openclaw.json` — the gateway watches it and hot-reloads most changes
+- `~/.littlebaby/.env` is available inside the container at `/home/node/.littlebaby/.env` — LittleBaby loads it automatically as the global env fallback
+- `~/.littlebaby/littlebaby.json` is available at `/home/node/.littlebaby/littlebaby.json` — the gateway watches it and hot-reloads most changes
 - No need to add API keys to `docker-compose.yml` or configure anything inside the container
 - Keys survive `clawdock-update`, `clawdock-rebuild`, and `clawdock-clean` because they live on the host
 
-The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.littlebaby/.env` feeds the OpenClaw process inside the container.
+The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.littlebaby/.env` feeds the LittleBaby process inside the container.
 
 ### Example `~/.littlebaby/.env`
 
@@ -220,24 +220,24 @@ LITTLEBABY_GATEWAY_PORT=18789
 LITTLEBABY_BRIDGE_PORT=18790
 LITTLEBABY_GATEWAY_BIND=lan
 LITTLEBABY_GATEWAY_TOKEN=<generated-by-docker-setup>
-LITTLEBABY_IMAGE=openclaw:local
+LITTLEBABY_IMAGE=littlebaby:local
 ```
 
 ### Env Precedence
 
-OpenClaw loads env vars in this order (highest wins, never overrides existing):
+LittleBaby loads env vars in this order (highest wins, never overrides existing):
 
 1. **Process environment** — `docker-compose.yml` `environment:` block (gateway token, session keys)
 2. **`.env` in CWD** — project root `.env` (Docker infra vars)
 3. **`~/.littlebaby/.env`** — global secrets (API keys, bot tokens)
-4. **`openclaw.json` `env` block** — inline vars, applied only if still missing
+4. **`littlebaby.json` `env` block** — inline vars, applied only if still missing
 5. **Shell env import** — optional login-shell scrape (`LITTLEBABY_LOAD_SHELL_ENV=1`)
 
 ## Common Workflows
 
-### Update OpenClaw
+### Update LittleBaby
 
-> **Important:** `openclaw update` does not work inside Docker.
+> **Important:** `littlebaby update` does not work inside Docker.
 > The container runs as a non-root user with a source-built image, so `npm i -g` fails with EACCES.
 > Use `clawdock-update` instead — it pulls, rebuilds, and restarts from the host.
 
@@ -284,7 +284,7 @@ clawdock-shell
 **Inside the container, login to WhatsApp:**
 
 ```bash
-openclaw channels login --channel whatsapp --verbose
+littlebaby channels login --channel whatsapp --verbose
 ```
 
 Scan the QR code with WhatsApp on your phone.
@@ -292,7 +292,7 @@ Scan the QR code with WhatsApp on your phone.
 **Verify connection:**
 
 ```bash
-openclaw status
+littlebaby status
 ```
 
 ### Troubleshooting Device Pairing
@@ -322,7 +322,7 @@ clawdock-fix-token
 This will:
 
 1. Read the token from your `.env` file
-2. Configure it in the OpenClaw config
+2. Configure it in the LittleBaby config
 3. Restart the gateway
 4. Verify the configuration
 
@@ -338,7 +338,7 @@ docker ps
 
 - Docker and Docker Compose installed
 - Bash or Zsh shell
-- OpenClaw project (run `scripts/docker/setup.sh`)
+- LittleBaby project (run `scripts/docker/setup.sh`)
 
 ## Development
 

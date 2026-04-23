@@ -1,14 +1,14 @@
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { createBlueBubblesClient } from "./client.js";
 import { getCachedBlueBubblesPrivateApiStatus } from "./probe.js";
-import type { OpenClawConfig } from "./runtime-api.js";
+import type { LittleBabyConfig } from "./runtime-api.js";
 
 export type BlueBubblesReactionOpts = {
   serverUrl?: string;
   password?: string;
   accountId?: string;
   timeoutMs?: number;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
 };
 
 const REACTION_TYPES = new Set(["love", "like", "dislike", "laugh", "emphasize", "question"]);

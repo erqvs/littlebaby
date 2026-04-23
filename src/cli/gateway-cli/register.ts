@@ -143,11 +143,11 @@ export function registerGatewayCli(program: Command) {
         "after",
         () =>
           `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-            ["openclaw gateway run", "Run the gateway in the foreground."],
-            ["openclaw gateway status", "Show service status plus connectivity/capability."],
-            ["openclaw gateway discover", "Find local and wide-area gateway beacons."],
-            ["openclaw gateway call health", "Call a gateway RPC method directly."],
-          ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs.openclaw.ai/cli/gateway")}\n`,
+            ["littlebaby gateway run", "Run the gateway in the foreground."],
+            ["littlebaby gateway status", "Show service status plus connectivity/capability."],
+            ["littlebaby gateway discover", "Find local and wide-area gateway beacons."],
+            ["littlebaby gateway call health", "Call a gateway RPC method directly."],
+          ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs.littlebaby.ai/cli/gateway")}\n`,
       ),
   );
 

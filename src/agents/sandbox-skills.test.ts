@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { captureEnv } from "../test-utils/env.js";
 import { resolveSandboxContext } from "./sandbox/context.js";
 import { writeSkill } from "./skills.e2e-test-helpers.js";
 
 vi.mock("./sandbox/docker.js", () => ({
-  ensureSandboxContainer: vi.fn(async () => "openclaw-sbx-test"),
+  ensureSandboxContainer: vi.fn(async () => "littlebaby-sbx-test"),
 }));
 
 vi.mock("./sandbox/browser.js", () => ({
@@ -24,7 +24,7 @@ describe("sandbox skill mirroring", () => {
   let tempRoot = "";
 
   beforeAll(async () => {
-    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sandbox-skills-"));
+    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sandbox-skills-"));
   });
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe("sandbox skill mirroring", () => {
       description: "Demo skill",
     });
 
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       agents: {
         defaults: {
           sandbox: {

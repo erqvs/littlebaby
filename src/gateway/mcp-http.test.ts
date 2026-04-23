@@ -93,8 +93,8 @@ describe("mcp loopback server", () => {
       headers: {
         "content-type": "application/json",
         "x-session-key": "agent:main:telegram:group:chat123",
-        "x-openclaw-account-id": "work",
-        "x-openclaw-message-channel": "telegram",
+        "x-littlebaby-account-id": "work",
+        "x-littlebaby-message-channel": "telegram",
       },
       body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
     });
@@ -123,8 +123,8 @@ describe("mcp loopback server", () => {
         headers: {
           "content-type": "application/json",
           "x-session-key": "agent:main:matrix:dm:test",
-          "x-openclaw-message-channel": "matrix",
-          "x-openclaw-sender-is-owner": senderIsOwner,
+          "x-littlebaby-message-channel": "matrix",
+          "x-littlebaby-sender-is-owner": senderIsOwner,
         },
         body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
       });
@@ -290,14 +290,14 @@ describe("createMcpLoopbackServerConfig", () => {
     const config = createMcpLoopbackServerConfig(23119) as {
       mcpServers?: Record<string, { url?: string; headers?: Record<string, string> }>;
     };
-    expect(config.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:23119/mcp");
-    expect(config.mcpServers?.openclaw?.headers?.Authorization).toBe(
+    expect(config.mcpServers?.littlebaby?.url).toBe("http://127.0.0.1:23119/mcp");
+    expect(config.mcpServers?.littlebaby?.headers?.Authorization).toBe(
       "Bearer ${LITTLEBABY_MCP_TOKEN}",
     );
-    expect(config.mcpServers?.openclaw?.headers?.["x-openclaw-message-channel"]).toBe(
+    expect(config.mcpServers?.littlebaby?.headers?.["x-littlebaby-message-channel"]).toBe(
       "${LITTLEBABY_MCP_MESSAGE_CHANNEL}",
     );
-    expect(config.mcpServers?.openclaw?.headers?.["x-openclaw-sender-is-owner"]).toBe(
+    expect(config.mcpServers?.littlebaby?.headers?.["x-littlebaby-sender-is-owner"]).toBe(
       "${LITTLEBABY_MCP_SENDER_IS_OWNER}",
     );
   });

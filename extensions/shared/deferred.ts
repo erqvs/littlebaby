@@ -1,1 +1,1 @@
-export { createDeferred } from "openclaw/plugin-sdk/extension-shared";
+export { createDeferred } from "littlebaby/plugin-sdk/extension-shared";

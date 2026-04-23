@@ -24,7 +24,7 @@ vi.mock("./model-auth-env.js", () => ({
 }));
 
 async function createAgentDir(): Promise<string> {
-  return await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-auth-storage-"));
+  return await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-pi-auth-storage-"));
 }
 
 async function withAgentDir(run: (agentDir: string) => Promise<void>): Promise<void> {

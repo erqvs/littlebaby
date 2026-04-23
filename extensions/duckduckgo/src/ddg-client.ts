@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   DEFAULT_CACHE_TTL_MINUTES,
   DEFAULT_SEARCH_COUNT,
@@ -12,7 +12,7 @@ import {
   withTrustedWebSearchEndpoint,
   wrapWebContent,
   writeCache,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "littlebaby/plugin-sdk/provider-web-search";
 import { resolveDdgRegion, resolveDdgSafeSearch, type DdgSafeSearch } from "./config.js";
 
 const DDG_HTML_ENDPOINT = "https://html.duckduckgo.com/html";
@@ -113,7 +113,7 @@ function parseDuckDuckGoHtml(html: string): DuckDuckGoResult[] {
 }
 
 export async function runDuckDuckGoSearch(params: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   query: string;
   count?: number;
   region?: string;

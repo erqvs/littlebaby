@@ -2,7 +2,7 @@
 title: "Google (Gemini)"
 summary: "Google Gemini setup (API key + OAuth, image generation, media understanding, TTS, web search)"
 read_when:
-  - You want to use Google Gemini models with OpenClaw
+  - You want to use Google Gemini models with LittleBaby
   - You need the API key or OAuth auth flow
 ---
 
@@ -28,13 +28,13 @@ Choose your preferred auth method and follow the setup steps.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice gemini-api-key
+        littlebaby onboard --auth-choice gemini-api-key
         ```
 
         Or pass the key directly:
 
         ```bash
-        openclaw onboard --non-interactive \
+        littlebaby onboard --non-interactive \
           --mode local \
           --auth-choice gemini-api-key \
           --gemini-api-key "$GEMINI_API_KEY"
@@ -53,7 +53,7 @@ Choose your preferred auth method and follow the setup steps.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider google
+        littlebaby models list --provider google
         ```
       </Step>
     </Steps>
@@ -84,17 +84,17 @@ Choose your preferred auth method and follow the setup steps.
         npm install -g @google/gemini-cli
         ```
 
-        OpenClaw supports both Homebrew installs and global npm installs, including
+        LittleBaby supports both Homebrew installs and global npm installs, including
         common Windows/npm layouts.
       </Step>
       <Step title="Log in via OAuth">
         ```bash
-        openclaw models auth login --provider google-gemini-cli --set-default
+        littlebaby models auth login --provider google-gemini-cli --set-default
         ```
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider google-gemini-cli
+        littlebaby models list --provider google-gemini-cli
         ```
       </Step>
     </Steps>
@@ -142,12 +142,12 @@ Choose your preferred auth method and follow the setup steps.
 | Gemma 4 models         | Yes                           |
 
 <Tip>
-Gemini 3 models use `thinkingLevel` rather than `thinkingBudget`. OpenClaw maps
+Gemini 3 models use `thinkingLevel` rather than `thinkingBudget`. LittleBaby maps
 Gemini 3, Gemini 3.1, and `gemini-*-latest` alias reasoning controls to
 `thinkingLevel` so default/low-latency runs do not send disabled
 `thinkingBudget` values.
 
-Gemma 4 models (for example `gemma-4-26b-a4b-it`) support thinking mode. OpenClaw
+Gemma 4 models (for example `gemma-4-26b-a4b-it`) support thinking mode. LittleBaby
 rewrites `thinkingBudget` to a supported Google `thinkingLevel` for Gemma 4.
 Setting thinking to `off` preserves thinking disabled instead of mapping to
 `MINIMAL`.
@@ -287,14 +287,14 @@ provider. This is not the separate Cloud Text-to-Speech API path.
 
 <AccordionGroup>
   <Accordion title="Direct Gemini cache reuse">
-    For direct Gemini API runs (`api: "google-generative-ai"`), OpenClaw
+    For direct Gemini API runs (`api: "google-generative-ai"`), LittleBaby
     passes a configured `cachedContent` handle through to Gemini requests.
 
     - Configure per-model or global params with either
       `cachedContent` or legacy `cached_content`
     - If both are present, `cachedContent` wins
     - Example value: `cachedContents/prebuilt-context`
-    - Gemini cache-hit usage is normalized into OpenClaw `cacheRead` from
+    - Gemini cache-hit usage is normalized into LittleBaby `cacheRead` from
       upstream `cachedContentTokenCount`
 
     ```json5
@@ -316,13 +316,13 @@ provider. This is not the separate Cloud Text-to-Speech API path.
   </Accordion>
 
   <Accordion title="Gemini CLI JSON usage notes">
-    When using the `google-gemini-cli` OAuth provider, OpenClaw normalizes
+    When using the `google-gemini-cli` OAuth provider, LittleBaby normalizes
     the CLI JSON output as follows:
 
     - Reply text comes from the CLI JSON `response` field.
     - Usage falls back to `stats` when the CLI leaves `usage` empty.
-    - `stats.cached` is normalized into OpenClaw `cacheRead`.
-    - If `stats.input` is missing, OpenClaw derives input tokens from
+    - `stats.cached` is normalized into LittleBaby `cacheRead`.
+    - If `stats.input` is missing, LittleBaby derives input tokens from
       `stats.input_tokens - stats.cached`.
 
   </Accordion>

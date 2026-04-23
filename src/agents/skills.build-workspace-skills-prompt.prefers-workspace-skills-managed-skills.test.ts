@@ -5,7 +5,7 @@ import { createFixtureSuite } from "../test-utils/fixture-suite.js";
 import { writeSkill } from "./skills.e2e-test-helpers.js";
 import { buildWorkspaceSkillsPrompt } from "./skills/workspace.js";
 
-const fixtureSuite = createFixtureSuite("openclaw-skills-prompt-suite-");
+const fixtureSuite = createFixtureSuite("littlebaby-skills-prompt-suite-");
 
 beforeAll(async () => {
   await fixtureSuite.setup();

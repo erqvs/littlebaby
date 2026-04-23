@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderQaMarkdownReport } from "../../report.js";
 import { __testing as liveTesting } from "./runtime.js";
@@ -9,7 +9,7 @@ afterEach(() => {
 
 describe("matrix live qa runtime", () => {
   it("injects a temporary Matrix account into the QA gateway config", () => {
-    const baseCfg: OpenClawConfig = {
+    const baseCfg: LittleBabyConfig = {
       plugins: {
         allow: ["memory-core", "qa-channel"],
         entries: {

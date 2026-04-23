@@ -69,7 +69,7 @@ function buildAccount(): ResolvedIrcAccount {
     tls: true,
     nick: "littlebaby",
     username: "littlebaby",
-    realname: "OpenClaw",
+    realname: "LittleBaby",
     password: "",
     passwordSource: "none",
     config: {} as ResolvedIrcAccount["config"],
@@ -208,7 +208,7 @@ describe("irc setup", () => {
     expect(
       updateIrcAccountConfig(cfg, "work", {
         host: "irc.libera.chat",
-        nick: "openclaw-work",
+        nick: "littlebaby-work",
       }),
     ).toMatchObject({
       channels: {
@@ -216,7 +216,7 @@ describe("irc setup", () => {
           accounts: {
             work: {
               host: "irc.libera.chat",
-              nick: "openclaw-work",
+              nick: "littlebaby-work",
             },
           },
         },
@@ -250,7 +250,7 @@ describe("irc setup", () => {
           enabled: true,
           groupPolicy: "allowlist",
           groups: {
-            "#openclaw": {},
+            "#littlebaby": {},
             "#ops": {},
             "*": {},
           },
@@ -301,11 +301,11 @@ describe("irc setup", () => {
           host: " irc.libera.chat ",
           port: "7000",
           tls: true,
-          nick: " openclaw ",
+          nick: " littlebaby ",
           username: " claw ",
-          realname: " OpenClaw Bot ",
+          realname: " LittleBaby Bot ",
           password: " secret ",
-          channels: ["#openclaw"],
+          channels: ["#littlebaby"],
         },
       } as never),
     ).toEqual({
@@ -318,9 +318,9 @@ describe("irc setup", () => {
           tls: true,
           nick: "littlebaby",
           username: "claw",
-          realname: "OpenClaw Bot",
+          realname: "LittleBaby Bot",
           password: "secret",
-          channels: ["#openclaw"],
+          channels: ["#littlebaby"],
         },
       },
     });
@@ -336,19 +336,19 @@ describe("irc setup", () => {
           return "6697";
         }
         if (message === "IRC nick") {
-          return "openclaw-bot";
+          return "littlebaby-bot";
         }
         if (message === "IRC username") {
           return "littlebaby";
         }
         if (message === "IRC real name") {
-          return "OpenClaw Bot";
+          return "LittleBaby Bot";
         }
         if (message.startsWith("Auto-join IRC channels")) {
-          return "#openclaw, #ops";
+          return "#littlebaby, #ops";
         }
         if (message.startsWith("IRC channels allowlist")) {
-          return "#openclaw, #ops";
+          return "#littlebaby, #ops";
         }
         throw new Error(`Unexpected prompt: ${message}`);
       }) as WizardPrompter["text"],
@@ -373,11 +373,11 @@ describe("irc setup", () => {
     expect(result.accountId).toBe("default");
     expect(result.cfg.channels?.irc?.enabled).toBe(true);
     expect(result.cfg.channels?.irc?.host).toBe("irc.libera.chat");
-    expect(result.cfg.channels?.irc?.nick).toBe("openclaw-bot");
+    expect(result.cfg.channels?.irc?.nick).toBe("littlebaby-bot");
     expect(result.cfg.channels?.irc?.tls).toBe(true);
-    expect(result.cfg.channels?.irc?.channels).toEqual(["#openclaw", "#ops"]);
+    expect(result.cfg.channels?.irc?.channels).toEqual(["#littlebaby", "#ops"]);
     expect(result.cfg.channels?.irc?.groupPolicy).toBe("allowlist");
-    expect(Object.keys(result.cfg.channels?.irc?.groups ?? {})).toEqual(["#openclaw", "#ops"]);
+    expect(Object.keys(result.cfg.channels?.irc?.groups ?? {})).toEqual(["#littlebaby", "#ops"]);
   });
 
   it("writes DM allowFrom to top-level config for non-default account prompts", async () => {
@@ -402,7 +402,7 @@ describe("irc setup", () => {
           accounts: {
             work: {
               host: "irc.libera.chat",
-              nick: "openclaw-work",
+              nick: "littlebaby-work",
             },
           },
         },

@@ -5,15 +5,15 @@ import type {
   ExecApprovalExpiredView,
   ExecApprovalPendingView,
   ExecApprovalResolvedView,
-} from "openclaw/plugin-sdk/approval-handler-runtime";
-import { createChannelApprovalNativeRuntimeAdapter } from "openclaw/plugin-sdk/approval-handler-runtime";
-import { buildChannelApprovalNativeTargetKey } from "openclaw/plugin-sdk/approval-native-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+} from "littlebaby/plugin-sdk/approval-handler-runtime";
+import { createChannelApprovalNativeRuntimeAdapter } from "littlebaby/plugin-sdk/approval-handler-runtime";
+import { buildChannelApprovalNativeTargetKey } from "littlebaby/plugin-sdk/approval-native-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   buildApprovalInteractiveReplyFromActionDescriptors,
   type ExecApprovalRequest,
-} from "openclaw/plugin-sdk/infra-runtime";
-import { logError, normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/infra-runtime";
+import { logError, normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import {
   isSlackExecApprovalClientEnabled,
   shouldHandleSlackExecApprovalRequest,
@@ -33,7 +33,7 @@ type SlackPendingDelivery = {
 };
 
 type SlackExecApprovalConfig = NonNullable<
-  NonNullable<NonNullable<OpenClawConfig["channels"]>["slack"]>["execApprovals"]
+  NonNullable<NonNullable<LittleBabyConfig["channels"]>["slack"]>["execApprovals"]
 >;
 
 export type SlackApprovalHandlerContext = {

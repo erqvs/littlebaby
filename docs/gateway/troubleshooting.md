@@ -16,18 +16,18 @@ Start at [/help/troubleshooting](/help/troubleshooting) if you want the fast tri
 Run these first, in this order:
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw logs --follow
-openclaw doctor
-openclaw channels status --probe
+littlebaby status
+littlebaby gateway status
+littlebaby logs --follow
+littlebaby doctor
+littlebaby channels status --probe
 ```
 
 Expected healthy signals:
 
-- `openclaw gateway status` shows `Runtime: running`, `Connectivity probe: ok`, and a `Capability: ...` line.
-- `openclaw doctor` reports no blocking config/service issues.
-- `openclaw channels status --probe` shows live per-account transport status and,
+- `littlebaby gateway status` shows `Runtime: running`, `Connectivity probe: ok`, and a `Capability: ...` line.
+- `littlebaby doctor` reports no blocking config/service issues.
+- `littlebaby channels status --probe` shows live per-account transport status and,
   where supported, probe/audit results such as `works` or `audit ok`.
 
 ## Anthropic 429 extra usage required for long context
@@ -36,9 +36,9 @@ Use this when logs/errors include:
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`.
 
 ```bash
-openclaw logs --follow
-openclaw models status
-openclaw config get agents.defaults.models
+littlebaby logs --follow
+littlebaby models status
+littlebaby config get agents.defaults.models
 ```
 
 Look for:
@@ -65,20 +65,20 @@ Use this when:
 
 - `curl ... /v1/models` works
 - tiny direct `/v1/chat/completions` calls work
-- OpenClaw model runs fail only on normal agent turns
+- LittleBaby model runs fail only on normal agent turns
 
 ```bash
 curl http://127.0.0.1:1234/v1/models
 curl http://127.0.0.1:1234/v1/chat/completions \
   -H 'content-type: application/json' \
   -d '{"model":"<id>","messages":[{"role":"user","content":"hi"}],"stream":false}'
-openclaw infer model run --model <provider/model> --prompt "hi" --json
-openclaw logs --follow
+littlebaby infer model run --model <provider/model> --prompt "hi" --json
+littlebaby logs --follow
 ```
 
 Look for:
 
-- direct tiny calls succeed, but OpenClaw runs fail only on larger prompts
+- direct tiny calls succeed, but LittleBaby runs fail only on larger prompts
 - backend errors about `messages[].content` expecting a string
 - backend crashes that appear only with larger prompt-token counts or full agent
   runtime prompts
@@ -88,8 +88,8 @@ Common signatures:
 - `messages[...].content: invalid type: sequence, expected a string` → backend
   rejects structured Chat Completions content parts. Fix: set
   `models.providers.<provider>.models[].compat.requiresStringContent: true`.
-- direct tiny requests succeed, but OpenClaw agent runs fail with backend/model
-  crashes (for example Gemma on some `inferrs` builds) → OpenClaw transport is
+- direct tiny requests succeed, but LittleBaby agent runs fail with backend/model
+  crashes (for example Gemma on some `inferrs` builds) → LittleBaby transport is
   likely already correct; the backend is failing on the larger agent-runtime
   prompt shape.
 - failures shrink after disabling tools but do not disappear → tool schemas were
@@ -100,11 +100,11 @@ Fix options:
 
 1. Set `compat.requiresStringContent: true` for string-only Chat Completions backends.
 2. Set `compat.supportsTools: false` for models/backends that cannot handle
-   OpenClaw's tool schema surface reliably.
+   LittleBaby's tool schema surface reliably.
 3. Lower prompt pressure where possible: smaller workspace bootstrap, shorter
    session history, lighter local model, or a backend with stronger long-context
    support.
-4. If tiny direct requests keep passing while OpenClaw agent turns still crash
+4. If tiny direct requests keep passing while LittleBaby agent turns still crash
    inside the backend, treat it as an upstream server/model limitation and file
    a repro there with the accepted payload shape.
 
@@ -119,11 +119,11 @@ Related:
 If channels are up but nothing answers, check routing and policy before reconnecting anything.
 
 ```bash
-openclaw status
-openclaw channels status --probe
-openclaw pairing list --channel <channel> [--account <id>]
-openclaw config get channels
-openclaw logs --follow
+littlebaby status
+littlebaby channels status --probe
+littlebaby pairing list --channel <channel> [--account <id>]
+littlebaby config get channels
+littlebaby logs --follow
 ```
 
 Look for:
@@ -149,11 +149,11 @@ Related:
 When dashboard/control UI will not connect, validate URL, auth mode, and secure context assumptions.
 
 ```bash
-openclaw gateway status
-openclaw status
-openclaw logs --follow
-openclaw doctor
-openclaw gateway status --json
+littlebaby gateway status
+littlebaby status
+littlebaby logs --follow
+littlebaby doctor
+littlebaby gateway status --json
 ```
 
 Look for:
@@ -195,17 +195,17 @@ Use `error.details.code` from the failed `connect` response to pick the next act
 
 | Detail code                  | Meaning                                                                                                                                                                                      | Recommended action                                                                                                                                                                                                                                                                       |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | Client did not send a required shared token.                                                                                                                                                 | Paste/set token in the client and retry. For dashboard paths: `openclaw config get gateway.auth.token` then paste into Control UI settings.                                                                                                                                              |
+| `AUTH_TOKEN_MISSING`         | Client did not send a required shared token.                                                                                                                                                 | Paste/set token in the client and retry. For dashboard paths: `littlebaby config get gateway.auth.token` then paste into Control UI settings.                                                                                                                                              |
 | `AUTH_TOKEN_MISMATCH`        | Shared token did not match gateway auth token.                                                                                                                                               | If `canRetryWithDeviceToken=true`, allow one trusted retry. Cached-token retries reuse stored approved scopes; explicit `deviceToken` / `scopes` callers keep requested scopes. If still failing, run the [token drift recovery checklist](/cli/devices#token-drift-recovery-checklist). |
 | `AUTH_DEVICE_TOKEN_MISMATCH` | Cached per-device token is stale or revoked.                                                                                                                                                 | Rotate/re-approve device token using [devices CLI](/cli/devices), then reconnect.                                                                                                                                                                                                        |
-| `PAIRING_REQUIRED`           | Device identity needs approval. Check `error.details.reason` for `not-paired`, `scope-upgrade`, `role-upgrade`, or `metadata-upgrade`, and use `requestId` / `remediationHint` when present. | Approve pending request: `openclaw devices list` then `openclaw devices approve <requestId>`. Scope/role upgrades use the same flow after you review the requested access.                                                                                                               |
+| `PAIRING_REQUIRED`           | Device identity needs approval. Check `error.details.reason` for `not-paired`, `scope-upgrade`, `role-upgrade`, or `metadata-upgrade`, and use `requestId` / `remediationHint` when present. | Approve pending request: `littlebaby devices list` then `littlebaby devices approve <requestId>`. Scope/role upgrades use the same flow after you review the requested access.                                                                                                               |
 
 Device auth v2 migration check:
 
 ```bash
-openclaw --version
-openclaw doctor
-openclaw gateway status
+littlebaby --version
+littlebaby doctor
+littlebaby gateway status
 ```
 
 If logs show nonce/signature errors, update the connecting client and verify it:
@@ -214,11 +214,11 @@ If logs show nonce/signature errors, update the connecting client and verify it:
 2. signs the challenge-bound payload
 3. sends `connect.params.device.nonce` with the same challenge nonce
 
-If `openclaw devices rotate` / `revoke` / `remove` is denied unexpectedly:
+If `littlebaby devices rotate` / `revoke` / `remove` is denied unexpectedly:
 
 - paired-device token sessions can manage only **their own** device unless the
   caller also has `operator.admin`
-- `openclaw devices rotate --scope ...` can only request operator scopes that
+- `littlebaby devices rotate --scope ...` can only request operator scopes that
   the caller session already holds
 
 Related:
@@ -234,11 +234,11 @@ Related:
 Use this when service is installed but process does not stay up.
 
 ```bash
-openclaw gateway status
-openclaw status
-openclaw logs --follow
-openclaw doctor
-openclaw gateway status --deep   # also scan system-level services
+littlebaby gateway status
+littlebaby status
+littlebaby logs --follow
+littlebaby doctor
+littlebaby gateway status --deep   # also scan system-level services
 ```
 
 Look for:
@@ -251,7 +251,7 @@ Look for:
 
 Common signatures:
 
-- `Gateway start blocked: set gateway.mode=local` or `existing config is missing gateway.mode` → local gateway mode is not enabled, or the config file was clobbered and lost `gateway.mode`. Fix: set `gateway.mode="local"` in your config, or re-run `openclaw onboard --mode local` / `openclaw setup` to restamp the expected local-mode config. If you are running OpenClaw via Podman, the default config path is `~/.littlebaby/openclaw.json`.
+- `Gateway start blocked: set gateway.mode=local` or `existing config is missing gateway.mode` → local gateway mode is not enabled, or the config file was clobbered and lost `gateway.mode`. Fix: set `gateway.mode="local"` in your config, or re-run `littlebaby onboard --mode local` / `littlebaby setup` to restamp the expected local-mode config. If you are running LittleBaby via Podman, the default config path is `~/.littlebaby/littlebaby.json`.
 - `refusing to bind gateway ... without auth` → non-loopback bind without a valid gateway auth path (token/password, or trusted-proxy where configured).
 - `another gateway instance is already listening` / `EADDRINUSE` → port conflict.
 - `Other gateway-like services detected (best effort)` → stale or parallel launchd/systemd/schtasks units exist. Most setups should keep one gateway per machine; if you do need more than one, isolate ports + config/state/workspace. See [/gateway#multiple-gateways-same-host](/gateway#multiple-gateways-same-host).
@@ -264,13 +264,13 @@ Related:
 
 ## Gateway restored last-known-good config
 
-Use this when the Gateway starts, but logs say it restored `openclaw.json`.
+Use this when the Gateway starts, but logs say it restored `littlebaby.json`.
 
 ```bash
-openclaw logs --follow
-openclaw config file
-openclaw config validate
-openclaw doctor
+littlebaby logs --follow
+littlebaby config file
+littlebaby config validate
+littlebaby doctor
 ```
 
 Look for:
@@ -278,38 +278,38 @@ Look for:
 - `Config auto-restored from last-known-good`
 - `gateway: invalid config was restored from last-known-good backup`
 - `config reload restored last-known-good config after invalid-config`
-- A timestamped `openclaw.json.clobbered.*` file beside the active config
+- A timestamped `littlebaby.json.clobbered.*` file beside the active config
 - A main-agent system event that starts with `Config recovery warning`
 
 What happened:
 
 - The rejected config did not validate during startup or hot reload.
-- OpenClaw preserved the rejected payload as `.clobbered.*`.
+- LittleBaby preserved the rejected payload as `.clobbered.*`.
 - The active config was restored from the last validated last-known-good copy.
 - The next main-agent turn is warned not to blindly rewrite the rejected config.
 
 Inspect and repair:
 
 ```bash
-CONFIG="$(openclaw config file)"
+CONFIG="$(littlebaby config file)"
 ls -lt "$CONFIG".clobbered.* "$CONFIG".rejected.* 2>/dev/null | head
 diff -u "$CONFIG" "$(ls -t "$CONFIG".clobbered.* 2>/dev/null | head -n 1)"
-openclaw config validate
-openclaw doctor
+littlebaby config validate
+littlebaby doctor
 ```
 
 Common signatures:
 
 - `.clobbered.*` exists → an external direct edit or startup read was restored.
-- `.rejected.*` exists → an OpenClaw-owned config write failed schema or clobber checks before commit.
+- `.rejected.*` exists → an LittleBaby-owned config write failed schema or clobber checks before commit.
 - `Config write rejected:` → the write tried to drop required shape, shrink the file sharply, or persist invalid config.
 - `Config last-known-good promotion skipped` → the candidate contained redacted secret placeholders such as `***`.
 
 Fix options:
 
 1. Keep the restored active config if it is correct.
-2. Copy only the intended keys from `.clobbered.*` or `.rejected.*`, then apply them with `openclaw config set` or `config.patch`.
-3. Run `openclaw config validate` before restarting.
+2. Copy only the intended keys from `.clobbered.*` or `.rejected.*`, then apply them with `littlebaby config set` or `config.patch`.
+3. Run `littlebaby config validate` before restarting.
 4. If you edit by hand, keep the full JSON5 config, not just the partial object you wanted to change.
 
 Related:
@@ -321,12 +321,12 @@ Related:
 
 ## Gateway probe warnings
 
-Use this when `openclaw gateway probe` reaches something, but still prints a warning block.
+Use this when `littlebaby gateway probe` reaches something, but still prints a warning block.
 
 ```bash
-openclaw gateway probe
-openclaw gateway probe --json
-openclaw gateway probe --ssh user@gateway-host
+littlebaby gateway probe
+littlebaby gateway probe --json
+littlebaby gateway probe --ssh user@gateway-host
 ```
 
 Look for:
@@ -353,11 +353,11 @@ Related:
 If channel state is connected but message flow is dead, focus on policy, permissions, and channel specific delivery rules.
 
 ```bash
-openclaw channels status --probe
-openclaw pairing list --channel <channel> [--account <id>]
-openclaw status --deep
-openclaw logs --follow
-openclaw config get channels
+littlebaby channels status --probe
+littlebaby pairing list --channel <channel> [--account <id>]
+littlebaby status --deep
+littlebaby logs --follow
+littlebaby config get channels
 ```
 
 Look for:
@@ -384,11 +384,11 @@ Related:
 If cron or heartbeat did not run or did not deliver, verify scheduler state first, then delivery target.
 
 ```bash
-openclaw cron status
-openclaw cron list
-openclaw cron runs --id <jobId> --limit 20
-openclaw system heartbeat last
-openclaw logs --follow
+littlebaby cron status
+littlebaby cron list
+littlebaby cron runs --id <jobId> --limit 20
+littlebaby system heartbeat last
+littlebaby logs --follow
 ```
 
 Look for:
@@ -402,7 +402,7 @@ Common signatures:
 - `cron: scheduler disabled; jobs will not run automatically` → cron disabled.
 - `cron: timer tick failed` → scheduler tick failed; check file/log/runtime errors.
 - `heartbeat skipped` with `reason=quiet-hours` → outside active hours window.
-- `heartbeat skipped` with `reason=empty-heartbeat-file` → `HEARTBEAT.md` exists but only contains blank lines / markdown headers, so OpenClaw skips the model call.
+- `heartbeat skipped` with `reason=empty-heartbeat-file` → `HEARTBEAT.md` exists but only contains blank lines / markdown headers, so LittleBaby skips the model call.
 - `heartbeat skipped` with `reason=no-tasks-due` → `HEARTBEAT.md` contains a `tasks:` block, but none of the tasks are due on this tick.
 - `heartbeat: unknown accountId` → invalid account id for heartbeat delivery target.
 - `heartbeat skipped` with `reason=dm-blocked` → heartbeat target resolved to a DM-style destination while `agents.defaults.heartbeat.directPolicy` (or per-agent override) is set to `block`.
@@ -418,11 +418,11 @@ Related:
 If a node is paired but tools fail, isolate foreground, permission, and approval state.
 
 ```bash
-openclaw nodes status
-openclaw nodes describe --node <idOrNameOrIp>
-openclaw approvals get --node <idOrNameOrIp>
-openclaw logs --follow
-openclaw status
+littlebaby nodes status
+littlebaby nodes describe --node <idOrNameOrIp>
+littlebaby approvals get --node <idOrNameOrIp>
+littlebaby logs --follow
+littlebaby status
 ```
 
 Look for:
@@ -449,11 +449,11 @@ Related:
 Use this when browser tool actions fail even though the gateway itself is healthy.
 
 ```bash
-openclaw browser status
-openclaw browser start --browser-profile openclaw
-openclaw browser profiles
-openclaw logs --follow
-openclaw doctor
+littlebaby browser status
+littlebaby browser start --browser-profile littlebaby
+littlebaby browser profiles
+littlebaby logs --follow
+littlebaby doctor
 ```
 
 Look for:
@@ -481,7 +481,7 @@ Common signatures:
 - `existing-session file uploads currently support one file at a time.` → send one upload per call on Chrome MCP profiles.
 - `existing-session dialog handling does not support timeoutMs.` → dialog hooks on Chrome MCP profiles do not support timeout overrides.
 - `response body is not supported for existing-session profiles yet.` → `responsebody` still requires a managed browser or raw CDP profile.
-- stale viewport / dark-mode / locale / offline overrides on attach-only or remote CDP profiles → run `openclaw browser stop --browser-profile <name>` to close the active control session and release Playwright/CDP emulation state without restarting the whole gateway.
+- stale viewport / dark-mode / locale / offline overrides on attach-only or remote CDP profiles → run `littlebaby browser stop --browser-profile <name>` to close the active control session and release Playwright/CDP emulation state without restarting the whole gateway.
 
 Related:
 
@@ -495,10 +495,10 @@ Most post-upgrade breakage is config drift or stricter defaults now being enforc
 ### 1) Auth and URL override behavior changed
 
 ```bash
-openclaw gateway status
-openclaw config get gateway.mode
-openclaw config get gateway.remote.url
-openclaw config get gateway.auth.mode
+littlebaby gateway status
+littlebaby config get gateway.mode
+littlebaby config get gateway.remote.url
+littlebaby config get gateway.auth.mode
 ```
 
 What to check:
@@ -514,11 +514,11 @@ Common signatures:
 ### 2) Bind and auth guardrails are stricter
 
 ```bash
-openclaw config get gateway.bind
-openclaw config get gateway.auth.mode
-openclaw config get gateway.auth.token
-openclaw gateway status
-openclaw logs --follow
+littlebaby config get gateway.bind
+littlebaby config get gateway.auth.mode
+littlebaby config get gateway.auth.token
+littlebaby gateway status
+littlebaby logs --follow
 ```
 
 What to check:
@@ -534,10 +534,10 @@ Common signatures:
 ### 3) Pairing and device identity state changed
 
 ```bash
-openclaw devices list
-openclaw pairing list --channel <channel> [--account <id>]
-openclaw logs --follow
-openclaw doctor
+littlebaby devices list
+littlebaby pairing list --channel <channel> [--account <id>]
+littlebaby logs --follow
+littlebaby doctor
 ```
 
 What to check:
@@ -553,8 +553,8 @@ Common signatures:
 If the service config and runtime still disagree after checks, reinstall service metadata from the same profile/state directory:
 
 ```bash
-openclaw gateway install --force
-openclaw gateway restart
+littlebaby gateway install --force
+littlebaby gateway restart
 ```
 
 Related:

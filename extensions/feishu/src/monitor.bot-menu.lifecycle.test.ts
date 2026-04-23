@@ -88,7 +88,7 @@ describe("Feishu bot-menu lifecycle", () => {
     vi.clearAllMocks();
     _handlers = {};
     lastRuntime = null;
-    setFeishuLifecycleStateDir("openclaw-feishu-bot-menu");
+    setFeishuLifecycleStateDir("littlebaby-feishu-bot-menu");
 
     createFeishuReplyDispatcherMock.mockReturnValue(createFeishuLifecycleReplyDispatcher());
 

@@ -1,8 +1,8 @@
 import type {
   BindingTargetKind,
   SessionBindingRecord,
-} from "openclaw/plugin-sdk/thread-bindings-session-runtime";
-import { resolveThreadBindingLifecycle } from "openclaw/plugin-sdk/thread-bindings-session-runtime";
+} from "littlebaby/plugin-sdk/thread-bindings-session-runtime";
+import { resolveThreadBindingLifecycle } from "littlebaby/plugin-sdk/thread-bindings-session-runtime";
 
 export type MatrixThreadBindingTargetKind = "subagent" | "acp";
 

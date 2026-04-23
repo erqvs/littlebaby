@@ -5,9 +5,9 @@ import {
   ReplyRuntimeConfigSchemaShape,
   ToolPolicySchema,
   requireOpenAllowFrom,
-} from "openclaw/plugin-sdk/channel-config-schema";
-import { requireChannelOpenAllowFrom } from "openclaw/plugin-sdk/extension-shared";
-import { z } from "openclaw/plugin-sdk/zod";
+} from "littlebaby/plugin-sdk/channel-config-schema";
+import { requireChannelOpenAllowFrom } from "littlebaby/plugin-sdk/extension-shared";
+import { z } from "littlebaby/plugin-sdk/zod";
 import { buildSecretInputSchema } from "./secret-input.js";
 
 export const NextcloudTalkRoomSchema = z

@@ -93,7 +93,7 @@ const config = {
   workspaces: {
     ".": {
       entry: rootEntries,
-      ignoreDependencies: ["@openclaw/*"],
+      ignoreDependencies: ["@littlebaby/*"],
       project: [
         "src/**/*.ts!",
         "scripts/**/*.{js,mjs,cjs,ts,mts,cts}!",

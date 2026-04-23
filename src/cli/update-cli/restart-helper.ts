@@ -77,19 +77,19 @@ export async function prepareRestartScript(
       const unitName = resolveSystemdUnit(env);
       const escaped = shellEscape(unitName);
       const logSetup = renderPosixRestartLogSetup({ ...process.env, ...env });
-      filename = `openclaw-restart-${timestamp}.sh`;
+      filename = `littlebaby-restart-${timestamp}.sh`;
       scriptContent = `#!/bin/sh
 # Standalone restart script — survives parent process termination.
 # Wait briefly to ensure file locks are released after update.
 sleep 1
 ${logSetup}
-printf '[%s] openclaw restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&2
+printf '[%s] littlebaby restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&2
 if systemctl --user restart '${escaped}'; then
   status=0
-  printf '[%s] openclaw restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
+  printf '[%s] littlebaby restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
 else
   status=$?
-  printf '[%s] openclaw restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
+  printf '[%s] littlebaby restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
 fi
 # Self-cleanup
 rm -f "$0"
@@ -106,7 +106,7 @@ exit "$status"
       const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
       const escapedPlistPath = shellEscape(plistPath);
       const logSetup = renderPosixRestartLogSetup({ ...process.env, ...env });
-      filename = `openclaw-restart-${timestamp}.sh`;
+      filename = `littlebaby-restart-${timestamp}.sh`;
       scriptContent = `#!/bin/sh
 # Standalone restart script — survives parent process termination.
 # Wait briefly to ensure file locks are released after update.
@@ -115,7 +115,7 @@ sleep 1
 # audit trail. Log setup is best-effort: restart must still run if the log path
 # is temporarily unavailable.
 ${logSetup}
-printf '[%s] openclaw restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${shellEscapeRestartLogValue(label)}' >&2
+printf '[%s] littlebaby restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${shellEscapeRestartLogValue(label)}' >&2
 # Try kickstart first (works when the service is still registered).
 # If it fails (e.g. after bootout), clear any persisted disabled state,
 # then re-register via bootstrap and kickstart. The final status is captured
@@ -128,11 +128,11 @@ if ! launchctl kickstart -k 'gui/${uid}/${escaped}'; then
   status=$?
 fi
 if [ "$status" -eq 0 ]; then
-  printf '[%s] openclaw restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
+  printf '[%s] littlebaby restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
 else
-  printf '[%s] openclaw restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
+  printf '[%s] littlebaby restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
 fi
-# Self-cleanup (log is retained under the OpenClaw state logs directory).
+# Self-cleanup (log is retained under the LittleBaby state logs directory).
 rm -f "$0"
 exit "$status"
 `;
@@ -144,13 +144,13 @@ exit "$status"
       const port =
         Number.isFinite(gatewayPort) && gatewayPort > 0 ? gatewayPort : DEFAULT_GATEWAY_PORT;
       const restartLog = renderCmdRestartLogSetup({ ...process.env, ...env });
-      filename = `openclaw-restart-${timestamp}.bat`;
+      filename = `littlebaby-restart-${timestamp}.bat`;
       scriptContent = `@echo off
 REM Standalone restart script — survives parent process termination.
 REM Wait briefly to ensure file locks are released after update.
 timeout /t 2 /nobreak >nul
 ${restartLog.lines.join("\r\n")}
->> ${restartLog.quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart attempt source=update target=${taskName}
+>> ${restartLog.quotedLogPath} 2>&1 echo [%DATE% %TIME%] littlebaby restart attempt source=update target=${taskName}
 schtasks /End /TN "${taskName}" >> ${restartLog.quotedLogPath} 2>&1
 REM Poll for gateway port release before rerun; force-kill listener if stuck.
 set /a attempts=0
@@ -170,9 +170,9 @@ for /f "tokens=5" %%P in ('netstat -ano ^| findstr /R /C:":${port} .*LISTENING"'
 schtasks /Run /TN "${taskName}" >> ${restartLog.quotedLogPath} 2>&1
 set "status=%ERRORLEVEL%"
 if not "%status%"=="0" (
-  >> ${restartLog.quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart failed source=update status=%status%
+  >> ${restartLog.quotedLogPath} 2>&1 echo [%DATE% %TIME%] littlebaby restart failed source=update status=%status%
 ) else (
-  >> ${restartLog.quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart done source=update
+  >> ${restartLog.quotedLogPath} 2>&1 echo [%DATE% %TIME%] littlebaby restart done source=update
 )
 REM Self-cleanup
 del "%~f0"

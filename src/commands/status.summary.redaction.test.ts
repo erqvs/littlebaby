@@ -64,14 +64,14 @@ describe("redactSensitiveStatusSummary", () => {
         },
       },
       sessions: {
-        paths: ["/tmp/openclaw/sessions.json"],
+        paths: ["/tmp/littlebaby/sessions.json"],
         count: 1,
         defaults: { model: "gpt-5", contextTokens: 200_000 },
         recent: [createRecentSessionRow()],
         byAgent: [
           {
             agentId: "main",
-            path: "/tmp/openclaw/main-sessions.json",
+            path: "/tmp/littlebaby/main-sessions.json",
             count: 1,
             recent: [createRecentSessionRow()],
           },

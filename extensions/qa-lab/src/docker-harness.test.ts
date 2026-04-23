@@ -25,7 +25,7 @@ describe("qa docker harness", () => {
       qaLabPort: 43124,
       gatewayToken: "qa-token",
       providerBaseUrl: "http://host.docker.internal:45123/v1",
-      repoRoot: "/repo/openclaw",
+      repoRoot: "/repo/littlebaby",
       usePrebuiltImage: true,
       bindUiDist: true,
     });
@@ -35,7 +35,7 @@ describe("qa docker harness", () => {
         path.join(outputDir, ".env.example"),
         path.join(outputDir, "README.md"),
         path.join(outputDir, "docker-compose.qa.yml"),
-        path.join(outputDir, "state", "openclaw.json"),
+        path.join(outputDir, "state", "littlebaby.json"),
         path.join(outputDir, "state", "seed-workspace", "QA_KICKOFF_TASK.md"),
         path.join(outputDir, "state", "seed-workspace", "QA_SCENARIO_PLAN.md"),
         path.join(outputDir, "state", "seed-workspace", "QA_SCENARIOS.md"),
@@ -44,28 +44,28 @@ describe("qa docker harness", () => {
     );
 
     const compose = await readFile(path.join(outputDir, "docker-compose.qa.yml"), "utf8");
-    expect(compose).toContain("image: openclaw:qa-local-prebaked");
+    expect(compose).toContain("image: littlebaby:qa-local-prebaked");
     expect(compose).toContain("qa-mock-openai:");
     expect(compose).toContain("18889:18789");
     expect(compose).toContain('      - "43124:43123"');
-    expect(compose).toContain(":/opt/openclaw-qa-lab-ui:ro");
+    expect(compose).toContain(":/opt/littlebaby-qa-lab-ui:ro");
     expect(compose).toContain("      - sh");
     expect(compose).toContain("      - -lc");
     expect(compose).toContain(
       '        - fetch("http://127.0.0.1:18789/healthz").then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))',
     );
     expect(compose).toContain("      - --control-ui-proxy-target");
-    expect(compose).toContain('      - "http://openclaw-qa-gateway:18789/"');
+    expect(compose).toContain('      - "http://littlebaby-qa-gateway:18789/"');
     expect(compose).toContain("      - --send-kickoff-on-start");
     expect(compose).toContain("      - --ui-dist-dir");
-    expect(compose).toContain('      - "/opt/openclaw-qa-lab-ui"');
-    expect(compose).toContain(":/opt/openclaw-repo:ro");
-    expect(compose).toContain("./state:/opt/openclaw-scaffold:ro");
+    expect(compose).toContain('      - "/opt/littlebaby-qa-lab-ui"');
+    expect(compose).toContain(":/opt/littlebaby-repo:ro");
+    expect(compose).toContain("./state:/opt/littlebaby-scaffold:ro");
     expect(compose).toContain(
-      "cp -R /opt/openclaw-scaffold/seed-workspace/. /tmp/openclaw/workspace/",
+      "cp -R /opt/littlebaby-scaffold/seed-workspace/. /tmp/littlebaby/workspace/",
     );
-    expect(compose).toContain("LITTLEBABY_CONFIG_PATH: /tmp/openclaw/openclaw.json");
-    expect(compose).toContain("LITTLEBABY_STATE_DIR: /tmp/openclaw/state");
+    expect(compose).toContain("LITTLEBABY_CONFIG_PATH: /tmp/littlebaby/littlebaby.json");
+    expect(compose).toContain("LITTLEBABY_STATE_DIR: /tmp/littlebaby/state");
     expect(compose).toContain('LITTLEBABY_NO_RESPAWN: "1"');
 
     const envExample = await readFile(path.join(outputDir, ".env.example"), "utf8");
@@ -74,12 +74,12 @@ describe("qa docker harness", () => {
     expect(envExample).toContain("QA_PROVIDER_BASE_URL=http://host.docker.internal:45123/v1");
     expect(envExample).toContain("QA_LAB_URL=http://127.0.0.1:43124");
 
-    const config = await readFile(path.join(outputDir, "state", "openclaw.json"), "utf8");
+    const config = await readFile(path.join(outputDir, "state", "littlebaby.json"), "utf8");
     expect(config).toContain('"allowInsecureAuth": true');
     expect(config).toContain('"enabled": false');
     expect(config).toContain("/app/dist/control-ui");
     expect(config).toContain("C-3PO QA");
-    expect(config).toContain('"/tmp/openclaw/workspace"');
+    expect(config).toContain('"/tmp/littlebaby/workspace"');
 
     const kickoff = await readFile(
       path.join(outputDir, "state", "seed-workspace", "QA_KICKOFF_TASK.md"),
@@ -103,8 +103,8 @@ describe("qa docker harness", () => {
     const calls: string[] = [];
     const result = await buildQaDockerHarnessImage(
       {
-        repoRoot: "/repo/openclaw",
-        imageName: "openclaw:qa-local-prebaked",
+        repoRoot: "/repo/littlebaby",
+        imageName: "littlebaby:qa-local-prebaked",
       },
       {
         async runCommand(command, args, cwd) {
@@ -114,10 +114,10 @@ describe("qa docker harness", () => {
       },
     );
 
-    expect(result.imageName).toBe("openclaw:qa-local-prebaked");
+    expect(result.imageName).toBe("littlebaby:qa-local-prebaked");
     expect(calls).toEqual([
       expect.stringContaining(
-        "docker build -t openclaw:qa-local-prebaked --build-arg LITTLEBABY_EXTENSIONS=qa-channel qa-lab -f Dockerfile . @/repo/openclaw",
+        "docker build -t littlebaby:qa-local-prebaked --build-arg LITTLEBABY_EXTENSIONS=qa-channel qa-lab -f Dockerfile . @/repo/littlebaby",
       ),
     ]);
   });

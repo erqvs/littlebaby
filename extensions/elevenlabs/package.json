@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/elevenlabs-speech",
+  "name": "@littlebaby/elevenlabs-speech",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw ElevenLabs speech plugin",
+  "description": "LittleBaby ElevenLabs speech plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

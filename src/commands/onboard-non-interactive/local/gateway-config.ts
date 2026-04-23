@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../../config/types.littlebaby.js";
 import { isValidEnvSecretRefId, resolveSecretInputRef } from "../../../config/types.secrets.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import { resolveDefaultSecretProviderAlias } from "../../../secrets/ref-contract.js";
@@ -7,12 +7,12 @@ import { normalizeGatewayTokenInput, randomToken } from "../../onboard-helpers.j
 import type { OnboardOptions } from "../../onboard-types.js";
 
 export function applyNonInteractiveGatewayConfig(params: {
-  nextConfig: OpenClawConfig;
+  nextConfig: LittleBabyConfig;
   opts: OnboardOptions;
   runtime: RuntimeEnv;
   defaultPort: number;
 }): {
-  nextConfig: OpenClawConfig;
+  nextConfig: LittleBabyConfig;
   port: number;
   bind: string;
   authMode: string;

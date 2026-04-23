@@ -132,10 +132,10 @@ export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise
     },
     {
       env: {
-        LITTLEBABY_AGENT_DIR: (home) => path.join(home, ".openclaw", "agent"),
-        PI_CODING_AGENT_DIR: (home) => path.join(home, ".openclaw", "agent"),
+        LITTLEBABY_AGENT_DIR: (home) => path.join(home, ".littlebaby", "agent"),
+        PI_CODING_AGENT_DIR: (home) => path.join(home, ".littlebaby", "agent"),
       },
-      prefix: "openclaw-reply-",
+      prefix: "littlebaby-reply-",
     },
   );
 }

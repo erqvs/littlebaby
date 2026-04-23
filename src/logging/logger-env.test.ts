@@ -9,7 +9,7 @@ import { createSuiteLogPathTracker } from "./log-test-helpers.js";
 import { loggingState } from "./state.js";
 
 const defaultMaxFileBytes = 500 * 1024 * 1024;
-const logPathTracker = createSuiteLogPathTracker("openclaw-test-env-log-level-");
+const logPathTracker = createSuiteLogPathTracker("littlebaby-test-env-log-level-");
 
 describe("LITTLEBABY_LOG_LEVEL", () => {
   let originalEnv: string | undefined;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import {
   collectExecPolicyScopeSnapshots,
@@ -439,7 +439,7 @@ describe("exec approvals policy helpers", () => {
     });
   });
 
-  it("reports askFallback from the OpenClaw default when approvals omit it", () => {
+  it("reports askFallback from the LittleBaby default when approvals omit it", () => {
     const summary = resolveExecPolicyScopeSummary({
       approvals: {
         version: 1,
@@ -451,7 +451,7 @@ describe("exec approvals policy helpers", () => {
 
     expect(summary.askFallback).toEqual({
       effective: "full",
-      source: "OpenClaw default (full)",
+      source: "LittleBaby default (full)",
     });
   });
 
@@ -467,7 +467,7 @@ describe("exec approvals policy helpers", () => {
         agents: {
           list: [{ id: "runner" }],
         },
-      } satisfies OpenClawConfig,
+      } satisfies LittleBabyConfig,
       approvals: {
         version: 1,
         agents: {
@@ -509,7 +509,7 @@ describe("exec approvals policy helpers", () => {
             ask: "off",
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies LittleBabyConfig,
       approvals: {
         version: 1,
         agents: {
@@ -553,7 +553,7 @@ describe("exec approvals policy helpers", () => {
             },
           ],
         },
-      } satisfies OpenClawConfig,
+      } satisfies LittleBabyConfig,
       approvals: {
         version: 1,
       },

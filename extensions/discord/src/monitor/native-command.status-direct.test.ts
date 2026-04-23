@@ -1,5 +1,5 @@
 import { ChannelType } from "discord-api-types/v10";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createMockCommandInteraction,
@@ -12,9 +12,9 @@ const runtimeModuleMocks = vi.hoisted(() => ({
   resolveDirectStatusReplyForSession: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/reply-dispatch-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/reply-dispatch-runtime")>(
-    "openclaw/plugin-sdk/reply-dispatch-runtime",
+vi.mock("littlebaby/plugin-sdk/reply-dispatch-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/reply-dispatch-runtime")>(
+    "littlebaby/plugin-sdk/reply-dispatch-runtime",
   );
   return {
     ...actual,
@@ -23,7 +23,7 @@ vi.mock("openclaw/plugin-sdk/reply-dispatch-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/command-status-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/command-status-runtime", () => ({
   resolveDirectStatusReplyForSession: (...args: unknown[]) =>
     runtimeModuleMocks.resolveDirectStatusReplyForSession(...args),
 }));
@@ -51,7 +51,7 @@ function createInteraction(params?: {
   });
 }
 
-function createConfig(params?: { requireMention?: boolean }): OpenClawConfig {
+function createConfig(params?: { requireMention?: boolean }): LittleBabyConfig {
   return {
     commands: {
       useAccessGroups: false,
@@ -72,10 +72,10 @@ function createConfig(params?: { requireMention?: boolean }): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
-async function createStatusCommand(cfg: OpenClawConfig) {
+async function createStatusCommand(cfg: LittleBabyConfig) {
   return createDiscordNativeCommand({
     command: {
       name: "status",
@@ -119,7 +119,7 @@ function setDefaultRouteState() {
 }
 
 function firstStatusCall(): {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   sessionKey: string;
   channel: string;
   isGroup: boolean;
@@ -130,7 +130,7 @@ function firstStatusCall(): {
     throw new Error("expected resolveDirectStatusReplyForSession to be called");
   }
   return call as {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     sessionKey: string;
     channel: string;
     isGroup: boolean;
@@ -158,7 +158,7 @@ describe("discord native /status", () => {
       text: "status reply",
     });
     discordNativeCommandTesting.setDispatchReplyWithDispatcher(
-      runtimeModuleMocks.dispatchReplyWithDispatcher as typeof import("openclaw/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithDispatcher,
+      runtimeModuleMocks.dispatchReplyWithDispatcher as typeof import("littlebaby/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithDispatcher,
     );
     setDefaultRouteState();
   });

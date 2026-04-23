@@ -14,7 +14,7 @@ import {
   resolveStateDir,
   resolveGatewayPort,
 } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { hasConfiguredSecretInput } from "../../config/types.secrets.js";
 import { resolveGatewayAuth } from "../../gateway/auth.js";
 import { defaultGatewayBindMode, isContainerEnvironment } from "../../gateway/net.js";
@@ -159,7 +159,7 @@ function formatModeErrorList(modes: readonly string[]): string {
   return `${quoted.slice(0, -1).join(", ")}, or ${quoted[quoted.length - 1]}`;
 }
 
-function maybeLogPendingControlUiBuild(cfg: OpenClawConfig): void {
+function maybeLogPendingControlUiBuild(cfg: LittleBabyConfig): void {
   if (cfg.gateway?.controlUi?.enabled === false) {
     return;
   }
@@ -191,7 +191,7 @@ function getGatewayStartGuardErrors(params: {
   }
   if (!params.configExists) {
     return [
-      `Missing config. Run \`${formatCliCommand("openclaw setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
+      `Missing config. Run \`${formatCliCommand("littlebaby setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
     ];
   }
   if (params.mode === undefined) {
@@ -199,7 +199,7 @@ function getGatewayStartGuardErrors(params: {
       [
         "Gateway start blocked: existing config is missing gateway.mode.",
         "Treat this as suspicious or clobbered config.",
-        `Re-run \`${formatCliCommand("openclaw onboard --mode local")}\` or \`${formatCliCommand("openclaw setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
+        `Re-run \`${formatCliCommand("littlebaby onboard --mode local")}\` or \`${formatCliCommand("littlebaby setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
       ].join(" "),
       `Config write audit: ${params.configAuditPath}`,
     ];
@@ -574,7 +574,7 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
     if (isGatewayLockError(err)) {
       const errMessage = formatErrorMessage(err);
       defaultRuntime.error(
-        `Gateway failed to start: ${errMessage}\nIf the gateway is supervised, stop it with: ${formatCliCommand("openclaw gateway stop")}`,
+        `Gateway failed to start: ${errMessage}\nIf the gateway is supervised, stop it with: ${formatCliCommand("littlebaby gateway stop")}`,
       );
       try {
         const diagnostics = await inspectPortUsage(port);

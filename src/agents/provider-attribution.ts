@@ -111,7 +111,7 @@ export type ProviderRequestCapabilities = ProviderRequestPolicyResolution & {
   compatibilityFamily?: ProviderRequestCompatibilityFamily;
 };
 
-const LITTLEBABY_ATTRIBUTION_PRODUCT = "OpenClaw";
+const LITTLEBABY_ATTRIBUTION_PRODUCT = "LittleBaby";
 const LITTLEBABY_ATTRIBUTION_ORIGINATOR = "littlebaby";
 
 const LOCAL_ENDPOINT_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
@@ -140,7 +140,7 @@ type ManifestProviderEndpointCacheEntry = {
 };
 let manifestProviderEndpointCache: ManifestProviderEndpointCacheEntry[] | null = null;
 
-function formatOpenClawUserAgent(version: string): string {
+function formatLittleBabyUserAgent(version: string): string {
   return `${LITTLEBABY_ATTRIBUTION_ORIGINATOR}/${version}`;
 }
 
@@ -399,10 +399,10 @@ function buildOpenRouterAttributionPolicy(
     verification: "vendor-documented",
     hook: "request-headers",
     docsUrl: "https://openrouter.ai/docs/app-attribution",
-    reviewNote: "Documented app attribution headers. Verified in OpenClaw runtime wrapper.",
+    reviewNote: "Documented app attribution headers. Verified in LittleBaby runtime wrapper.",
     ...identity,
     headers: {
-      "HTTP-Referer": "https://openclaw.ai",
+      "HTTP-Referer": "https://littlebaby.ai",
       "X-OpenRouter-Title": identity.product,
       "X-OpenRouter-Categories": "cli-agent",
     },
@@ -424,7 +424,7 @@ function buildOpenAIAttributionPolicy(
     headers: {
       originator: LITTLEBABY_ATTRIBUTION_ORIGINATOR,
       version: identity.version,
-      "User-Agent": formatOpenClawUserAgent(identity.version),
+      "User-Agent": formatLittleBabyUserAgent(identity.version),
     },
   };
 }
@@ -444,7 +444,7 @@ function buildOpenAICodexAttributionPolicy(
     headers: {
       originator: LITTLEBABY_ATTRIBUTION_ORIGINATOR,
       version: identity.version,
-      "User-Agent": formatOpenClawUserAgent(identity.version),
+      "User-Agent": formatLittleBabyUserAgent(identity.version),
     },
   };
 }

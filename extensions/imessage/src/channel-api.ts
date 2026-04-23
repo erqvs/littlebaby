@@ -1,20 +1,20 @@
-import { formatTrimmedAllowFromEntries } from "openclaw/plugin-sdk/channel-config-helpers";
-import type { ChannelStatusIssue } from "openclaw/plugin-sdk/channel-contract";
-import { PAIRING_APPROVED_MESSAGE } from "openclaw/plugin-sdk/channel-status";
+import { formatTrimmedAllowFromEntries } from "littlebaby/plugin-sdk/channel-config-helpers";
+import type { ChannelStatusIssue } from "littlebaby/plugin-sdk/channel-contract";
+import { PAIRING_APPROVED_MESSAGE } from "littlebaby/plugin-sdk/channel-status";
 import {
   DEFAULT_ACCOUNT_ID,
   getChatChannelMeta,
   type ChannelPlugin,
-  type OpenClawConfig,
-} from "openclaw/plugin-sdk/core";
-import { resolveChannelMediaMaxBytes } from "openclaw/plugin-sdk/media-runtime";
-import { collectStatusIssuesFromLastError } from "openclaw/plugin-sdk/status-helpers";
+  type LittleBabyConfig,
+} from "littlebaby/plugin-sdk/core";
+import { resolveChannelMediaMaxBytes } from "littlebaby/plugin-sdk/media-runtime";
+import { collectStatusIssuesFromLastError } from "littlebaby/plugin-sdk/status-helpers";
 import {
   resolveIMessageConfigAllowFrom,
   resolveIMessageConfigDefaultTo,
 } from "./config-accessors.js";
 import { looksLikeIMessageTargetId, normalizeIMessageMessagingTarget } from "./normalize.js";
-export { chunkTextForOutbound } from "openclaw/plugin-sdk/text-chunking";
+export { chunkTextForOutbound } from "littlebaby/plugin-sdk/text-chunking";
 
 export {
   collectStatusIssuesFromLastError,
@@ -29,4 +29,4 @@ export {
   resolveIMessageConfigDefaultTo,
 };
 
-export type { ChannelPlugin, ChannelStatusIssue, OpenClawConfig };
+export type { ChannelPlugin, ChannelStatusIssue, LittleBabyConfig };

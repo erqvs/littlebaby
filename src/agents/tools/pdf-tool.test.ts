@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import * as pdfExtractModule from "../../media/pdf-extract.js";
 import * as webMedia from "../../media/web-media.js";
 import * as modelAuth from "../model-auth.js";
@@ -65,10 +65,10 @@ async function withConfiguredPdfTool(
   });
 }
 
-function withPdfModel(primary: string): OpenClawConfig {
+function withPdfModel(primary: string): LittleBabyConfig {
   return {
     agents: { defaults: { pdfModel: { primary } } },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 async function stubPdfToolInfra(
@@ -95,7 +95,7 @@ async function stubPdfToolInfra(
           }) as never;
   vi.spyOn(modelDiscovery, "discoverModels").mockReturnValue({ find } as never);
 
-  vi.spyOn(modelsConfig, "ensureOpenClawModelsJson").mockResolvedValue({
+  vi.spyOn(modelsConfig, "ensureLittleBabyModelsJson").mockResolvedValue({
     agentDir,
     wrote: false,
   });
@@ -156,8 +156,8 @@ describe("createPdfTool", () => {
 
   it("respects fsPolicy.workspaceOnly for non-sandbox pdf paths", async () => {
     await withTempPdfAgentDir(async (agentDir) => {
-      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pdf-ws-"));
-      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pdf-out-"));
+      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-pdf-ws-"));
+      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-pdf-out-"));
       try {
         const cfg = withPdfModel(ANTHROPIC_PDF_MODEL);
         const tool = requirePdfTool(

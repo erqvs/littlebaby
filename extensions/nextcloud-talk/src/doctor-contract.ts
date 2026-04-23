@@ -1,4 +1,4 @@
-import { createLegacyPrivateNetworkDoctorContract } from "openclaw/plugin-sdk/ssrf-runtime";
+import { createLegacyPrivateNetworkDoctorContract } from "littlebaby/plugin-sdk/ssrf-runtime";
 
 const contract = createLegacyPrivateNetworkDoctorContract({
   channelKey: "nextcloud-talk",

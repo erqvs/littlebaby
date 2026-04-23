@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.js";
+import type { LittleBabyConfig } from "../../config/types.js";
 import { probeGateway } from "../../gateway/probe.js";
 import {
   discoverGatewayBeacons,
@@ -25,7 +25,7 @@ export type GatewayStatusProbedTarget = {
 };
 
 export async function runGatewayStatusProbePass(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   opts: {
     token?: string;
     password?: string;

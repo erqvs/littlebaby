@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 const resolveGatewayLogPathsMock = vi.fn(() => ({
-  logDir: "C:\\tmp\\openclaw-state\\logs",
-  stdoutPath: "C:\\tmp\\openclaw-state\\logs\\gateway.log",
-  stderrPath: "C:\\tmp\\openclaw-state\\logs\\gateway.err.log",
+  logDir: "C:\\tmp\\littlebaby-state\\logs",
+  stdoutPath: "C:\\tmp\\littlebaby-state\\logs\\gateway.log",
+  stderrPath: "C:\\tmp\\littlebaby-state\\logs\\gateway.err.log",
 }));
 const resolveGatewayRestartLogPathMock = vi.fn(
-  () => "C:\\tmp\\openclaw-state\\logs\\gateway-restart.log",
+  () => "C:\\tmp\\littlebaby-state\\logs\\gateway-restart.log",
 );
 
 vi.mock("./restart-logs.js", () => ({
@@ -26,12 +26,12 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "darwin",
         systemdServiceName: "littlebaby-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "LittleBaby Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /tmp/openclaw-state/logs/gateway.log",
-      "Launchd stderr (if installed): /tmp/openclaw-state/logs/gateway.err.log",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Launchd stdout (if installed): /tmp/littlebaby-state/logs/gateway.log",
+      "Launchd stderr (if installed): /tmp/littlebaby-state/logs/gateway.err.log",
+      "Restart attempts: /tmp/littlebaby-state/logs/gateway-restart.log",
     ]);
   });
 });

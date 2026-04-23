@@ -2,7 +2,7 @@ import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "littlebaby/plugin-sdk/provider-web-search";
 import {
   buildSearchCacheKey,
   DEFAULT_SEARCH_COUNT,
@@ -21,8 +21,8 @@ import {
   withTrustedWebSearchEndpoint,
   wrapWebContent,
   writeCachedSearchPayload,
-} from "openclaw/plugin-sdk/provider-web-search";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/provider-web-search";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import {
   DEFAULT_PERPLEXITY_BASE_URL,
   inferPerplexityBaseUrlFromApiKey,
@@ -232,8 +232,8 @@ async function runPerplexitySearchApi(params: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${params.apiKey}`,
-          "HTTP-Referer": "https://openclaw.ai",
-          "X-Title": "OpenClaw Web Search",
+          "HTTP-Referer": "https://littlebaby.ai",
+          "X-Title": "LittleBaby Web Search",
         },
         body: JSON.stringify(body),
       },
@@ -280,8 +280,8 @@ async function runPerplexitySearch(params: {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${params.apiKey}`,
-          "HTTP-Referer": "https://openclaw.ai",
-          "X-Title": "OpenClaw Web Search",
+          "HTTP-Referer": "https://littlebaby.ai",
+          "X-Title": "LittleBaby Web Search",
         },
         body: JSON.stringify(body),
       },
@@ -310,7 +310,7 @@ export async function executePerplexitySearch(
       error: "missing_perplexity_api_key",
       message:
         "web_search (perplexity) needs an API key. Set PERPLEXITY_API_KEY or OPENROUTER_API_KEY in the Gateway environment, or configure tools.web.search.perplexity.apiKey.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
 
@@ -323,7 +323,7 @@ export async function executePerplexitySearch(
     return {
       error: "invalid_freshness",
       message: "freshness must be day, week, month, or year.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
 
@@ -342,7 +342,7 @@ export async function executePerplexitySearch(
         error: "unsupported_country",
         message:
           "country filtering is only supported by the native Perplexity Search API path. Remove Perplexity baseUrl/model overrides or use a direct PERPLEXITY_API_KEY to enable it.",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
     if (language) {
@@ -350,7 +350,7 @@ export async function executePerplexitySearch(
         error: "unsupported_language",
         message:
           "language filtering is only supported by the native Perplexity Search API path. Remove Perplexity baseUrl/model overrides or use a direct PERPLEXITY_API_KEY to enable it.",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
     if (rawDateAfter || rawDateBefore) {
@@ -358,7 +358,7 @@ export async function executePerplexitySearch(
         error: "unsupported_date_filter",
         message:
           "date_after/date_before are only supported by the native Perplexity Search API path. Remove Perplexity baseUrl/model overrides or use a direct PERPLEXITY_API_KEY to enable them.",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
     if (domainFilter?.length) {
@@ -366,7 +366,7 @@ export async function executePerplexitySearch(
         error: "unsupported_domain_filter",
         message:
           "domain_filter is only supported by the native Perplexity Search API path. Remove Perplexity baseUrl/model overrides or use a direct PERPLEXITY_API_KEY to enable it.",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
     if (maxTokens !== undefined || maxTokensPerPage !== undefined) {
@@ -374,7 +374,7 @@ export async function executePerplexitySearch(
         error: "unsupported_content_budget",
         message:
           "max_tokens and max_tokens_per_page are only supported by the native Perplexity Search API path. Remove Perplexity baseUrl/model overrides or use a direct PERPLEXITY_API_KEY to enable them.",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
   }
@@ -383,7 +383,7 @@ export async function executePerplexitySearch(
     return {
       error: "invalid_language",
       message: "language must be a 2-letter ISO 639-1 code like 'en', 'de', or 'fr'.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
   if (rawFreshness && (rawDateAfter || rawDateBefore)) {
@@ -391,7 +391,7 @@ export async function executePerplexitySearch(
       error: "conflicting_time_filters",
       message:
         "freshness and date_after/date_before cannot be used together. Use either freshness (day/week/month/year) or a date range (date_after/date_before), not both.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
   const dateAfter = rawDateAfter ? normalizeToIsoDate(rawDateAfter) : undefined;
@@ -400,21 +400,21 @@ export async function executePerplexitySearch(
     return {
       error: "invalid_date",
       message: "date_after must be YYYY-MM-DD format.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
   if (rawDateBefore && !dateBefore) {
     return {
       error: "invalid_date",
       message: "date_before must be YYYY-MM-DD format.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
   if (dateAfter && dateBefore && dateAfter > dateBefore) {
     return {
       error: "invalid_date_range",
       message: "date_after must be before date_before.",
-      docs: "https://docs.openclaw.ai/tools/web",
+      docs: "https://docs.littlebaby.ai/tools/web",
     };
   }
   if (domainFilter?.length) {
@@ -425,14 +425,14 @@ export async function executePerplexitySearch(
         error: "invalid_domain_filter",
         message:
           "domain_filter cannot mix allowlist and denylist entries. Use either all positive entries (allowlist) or all entries prefixed with '-' (denylist).",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
     if (domainFilter.length > 20) {
       return {
         error: "invalid_domain_filter",
         message: "domain_filter supports a maximum of 20 domains.",
-        docs: "https://docs.openclaw.ai/tools/web",
+        docs: "https://docs.littlebaby.ai/tools/web",
       };
     }
   }

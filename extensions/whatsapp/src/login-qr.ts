@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { loadConfig } from "openclaw/plugin-sdk/config-runtime";
-import { danger, info, success } from "openclaw/plugin-sdk/runtime-env";
-import { defaultRuntime, type RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { logInfo } from "openclaw/plugin-sdk/text-runtime";
+import { loadConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { danger, info, success } from "littlebaby/plugin-sdk/runtime-env";
+import { defaultRuntime, type RuntimeEnv } from "littlebaby/plugin-sdk/runtime-env";
+import { logInfo } from "littlebaby/plugin-sdk/text-runtime";
 import { resolveWhatsAppAccount } from "./accounts.js";
 import {
   closeWaSocket,

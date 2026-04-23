@@ -58,13 +58,13 @@ describe("bundled plugin build entries", () => {
 
     expect(artifacts).toContain("dist/extensions/image-generation-core/package.json");
     expect(artifacts).toContain("dist/extensions/image-generation-core/runtime-api.js");
-    expect(artifacts).not.toContain("dist/extensions/image-generation-core/openclaw.plugin.json");
+    expect(artifacts).not.toContain("dist/extensions/image-generation-core/littlebaby.plugin.json");
     expect(artifacts).toContain("dist/extensions/media-understanding-core/runtime-api.js");
     expect(artifacts).not.toContain(
-      "dist/extensions/media-understanding-core/openclaw.plugin.json",
+      "dist/extensions/media-understanding-core/littlebaby.plugin.json",
     );
     expect(artifacts).toContain("dist/extensions/speech-core/runtime-api.js");
-    expect(artifacts).not.toContain("dist/extensions/speech-core/openclaw.plugin.json");
+    expect(artifacts).not.toContain("dist/extensions/speech-core/littlebaby.plugin.json");
   });
 
   it("packs the Matrix packaged runtime shim", () => {

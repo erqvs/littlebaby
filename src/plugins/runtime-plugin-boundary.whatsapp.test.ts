@@ -26,14 +26,14 @@ function writeRuntimeFixtureText(rootDir: string, relativePath: string, value: s
 }
 
 function createBundledWhatsAppRuntimeFixture() {
-  const rootDir = makeTrackedTempDir("openclaw-whatsapp-boundary", tempDirs);
+  const rootDir = makeTrackedTempDir("littlebaby-whatsapp-boundary", tempDirs);
   for (const [relativePath, value] of Object.entries({
     "package.json": JSON.stringify(
       {
         name: "littlebaby",
         type: "module",
         bin: {
-          openclaw: "littlebaby.mjs",
+          littlebaby: "littlebaby.mjs",
         },
         exports: {
           "./plugin-sdk": {
@@ -51,7 +51,7 @@ function createBundledWhatsAppRuntimeFixture() {
     [bundledDistPluginFile("whatsapp", "runtime-api.js")]:
       'export { registerControllerForTest } from "../../connection-controller-registry.js";\n',
     "dist/connection-controller-registry.js": [
-      'const key = Symbol.for("openclaw.whatsapp.connectionControllerRegistry");',
+      'const key = Symbol.for("littlebaby.whatsapp.connectionControllerRegistry");',
       "const g = globalThis;",
       "if (!g[key]) {",
       "  g[key] = { controllers: new Map() };",

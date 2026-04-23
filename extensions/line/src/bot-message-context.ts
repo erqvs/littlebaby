@@ -4,25 +4,25 @@ import {
   formatLocationText,
   resolveInboundSessionEnvelopeContext,
   toLocationContext,
-} from "openclaw/plugin-sdk/channel-inbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+} from "littlebaby/plugin-sdk/channel-inbound";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   ensureConfiguredBindingRouteReady,
   getSessionBindingService,
   recordInboundSession,
   resolvePinnedMainDmOwnerFromAllowlist,
   resolveConfiguredBindingRoute,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { recordChannelActivity } from "openclaw/plugin-sdk/infra-runtime";
-import { finalizeInboundContext } from "openclaw/plugin-sdk/reply-dispatch-runtime";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
+} from "littlebaby/plugin-sdk/conversation-runtime";
+import { recordChannelActivity } from "littlebaby/plugin-sdk/infra-runtime";
+import { finalizeInboundContext } from "littlebaby/plugin-sdk/reply-dispatch-runtime";
+import type { HistoryEntry } from "littlebaby/plugin-sdk/reply-history";
 import {
   deriveLastRoutePolicy,
   resolveAgentIdFromSessionKey,
   resolveAgentRoute,
-} from "openclaw/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { normalizeAllowFrom } from "./bot-access.js";
 import { resolveLineGroupConfigEntry } from "./group-keys.js";
 import type { ResolvedLineAccount } from "./types.js";
@@ -40,7 +40,7 @@ interface MediaRef {
 interface BuildLineMessageContextParams {
   event: MessageEvent;
   allMedia: MediaRef[];
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   account: ResolvedLineAccount;
   commandAuthorized: boolean;
   groupHistories?: Map<string, HistoryEntry[]>;
@@ -91,7 +91,7 @@ function buildPeerId(source: EventSource): string {
 
 async function resolveLineInboundRoute(params: {
   source: EventSource;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   account: ResolvedLineAccount;
 }): Promise<{
   userId?: string;
@@ -284,7 +284,7 @@ function resolveLineAddresses(params: {
 }
 
 async function finalizeLineInboundContext(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   account: ResolvedLineAccount;
   event: MessageEvent | PostbackEvent;
   route: LineRouteInfo;
@@ -516,7 +516,7 @@ export async function buildLineMessageContext(params: BuildLineMessageContextPar
 
 export async function buildLinePostbackContext(params: {
   event: PostbackEvent;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   account: ResolvedLineAccount;
   commandAuthorized: boolean;
 }) {

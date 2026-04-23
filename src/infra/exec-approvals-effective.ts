@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import {
   DEFAULT_EXEC_APPROVAL_ASK_FALLBACK,
@@ -88,7 +88,7 @@ function formatRequestedSource(params: {
   defaultValue: ExecSecurity | ExecAsk;
 }): string {
   return params.sourcePath === "__default__"
-    ? `OpenClaw default (${params.defaultValue})`
+    ? `LittleBaby default (${params.defaultValue})`
     : `${params.sourcePath}.${params.field}`;
 }
 
@@ -132,7 +132,7 @@ function formatHostFieldSource(params: {
     return `${params.hostPath} ${params.sourceSuffix}`;
   }
   if (params.field === "askFallback") {
-    return `OpenClaw default (${DEFAULT_EXEC_APPROVAL_ASK_FALLBACK})`;
+    return `LittleBaby default (${DEFAULT_EXEC_APPROVAL_ASK_FALLBACK})`;
   }
   return "inherits requested tool policy";
 }
@@ -149,7 +149,7 @@ function resolveAskNote(params: {
 }
 
 export function collectExecPolicyScopeSnapshots(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   approvals: ExecApprovalsFile;
   hostPath?: string;
 }): ExecPolicyScopeSnapshot[] {
@@ -246,7 +246,7 @@ export function resolveExecPolicyScopeSnapshot(params: {
       requested: requestedHost.value,
       requestedSource:
         requestedHost.sourcePath === "__default__"
-          ? "OpenClaw default (auto)"
+          ? "LittleBaby default (auto)"
           : `${requestedHost.sourcePath === "scope" ? params.configPath : requestedHost.sourcePath}.host`,
     },
     security: {

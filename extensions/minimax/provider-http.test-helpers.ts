@@ -1,4 +1,4 @@
-import type { resolveProviderHttpRequestConfig } from "openclaw/plugin-sdk/provider-http";
+import type { resolveProviderHttpRequestConfig } from "littlebaby/plugin-sdk/provider-http";
 import { afterEach, vi } from "vitest";
 
 type ResolveProviderHttpRequestConfigParams = Parameters<
@@ -18,11 +18,11 @@ const minimaxProviderHttpMocks = vi.hoisted(() => ({
   })),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/provider-auth-runtime", () => ({
   resolveApiKeyForProvider: minimaxProviderHttpMocks.resolveApiKeyForProviderMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-http", () => ({
+vi.mock("littlebaby/plugin-sdk/provider-http", () => ({
   assertOkOrThrowHttpError: minimaxProviderHttpMocks.assertOkOrThrowHttpErrorMock,
   createProviderOperationDeadline: ({
     label,

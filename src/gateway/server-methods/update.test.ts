@@ -32,13 +32,13 @@ vi.mock("../../config/sessions.js", () => ({
   },
 }));
 
-vi.mock("../../infra/openclaw-root.js", async () => {
-  const actual = await vi.importActual<typeof import("../../infra/openclaw-root.js")>(
-    "../../infra/openclaw-root.js",
+vi.mock("../../infra/littlebaby-root.js", async () => {
+  const actual = await vi.importActual<typeof import("../../infra/littlebaby-root.js")>(
+    "../../infra/littlebaby-root.js",
   );
   return {
     ...actual,
-    resolveOpenClawPackageRoot: async () => "/tmp/openclaw",
+    resolveLittleBabyPackageRoot: async () => "/tmp/littlebaby",
   };
 });
 

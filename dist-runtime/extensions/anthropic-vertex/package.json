@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/anthropic-vertex-provider",
+  "name": "@littlebaby/anthropic-vertex-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Anthropic Vertex provider plugin",
+  "description": "LittleBaby Anthropic Vertex provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

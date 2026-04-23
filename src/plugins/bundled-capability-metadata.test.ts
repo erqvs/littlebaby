@@ -24,14 +24,14 @@ function readManifestRecords(): PluginManifest[] {
         return false;
       }
       const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8")) as {
-        openclaw?: { extensions?: unknown };
+        littlebaby?: { extensions?: unknown };
       };
-      return normalizeBundledPluginStringList(packageJson.openclaw?.extensions).length > 0;
+      return normalizeBundledPluginStringList(packageJson.littlebaby?.extensions).length > 0;
     })
     .map(
       (pluginDir) =>
         JSON.parse(
-          fs.readFileSync(path.join(pluginDir, "openclaw.plugin.json"), "utf-8"),
+          fs.readFileSync(path.join(pluginDir, "littlebaby.plugin.json"), "utf-8"),
         ) as PluginManifest,
     )
     .toSorted((left, right) => left.id.localeCompare(right.id));

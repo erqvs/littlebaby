@@ -22,16 +22,16 @@ export function clearActiveMcpLoopbackRuntime(token: string): void {
 export function createMcpLoopbackServerConfig(port: number) {
   return {
     mcpServers: {
-      openclaw: {
+      littlebaby: {
         type: "http",
         url: `http://127.0.0.1:${port}/mcp`,
         headers: {
           Authorization: "Bearer ${LITTLEBABY_MCP_TOKEN}",
           "x-session-key": "${LITTLEBABY_MCP_SESSION_KEY}",
-          "x-openclaw-agent-id": "${LITTLEBABY_MCP_AGENT_ID}",
-          "x-openclaw-account-id": "${LITTLEBABY_MCP_ACCOUNT_ID}",
-          "x-openclaw-message-channel": "${LITTLEBABY_MCP_MESSAGE_CHANNEL}",
-          "x-openclaw-sender-is-owner": "${LITTLEBABY_MCP_SENDER_IS_OWNER}",
+          "x-littlebaby-agent-id": "${LITTLEBABY_MCP_AGENT_ID}",
+          "x-littlebaby-account-id": "${LITTLEBABY_MCP_ACCOUNT_ID}",
+          "x-littlebaby-message-channel": "${LITTLEBABY_MCP_MESSAGE_CHANNEL}",
+          "x-littlebaby-sender-is-owner": "${LITTLEBABY_MCP_SENDER_IS_OWNER}",
         },
       },
     },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { withTempHome, writeStateDirDotEnv } from "../config/test-helpers.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -18,7 +18,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             token: "config-token",
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
 
@@ -42,7 +42,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {
         CUSTOM_GATEWAY_TOKEN: "resolved-token",
       } as NodeJS.ProcessEnv,
@@ -64,7 +64,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {
         CUSTOM_GATEWAY_TOKEN: "resolved-token",
       } as NodeJS.ProcessEnv,
@@ -90,7 +90,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {
         LITTLEBABY_GATEWAY_TOKEN: "env-fallback-token",
       } as NodeJS.ProcessEnv,
@@ -116,7 +116,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {
         CUSTOM_GATEWAY_TOKEN: "   ",
         LITTLEBABY_GATEWAY_TOKEN: "env-fallback-token",
@@ -143,7 +143,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
 
@@ -161,7 +161,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             mode: "token",
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(true);
@@ -175,7 +175,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             mode: "password",
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(false);
@@ -183,7 +183,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
 
   it("requires token in inferred mode when password env exists only in shell", async () => {
     await withEnvAsync(
-      { [envVar("OPENCLAW", "GATEWAY", "PASSWORD")]: "password-from-env" },
+      { [envVar("LITTLEBABY", "GATEWAY", "PASSWORD")]: "password-from-env" },
       async () => {
         // pragma: allowlist secret
         const required = shouldRequireGatewayTokenForInstall(
@@ -191,7 +191,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             gateway: {
               auth: {},
             },
-          } as OpenClawConfig,
+          } as LittleBabyConfig,
           process.env,
         );
         expect(required).toBe(true);
@@ -216,7 +216,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(false);
@@ -233,7 +233,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             LITTLEBABY_GATEWAY_PASSWORD: "configured-password", // pragma: allowlist secret
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(false);
@@ -250,7 +250,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
           gateway: {
             auth: {},
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
         process.env,
       );
       expect(required).toBe(false);
@@ -263,7 +263,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
         gateway: {
           auth: {},
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(true);

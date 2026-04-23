@@ -12,15 +12,15 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const smokeEntryPath = path.join(repoRoot, "dist", "plugins", "build-smoke-entry.js");
 assert.ok(fs.existsSync(smokeEntryPath), `missing build output: ${smokeEntryPath}`);
 
-const { clearPluginCommands, getPluginCommandSpecs, loadOpenClawPlugins, matchPluginCommand } =
+const { clearPluginCommands, getPluginCommandSpecs, loadLittleBabyPlugins, matchPluginCommand } =
   await import(pathToFileURL(smokeEntryPath).href);
 
-assert.equal(typeof loadOpenClawPlugins, "function", "built loader export missing");
+assert.equal(typeof loadLittleBabyPlugins, "function", "built loader export missing");
 assert.equal(typeof clearPluginCommands, "function", "clearPluginCommands missing");
 assert.equal(typeof getPluginCommandSpecs, "function", "getPluginCommandSpecs missing");
 assert.equal(typeof matchPluginCommand, "function", "matchPluginCommand missing");
 
-const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-build-smoke-"));
+const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-build-smoke-"));
 
 function cleanup() {
   clearPluginCommands();
@@ -45,9 +45,9 @@ fs.writeFileSync(
   path.join(distPluginDir, "package.json"),
   JSON.stringify(
     {
-      name: "@openclaw/build-smoke-plugin",
+      name: "@littlebaby/build-smoke-plugin",
       type: "module",
-      openclaw: {
+      littlebaby: {
         extensions: ["./index.js"],
       },
     },
@@ -57,7 +57,7 @@ fs.writeFileSync(
   "utf8",
 );
 fs.writeFileSync(
-  path.join(distPluginDir, "openclaw.plugin.json"),
+  path.join(distPluginDir, "littlebaby.plugin.json"),
   JSON.stringify(
     {
       id: pluginId,
@@ -75,7 +75,7 @@ fs.writeFileSync(
 fs.writeFileSync(
   path.join(distPluginDir, "index.js"),
   [
-    "import sdk from 'openclaw/plugin-sdk';",
+    "import sdk from 'littlebaby/plugin-sdk';",
     "const { emptyPluginConfigSchema } = sdk;",
     "",
     "export default {",
@@ -110,7 +110,7 @@ assert.equal(
 
 clearPluginCommands();
 
-const registry = loadOpenClawPlugins({
+const registry = loadLittleBabyPlugins({
   cache: false,
   workspaceDir: tempRoot,
   env: {

@@ -1,14 +1,14 @@
 ---
-summary: "CLI reference for `openclaw update` (safe-ish source update + gateway auto-restart)"
+summary: "CLI reference for `littlebaby update` (safe-ish source update + gateway auto-restart)"
 read_when:
   - You want to update a source checkout safely
   - You need to understand `--update` shorthand behavior
 title: "update"
 ---
 
-# `openclaw update`
+# `littlebaby update`
 
-Safely update OpenClaw and switch between stable/beta/dev channels.
+Safely update LittleBaby and switch between stable/beta/dev channels.
 
 If you installed via **npm/pnpm/bun** (global install, no git metadata),
 updates happen via the package-manager flow in [Updating](/install/updating).
@@ -16,25 +16,25 @@ updates happen via the package-manager flow in [Updating](/install/updating).
 ## Usage
 
 ```bash
-openclaw update
-openclaw update status
-openclaw update wizard
-openclaw update --channel beta
-openclaw update --channel dev
-openclaw update --tag beta
-openclaw update --tag main
-openclaw update --dry-run
-openclaw update --no-restart
-openclaw update --yes
-openclaw update --json
-openclaw --update
+littlebaby update
+littlebaby update status
+littlebaby update wizard
+littlebaby update --channel beta
+littlebaby update --channel dev
+littlebaby update --tag beta
+littlebaby update --tag main
+littlebaby update --dry-run
+littlebaby update --no-restart
+littlebaby update --yes
+littlebaby update --json
+littlebaby --update
 ```
 
 ## Options
 
 - `--no-restart`: skip restarting the Gateway service after a successful update.
 - `--channel <stable|beta|dev>`: set the update channel (git + npm; persisted in config).
-- `--tag <dist-tag|version|spec>`: override the package target for this update only. For package installs, `main` maps to `github:openclaw/openclaw#main`.
+- `--tag <dist-tag|version|spec>`: override the package target for this update only. For package installs, `main` maps to `github:littlebaby/littlebaby#main`.
 - `--dry-run`: preview planned update actions (channel/tag/target/restart flow) without writing config, installing, syncing plugins, or restarting.
 - `--json`: print machine-readable `UpdateRunResult` JSON.
 - `--timeout <seconds>`: per-step timeout (default is 1200s).
@@ -47,9 +47,9 @@ Note: downgrades require confirmation because older versions can break configura
 Show the active update channel + git tag/branch/SHA (for source checkouts), plus update availability.
 
 ```bash
-openclaw update status
-openclaw update status --json
-openclaw update status --timeout 10
+littlebaby update status
+littlebaby update status --json
+littlebaby update status --timeout 10
 ```
 
 Options:
@@ -69,10 +69,10 @@ Options:
 
 ## What it does
 
-When you switch channels explicitly (`--channel ...`), OpenClaw also keeps the
+When you switch channels explicitly (`--channel ...`), LittleBaby also keeps the
 install method aligned:
 
-- `dev` → ensures a git checkout (default: `~/openclaw`, override with `LITTLEBABY_GIT_DIR`),
+- `dev` → ensures a git checkout (default: `~/littlebaby`, override with `LITTLEBABY_GIT_DIR`),
   updates it, and installs the global CLI from that checkout.
 - `stable` → installs from npm using `latest`.
 - `beta` → prefers npm dist-tag `beta`, but falls back to `latest` when beta is
@@ -98,18 +98,18 @@ High-level:
 5. Rebases onto the selected commit (dev only).
 6. Installs deps with the repo package manager. For pnpm checkouts, the updater bootstraps `pnpm` on demand (via `corepack` first, then a temporary `npm install pnpm@10` fallback) instead of running `npm run build` inside a pnpm workspace.
 7. Builds + builds the Control UI.
-8. Runs `openclaw doctor` as the final “safe update” check.
+8. Runs `littlebaby doctor` as the final “safe update” check.
 9. Syncs plugins to the active channel (dev uses bundled extensions; stable/beta uses npm) and updates npm-installed plugins.
 
 If pnpm bootstrap still fails, the updater now stops early with a package-manager-specific error instead of trying `npm run build` inside the checkout.
 
 ## `--update` shorthand
 
-`openclaw --update` rewrites to `openclaw update` (useful for shells and launcher scripts).
+`littlebaby --update` rewrites to `littlebaby update` (useful for shells and launcher scripts).
 
 ## See also
 
-- `openclaw doctor` (offers to run update first on git checkouts)
+- `littlebaby doctor` (offers to run update first on git checkouts)
 - [Development channels](/install/development-channels)
 - [Updating](/install/updating)
 - [CLI reference](/cli)

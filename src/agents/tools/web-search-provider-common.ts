@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { normalizeResolvedSecretInputString } from "../../config/types.secrets.js";
 import { normalizeLowercaseStringOrEmpty } from "../../shared/string-coerce.js";
 import { normalizeSecretInput } from "../../utils/normalize-secret-input.js";
@@ -28,7 +28,7 @@ async function loadTrustedWebToolsEndpoint(): Promise<
   return (await webGuardedFetchPromise).withTrustedWebToolsEndpoint;
 }
 
-export type SearchConfigRecord = (NonNullable<OpenClawConfig["tools"]>["web"] extends infer Web
+export type SearchConfigRecord = (NonNullable<LittleBabyConfig["tools"]>["web"] extends infer Web
   ? Web extends { search?: infer Search }
     ? Search
     : never
@@ -224,7 +224,7 @@ export function parseIsoDateRange(params: {
       message: string;
       docs: string;
     } {
-  const docs = params.docs ?? "https://docs.openclaw.ai/tools/web";
+  const docs = params.docs ?? "https://docs.littlebaby.ai/tools/web";
   const dateAfter = params.rawDateAfter ? normalizeToIsoDate(params.rawDateAfter) : undefined;
   if (params.rawDateAfter && !dateAfter) {
     return {
@@ -336,7 +336,7 @@ function describeUnsupportedSearchFilter(name: UnsupportedWebSearchFilterName): 
 export function buildUnsupportedSearchFilterResponse(
   params: Record<string, unknown>,
   provider: string,
-  docs = "https://docs.openclaw.ai/tools/web",
+  docs = "https://docs.littlebaby.ai/tools/web",
 ):
   | {
       error: string;

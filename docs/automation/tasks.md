@@ -34,39 +34,39 @@ Not every agent run creates a task. Heartbeat turns and normal interactive chat 
   descendant subagent work is still draining, and it prefers final descendant
   output when that arrives before delivery.
 - Completion notifications are delivered directly to a channel or queued for the next heartbeat.
-- `openclaw tasks list` shows all tasks; `openclaw tasks audit` surfaces issues.
+- `littlebaby tasks list` shows all tasks; `littlebaby tasks audit` surfaces issues.
 - Terminal records are kept for 7 days, then automatically pruned.
 
 ## Quick start
 
 ```bash
 # List all tasks (newest first)
-openclaw tasks list
+littlebaby tasks list
 
 # Filter by runtime or status
-openclaw tasks list --runtime acp
-openclaw tasks list --status running
+littlebaby tasks list --runtime acp
+littlebaby tasks list --status running
 
 # Show details for a specific task (by ID, run ID, or session key)
-openclaw tasks show <lookup>
+littlebaby tasks show <lookup>
 
 # Cancel a running task (kills the child session)
-openclaw tasks cancel <lookup>
+littlebaby tasks cancel <lookup>
 
 # Change notification policy for a task
-openclaw tasks notify <lookup> state_changes
+littlebaby tasks notify <lookup> state_changes
 
 # Run a health audit
-openclaw tasks audit
+littlebaby tasks audit
 
 # Preview or apply maintenance
-openclaw tasks maintenance
-openclaw tasks maintenance --apply
+littlebaby tasks maintenance
+littlebaby tasks maintenance --apply
 
 # Inspect TaskFlow state
-openclaw tasks flow list
-openclaw tasks flow show <lookup>
-openclaw tasks flow cancel <lookup>
+littlebaby tasks flow list
+littlebaby tasks flow show <lookup>
+littlebaby tasks flow cancel <lookup>
 ```
 
 ## What creates a task
@@ -76,7 +76,7 @@ openclaw tasks flow cancel <lookup>
 | ACP background runs    | `acp`        | Spawning a child ACP session                           | `done_only`           |
 | Subagent orchestration | `subagent`   | Spawning a subagent via `sessions_spawn`               | `done_only`           |
 | Cron jobs (all types)  | `cron`       | Every cron execution (main-session and isolated)       | `silent`              |
-| CLI operations         | `cli`        | `openclaw agent` commands that run through the gateway | `silent`              |
+| CLI operations         | `cli`        | `littlebaby agent` commands that run through the gateway | `silent`              |
 | Agent media jobs       | `cli`        | Session-backed `video_generate` runs                   | `silent`              |
 
 Main-session cron tasks use `silent` notify policy by default — they create records for tracking but do not generate notifications. Isolated cron tasks also default to `silent` but are more visible because they run in their own session.
@@ -112,7 +112,7 @@ stateDiagram-v2
 | `succeeded` | Completed successfully                                                     |
 | `failed`    | Completed with an error                                                    |
 | `timed_out` | Exceeded the configured timeout                                            |
-| `cancelled` | Stopped by the operator via `openclaw tasks cancel`                        |
+| `cancelled` | Stopped by the operator via `littlebaby tasks cancel`                        |
 | `lost`      | The runtime lost authoritative backing state after a 5-minute grace period |
 
 Transitions happen automatically — when the associated agent run ends, the task status updates to match.
@@ -126,9 +126,9 @@ Transitions happen automatically — when the associated agent run ends, the tas
 
 ## Delivery and notifications
 
-When a task reaches a terminal state, OpenClaw notifies you. There are two delivery paths:
+When a task reaches a terminal state, LittleBaby notifies you. There are two delivery paths:
 
-**Direct delivery** — if the task has a channel target (the `requesterOrigin`), the completion message goes straight to that channel (Telegram, Discord, Slack, etc.). For subagent completions, OpenClaw also preserves bound thread/topic routing when available and can fill a missing `to` / account from the requester session's stored route (`lastChannel` / `lastTo` / `lastAccountId`) before giving up on direct delivery.
+**Direct delivery** — if the task has a channel target (the `requesterOrigin`), the completion message goes straight to that channel (Telegram, Discord, Slack, etc.). For subagent completions, LittleBaby also preserves bound thread/topic routing when available and can fill a missing `to` / account from the requester session's stored route (`lastChannel` / `lastTo` / `lastAccountId`) before giving up on direct delivery.
 
 **Session-queued delivery** — if direct delivery fails or no origin is set, the update is queued as a system event in the requester's session and surfaces on the next heartbeat.
 
@@ -153,7 +153,7 @@ Control how much you hear about each task:
 Change the policy while a task is running:
 
 ```bash
-openclaw tasks notify <lookup> state_changes
+littlebaby tasks notify <lookup> state_changes
 ```
 
 ## CLI reference
@@ -161,7 +161,7 @@ openclaw tasks notify <lookup> state_changes
 ### `tasks list`
 
 ```bash
-openclaw tasks list [--runtime <acp|subagent|cron|cli>] [--status <status>] [--json]
+littlebaby tasks list [--runtime <acp|subagent|cron|cli>] [--status <status>] [--json]
 ```
 
 Output columns: Task ID, Kind, Status, Delivery, Run ID, Child Session, Summary.
@@ -169,7 +169,7 @@ Output columns: Task ID, Kind, Status, Delivery, Run ID, Child Session, Summary.
 ### `tasks show`
 
 ```bash
-openclaw tasks show <lookup>
+littlebaby tasks show <lookup>
 ```
 
 The lookup token accepts a task ID, run ID, or session key. Shows the full record including timing, delivery state, error, and terminal summary.
@@ -177,7 +177,7 @@ The lookup token accepts a task ID, run ID, or session key. Shows the full recor
 ### `tasks cancel`
 
 ```bash
-openclaw tasks cancel <lookup>
+littlebaby tasks cancel <lookup>
 ```
 
 For ACP and subagent tasks, this kills the child session. For CLI-tracked tasks, cancellation is recorded in the task registry (there is no separate child runtime handle). Status transitions to `cancelled` and a delivery notification is sent when applicable.
@@ -185,16 +185,16 @@ For ACP and subagent tasks, this kills the child session. For CLI-tracked tasks,
 ### `tasks notify`
 
 ```bash
-openclaw tasks notify <lookup> <done_only|state_changes|silent>
+littlebaby tasks notify <lookup> <done_only|state_changes|silent>
 ```
 
 ### `tasks audit`
 
 ```bash
-openclaw tasks audit [--json]
+littlebaby tasks audit [--json]
 ```
 
-Surfaces operational issues. Findings also appear in `openclaw status` when issues are detected.
+Surfaces operational issues. Findings also appear in `littlebaby status` when issues are detected.
 
 | Finding                   | Severity | Trigger                                               |
 | ------------------------- | -------- | ----------------------------------------------------- |
@@ -208,8 +208,8 @@ Surfaces operational issues. Findings also appear in `openclaw status` when issu
 ### `tasks maintenance`
 
 ```bash
-openclaw tasks maintenance [--json]
-openclaw tasks maintenance --apply [--json]
+littlebaby tasks maintenance [--json]
+littlebaby tasks maintenance --apply [--json]
 ```
 
 Use this to preview or apply reconciliation, cleanup stamping, and pruning for
@@ -233,9 +233,9 @@ Completion cleanup is also runtime-aware:
 ### `tasks flow list|show|cancel`
 
 ```bash
-openclaw tasks flow list [--status <status>] [--json]
-openclaw tasks flow show <lookup> [--json]
-openclaw tasks flow cancel <lookup>
+littlebaby tasks flow list [--status <status>] [--json]
+littlebaby tasks flow show <lookup> [--json]
+littlebaby tasks flow cancel <lookup>
 ```
 
 Use these when the orchestrating Task Flow is the thing you care about rather
@@ -249,11 +249,11 @@ active and recently completed tasks with runtime, status, timing, and progress o
 When the current session has no visible linked tasks, `/tasks` falls back to agent-local task counts
 so you still get an overview without leaking other-session details.
 
-For the full operator ledger, use the CLI: `openclaw tasks list`.
+For the full operator ledger, use the CLI: `littlebaby tasks list`.
 
 ## Status integration (task pressure)
 
-`openclaw status` includes an at-a-glance task summary:
+`littlebaby status` includes an at-a-glance task summary:
 
 ```
 Tasks: 3 queued · 2 running · 1 issues
@@ -295,7 +295,7 @@ A sweeper runs every **60 seconds** and handles three things:
 
 ### Tasks and Task Flow
 
-[Task Flow](/automation/taskflow) is the flow orchestration layer above background tasks. A single flow may coordinate multiple tasks over its lifetime using managed or mirrored sync modes. Use `openclaw tasks` to inspect individual task records and `openclaw tasks flow` to inspect the orchestrating flow.
+[Task Flow](/automation/taskflow) is the flow orchestration layer above background tasks. A single flow may coordinate multiple tasks over its lifetime using managed or mirrored sync modes. Use `littlebaby tasks` to inspect individual task records and `littlebaby tasks flow` to inspect the orchestrating flow.
 
 See [Task Flow](/automation/taskflow) for details.
 

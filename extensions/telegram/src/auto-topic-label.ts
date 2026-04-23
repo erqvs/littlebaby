@@ -1,9 +1,9 @@
 import type {
-  OpenClawConfig,
+  LittleBabyConfig,
   TelegramAccountConfig,
   TelegramDirectConfig,
-} from "openclaw/plugin-sdk/config-runtime";
-import { generateConversationLabel } from "openclaw/plugin-sdk/reply-runtime";
+} from "littlebaby/plugin-sdk/config-runtime";
+import { generateConversationLabel } from "littlebaby/plugin-sdk/reply-runtime";
 
 export const AUTO_TOPIC_LABEL_DEFAULT_PROMPT =
   "Generate a very short topic label (2-4 words, max 25 chars) for a chat conversation based on the user's first message below. No emoji. Use the same language as the message. Be concise and descriptive. Return ONLY the topic name, nothing else.";
@@ -28,7 +28,7 @@ export function resolveAutoTopicLabelConfig(
 export async function generateTelegramTopicLabel(params: {
   userMessage: string;
   prompt: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId?: string;
   agentDir?: string;
 }): Promise<string | null> {

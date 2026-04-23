@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import type { QaBusState } from "./bus-state.js";
 import { getQaProvider } from "./providers/index.js";
 import { QaStateBackedTransportAdapter, waitForQaTransportCondition } from "./qa-transport.js";
@@ -58,14 +58,14 @@ export function createQaChannelGatewayConfig(params: {
         enabled: true,
         baseUrl: params.baseUrl,
         botUserId: "littlebaby",
-        botDisplayName: "OpenClaw QA",
+        botDisplayName: "LittleBaby QA",
         allowFrom: ["*"],
         pollTimeoutMs: 250,
       },
     },
     messages: {
       groupChat: {
-        mentionPatterns: ["\\b@?openclaw\\b"],
+        mentionPatterns: ["\\b@?littlebaby\\b"],
       },
     },
   };
@@ -87,7 +87,7 @@ function createQaChannelReportNotes(params: QaTransportReportParams) {
 async function handleQaChannelAction(params: {
   action: QaTransportActionName;
   args: Record<string, unknown>;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
 }) {
   return await qaChannelPlugin.actions?.handleAction?.({

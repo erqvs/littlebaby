@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../../config/types.littlebaby.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 import { applyNonInteractiveGatewayConfig } from "./gateway-config.js";
 
@@ -33,18 +33,18 @@ const SAMPLE_SECRET_REF = {
   id: "LITTLEBABY_GATEWAY_TOKEN_REF",
 };
 
-function createTokenConfig(token: unknown): OpenClawConfig {
+function createTokenConfig(token: unknown): LittleBabyConfig {
   return {
     gateway: { auth: { mode: "token", token } },
-  } as unknown as OpenClawConfig;
+  } as unknown as LittleBabyConfig;
 }
 
 function applyGatewayConfig({
-  nextConfig = {} as OpenClawConfig,
+  nextConfig = {} as LittleBabyConfig,
   opts = baseOpts,
   runtime = createRuntime(),
 }: {
-  nextConfig?: OpenClawConfig;
+  nextConfig?: LittleBabyConfig;
   opts?: OnboardOptions;
   runtime?: ReturnType<typeof createRuntime>;
 } = {}) {

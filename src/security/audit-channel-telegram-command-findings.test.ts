@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { collectTelegramSecurityAuditFindings } from "../../test/helpers/channels/security-audit-contract.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { withChannelSecurityStateDir } from "./audit-channel-security.test-helpers.js";
 
 type TelegramAuditParams = Parameters<typeof collectTelegramSecurityAuditFindings>[0];
@@ -10,12 +10,12 @@ const { readChannelAllowFromStoreMock } = vi.hoisted(() => ({
   readChannelAllowFromStoreMock: vi.fn(async () => [] as string[]),
 }));
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/conversation-runtime", () => ({
   readChannelAllowFromStore: readChannelAllowFromStoreMock,
 }));
 
 function createTelegramAccount(
-  config: NonNullable<OpenClawConfig["channels"]>["telegram"],
+  config: NonNullable<LittleBabyConfig["channels"]>["telegram"],
 ): ResolvedTelegramAccount {
   return {
     accountId: "default",
@@ -27,7 +27,7 @@ function createTelegramAccount(
 
 describe("security audit telegram command findings", () => {
   it("flags Telegram group commands without a sender allowlist", async () => {
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       channels: {
         telegram: {
           enabled: true,
@@ -41,9 +41,9 @@ describe("security audit telegram command findings", () => {
     await withChannelSecurityStateDir(async () => {
       readChannelAllowFromStoreMock.mockResolvedValue([]);
       const findings = await collectTelegramSecurityAuditFindings({
-        cfg: cfg as OpenClawConfig & {
+        cfg: cfg as LittleBabyConfig & {
           channels: {
-            telegram: NonNullable<OpenClawConfig["channels"]>["telegram"];
+            telegram: NonNullable<LittleBabyConfig["channels"]>["telegram"];
           };
         },
         account: createTelegramAccount(cfg.channels!.telegram),
@@ -62,7 +62,7 @@ describe("security audit telegram command findings", () => {
   });
 
   it("warns when Telegram allowFrom entries are non-numeric (legacy @username configs)", async () => {
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       channels: {
         telegram: {
           enabled: true,
@@ -77,9 +77,9 @@ describe("security audit telegram command findings", () => {
     await withChannelSecurityStateDir(async () => {
       readChannelAllowFromStoreMock.mockResolvedValue([]);
       const findings = await collectTelegramSecurityAuditFindings({
-        cfg: cfg as OpenClawConfig & {
+        cfg: cfg as LittleBabyConfig & {
           channels: {
-            telegram: NonNullable<OpenClawConfig["channels"]>["telegram"];
+            telegram: NonNullable<LittleBabyConfig["channels"]>["telegram"];
           };
         },
         account: createTelegramAccount(cfg.channels!.telegram),

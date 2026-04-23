@@ -12,7 +12,7 @@ API_KEY_ENV=""
 AUTH_CHOICE=""
 AUTH_KEY_FLAG=""
 MODEL_ID=""
-INSTALL_URL="https://openclaw.ai/install.sh"
+INSTALL_URL="https://littlebaby.ai/install.sh"
 HOST_PORT="18425"
 HOST_PORT_EXPLICIT=0
 HOST_IP=""
@@ -29,8 +29,8 @@ DISCORD_CHANNEL_ID=""
 SNAPSHOT_ID=""
 SNAPSHOT_STATE=""
 SNAPSHOT_NAME=""
-GUEST_LITTLEBABY_BIN="/opt/homebrew/bin/openclaw"
-GUEST_LITTLEBABY_ENTRY="/opt/homebrew/lib/node_modules/openclaw/littlebaby.mjs"
+GUEST_LITTLEBABY_BIN="/opt/homebrew/bin/littlebaby"
+GUEST_LITTLEBABY_ENTRY="/opt/homebrew/lib/node_modules/littlebaby/littlebaby.mjs"
 GUEST_NODE_BIN="/opt/homebrew/bin/node"
 GUEST_NPM_BIN="/opt/homebrew/bin/npm"
 GUEST_CURRENT_USER=""
@@ -41,8 +41,8 @@ MAIN_TGZ_PATH=""
 PACKED_MAIN_COMMIT_SHORT=""
 TARGET_EXPECT_VERSION=""
 SERVER_PID=""
-RUN_DIR="$(mktemp -d /tmp/openclaw-parallels-smoke.XXXXXX)"
-BUILD_LOCK_DIR="${TMPDIR:-/tmp}/openclaw-parallels-build.lock"
+RUN_DIR="$(mktemp -d /tmp/littlebaby-parallels-smoke.XXXXXX)"
+BUILD_LOCK_DIR="${TMPDIR:-/tmp}/littlebaby-parallels-build.lock"
 
 TIMEOUT_INSTALL_SITE_S=420
 TIMEOUT_INSTALL_TGZ_S=420
@@ -143,14 +143,14 @@ Options:
   --api-key-env <var>        Host env var name for provider API key.
                              Default: OPENAI_API_KEY for openai, ANTHROPIC_API_KEY for anthropic
   --openai-api-key-env <var> Alias for --api-key-env (backward compatible)
-  --install-url <url>        Installer URL for latest release. Default: https://openclaw.ai/install.sh
+  --install-url <url>        Installer URL for latest release. Default: https://littlebaby.ai/install.sh
   --host-port <port>         Host HTTP port for current-main tgz. Default: 18425
   --host-ip <ip>             Override Parallels host IP.
   --latest-version <ver>     Override npm latest version lookup.
   --install-version <ver>    Pin site-installer version/dist-tag for the baseline lane.
   --target-package-spec <npm-spec>
                              Install this npm package tarball instead of packing current main.
-                             Example: openclaw@2026.3.13-beta.1
+                             Example: littlebaby@2026.3.13-beta.1
   --skip-latest-ref-check    Skip the known latest-release ref-mode precheck in upgrade lane.
   --keep-server              Leave temp host HTTP server running.
   --discord-token-env <var>  Host env var name for Discord bot token.
@@ -689,10 +689,10 @@ resolve_guest_current_user_home() {
   parallels_macos_resolve_desktop_home "$VM_NAME" "$user_name"
 }
 
-resolve_guest_git_openclaw_entry() {
+resolve_guest_git_littlebaby_entry() {
   local guest_home
   guest_home="$(resolve_guest_current_user_home)"
-  printf '%s/openclaw/littlebaby.mjs\n' "$guest_home"
+  printf '%s/littlebaby/littlebaby.mjs\n' "$guest_home"
 }
 
 guest_current_user_cli() {
@@ -728,13 +728,13 @@ log_user 0
 send -- "export PS1='' PROMPT='' PROMPT2='' RPROMPT=''\r"
 send -- "stty -echo\r"
 
-send -- "cat >/tmp/openclaw-prl.sh <<'__LITTLEBABY_SCRIPT__'\r"
+send -- "cat >/tmp/littlebaby-prl.sh <<'__LITTLEBABY_SCRIPT__'\r"
 send -- $script
 if {![string match "*\n" $script]} {
   send -- "\r"
 }
 send -- "__LITTLEBABY_SCRIPT__\r"
-send -- "/bin/bash /tmp/openclaw-prl.sh; rc=\$?; rm -f /tmp/openclaw-prl.sh; printf '__LITTLEBABY_RC__:%s\\n' \"\$rc\"; exit \"\$rc\"\r"
+send -- "/bin/bash /tmp/littlebaby-prl.sh; rc=\$?; rm -f /tmp/littlebaby-prl.sh; printf '__LITTLEBABY_RC__:%s\\n' \"\$rc\"; exit \"\$rc\"\r"
 log_user 1
 
 set rc 1
@@ -769,7 +769,7 @@ guest_current_user_sh() {
   script+=$'cd "$HOME"\n'
   script+="$1"
   if headless_guest_fallback; then
-    script_path="/tmp/openclaw-prl-${BASHPID:-$$}-$RANDOM.sh"
+    script_path="/tmp/littlebaby-prl-${BASHPID:-$$}-$RANDOM.sh"
     local guest_home
     guest_home="$(parallels_macos_resolve_desktop_home "$VM_NAME" "$GUEST_CURRENT_USER")"
     printf '%s' "$script" | /usr/bin/base64 | prlctl exec "$VM_NAME" \
@@ -907,9 +907,9 @@ EOF
   write_runner_cmd+="(/bin/bash $(shell_quote "$runner_path") > $(shell_quote "$log_path") 2>&1 < /dev/null &) >/dev/null 2>&1"
   guest_current_user_sh "$write_runner_cmd"
   guest_home="$(resolve_guest_current_user_home)"
-  guest_log_state_path="$(mktemp "${TMPDIR:-/tmp}/openclaw-guest-log-state.XXXXXX")"
-  latest_npm_log_state_path="$(mktemp "${TMPDIR:-/tmp}/openclaw-guest-npm-log-state.XXXXXX")"
-  npm_state_path="$(mktemp "${TMPDIR:-/tmp}/openclaw-guest-npm-log-path.XXXXXX")"
+  guest_log_state_path="$(mktemp "${TMPDIR:-/tmp}/littlebaby-guest-log-state.XXXXXX")"
+  latest_npm_log_state_path="$(mktemp "${TMPDIR:-/tmp}/littlebaby-guest-npm-log-state.XXXXXX")"
+  npm_state_path="$(mktemp "${TMPDIR:-/tmp}/littlebaby-guest-npm-log-path.XXXXXX")"
   : >"$guest_log_state_path"
   : >"$latest_npm_log_state_path"
   : >"$npm_state_path"
@@ -1005,7 +1005,7 @@ resolve_latest_version() {
     printf '%s\n' "$LATEST_VERSION"
     return
   fi
-  npm view openclaw version --userconfig "$(mktemp)"
+  npm view littlebaby version --userconfig "$(mktemp)"
 }
 
 install_latest_release() {
@@ -1015,8 +1015,8 @@ install_latest_release() {
   version_arg_q=" --version $(shell_quote "$version_to_install")"
   guest_current_user_sh "$(cat <<EOF
 export LITTLEBABY_NO_ONBOARD=1
-curl -fsSL $install_url_q -o /tmp/openclaw-install.sh
-bash /tmp/openclaw-install.sh${version_arg_q}
+curl -fsSL $install_url_q -o /tmp/littlebaby-install.sh
+bash /tmp/littlebaby-install.sh${version_arg_q}
 $GUEST_LITTLEBABY_BIN --version
 EOF
 )"
@@ -1024,7 +1024,7 @@ EOF
 
 ensure_guest_pnpm_for_dev_update() {
   local bootstrap_root bootstrap_bin
-  bootstrap_root="/tmp/openclaw-smoke-pnpm-bootstrap"
+  bootstrap_root="/tmp/littlebaby-smoke-pnpm-bootstrap"
   bootstrap_bin="$bootstrap_root/node_modules/.bin"
   if guest_current_user_exec /bin/test -x "$bootstrap_bin/pnpm"; then
     printf 'bootstrap-pnpm: reuse\n'
@@ -1045,8 +1045,8 @@ ensure_guest_pnpm_for_dev_update() {
 
 repair_legacy_dev_source_checkout_if_needed() {
   local bootstrap_bin update_root update_entry
-  bootstrap_bin="/tmp/openclaw-smoke-pnpm-bootstrap/node_modules/.bin"
-  update_root="$(resolve_guest_current_user_home)/openclaw"
+  bootstrap_bin="/tmp/littlebaby-smoke-pnpm-bootstrap/node_modules/.bin"
+  update_root="$(resolve_guest_current_user_home)/littlebaby"
   update_entry="$update_root/littlebaby.mjs"
   if guest_current_user_exec /bin/test -e "$update_root/.git"; then
     return 0
@@ -1061,7 +1061,7 @@ repair_legacy_dev_source_checkout_if_needed() {
   ensure_guest_pnpm_for_dev_update
   guest_current_user_exec /bin/rm -rf "$update_root"
   guest_current_user_exec /usr/bin/git clone --depth 1 --branch main \
-    https://github.com/openclaw/openclaw.git "$update_root"
+    https://github.com/littlebaby/littlebaby.git "$update_root"
   guest_current_user_exec_path "$bootstrap_bin:$GUEST_EXEC_PATH" \
     "$bootstrap_bin/pnpm" --dir "$update_root" install
   guest_current_user_exec_path "$bootstrap_bin:$GUEST_EXEC_PATH" \
@@ -1073,11 +1073,11 @@ repair_legacy_dev_source_checkout_if_needed() {
 
 run_dev_channel_update() {
   local bootstrap_bin update_root update_log update_done update_runner update_rc
-  bootstrap_bin="/tmp/openclaw-smoke-pnpm-bootstrap/node_modules/.bin"
-  update_root="$(resolve_guest_current_user_home)/openclaw"
-  update_log="/tmp/openclaw-smoke-update-dev.log"
-  update_done="/tmp/openclaw-smoke-update-dev.done"
-  update_runner="/tmp/openclaw-smoke-update-dev.sh"
+  bootstrap_bin="/tmp/littlebaby-smoke-pnpm-bootstrap/node_modules/.bin"
+  update_root="$(resolve_guest_current_user_home)/littlebaby"
+  update_log="/tmp/littlebaby-smoke-update-dev.log"
+  update_done="/tmp/littlebaby-smoke-update-dev.done"
+  update_runner="/tmp/littlebaby-smoke-update-dev.sh"
   ensure_guest_pnpm_for_dev_update
   printf 'update-dev: run\n'
   set +e
@@ -1162,7 +1162,7 @@ pack_main_tgz() {
     npm pack --ignore-scripts --json --pack-destination "$MAIN_TGZ_DIR" \
       | python3 -c 'import json, sys; data = json.load(sys.stdin); print(data[-1]["filename"])'
   )"
-  MAIN_TGZ_PATH="$MAIN_TGZ_DIR/openclaw-main-$short_head.tgz"
+  MAIN_TGZ_PATH="$MAIN_TGZ_DIR/littlebaby-main-$short_head.tgz"
   cp "$MAIN_TGZ_DIR/$pkg" "$MAIN_TGZ_PATH"
   packed_commit="$(extract_package_build_commit_from_tgz "$MAIN_TGZ_PATH")"
   [[ -n "$packed_commit" ]] || die "failed to read packed build commit from $MAIN_TGZ_PATH"
@@ -1248,7 +1248,7 @@ start_server() {
   (
     cd "$MAIN_TGZ_DIR"
     exec python3 -m http.server "$HOST_PORT" --bind 0.0.0.0
-  ) >/tmp/openclaw-parallels-http.log 2>&1 &
+  ) >/tmp/littlebaby-parallels-http.log 2>&1 &
   SERVER_PID=$!
   sleep 1
   kill -0 "$SERVER_PID" >/dev/null 2>&1 || die "failed to start host HTTP server"
@@ -1301,12 +1301,12 @@ check_path() {
     exit 1
   fi
 }
-check_path "\$root/openclaw"
-check_path "\$root/openclaw/extensions"
-if [ -d "\$root/openclaw/extensions" ]; then
+check_path "\$root/littlebaby"
+check_path "\$root/littlebaby/extensions"
+if [ -d "\$root/littlebaby/extensions" ]; then
   while IFS= read -r -d '' extension_dir; do
     check_path "\$extension_dir"
-  done < <(/usr/bin/find "\$root/openclaw/extensions" -mindepth 1 -maxdepth 1 -type d -print0)
+  done < <(/usr/bin/find "\$root/littlebaby/extensions" -mindepth 1 -maxdepth 1 -type d -print0)
 fi
 EOF
 )"
@@ -1340,15 +1340,15 @@ start_manual_gateway_if_needed() {
   local gateway_log guest_gateway_log guest_home launch_cmd runner_log done_path runner_path
   guest_home="$(parallels_macos_resolve_desktop_home "$VM_NAME" "$GUEST_CURRENT_USER")"
   gateway_log="$RUN_DIR/macos-gateway-prlctl.log"
-  guest_gateway_log="/tmp/openclaw-parallels-macos-gateway.log"
-  runner_log="/tmp/openclaw-parallels-gateway-start.log"
-  done_path="/tmp/openclaw-parallels-gateway-start.done"
-  runner_path="/tmp/openclaw-parallels-gateway-start.sh"
+  guest_gateway_log="/tmp/littlebaby-parallels-macos-gateway.log"
+  runner_log="/tmp/littlebaby-parallels-gateway-start.log"
+  done_path="/tmp/littlebaby-parallels-gateway-start.done"
+  runner_path="/tmp/littlebaby-parallels-gateway-start.sh"
   printf 'manual gateway launch transport=%s user=%s\n' "$GUEST_CURRENT_USER_TRANSPORT" "$GUEST_CURRENT_USER"
   launch_cmd="$(cat <<EOF
 set -euo pipefail
 trap '' HUP
-/usr/bin/pkill -f 'openclaw.*gateway run' >/dev/null 2>&1 || true
+/usr/bin/pkill -f 'littlebaby.*gateway run' >/dev/null 2>&1 || true
 /usr/bin/pkill -f 'littlebaby-gateway' >/dev/null 2>&1 || true
 /usr/bin/pkill -f 'littlebaby.mjs gateway' >/dev/null 2>&1 || true
 /usr/bin/env \\
@@ -1359,7 +1359,7 @@ trap '' HUP
   $(shell_quote "$API_KEY_ENV=$API_KEY_VALUE") \\
   LITTLEBABY_HOME=$(shell_quote "$guest_home") \\
   LITTLEBABY_STATE_DIR=$(shell_quote "$guest_home/.littlebaby") \\
-  LITTLEBABY_CONFIG_PATH=$(shell_quote "$guest_home/.littlebaby/openclaw.json") \\
+  LITTLEBABY_CONFIG_PATH=$(shell_quote "$guest_home/.littlebaby/littlebaby.json") \\
   $(shell_quote "$GUEST_NODE_BIN") $(shell_quote "$GUEST_LITTLEBABY_ENTRY") gateway run --bind loopback --port 18789 --force \\
   < /dev/null >$(shell_quote "$guest_gateway_log") 2>&1 &
 gateway_pid="\$!"
@@ -1423,7 +1423,7 @@ resolve_dashboard_url() {
   dashboard_url="${dashboard_url//$'\r'/}"
   dashboard_url="${dashboard_url//$'\n'/}"
   [[ -n "$dashboard_url" ]] || {
-    echo "failed to resolve dashboard URL from openclaw dashboard --no-open" >&2
+    echo "failed to resolve dashboard URL from littlebaby dashboard --no-open" >&2
     return 1
   }
   printf '%s\n' "$dashboard_url"
@@ -1431,7 +1431,7 @@ resolve_dashboard_url() {
 
 verify_dashboard_load() {
   local dashboard_url dashboard_http_url dashboard_url_q dashboard_http_url_q cmd headless_flag
-  # `openclaw dashboard --no-open` can hang under the Tahoe Parallels transport
+  # `littlebaby dashboard --no-open` can hang under the Tahoe Parallels transport
   # even when the dashboard itself is healthy. Probe the local dashboard URL
   # directly so the smoke still validates HTML readiness and browser reachability.
   dashboard_url="http://127.0.0.1:18789/"
@@ -1458,9 +1458,9 @@ fi
 deadline=\$((SECONDS + 30))
 dashboard_ready=0
 while [ \$SECONDS -lt \$deadline ]; do
-  if curl -fsSL --connect-timeout 2 --max-time 5 "\$dashboard_http_url" >/tmp/openclaw-dashboard-smoke.html 2>/dev/null; then
-    if grep -F '<title>OpenClaw Control</title>' /tmp/openclaw-dashboard-smoke.html >/dev/null; then
-      if grep -F '<openclaw-app></openclaw-app>' /tmp/openclaw-dashboard-smoke.html >/dev/null; then
+  if curl -fsSL --connect-timeout 2 --max-time 5 "\$dashboard_http_url" >/tmp/littlebaby-dashboard-smoke.html 2>/dev/null; then
+    if grep -F '<title>LittleBaby Control</title>' /tmp/littlebaby-dashboard-smoke.html >/dev/null; then
+      if grep -F '<littlebaby-app></littlebaby-app>' /tmp/littlebaby-dashboard-smoke.html >/dev/null; then
         dashboard_ready=1
         break
       fi
@@ -1472,8 +1472,8 @@ done
   echo "dashboard HTML did not become ready at \$dashboard_http_url" >&2
   exit 1
 }
-grep -F '<title>OpenClaw Control</title>' /tmp/openclaw-dashboard-smoke.html >/dev/null
-grep -F '<openclaw-app></openclaw-app>' /tmp/openclaw-dashboard-smoke.html >/dev/null
+grep -F '<title>LittleBaby Control</title>' /tmp/littlebaby-dashboard-smoke.html >/dev/null
+grep -F '<littlebaby-app></littlebaby-app>' /tmp/littlebaby-dashboard-smoke.html >/dev/null
 echo "dashboard HTML ready at \$dashboard_http_url"
 if [ "\$headless_flag" = "1" ]; then
   exit 0
@@ -1523,14 +1523,14 @@ print(
 PY
   )"
   script="$(cat <<EOF
-cat >/tmp/openclaw-discord-token <<'__LITTLEBABY_TOKEN__'
+cat >/tmp/littlebaby-discord-token <<'__LITTLEBABY_TOKEN__'
 $DISCORD_TOKEN_VALUE
 __LITTLEBABY_TOKEN__
-cat >/tmp/openclaw-discord-guilds.json <<'__LITTLEBABY_GUILDS__'
+cat >/tmp/littlebaby-discord-guilds.json <<'__LITTLEBABY_GUILDS__'
 $guilds_json
 __LITTLEBABY_GUILDS__
-token="\$(tr -d '\n' </tmp/openclaw-discord-token)"
-guilds_json="\$(cat /tmp/openclaw-discord-guilds.json)"
+token="\$(tr -d '\n' </tmp/littlebaby-discord-token)"
+guilds_json="\$(cat /tmp/littlebaby-discord-guilds.json)"
 $GUEST_NODE_BIN $GUEST_LITTLEBABY_ENTRY config set channels.discord.token "\$token"
 $GUEST_NODE_BIN $GUEST_LITTLEBABY_ENTRY config set channels.discord.enabled true
 $GUEST_NODE_BIN $GUEST_LITTLEBABY_ENTRY config set channels.discord.groupPolicy allowlist
@@ -1543,7 +1543,7 @@ for _ in 1 2 3 4 5 6 7 8; do
   sleep 2
 done
 $GUEST_NODE_BIN $GUEST_LITTLEBABY_ENTRY channels status --probe --json
-rm -f /tmp/openclaw-discord-token /tmp/openclaw-discord-guilds.json
+rm -f /tmp/littlebaby-discord-token /tmp/littlebaby-discord-guilds.json
 EOF
 )"
   guest_current_user_sh "$script"
@@ -1692,7 +1692,7 @@ import re
 import sys
 
 text = pathlib.Path(sys.argv[1]).read_text(errors="replace")
-matches = re.findall(r"OpenClaw [^\r\n]+ \([0-9a-f]{7,}\)", text)
+matches = re.findall(r"LittleBaby [^\r\n]+ \([0-9a-f]{7,}\)", text)
 print(matches[-1] if matches else "")
 PY
 }
@@ -1826,7 +1826,7 @@ run_fresh_main_lane() {
   local snapshot_id="$1"
   local host_ip="$2"
   phase_run "fresh.restore-snapshot" "$TIMEOUT_SNAPSHOT_S" restore_snapshot "$snapshot_id"
-  phase_run "fresh.install-main" "$(install_main_timeout)" install_main_tgz "$host_ip" "openclaw-main-fresh.tgz"
+  phase_run "fresh.install-main" "$(install_main_timeout)" install_main_tgz "$host_ip" "littlebaby-main-fresh.tgz"
   FRESH_MAIN_VERSION="$(extract_last_version "$(phase_log_path fresh.install-main)")"
   phase_run "fresh.verify-main-version" "$TIMEOUT_VERIFY_S" verify_target_version
   phase_run "fresh.verify-bundle-permissions" "$TIMEOUT_PERMISSION_S" verify_bundle_permissions
@@ -1863,7 +1863,7 @@ run_upgrade_lane() {
     UPGRADE_PRECHECK_STATUS="skipped"
   fi
   if upgrade_uses_host_tgz; then
-    phase_run "upgrade.install-main" "$(install_main_timeout)" install_main_tgz "$host_ip" "openclaw-main-upgrade.tgz"
+    phase_run "upgrade.install-main" "$(install_main_timeout)" install_main_tgz "$host_ip" "littlebaby-main-upgrade.tgz"
     UPGRADE_MAIN_VERSION="$(extract_last_version "$(phase_log_path upgrade.install-main)")"
     phase_run "upgrade.verify-main-version" "$TIMEOUT_VERIFY_S" verify_target_version
     phase_run "upgrade.verify-bundle-permissions" "$TIMEOUT_PERMISSION_S" verify_bundle_permissions

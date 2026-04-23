@@ -59,19 +59,19 @@ describe("loadSettings default gateway URL derivation", () => {
       host: "gateway.example:8443",
       pathname: "/ignored/path",
     });
-    setControlUiBasePath(" /openclaw/ ");
+    setControlUiBasePath(" /littlebaby/ ");
 
-    expect(loadSettings().gatewayUrl).toBe(expectedGatewayUrl("/openclaw"));
+    expect(loadSettings().gatewayUrl).toBe(expectedGatewayUrl("/littlebaby"));
   });
 
   it("infers base path from nested pathname when configured base path is not set", async () => {
     setTestLocation({
       protocol: "http:",
       host: "gateway.example:18789",
-      pathname: "/apps/openclaw/chat",
+      pathname: "/apps/littlebaby/chat",
     });
 
-    expect(loadSettings().gatewayUrl).toBe(expectedGatewayUrl("/apps/openclaw"));
+    expect(loadSettings().gatewayUrl).toBe(expectedGatewayUrl("/apps/littlebaby"));
   });
 
   it("skips node sessionStorage accessors that warn without a storage file", async () => {
@@ -103,24 +103,24 @@ describe("loadSettings default gateway URL derivation", () => {
       host: "gateway.example:8443",
       pathname: "/",
     });
-    sessionStorage.setItem("openclaw.control.token.v1", "legacy-session-token");
+    sessionStorage.setItem("littlebaby.control.token.v1", "legacy-session-token");
     localStorage.setItem(
-      "openclaw.control.settings.v1",
+      "littlebaby.control.settings.v1",
       JSON.stringify({
-        gatewayUrl: "wss://gateway.example:8443/openclaw",
+        gatewayUrl: "wss://gateway.example:8443/littlebaby",
         token: "persisted-token",
         sessionKey: "agent",
       }),
     );
 
     expect(loadSettings()).toMatchObject({
-      gatewayUrl: "wss://gateway.example:8443/openclaw",
+      gatewayUrl: "wss://gateway.example:8443/littlebaby",
       token: "",
       sessionKey: "agent",
     });
-    const scopedKey = "openclaw.control.settings.v1:wss://gateway.example:8443/openclaw";
+    const scopedKey = "littlebaby.control.settings.v1:wss://gateway.example:8443/littlebaby";
     expect(JSON.parse(localStorage.getItem(scopedKey) ?? "{}")).toEqual({
-      gatewayUrl: "wss://gateway.example:8443/openclaw",
+      gatewayUrl: "wss://gateway.example:8443/littlebaby",
       theme: "claw",
       themeMode: "system",
       chatFocusMode: false,
@@ -132,7 +132,7 @@ describe("loadSettings default gateway URL derivation", () => {
       navGroupsCollapsed: {},
       borderRadius: 50,
       sessionsByGateway: {
-        "wss://gateway.example:8443/openclaw": {
+        "wss://gateway.example:8443/littlebaby": {
           sessionKey: "agent",
           lastActiveSessionKey: "agent",
         },
@@ -250,7 +250,7 @@ describe("loadSettings default gateway URL derivation", () => {
       token: "memory-only-token",
     });
 
-    const scopedKey = `openclaw.control.settings.v1:${gwUrl}`;
+    const scopedKey = `littlebaby.control.settings.v1:${gwUrl}`;
     expect(JSON.parse(localStorage.getItem(scopedKey) ?? "{}")).toEqual({
       gatewayUrl: gwUrl,
       theme: "claw",
@@ -343,7 +343,7 @@ describe("loadSettings default gateway URL derivation", () => {
       borderRadius: 50,
     });
 
-    const scopedKey = `openclaw.control.settings.v1:${gwUrl}`;
+    const scopedKey = `littlebaby.control.settings.v1:${gwUrl}`;
     expect(JSON.parse(localStorage.getItem(scopedKey) ?? "{}")).toMatchObject({
       theme: "dash",
       themeMode: "light",
@@ -391,7 +391,7 @@ describe("loadSettings default gateway URL derivation", () => {
     });
 
     const gwUrl = expectedGatewayUrl("");
-    const scopedKey = `openclaw.control.settings.v1:wss://gateway.example:8443`;
+    const scopedKey = `littlebaby.control.settings.v1:wss://gateway.example:8443`;
 
     // Pre-seed sessionsByGateway with 11 stale gateway entries so the next
     // saveSettings call pushes the total to 12 and triggers the cap (10).

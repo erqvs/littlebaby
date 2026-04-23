@@ -30,7 +30,7 @@ export function resetCleanupCommandMocks() {
   vi.clearAllMocks();
   resolveCleanupPlanFromDisk.mockReturnValue({
     stateDir: "/tmp/.littlebaby",
-    configPath: "/tmp/.littlebaby/openclaw.json",
+    configPath: "/tmp/.littlebaby/littlebaby.json",
     oauthDir: "/tmp/.littlebaby/credentials",
     configInsideState: true,
     oauthInsideState: true,

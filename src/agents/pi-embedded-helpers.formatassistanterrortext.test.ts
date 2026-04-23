@@ -219,7 +219,7 @@ describe("formatAssistantErrorText", () => {
     (errorMessage) => {
       const msg = makeAssistantError(errorMessage);
       expect(formatAssistantErrorText(msg)).toBe(
-        "OpenClaw could not write local session data because the disk is full. Free some disk space and try again.",
+        "LittleBaby could not write local session data because the disk is full. Free some disk space and try again.",
       );
     },
   );
@@ -248,7 +248,7 @@ describe("formatAssistantErrorText", () => {
   });
 
   it("returns a contention-specific message for OAuth refresh lock timeouts", () => {
-    const msg = makeAssistantError("file lock timeout for /tmp/openclaw-oauth-refresh.lock");
+    const msg = makeAssistantError("file lock timeout for /tmp/littlebaby-oauth-refresh.lock");
     expect(formatAssistantErrorText(msg)).toBe(
       "Authentication refresh is already in progress elsewhere and this attempt timed out waiting for it. Retry in a moment.",
     );

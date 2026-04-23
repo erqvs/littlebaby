@@ -43,8 +43,8 @@ const serviceReadCommand = vi.fn<
 >(async (_env?: NodeJS.ProcessEnv) => ({
   programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
   environment: {
-    LITTLEBABY_STATE_DIR: "/tmp/openclaw-daemon",
-    LITTLEBABY_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
+    LITTLEBABY_STATE_DIR: "/tmp/littlebaby-daemon",
+    LITTLEBABY_CONFIG_PATH: "/tmp/littlebaby-daemon/littlebaby.json",
   },
 }));
 const resolveGatewayBindHost = vi.fn(
@@ -53,10 +53,10 @@ const resolveGatewayBindHost = vi.fn(
 const pickPrimaryTailnetIPv4 = vi.fn(() => "100.64.0.9");
 const resolveGatewayPort = vi.fn((_cfg?: unknown, _env?: unknown) => 18789);
 const resolveStateDir = vi.fn(
-  (env: NodeJS.ProcessEnv) => env.LITTLEBABY_STATE_DIR ?? "/tmp/openclaw-cli",
+  (env: NodeJS.ProcessEnv) => env.LITTLEBABY_STATE_DIR ?? "/tmp/littlebaby-cli",
 );
 const resolveConfigPath = vi.fn((env: NodeJS.ProcessEnv, stateDir: string) => {
-  return env.LITTLEBABY_CONFIG_PATH ?? `${stateDir}/openclaw.json`;
+  return env.LITTLEBABY_CONFIG_PATH ?? `${stateDir}/littlebaby.json`;
 });
 const readConfigFileSnapshotCalls = vi.fn((configPath: string) => configPath);
 const loadConfigCalls = vi.fn((configPath: string) => configPath);
@@ -75,7 +75,7 @@ let cliLoadedConfig: Record<string, unknown> = {
 
 vi.mock("../../config/config.js", () => ({
   createConfigIO: ({ configPath }: { configPath: string }) => {
-    const isDaemon = configPath.includes("/openclaw-daemon/");
+    const isDaemon = configPath.includes("/littlebaby-daemon/");
     const runtimeConfig = isDaemon ? daemonLoadedConfig : cliLoadedConfig;
     return {
       readConfigFileSnapshot: async () => {
@@ -160,8 +160,8 @@ describe("gatherDaemonStatus", () => {
       "DAEMON_GATEWAY_TOKEN",
       "DAEMON_GATEWAY_PASSWORD",
     ]);
-    process.env.LITTLEBABY_STATE_DIR = "/tmp/openclaw-cli";
-    process.env.LITTLEBABY_CONFIG_PATH = "/tmp/openclaw-cli/openclaw.json";
+    process.env.LITTLEBABY_STATE_DIR = "/tmp/littlebaby-cli";
+    process.env.LITTLEBABY_CONFIG_PATH = "/tmp/littlebaby-cli/littlebaby.json";
     delete process.env.LITTLEBABY_GATEWAY_TOKEN;
     delete process.env.LITTLEBABY_GATEWAY_PASSWORD;
     delete process.env.DAEMON_GATEWAY_TOKEN;
@@ -220,7 +220,7 @@ describe("gatherDaemonStatus", () => {
     expect(callGatewayStatusProbe).toHaveBeenCalledWith(
       expect.objectContaining({
         requireRpc: true,
-        configPath: "/tmp/openclaw-daemon/openclaw.json",
+        configPath: "/tmp/littlebaby-daemon/littlebaby.json",
       }),
     );
   });
@@ -237,7 +237,7 @@ describe("gatherDaemonStatus", () => {
     });
 
     expect(readConfigFileSnapshotCalls).toHaveBeenCalledTimes(1);
-    expect(readConfigFileSnapshotCalls).toHaveBeenCalledWith("/tmp/openclaw-cli/openclaw.json");
+    expect(readConfigFileSnapshotCalls).toHaveBeenCalledWith("/tmp/littlebaby-cli/littlebaby.json");
     expect(loadConfigCalls).not.toHaveBeenCalled();
   });
 
@@ -312,8 +312,8 @@ describe("gatherDaemonStatus", () => {
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
         LITTLEBABY_GATEWAY_PORT: "19001",
-        LITTLEBABY_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
-        LITTLEBABY_STATE_DIR: "/tmp/openclaw-daemon",
+        LITTLEBABY_CONFIG_PATH: "/tmp/littlebaby-daemon/littlebaby.json",
+        LITTLEBABY_STATE_DIR: "/tmp/littlebaby-daemon",
       } as Record<string, string>,
     });
     serviceReadRuntime.mockImplementationOnce(async (env?: NodeJS.ProcessEnv) => ({

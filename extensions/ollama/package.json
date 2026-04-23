@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/ollama-provider",
+  "name": "@littlebaby/ollama-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Ollama provider plugin",
+  "description": "LittleBaby Ollama provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

@@ -1,15 +1,15 @@
 {
-  "name": "@openclaw/acpx",
+  "name": "@littlebaby/acpx",
   "version": "2026.4.20",
-  "description": "OpenClaw ACP runtime backend",
+  "description": "LittleBaby ACP runtime backend",
   "type": "module",
   "dependencies": {
     "acpx": "0.5.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

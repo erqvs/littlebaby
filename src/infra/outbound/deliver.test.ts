@@ -6,7 +6,7 @@ import {
   signalOutbound,
   whatsappOutbound,
 } from "../../../test/helpers/infra/deliver-test-outbounds.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import * as mediaCapabilityModule from "../../media/read-capability.js";
 import { createHookRunner } from "../../plugins/hooks.js";
 import { addTestHook } from "../../plugins/hooks.test-helpers.js";
@@ -18,7 +18,7 @@ import {
 import type { PluginHookRegistration } from "../../plugins/types.js";
 import { createOutboundTestPlugin, createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { createInternalHookEventPayload } from "../../test-utils/internal-hook-event-payload.js";
-import { resolvePreferredOpenClawTmpDir } from "../tmp-openclaw-dir.js";
+import { resolvePreferredLittleBabyTmpDir } from "../tmp-littlebaby-dir.js";
 
 const mocks = vi.hoisted(() => ({
   appendAssistantMessageToSessionTranscript: vi.fn(async () => ({ ok: true, sessionFile: "x" })),
@@ -93,11 +93,11 @@ type DeliverModule = typeof import("./deliver.js");
 let deliverOutboundPayloads: DeliverModule["deliverOutboundPayloads"];
 let normalizeOutboundPayloads: DeliverModule["normalizeOutboundPayloads"];
 
-const whatsappChunkConfig: OpenClawConfig = {
+const whatsappChunkConfig: LittleBabyConfig = {
   channels: { whatsapp: { textChunkLimit: 4000 } },
 };
 
-const expectedPreferredTmpRoot = resolvePreferredOpenClawTmpDir();
+const expectedPreferredTmpRoot = resolvePreferredLittleBabyTmpDir();
 
 type DeliverOutboundArgs = Parameters<DeliverModule["deliverOutboundPayloads"]>[0];
 type DeliverOutboundPayload = DeliverOutboundArgs["payloads"][number];
@@ -107,7 +107,7 @@ async function deliverWhatsAppPayload(params: {
     NonNullable<Parameters<DeliverModule["deliverOutboundPayloads"]>[0]["deps"]>["whatsapp"]
   >;
   payload: DeliverOutboundPayload;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
 }) {
   return deliverOutboundPayloads({
     cfg: params.cfg ?? whatsappChunkConfig,
@@ -125,7 +125,7 @@ async function runChunkedWhatsAppDelivery(params?: {
     .fn()
     .mockResolvedValueOnce({ messageId: "w1", toJid: "jid" })
     .mockResolvedValueOnce({ messageId: "w2", toJid: "jid" });
-  const cfg: OpenClawConfig = {
+  const cfg: LittleBabyConfig = {
     channels: { whatsapp: { textChunkLimit: 2 } },
   };
   const results = await deliverOutboundPayloads({
@@ -157,7 +157,7 @@ async function runBestEffortPartialFailureDelivery() {
     .mockRejectedValueOnce(new Error("fail"))
     .mockResolvedValueOnce({ messageId: "w2", toJid: "jid" });
   const onError = vi.fn();
-  const cfg: OpenClawConfig = {};
+  const cfg: LittleBabyConfig = {};
   const results = await deliverOutboundPayloads({
     cfg,
     channel: "whatsapp",
@@ -343,7 +343,7 @@ describe("deliverOutboundPayloads", () => {
     );
 
     const results = await deliverOutboundPayloads({
-      cfg: { channels: { matrix: { textChunkLimit: 2 } } } as OpenClawConfig,
+      cfg: { channels: { matrix: { textChunkLimit: 2 } } } as LittleBabyConfig,
       channel: "matrix",
       to: "!room",
       accountId: "default",
@@ -401,7 +401,7 @@ describe("deliverOutboundPayloads", () => {
     );
 
     const textResults = await deliverOutboundPayloads({
-      cfg: { channels: { line: {} } } as OpenClawConfig,
+      cfg: { channels: { line: {} } } as LittleBabyConfig,
       channel: "line",
       to: "U123",
       accountId: "default",
@@ -423,7 +423,7 @@ describe("deliverOutboundPayloads", () => {
     ]);
 
     await deliverOutboundPayloads({
-      cfg: { channels: { line: {} } } as OpenClawConfig,
+      cfg: { channels: { line: {} } } as LittleBabyConfig,
       channel: "line",
       to: "U123",
       payloads: [{ text: "photo", mediaUrl: "file:///tmp/f.png" }],
@@ -444,13 +444,13 @@ describe("deliverOutboundPayloads", () => {
       | undefined;
     expect(
       sendFormattedMediaCall?.mediaLocalRoots?.some((root) =>
-        root.endsWith(path.join(".openclaw", "workspace-work")),
+        root.endsWith(path.join(".littlebaby", "workspace-work")),
       ),
     ).toBe(true);
     expect(sendMedia).not.toHaveBeenCalled();
   });
 
-  it("includes OpenClaw tmp root in signal mediaLocalRoots", async () => {
+  it("includes LittleBaby tmp root in signal mediaLocalRoots", async () => {
     const sendSignal = vi.fn().mockResolvedValue({ messageId: "s1", timestamp: 123 });
 
     await deliverOutboundPayloads({
@@ -542,7 +542,7 @@ describe("deliverOutboundPayloads", () => {
     );
 
     await deliverOutboundPayloads({
-      cfg: { channels: { matrix: {} } } as OpenClawConfig,
+      cfg: { channels: { matrix: {} } } as LittleBabyConfig,
       channel: "matrix",
       to: "room:!room:example",
       payloads: [{ text: "voice caption", mediaUrl: "file:///tmp/clip.mp3", audioAsVoice: true }],
@@ -558,7 +558,7 @@ describe("deliverOutboundPayloads", () => {
     );
   });
 
-  it("includes OpenClaw tmp root in whatsapp mediaLocalRoots", async () => {
+  it("includes LittleBaby tmp root in whatsapp mediaLocalRoots", async () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
 
     await deliverOutboundPayloads({
@@ -578,7 +578,7 @@ describe("deliverOutboundPayloads", () => {
     );
   });
 
-  it("includes OpenClaw tmp root in imessage mediaLocalRoots", async () => {
+  it("includes LittleBaby tmp root in imessage mediaLocalRoots", async () => {
     const sendIMessage = vi.fn().mockResolvedValue({ messageId: "i1", chatId: "chat-1" });
 
     await deliverOutboundPayloads({
@@ -607,7 +607,7 @@ describe("deliverOutboundPayloads", () => {
 
   it("respects newline chunk mode for WhatsApp", async () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       channels: { whatsapp: { textChunkLimit: 4000, chunkMode: "newline" } },
     };
 
@@ -691,7 +691,7 @@ describe("deliverOutboundPayloads", () => {
       ]),
     );
 
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       channels: { matrix: { textChunkLimit: 4000, chunkMode: "newline" } },
     };
     const text = "```js\nconst a = 1;\nconst b = 2;\n```\nAfter";
@@ -718,7 +718,7 @@ describe("deliverOutboundPayloads", () => {
         },
       ]),
     );
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       agents: { defaults: { mediaMaxMb: 3 } },
     };
 
@@ -872,7 +872,7 @@ describe("deliverOutboundPayloads", () => {
     const sendWhatsApp = vi.fn().mockResolvedValue({ messageId: "w1", toJid: "jid" });
     const abortController = new AbortController();
     abortController.abort();
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
 
     await expect(
       deliverOutboundPayloads({
@@ -893,7 +893,7 @@ describe("deliverOutboundPayloads", () => {
   it("passes normalized payload to onError", async () => {
     const sendWhatsApp = vi.fn().mockRejectedValue(new Error("boom"));
     const onError = vi.fn();
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
 
     await deliverOutboundPayloads({
       cfg,
@@ -932,7 +932,7 @@ describe("deliverOutboundPayloads", () => {
     mocks.appendAssistantMessageToSessionTranscript.mockClear();
 
     await deliverOutboundPayloads({
-      cfg: { channels: { line: {} } } as OpenClawConfig,
+      cfg: { channels: { line: {} } } as LittleBabyConfig,
       channel: "line",
       to: "U123",
       payloads: [{ text: "caption", mediaUrl: "https://example.com/files/report.pdf?sig=1" }],

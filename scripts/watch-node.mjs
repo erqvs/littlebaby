@@ -117,7 +117,7 @@ const writeWatchLock = (lockPath, payload) => {
 };
 
 const logWatcher = (message, deps) => {
-  deps.process.stderr?.write?.(`[openclaw] ${message}\n`);
+  deps.process.stderr?.write?.(`[littlebaby] ${message}\n`);
 };
 
 const waitForWatcherRelease = async (lockPath, pid, deps) => {

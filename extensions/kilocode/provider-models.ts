@@ -1,7 +1,7 @@
-import type { KilocodeModelCatalogEntry } from "openclaw/plugin-sdk/provider-model-shared";
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import type { KilocodeModelCatalogEntry } from "littlebaby/plugin-sdk/provider-model-shared";
+import type { ModelDefinitionConfig } from "littlebaby/plugin-sdk/provider-model-shared";
+import { createSubsystemLogger } from "littlebaby/plugin-sdk/runtime-env";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 
 const log = createSubsystemLogger("kilocode-models");
 

@@ -1,9 +1,9 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createBundledBrowserPluginFixture } from "../../test/helpers/browser-bundled-plugin-fixture.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { clearPluginDiscoveryCache } from "./discovery.js";
-import { clearPluginLoaderCache, loadOpenClawPlugins } from "./loader.js";
+import { clearPluginLoaderCache, loadLittleBabyPlugins } from "./loader.js";
 import { clearPluginManifestRegistryCache } from "./manifest-registry.js";
 import { resetPluginRuntimeStateForTest } from "./runtime.js";
 
@@ -31,12 +31,12 @@ describe("registerPluginCliCommands browser plugin integration", () => {
   });
 
   it("registers the browser command from the bundled browser plugin", () => {
-    const registry = loadOpenClawPlugins({
+    const registry = loadLittleBabyPlugins({
       config: {
         plugins: {
           allow: ["browser"],
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       cache: false,
       env: {
         ...process.env,
@@ -50,7 +50,7 @@ describe("registerPluginCliCommands browser plugin integration", () => {
   });
 
   it("omits the browser command when the bundled browser plugin is disabled", () => {
-    const registry = loadOpenClawPlugins({
+    const registry = loadLittleBabyPlugins({
       config: {
         plugins: {
           allow: ["browser"],
@@ -60,7 +60,7 @@ describe("registerPluginCliCommands browser plugin integration", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       cache: false,
       env: {
         ...process.env,

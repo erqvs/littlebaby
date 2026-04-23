@@ -1,12 +1,12 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   createStandardChannelSetupStatus,
   hasConfiguredSecretInput,
   setSetupChannelEnabled,
-} from "openclaw/plugin-sdk/setup";
-import type { ChannelSetupWizard } from "openclaw/plugin-sdk/setup";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/setup";
+import type { ChannelSetupWizard } from "littlebaby/plugin-sdk/setup";
+import { formatDocsLink } from "littlebaby/plugin-sdk/setup-tools";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import {
   DEFAULT_ACCOUNT_ID,
   listQQBotAccountIds,
@@ -24,10 +24,10 @@ type QQBotEnvCredentialField = "appId" | "clientSecret";
  * AppID + env AppSecret.
  */
 function clearQQBotCredentialField(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId: string,
   field: QQBotEnvCredentialField,
-): OpenClawConfig {
+): LittleBabyConfig {
   const next = { ...cfg };
   const qqbot = { ...(next.channels?.qqbot as Record<string, unknown> | undefined) };
 

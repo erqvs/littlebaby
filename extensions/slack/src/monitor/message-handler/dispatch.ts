@@ -1,4 +1,4 @@
-import { resolveHumanDelayConfig } from "openclaw/plugin-sdk/agent-runtime";
+import { resolveHumanDelayConfig } from "littlebaby/plugin-sdk/agent-runtime";
 import {
   createStatusReactionController,
   DEFAULT_TIMING,
@@ -6,20 +6,20 @@ import {
   logTypingFailure,
   removeAckReactionAfterReply,
   type StatusReactionAdapter,
-} from "openclaw/plugin-sdk/channel-feedback";
-import { createChannelReplyPipeline } from "openclaw/plugin-sdk/channel-reply-pipeline";
+} from "littlebaby/plugin-sdk/channel-feedback";
+import { createChannelReplyPipeline } from "littlebaby/plugin-sdk/channel-reply-pipeline";
 import {
   resolveChannelStreamingBlockEnabled,
   resolveChannelStreamingNativeTransport,
-} from "openclaw/plugin-sdk/channel-streaming";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { resolveAgentOutboundIdentity } from "openclaw/plugin-sdk/outbound-runtime";
-import { clearHistoryEntriesIfEnabled } from "openclaw/plugin-sdk/reply-history";
-import { resolveSendableOutboundReplyParts } from "openclaw/plugin-sdk/reply-payload";
-import type { ReplyDispatchKind, ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import { danger, logVerbose, shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "openclaw/plugin-sdk/security-runtime";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/channel-streaming";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { resolveAgentOutboundIdentity } from "littlebaby/plugin-sdk/outbound-runtime";
+import { clearHistoryEntriesIfEnabled } from "littlebaby/plugin-sdk/reply-history";
+import { resolveSendableOutboundReplyParts } from "littlebaby/plugin-sdk/reply-payload";
+import type { ReplyDispatchKind, ReplyPayload } from "littlebaby/plugin-sdk/reply-runtime";
+import { danger, logVerbose, shouldLogVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "littlebaby/plugin-sdk/security-runtime";
+import { normalizeOptionalLowercaseString } from "littlebaby/plugin-sdk/text-runtime";
 import { reactSlackMessage, removeSlackReaction } from "../../actions.js";
 import { createSlackDraftStream } from "../../draft-stream.js";
 import { normalizeSlackOutboundText } from "../../format.js";

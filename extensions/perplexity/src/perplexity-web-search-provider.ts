@@ -4,7 +4,7 @@ import {
   resolveProviderWebSearchPluginConfig,
   type WebSearchProviderPlugin,
   type WebSearchProviderToolDefinition,
-} from "openclaw/plugin-sdk/provider-web-search-config-contract";
+} from "littlebaby/plugin-sdk/provider-web-search-config-contract";
 import { resolvePerplexityRuntimeTransport } from "./perplexity-web-search-provider.shared.js";
 
 const PERPLEXITY_CREDENTIAL_PATH = "plugins.entries.perplexity.config.webSearch.apiKey";
@@ -120,7 +120,7 @@ export function createPerplexityWebSearchProvider(): WebSearchProviderPlugin {
     envVars: ["PERPLEXITY_API_KEY", "OPENROUTER_API_KEY"],
     placeholder: "pplx-...",
     signupUrl: "https://www.perplexity.ai/settings/api",
-    docsUrl: "https://docs.openclaw.ai/perplexity",
+    docsUrl: "https://docs.littlebaby.ai/perplexity",
     autoDetectOrder: 50,
     credentialPath: PERPLEXITY_CREDENTIAL_PATH,
     ...createWebSearchProviderContractFields({

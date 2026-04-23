@@ -17,7 +17,7 @@ let resolveGatewayOptions: typeof import("./gateway.js").resolveGatewayOptions;
 
 describe("gateway tool defaults", () => {
   const envSnapshot = {
-    openclaw: process.env.LITTLEBABY_GATEWAY_TOKEN,
+    littlebaby: process.env.LITTLEBABY_GATEWAY_TOKEN,
   };
 
   beforeAll(async () => {
@@ -31,10 +31,10 @@ describe("gateway tool defaults", () => {
   });
 
   afterAll(() => {
-    if (envSnapshot.openclaw === undefined) {
+    if (envSnapshot.littlebaby === undefined) {
       delete process.env.LITTLEBABY_GATEWAY_TOKEN;
     } else {
-      process.env.LITTLEBABY_GATEWAY_TOKEN = envSnapshot.openclaw;
+      process.env.LITTLEBABY_GATEWAY_TOKEN = envSnapshot.littlebaby;
     }
   });
 

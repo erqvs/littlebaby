@@ -4,7 +4,7 @@ sidebarTitle: "SDK Overview"
 summary: "Import map, registration API reference, and SDK architecture"
 read_when:
   - You need to know which SDK subpath to import from
-  - You want a reference for all registration methods on OpenClawPluginApi
+  - You want a reference for all registration methods on LittleBabyPluginApi
   - You are looking up a specific SDK export
 ---
 
@@ -25,19 +25,19 @@ reference for **what to import** and **what you can register**.
 Always import from a specific subpath:
 
 ```typescript
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
+import { definePluginEntry } from "littlebaby/plugin-sdk/plugin-entry";
+import { defineChannelPluginEntry } from "littlebaby/plugin-sdk/channel-core";
 ```
 
 Each subpath is a small, self-contained module. This keeps startup fast and
 prevents circular dependency issues. For channel-specific entry/build helpers,
-prefer `openclaw/plugin-sdk/channel-core`; keep `openclaw/plugin-sdk/core` for
+prefer `littlebaby/plugin-sdk/channel-core`; keep `littlebaby/plugin-sdk/core` for
 the broader umbrella surface and shared helpers such as
 `buildChannelConfigSchema`.
 
 Do not add or depend on provider-named convenience seams such as
-`openclaw/plugin-sdk/slack`, `openclaw/plugin-sdk/discord`,
-`openclaw/plugin-sdk/signal`, `openclaw/plugin-sdk/whatsapp`, or
+`littlebaby/plugin-sdk/slack`, `littlebaby/plugin-sdk/discord`,
+`littlebaby/plugin-sdk/signal`, `littlebaby/plugin-sdk/whatsapp`, or
 channel-branded helper seams. Bundled plugins should compose generic
 SDK subpaths inside their own `api.ts` or `runtime-api.ts` barrels, and core
 should either use those plugin-local barrels or add a narrow generic SDK
@@ -65,7 +65,7 @@ explicitly promotes one as public.
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `plugin-sdk/plugin-entry`   | `definePluginEntry`                                                                                                                    |
 | `plugin-sdk/core`           | `defineChannelPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase`, `defineSetupPluginEntry`, `buildChannelConfigSchema` |
-| `plugin-sdk/config-schema`  | `OpenClawSchema`                                                                                                                       |
+| `plugin-sdk/config-schema`  | `LittleBabySchema`                                                                                                                       |
 | `plugin-sdk/provider-entry` | `defineSingleProviderPluginEntry`                                                                                                      |
 
 <AccordionGroup>
@@ -73,7 +73,7 @@ explicitly promotes one as public.
     | Subpath | Key exports |
     | --- | --- |
     | `plugin-sdk/channel-core` | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` |
-    | `plugin-sdk/config-schema` | Root `openclaw.json` Zod schema export (`OpenClawSchema`) |
+    | `plugin-sdk/config-schema` | Root `littlebaby.json` Zod schema export (`LittleBabySchema`) |
     | `plugin-sdk/channel-setup` | `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`, `createOptionalChannelSetupWizard`, plus `DEFAULT_ACCOUNT_ID`, `createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, `splitSetupEntries` |
     | `plugin-sdk/setup` | Shared setup wizard helpers, allowlist prompts, setup status builders |
     | `plugin-sdk/setup-runtime` | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
@@ -228,7 +228,7 @@ explicitly promotes one as public.
     | `plugin-sdk/models-provider-runtime` | `/models` command/provider reply helpers |
     | `plugin-sdk/skill-commands-runtime` | Skill command listing helpers |
     | `plugin-sdk/native-command-registry` | Native command registry/build/serialize helpers |
-    | `plugin-sdk/agent-harness` | Experimental trusted-plugin surface for low-level agent harnesses: harness types, active-run steer/abort helpers, OpenClaw tool bridge helpers, and attempt result utilities |
+    | `plugin-sdk/agent-harness` | Experimental trusted-plugin surface for low-level agent harnesses: harness types, active-run steer/abort helpers, LittleBaby tool bridge helpers, and attempt result utilities |
     | `plugin-sdk/provider-zai-endpoint` | Z.AI endpoint detection helpers |
     | `plugin-sdk/infra-runtime` | System event/heartbeat helpers |
     | `plugin-sdk/collection-runtime` | Small bounded cache helpers |
@@ -313,7 +313,7 @@ explicitly promotes one as public.
 
 ## Registration API
 
-The `register(api)` callback receives an `OpenClawPluginApi` object with these
+The `register(api)` callback receives an `LittleBabyPluginApi` object with these
 methods:
 
 ### Capability registration
@@ -400,7 +400,7 @@ AI CLI backend such as `codex-cli`.
 
 - The backend `id` becomes the provider prefix in model refs like `codex-cli/gpt-5`.
 - The backend `config` uses the same shape as `agents.defaults.cliBackends.<id>`.
-- User config still wins. OpenClaw merges `agents.defaults.cliBackends.<id>` over the
+- User config still wins. LittleBaby merges `agents.defaults.cliBackends.<id>` over the
   plugin default before running the CLI.
 - Use `normalizeConfig` when a backend needs compatibility rewrites after merge
   (for example normalizing old flag shapes).
@@ -424,7 +424,7 @@ AI CLI backend such as `codex-cli`.
 - `registerMemoryCapability` is the preferred exclusive memory-plugin API.
 - `registerMemoryCapability` may also expose `publicArtifacts.listArtifacts(...)`
   so companion plugins can consume exported memory artifacts through
-  `openclaw/plugin-sdk/memory-host-core` instead of reaching into a specific
+  `littlebaby/plugin-sdk/memory-host-core` instead of reaching into a specific
   memory plugin's private layout.
 - `registerMemoryPromptSection`, `registerMemoryFlushPlan`, and
   `registerMemoryRuntime` are legacy-compatible exclusive memory-plugin APIs.
@@ -462,7 +462,7 @@ AI CLI backend such as `codex-cli`.
 | `api.description`        | `string?`                 | Plugin description (optional)                                                               |
 | `api.source`             | `string`                  | Plugin source path                                                                          |
 | `api.rootDir`            | `string?`                 | Plugin root directory (optional)                                                            |
-| `api.config`             | `OpenClawConfig`          | Current config snapshot (active in-memory runtime snapshot when available)                  |
+| `api.config`             | `LittleBabyConfig`          | Current config snapshot (active in-memory runtime snapshot when available)                  |
 | `api.pluginConfig`       | `Record<string, unknown>` | Plugin-specific config from `plugins.entries.<id>.config`                                   |
 | `api.runtime`            | `PluginRuntime`           | [Runtime helpers](/plugins/sdk-runtime)                                                     |
 | `api.logger`             | `PluginLogger`            | Scoped logger (`debug`, `info`, `warn`, `error`)                                            |
@@ -482,14 +482,14 @@ my-plugin/
 ```
 
 <Warning>
-  Never import your own plugin through `openclaw/plugin-sdk/<your-plugin>`
+  Never import your own plugin through `littlebaby/plugin-sdk/<your-plugin>`
   from production code. Route internal imports through `./api.ts` or
   `./runtime-api.ts`. The SDK path is the external contract only.
 </Warning>
 
 Facade-loaded bundled plugin public surfaces (`api.ts`, `runtime-api.ts`,
 `index.ts`, `setup-entry.ts`, and similar public entry files) now prefer the
-active runtime config snapshot when OpenClaw is already running. If no runtime
+active runtime config snapshot when LittleBaby is already running. If no runtime
 snapshot exists yet, they fall back to the resolved config file on disk.
 
 Provider plugins can also expose a narrow plugin-local contract barrel when a
@@ -501,15 +501,15 @@ promoting Anthropic beta-header and `service_tier` logic into a generic
 
 Other current bundled examples:
 
-- `@openclaw/openai-provider`: `api.ts` exports provider builders,
+- `@littlebaby/openai-provider`: `api.ts` exports provider builders,
   default-model helpers, and realtime provider builders
-- `@openclaw/openrouter-provider`: `api.ts` exports the provider builder plus
+- `@littlebaby/openrouter-provider`: `api.ts` exports the provider builder plus
   onboarding/config helpers
 
 <Warning>
-  Extension production code should also avoid `openclaw/plugin-sdk/<other-plugin>`
+  Extension production code should also avoid `littlebaby/plugin-sdk/<other-plugin>`
   imports. If a helper is truly shared, promote it to a neutral SDK subpath
-  such as `openclaw/plugin-sdk/speech`, `.../provider-model-shared`, or another
+  such as `littlebaby/plugin-sdk/speech`, `.../provider-model-shared`, or another
   capability-oriented surface instead of coupling two plugins together.
 </Warning>
 

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { ProviderPlugin } from "openclaw/plugin-sdk/provider-model-shared";
+import type { ProviderPlugin } from "littlebaby/plugin-sdk/provider-model-shared";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { createWizardPrompter as buildWizardPrompter } from "../../test/helpers/wizard-prompter.js";
 import { DEFAULT_BOOTSTRAP_FILENAME } from "../agents/workspace.js";
@@ -103,7 +103,7 @@ const resolveGatewayPort = vi.hoisted(() =>
 );
 const readConfigFileSnapshot = vi.hoisted(() =>
   vi.fn(async () => ({
-    path: "/tmp/.littlebaby/openclaw.json",
+    path: "/tmp/.littlebaby/littlebaby.json",
     exists: false,
     raw: null as string | null,
     parsed: {},
@@ -188,7 +188,7 @@ vi.mock("../config/config.js", () => ({
 }));
 
 vi.mock("../commands/onboard-helpers.js", () => ({
-  DEFAULT_WORKSPACE: "/tmp/openclaw-workspace",
+  DEFAULT_WORKSPACE: "/tmp/littlebaby-workspace",
   applyWizardMetadata: (cfg: unknown) => cfg,
   summarizeExistingConfig: () => "summary",
   handleReset: async () => {},
@@ -276,7 +276,7 @@ describe("runSetupWizard", () => {
   let suiteCase = 0;
 
   beforeAll(async () => {
-    suiteRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-onboard-suite-"));
+    suiteRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-onboard-suite-"));
   });
 
   afterAll(async () => {
@@ -294,7 +294,7 @@ describe("runSetupWizard", () => {
   it("does not crash when preferred-provider lookup sees a provider without an id", async () => {
     setupChannels.mockClear();
     readConfigFileSnapshot.mockResolvedValueOnce({
-      path: "/tmp/.littlebaby/openclaw.json",
+      path: "/tmp/.littlebaby/littlebaby.json",
       exists: true,
       raw: "{}",
       parsed: {},
@@ -355,7 +355,7 @@ describe("runSetupWizard", () => {
 
   it("exits when config is invalid", async () => {
     readConfigFileSnapshot.mockResolvedValueOnce({
-      path: "/tmp/.littlebaby/openclaw.json",
+      path: "/tmp/.littlebaby/littlebaby.json",
       exists: true,
       raw: "{}",
       parsed: {},
@@ -584,7 +584,7 @@ describe("runSetupWizard", () => {
       },
     ]);
     readConfigFileSnapshot.mockResolvedValueOnce({
-      path: "/tmp/.littlebaby/openclaw.json",
+      path: "/tmp/.littlebaby/littlebaby.json",
       exists: true,
       raw: "{}",
       parsed: {},
@@ -639,7 +639,7 @@ describe("runSetupWizard", () => {
     process.env.LITTLEBABY_GATEWAY_PASSWORD = "gateway-ref-password"; // pragma: allowlist secret
     probeGatewayReachable.mockClear();
     readConfigFileSnapshot.mockResolvedValueOnce({
-      path: "/tmp/.littlebaby/openclaw.json",
+      path: "/tmp/.littlebaby/littlebaby.json",
       exists: true,
       raw: "{}",
       parsed: {},

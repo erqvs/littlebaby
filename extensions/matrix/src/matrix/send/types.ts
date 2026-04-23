@@ -38,7 +38,7 @@ export const EventType = {
   RoomMessage: "m.room.message",
 } as const;
 
-export const MATRIX_LITTLEBABY_FINALIZED_PREVIEW_KEY = "com.openclaw.finalized_preview" as const;
+export const MATRIX_LITTLEBABY_FINALIZED_PREVIEW_KEY = "com.littlebaby.finalized_preview" as const;
 
 export type MatrixDirectAccountData = Record<string, string[]>;
 

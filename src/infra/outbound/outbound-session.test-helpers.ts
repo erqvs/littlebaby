@@ -1,5 +1,5 @@
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import {
   buildChannelOutboundSessionRoute,
   stripChannelTargetPrefix,
@@ -44,7 +44,7 @@ function createSessionRouteTestPlugin(params: {
 }
 
 function buildThreadedChannelRoute(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
   channel: string;
   accountId?: string | null;

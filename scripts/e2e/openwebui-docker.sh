@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-logs.sh"
 
-IMAGE_NAME="openclaw-openwebui-e2e"
+IMAGE_NAME="littlebaby-openwebui-e2e"
 OPENWEBUI_IMAGE="${OPENWEBUI_IMAGE:-ghcr.io/open-webui/open-webui:v0.8.10}"
 # Keep the default on a broadly available non-reasoning OpenAI model for
 # Open WebUI compatibility smoke. Callers can still override this explicitly.
@@ -16,9 +16,9 @@ WEBUI_PORT="${LITTLEBABY_OPENWEBUI_PORT:-8080}"
 TOKEN="openwebui-e2e-$(date +%s)-$$"
 ADMIN_EMAIL="${LITTLEBABY_OPENWEBUI_ADMIN_EMAIL:-openwebui-e2e@example.com}"
 ADMIN_PASSWORD="${LITTLEBABY_OPENWEBUI_ADMIN_PASSWORD:-OpenWebUI-E2E-Password-$(date +%s)-$$}"
-NET_NAME="openclaw-openwebui-e2e-$$"
-GW_NAME="openclaw-openwebui-gateway-$$"
-OW_NAME="openclaw-openwebui-$$"
+NET_NAME="littlebaby-openwebui-e2e-$$"
+GW_NAME="littlebaby-openwebui-gateway-$$"
+OW_NAME="littlebaby-openwebui-$$"
 
 OPENAI_API_KEY_VALUE="${OPENAI_API_KEY:-}"
 if [[ "$OPENAI_API_KEY_VALUE" == "undefined" || "$OPENAI_API_KEY_VALUE" == "null" ]]; then
@@ -64,7 +64,7 @@ docker run -d \
     [ -f "$entry" ] || entry=dist/index.js
 
     openai_api_key="${OPENAI_API_KEY:?OPENAI_API_KEY required}"
-    batch_file="$(mktemp /tmp/openclaw-openwebui-config.XXXXXX.json)"
+    batch_file="$(mktemp /tmp/littlebaby-openwebui-config.XXXXXX.json)"
     LITTLEBABY_CONFIG_BATCH_PATH="$batch_file" node - <<'"'"'NODE'"'"' "$openai_api_key"
 const fs = require("node:fs");
 
@@ -95,7 +95,7 @@ NODE
     cat > "$workspace/IDENTITY.md" <<'"'"'EOF'"'"'
 # Identity
 
-- Name: OpenClaw
+- Name: LittleBaby
 - Purpose: Open WebUI Docker compatibility smoke test assistant.
 EOF
     cat > "$workspace/.littlebaby/workspace-state.json" <<'"'"'EOF'"'"'
@@ -138,8 +138,8 @@ docker run -d \
   --name "$OW_NAME" \
   --network "$NET_NAME" \
   -e ENV=prod \
-  -e WEBUI_NAME="OpenClaw E2E" \
-  -e WEBUI_SECRET_KEY="openclaw-openwebui-e2e-secret" \
+  -e WEBUI_NAME="LittleBaby E2E" \
+  -e WEBUI_SECRET_KEY="littlebaby-openwebui-e2e-secret" \
   -e OFFLINE_MODE=True \
   -e ENABLE_VERSION_UPDATE_CHECK=False \
   -e ENABLE_PERSISTENT_CONFIG=False \
@@ -152,9 +152,9 @@ docker run -d \
   -e RAG_RERANKING_MODEL_AUTO_UPDATE=False \
   -e WEBUI_ADMIN_EMAIL="$ADMIN_EMAIL" \
   -e WEBUI_ADMIN_PASSWORD="$ADMIN_PASSWORD" \
-  -e WEBUI_ADMIN_NAME="OpenClaw E2E" \
+  -e WEBUI_ADMIN_NAME="LittleBaby E2E" \
   -e ENABLE_SIGNUP=False \
-  -e DEFAULT_MODELS="openclaw/default" \
+  -e DEFAULT_MODELS="littlebaby/default" \
   "$OPENWEBUI_IMAGE" >/dev/null
 
 echo "Waiting for Open WebUI..."
@@ -179,7 +179,7 @@ if [ "$ow_ready" -ne 1 ]; then
   exit 1
 fi
 
-echo "Running Open WebUI -> OpenClaw smoke..."
+echo "Running Open WebUI -> LittleBaby smoke..."
 if ! docker exec \
   -e "OPENWEBUI_BASE_URL=http://$OW_NAME:$WEBUI_PORT" \
   -e "OPENWEBUI_ADMIN_EMAIL=$ADMIN_EMAIL" \

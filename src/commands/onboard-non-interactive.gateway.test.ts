@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { makeTempWorkspace } from "../test-helpers/workspace.js";
 import { captureEnv } from "../test-utils/env.js";
@@ -9,7 +9,7 @@ import { createThrowingRuntime } from "./onboard-non-interactive.test-helpers.js
 import type { installGatewayDaemonNonInteractive } from "./onboard-non-interactive/local/daemon-install.js";
 
 const ensureWorkspaceAndSessionsMock = vi.fn(async (..._args: unknown[]) => {});
-const testConfigStore = new Map<string, OpenClawConfig>();
+const testConfigStore = new Map<string, LittleBabyConfig>();
 type InstallGatewayDaemonResult = Awaited<ReturnType<typeof installGatewayDaemonNonInteractive>>;
 const installGatewayDaemonNonInteractiveMock = vi.hoisted(() =>
   vi.fn(async (): Promise<InstallGatewayDaemonResult> => ({ installed: true })),
@@ -50,11 +50,11 @@ function resolveTestConfigPath() {
   if (!stateDir) {
     throw new Error("LITTLEBABY_STATE_DIR must be set before config IO in this test");
   }
-  return path.join(stateDir, "openclaw.json");
+  return path.join(stateDir, "littlebaby.json");
 }
 
 // oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- Test helper lets assertions ascribe stored config shape.
-function readTestConfig<T = OpenClawConfig>(): T {
+function readTestConfig<T = LittleBabyConfig>(): T {
   return (testConfigStore.get(resolveTestConfigPath()) ?? {}) as T;
 }
 
@@ -89,10 +89,10 @@ vi.mock("../config/io.js", () => ({
 }));
 
 vi.mock("../config/config.js", () => ({
-  replaceConfigFile: async ({ nextConfig }: { nextConfig: OpenClawConfig }) => {
+  replaceConfigFile: async ({ nextConfig }: { nextConfig: LittleBabyConfig }) => {
     testConfigStore.set(resolveTestConfigPath(), nextConfig);
   },
-  resolveGatewayPort: (cfg: OpenClawConfig) => cfg.gateway?.port ?? 18789,
+  resolveGatewayPort: (cfg: LittleBabyConfig) => cfg.gateway?.port ?? 18789,
 }));
 
 vi.mock("./onboard-helpers.js", () => {
@@ -104,7 +104,7 @@ vi.mock("./onboard-helpers.js", () => {
     return trimmed === "undefined" || trimmed === "null" ? "" : trimmed;
   };
   return {
-    DEFAULT_WORKSPACE: "/tmp/openclaw-workspace",
+    DEFAULT_WORKSPACE: "/tmp/littlebaby-workspace",
     applyWizardMetadata: (cfg: unknown) => cfg,
     ensureWorkspaceAndSessions: ensureWorkspaceAndSessionsMock,
     normalizeGatewayTokenInput,
@@ -295,7 +295,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     delete process.env.LITTLEBABY_GATEWAY_TOKEN;
     delete process.env.LITTLEBABY_GATEWAY_PASSWORD;
 
-    tempHome = await makeTempWorkspace("openclaw-onboard-");
+    tempHome = await makeTempWorkspace("littlebaby-onboard-");
     process.env.HOME = tempHome;
 
     await loadGatewayOnboardModules();
@@ -511,7 +511,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       expect(parsed.installDaemon).toBe(true);
       expect(parsed.detail).toContain("1006 abnormal closure");
       expect(parsed.gateway?.wsUrl).toContain("ws://127.0.0.1:");
-      expect(parsed.hints).toContain("Run `openclaw gateway status --deep` for more detail.");
+      expect(parsed.hints).toContain("Run `littlebaby gateway status --deep` for more detail.");
       expect(parsed.diagnostics?.service?.label).toBe("LaunchAgent");
       expect(parsed.diagnostics?.service?.loaded).toBe(true);
       expect(parsed.diagnostics?.service?.runtimeStatus).toBe("running");
@@ -527,7 +527,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     }
     await withStateDir("state-lan-", async (stateDir) => {
       process.env.LITTLEBABY_STATE_DIR = stateDir;
-      process.env.LITTLEBABY_CONFIG_PATH = path.join(stateDir, "openclaw.json");
+      process.env.LITTLEBABY_CONFIG_PATH = path.join(stateDir, "littlebaby.json");
 
       const port = getPseudoPort(40_000);
       const workspace = path.join(stateDir, "littlebaby");

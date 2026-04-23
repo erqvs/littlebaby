@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw tui` (terminal UI connected to the Gateway)"
+summary: "CLI reference for `littlebaby tui` (terminal UI connected to the Gateway)"
 read_when:
   - You want a terminal UI for the Gateway (remote-friendly)
   - You want to pass url/token/session from scripts
 title: "tui"
 ---
 
-# `openclaw tui`
+# `littlebaby tui`
 
 Open the terminal UI connected to the Gateway.
 
@@ -22,9 +22,9 @@ Notes:
 ## Examples
 
 ```bash
-openclaw tui
-openclaw tui --url ws://127.0.0.1:18789 --token <token>
-openclaw tui --session main --deliver
+littlebaby tui
+littlebaby tui --url ws://127.0.0.1:18789 --token <token>
+littlebaby tui --session main --deliver
 # when run inside an agent workspace, infers that agent automatically
-openclaw tui --session bugfix
+littlebaby tui --session bugfix
 ```

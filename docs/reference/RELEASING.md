@@ -8,7 +8,7 @@ read_when:
 
 # Release Policy
 
-OpenClaw has three public release lanes:
+LittleBaby has three public release lanes:
 
 - stable: tagged releases that publish to npm `beta` by default, or to npm `latest` when explicitly requested
 - beta: prerelease tags that publish to npm `beta`
@@ -26,7 +26,7 @@ OpenClaw has three public release lanes:
 - `latest` means the current promoted stable npm release
 - `beta` means the current beta install target
 - Stable and stable correction releases publish to npm `beta` by default; release operators can target `latest` explicitly, or promote a vetted beta build later
-- Every OpenClaw release ships the npm package and macOS app together
+- Every LittleBaby release ships the npm package and macOS app together
 
 ## Release cadence
 
@@ -46,12 +46,12 @@ OpenClaw has three public release lanes:
   validation step
 - Run `pnpm release:check` before every tagged release
 - Release checks now run in a separate manual workflow:
-  `OpenClaw Release Checks`
+  `LittleBaby Release Checks`
 - Cross-OS install and upgrade runtime validation is dispatched from the
   private caller workflow
-  `openclaw/releases-private/.github/workflows/openclaw-cross-os-release-checks.yml`,
+  `littlebaby/releases-private/.github/workflows/littlebaby-cross-os-release-checks.yml`,
   which invokes the reusable public workflow
-  `.github/workflows/openclaw-cross-os-release-checks-reusable.yml`
+  `.github/workflows/littlebaby-cross-os-release-checks-reusable.yml`
 - This split is intentional: keep the real npm release path short,
   deterministic, and artifact-focused, while slower live checks stay in their
   own lane so they do not stall or block publish
@@ -61,7 +61,7 @@ OpenClaw has three public release lanes:
   40-character `main` commit SHA
 - In commit-SHA mode it only accepts the current `origin/main` HEAD; use a
   release tag for older release commits
-- `OpenClaw NPM Release` validation-only preflight also accepts the current
+- `LittleBaby NPM Release` validation-only preflight also accepts the current
   full 40-character `main` commit SHA without requiring a pushed tag
 - That SHA path is validation-only and cannot be promoted into a real publish
 - In SHA mode the workflow synthesizes `v<package.json version>` only for the
@@ -73,10 +73,10 @@ OpenClaw has three public release lanes:
   `LITTLEBABY_LIVE_TEST=1 LITTLEBABY_LIVE_CACHE_TEST=1 pnpm test:live:cache`
   using both `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` workflow secrets
 - npm release preflight no longer waits on the separate release checks lane
-- Run `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/openclaw-npm-release-check.ts`
+- Run `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/littlebaby-npm-release-check.ts`
   (or the matching beta/correction tag) before approval
 - After npm publish, run
-  `node --import tsx scripts/openclaw-npm-postpublish-verify.ts YYYY.M.D`
+  `node --import tsx scripts/littlebaby-npm-postpublish-verify.ts YYYY.M.D`
   (or the matching beta/correction version) to verify the published registry
   install path in a fresh temp prefix
 - Maintainer release automation now uses preflight-then-promote:
@@ -84,7 +84,7 @@ OpenClaw has three public release lanes:
   - stable npm releases default to `beta`
   - stable npm publish can target `latest` explicitly via workflow input
   - token-based npm dist-tag mutation now lives in
-    `openclaw/releases-private/.github/workflows/openclaw-npm-dist-tags.yml`
+    `littlebaby/releases-private/.github/workflows/littlebaby-npm-dist-tags.yml`
     for security, because `npm dist-tag add` still needs `NPM_TOKEN` while the
     public repo keeps OIDC-only publish
   - public `macOS Release` is validation-only
@@ -115,7 +115,7 @@ OpenClaw has three public release lanes:
 
 ## NPM workflow inputs
 
-`OpenClaw NPM Release` accepts these operator-controlled inputs:
+`LittleBaby NPM Release` accepts these operator-controlled inputs:
 
 - `tag`: required release tag such as `v2026.4.2`, `v2026.4.2-1`, or
   `v2026.4.2-beta.1`; when `preflight_only=true`, it may also be the current
@@ -126,7 +126,7 @@ OpenClaw has three public release lanes:
   the prepared tarball from the successful preflight run
 - `npm_dist_tag`: npm target tag for the publish path; defaults to `beta`
 
-`OpenClaw Release Checks` accepts these operator-controlled inputs:
+`LittleBaby Release Checks` accepts these operator-controlled inputs:
 
 - `ref`: existing release tag or the current full 40-character `main` commit
   SHA to validate
@@ -144,20 +144,20 @@ Rules:
 
 When cutting a stable npm release:
 
-1. Run `OpenClaw NPM Release` with `preflight_only=true`
+1. Run `LittleBaby NPM Release` with `preflight_only=true`
    - Before a tag exists, you may use the current full `main` commit SHA for a
      validation-only dry run of the preflight workflow
 2. Choose `npm_dist_tag=beta` for the normal beta-first flow, or `latest` only
    when you intentionally want a direct stable publish
-3. Run `OpenClaw Release Checks` separately with the same tag or the
+3. Run `LittleBaby Release Checks` separately with the same tag or the
    full current `main` commit SHA when you want live prompt cache coverage
    - This is separate on purpose so live coverage stays available without
      recoupling long-running or flaky checks to the publish workflow
 4. Save the successful `preflight_run_id`
-5. Run `OpenClaw NPM Release` again with `preflight_only=false`, the same
+5. Run `LittleBaby NPM Release` again with `preflight_only=false`, the same
    `tag`, the same `npm_dist_tag`, and the saved `preflight_run_id`
 6. If the release landed on `beta`, use the private
-   `openclaw/releases-private/.github/workflows/openclaw-npm-dist-tags.yml`
+   `littlebaby/releases-private/.github/workflows/littlebaby-npm-dist-tags.yml`
    workflow to promote that stable version from `beta` to `latest`
 7. If the release intentionally published directly to `latest` and `beta`
    should follow the same stable build immediately, use that same private
@@ -172,13 +172,13 @@ documented and operator-visible.
 
 ## Public references
 
-- [`.github/workflows/openclaw-npm-release.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-npm-release.yml)
-- [`.github/workflows/openclaw-release-checks.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-release-checks.yml)
-- [`.github/workflows/openclaw-cross-os-release-checks-reusable.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-cross-os-release-checks-reusable.yml)
-- [`scripts/openclaw-npm-release-check.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/openclaw-npm-release-check.ts)
-- [`scripts/package-mac-dist.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-dist.sh)
-- [`scripts/make_appcast.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/make_appcast.sh)
+- [`.github/workflows/littlebaby-npm-release.yml`](https://github.com/littlebaby/littlebaby/blob/main/.github/workflows/littlebaby-npm-release.yml)
+- [`.github/workflows/littlebaby-release-checks.yml`](https://github.com/littlebaby/littlebaby/blob/main/.github/workflows/littlebaby-release-checks.yml)
+- [`.github/workflows/littlebaby-cross-os-release-checks-reusable.yml`](https://github.com/littlebaby/littlebaby/blob/main/.github/workflows/littlebaby-cross-os-release-checks-reusable.yml)
+- [`scripts/littlebaby-npm-release-check.ts`](https://github.com/littlebaby/littlebaby/blob/main/scripts/littlebaby-npm-release-check.ts)
+- [`scripts/package-mac-dist.sh`](https://github.com/littlebaby/littlebaby/blob/main/scripts/package-mac-dist.sh)
+- [`scripts/make_appcast.sh`](https://github.com/littlebaby/littlebaby/blob/main/scripts/make_appcast.sh)
 
 Maintainers use the private release docs in
-[`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
+[`littlebaby/maintainers/release/README.md`](https://github.com/littlebaby/maintainers/blob/main/release/README.md)
 for the actual runbook.

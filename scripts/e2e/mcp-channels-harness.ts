@@ -210,7 +210,7 @@ async function connectGatewayOnce(params: {
         minProtocol: PROTOCOL_VERSION,
         maxProtocol: PROTOCOL_VERSION,
         client: {
-          id: "openclaw-tui",
+          id: "littlebaby-tui",
           displayName: "docker-mcp-channels",
           version: "1.0.0",
           platform: process.platform,
@@ -331,7 +331,7 @@ export async function connectMcpClient(params: {
   gatewayUrl: string;
   gatewayToken: string;
 }): Promise<McpClientHandle> {
-  const tokenDir = "/tmp/openclaw-mcp-client";
+  const tokenDir = "/tmp/littlebaby-mcp-client";
   const tokenFile = `${tokenDir}/gateway.token`;
   mkdirSync(tokenDir, { recursive: true });
   writeFileSync(tokenFile, `${params.gatewayToken}\n`, { encoding: "utf8", mode: 0o600 });
@@ -352,12 +352,12 @@ export async function connectMcpClient(params: {
     env: {
       ...process.env,
       LITTLEBABY_ALLOW_INSECURE_PRIVATE_WS: "1",
-      LITTLEBABY_STATE_DIR: "/tmp/openclaw-mcp-client",
+      LITTLEBABY_STATE_DIR: "/tmp/littlebaby-mcp-client",
     },
     stderr: "pipe",
   });
   transport.stderr?.on("data", (chunk) => {
-    process.stderr.write(`[openclaw mcp] ${String(chunk)}`);
+    process.stderr.write(`[littlebaby mcp] ${String(chunk)}`);
   });
   const rawMessages: unknown[] = [];
   // The MCP stdio transport here exposes a writable onmessage callback at

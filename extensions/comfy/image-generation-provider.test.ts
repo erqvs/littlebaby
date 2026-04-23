@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import * as providerAuth from "openclaw/plugin-sdk/provider-auth-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import * as providerAuth from "littlebaby/plugin-sdk/provider-auth-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   _setComfyFetchGuardForTesting,
@@ -16,14 +16,14 @@ function parseJsonBody(call: number): Record<string, unknown> {
   return JSON.parse(String(request.init.body)) as Record<string, unknown>;
 }
 
-function buildComfyConfig(config: Record<string, unknown>): OpenClawConfig {
+function buildComfyConfig(config: Record<string, unknown>): LittleBabyConfig {
   return {
     models: {
       providers: {
         comfy: config,
       },
     },
-  } as unknown as OpenClawConfig;
+  } as unknown as LittleBabyConfig;
 }
 
 describe("comfy image-generation provider", () => {

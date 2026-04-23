@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/huggingface-provider",
+  "name": "@littlebaby/huggingface-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Hugging Face provider plugin",
+  "description": "LittleBaby Hugging Face provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

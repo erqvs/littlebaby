@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { buildOpenClawChromeLaunchArgs } from "./chrome.js";
+import { buildLittleBabyChromeLaunchArgs } from "./chrome.js";
 
 describe("browser chrome launch args", () => {
   it("does not force an about:blank tab at startup", () => {
-    const args = buildOpenClawChromeLaunchArgs({
+    const args = buildLittleBabyChromeLaunchArgs({
       resolved: {
         enabled: true,
         controlPort: 18791,
@@ -23,7 +23,7 @@ describe("browser chrome launch args", () => {
         ssrfPolicy: { allowPrivateNetwork: true },
         defaultProfile: "littlebaby",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          littlebaby: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profile: {
@@ -36,11 +36,11 @@ describe("browser chrome launch args", () => {
         driver: "littlebaby",
         attachOnly: false,
       },
-      userDataDir: "/tmp/openclaw-test-user-data",
+      userDataDir: "/tmp/littlebaby-test-user-data",
     });
 
     expect(args).not.toContain("about:blank");
     expect(args).toContain("--remote-debugging-port=18800");
-    expect(args).toContain("--user-data-dir=/tmp/openclaw-test-user-data");
+    expect(args).toContain("--user-data-dir=/tmp/littlebaby-test-user-data");
   });
 });

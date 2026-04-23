@@ -1,15 +1,15 @@
 import { normalizeChatChannelId } from "../channels/ids.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
 export function setPluginEnabledInConfig(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   pluginId: string,
   enabled: boolean,
-): OpenClawConfig {
+): LittleBabyConfig {
   const builtInChannelId = normalizeChatChannelId(pluginId);
   const resolvedId = builtInChannelId ?? pluginId;
 
-  const next: OpenClawConfig = {
+  const next: LittleBabyConfig = {
     ...config,
     plugins: {
       ...config.plugins,

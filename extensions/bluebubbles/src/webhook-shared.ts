@@ -1,5 +1,5 @@
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
-import { normalizeWebhookPath } from "openclaw/plugin-sdk/webhook-path";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
+import { normalizeWebhookPath } from "littlebaby/plugin-sdk/webhook-path";
 import type { BlueBubblesAccountConfig } from "./types.js";
 
 export { normalizeWebhookPath };

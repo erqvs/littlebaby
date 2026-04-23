@@ -16,7 +16,7 @@ export function resolveEnvLogLevelOverride(): LogLevel | undefined {
   if (loggingState.invalidEnvLogLevelValue !== trimmed) {
     loggingState.invalidEnvLogLevelValue = trimmed;
     process.stderr.write(
-      `[openclaw] Ignoring invalid LITTLEBABY_LOG_LEVEL="${trimmed}" (allowed: ${ALLOWED_LOG_LEVELS.join("|")}).\n`,
+      `[littlebaby] Ignoring invalid LITTLEBABY_LOG_LEVEL="${trimmed}" (allowed: ${ALLOWED_LOG_LEVELS.join("|")}).\n`,
     );
   }
   return undefined;

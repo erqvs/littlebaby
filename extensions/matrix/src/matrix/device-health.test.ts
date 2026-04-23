@@ -1,29 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { isOpenClawManagedMatrixDevice, summarizeMatrixDeviceHealth } from "./device-health.js";
+import { isLittleBabyManagedMatrixDevice, summarizeMatrixDeviceHealth } from "./device-health.js";
 
 describe("matrix device health", () => {
-  it("detects OpenClaw-managed device names", () => {
-    expect(isOpenClawManagedMatrixDevice("OpenClaw Gateway")).toBe(true);
-    expect(isOpenClawManagedMatrixDevice("OpenClaw Debug")).toBe(true);
-    expect(isOpenClawManagedMatrixDevice("Element iPhone")).toBe(false);
-    expect(isOpenClawManagedMatrixDevice(null)).toBe(false);
+  it("detects LittleBaby-managed device names", () => {
+    expect(isLittleBabyManagedMatrixDevice("LittleBaby Gateway")).toBe(true);
+    expect(isLittleBabyManagedMatrixDevice("LittleBaby Debug")).toBe(true);
+    expect(isLittleBabyManagedMatrixDevice("Element iPhone")).toBe(false);
+    expect(isLittleBabyManagedMatrixDevice(null)).toBe(false);
   });
 
-  it("summarizes stale OpenClaw-managed devices separately from the current device", () => {
+  it("summarizes stale LittleBaby-managed devices separately from the current device", () => {
     const summary = summarizeMatrixDeviceHealth([
       {
         deviceId: "du314Zpw3A",
-        displayName: "OpenClaw Gateway",
+        displayName: "LittleBaby Gateway",
         current: true,
       },
       {
         deviceId: "BritdXC6iL",
-        displayName: "OpenClaw Gateway",
+        displayName: "LittleBaby Gateway",
         current: false,
       },
       {
         deviceId: "G6NJU9cTgs",
-        displayName: "OpenClaw Debug",
+        displayName: "LittleBaby Debug",
         current: false,
       },
       {
@@ -34,10 +34,10 @@ describe("matrix device health", () => {
     ]);
 
     expect(summary.currentDeviceId).toBe("du314Zpw3A");
-    expect(summary.currentOpenClawDevices).toEqual([
+    expect(summary.currentLittleBabyDevices).toEqual([
       expect.objectContaining({ deviceId: "du314Zpw3A" }),
     ]);
-    expect(summary.staleOpenClawDevices).toEqual([
+    expect(summary.staleLittleBabyDevices).toEqual([
       expect.objectContaining({ deviceId: "BritdXC6iL" }),
       expect.objectContaining({ deviceId: "G6NJU9cTgs" }),
     ]);

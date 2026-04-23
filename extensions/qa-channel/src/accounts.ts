@@ -1,7 +1,7 @@
-import { createAccountListHelpers } from "openclaw/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import { resolveMergedAccountConfig } from "openclaw/plugin-sdk/account-resolution";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+import { createAccountListHelpers } from "littlebaby/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "littlebaby/plugin-sdk/account-id";
+import { resolveMergedAccountConfig } from "littlebaby/plugin-sdk/account-resolution";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import type { CoreConfig, QaChannelAccountConfig, ResolvedQaChannelAccount } from "./types.js";
 
 const DEFAULT_POLL_TIMEOUT_MS = 1_000;
@@ -33,7 +33,7 @@ export function resolveQaChannelAccount(params: {
   const enabled = baseEnabled && merged.enabled !== false;
   const baseUrl = merged.baseUrl?.trim() ?? "";
   const botUserId = merged.botUserId?.trim() || "littlebaby";
-  const botDisplayName = merged.botDisplayName?.trim() || "OpenClaw QA";
+  const botDisplayName = merged.botDisplayName?.trim() || "LittleBaby QA";
   return {
     accountId,
     enabled,

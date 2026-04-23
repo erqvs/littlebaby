@@ -1,20 +1,20 @@
 ---
-summary: "Run OpenClaw Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
+summary: "Run LittleBaby Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
 read_when:
-  - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
+  - You want LittleBaby running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
   - You want full control over persistence, binaries, and restart behavior
-  - You are running OpenClaw in Docker on Hetzner or a similar provider
+  - You are running LittleBaby in Docker on Hetzner or a similar provider
 title: "Hetzner"
 ---
 
-# OpenClaw on Hetzner (Docker, Production VPS Guide)
+# LittleBaby on Hetzner (Docker, Production VPS Guide)
 
 ## Goal
 
-Run a persistent OpenClaw Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
+Run a persistent LittleBaby Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
 
-If you want “OpenClaw 24/7 for ~$5”, this is the simplest reliable setup.
+If you want “LittleBaby 24/7 for ~$5”, this is the simplest reliable setup.
 Hetzner pricing changes; pick the smallest Debian/Ubuntu VPS and scale up if you hit OOMs.
 
 Security model reminder:
@@ -29,11 +29,11 @@ See [Security](/gateway/security) and [VPS hosting](/vps).
 
 - Rent a small Linux server (Hetzner VPS)
 - Install Docker (isolated app runtime)
-- Start the OpenClaw Gateway in Docker
+- Start the LittleBaby Gateway in Docker
 - Persist `~/.littlebaby` + `~/.littlebaby/workspace` on the host (survives restarts/rebuilds)
 - Access the Control UI from your laptop via an SSH tunnel
 
-That mounted `~/.littlebaby` state includes `openclaw.json`, per-agent
+That mounted `~/.littlebaby` state includes `littlebaby.json`, per-agent
 `agents/<agentId>/agent/auth-profiles.json`, and `.env`.
 
 The Gateway can be accessed via:
@@ -51,7 +51,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
 1. Provision Hetzner VPS
 2. Install Docker
-3. Clone OpenClaw repository
+3. Clone LittleBaby repository
 4. Create persistent host directories
 5. Configure `.env` and `docker-compose.yml`
 6. Bake required binaries into the image
@@ -106,10 +106,10 @@ For the generic Docker flow, see [Docker](/install/docker).
 
   </Step>
 
-  <Step title="Clone the OpenClaw repository">
+  <Step title="Clone the LittleBaby repository">
     ```bash
-    git clone https://github.com/openclaw/openclaw.git
-    cd openclaw
+    git clone https://github.com/littlebaby/littlebaby.git
+    cd littlebaby
     ```
 
     This guide assumes you will build a custom image to guarantee binary persistence.
@@ -133,7 +133,7 @@ For the generic Docker flow, see [Docker](/install/docker).
     Create `.env` in the repository root.
 
     ```bash
-    LITTLEBABY_IMAGE=openclaw:latest
+    LITTLEBABY_IMAGE=littlebaby:latest
     LITTLEBABY_GATEWAY_TOKEN=
     LITTLEBABY_GATEWAY_BIND=lan
     LITTLEBABY_GATEWAY_PORT=18789
@@ -146,7 +146,7 @@ For the generic Docker flow, see [Docker](/install/docker).
     ```
 
     Leave `LITTLEBABY_GATEWAY_TOKEN` blank unless you explicitly want to
-    manage it through `.env`; OpenClaw writes a random gateway token to
+    manage it through `.env`; LittleBaby writes a random gateway token to
     config on first start. Generate a keyring password and paste it into
     `GOG_KEYRING_PASSWORD`:
 
@@ -248,8 +248,8 @@ For teams preferring infrastructure-as-code workflows, a community-maintained Te
 
 **Repositories:**
 
-- Infrastructure: [openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
-- Docker config: [openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
+- Infrastructure: [littlebaby-terraform-hetzner](https://github.com/andreesg/littlebaby-terraform-hetzner)
+- Docker config: [littlebaby-docker-config](https://github.com/andreesg/littlebaby-docker-config)
 
 This approach complements the Docker setup above with reproducible deployments, version-controlled infrastructure, and automated disaster recovery.
 
@@ -259,4 +259,4 @@ This approach complements the Docker setup above with reproducible deployments, 
 
 - Set up messaging channels: [Channels](/channels)
 - Configure the Gateway: [Gateway configuration](/gateway/configuration)
-- Keep OpenClaw up to date: [Updating](/install/updating)
+- Keep LittleBaby up to date: [Updating](/install/updating)

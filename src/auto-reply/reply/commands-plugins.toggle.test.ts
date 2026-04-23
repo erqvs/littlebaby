@@ -67,7 +67,7 @@ describe("handleCommands /plugins toggle", () => {
     const config = buildCfg();
     readConfigFileSnapshotMock.mockResolvedValue({
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/littlebaby.json",
       resolved: config,
     });
     buildPluginDiagnosticsReportMock.mockReturnValue(
@@ -107,7 +107,7 @@ describe("handleCommands /plugins toggle", () => {
     const config = buildCfg();
     readConfigFileSnapshotMock.mockResolvedValue({
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/littlebaby.json",
       resolved: config,
     });
     buildPluginDiagnosticsReportMock.mockReturnValue(
@@ -146,7 +146,7 @@ describe("handleCommands /plugins toggle", () => {
     const config = buildCfg();
     readConfigFileSnapshotMock.mockResolvedValue({
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/littlebaby.json",
       resolved: config,
     });
     buildPluginSnapshotReportMock.mockReturnValue(

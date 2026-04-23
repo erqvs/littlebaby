@@ -24,7 +24,7 @@ codeRefs:
   - extensions/qa-lab/src/suite.ts
 execution:
   kind: flow
-  summary: Run with `pnpm openclaw qa suite --provider-mode live-frontier --model codex/gpt-5.4 --alt-model codex/gpt-5.4 --scenario codex-harness-no-meta-leak`.
+  summary: Run with `pnpm littlebaby qa suite --provider-mode live-frontier --model codex/gpt-5.4 --alt-model codex/gpt-5.4 --scenario codex-harness-no-meta-leak`.
   config:
     requiredProvider: codex
     requiredModel: gpt-5.4

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import {
   __resetGatewayModelPricingCacheForTest,
   __setGatewayModelPricingForTest,
@@ -20,7 +20,7 @@ describe("usage-format", () => {
   let agentDir: string;
 
   beforeEach(async () => {
-    agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-usage-format-"));
+    agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-usage-format-"));
     process.env.LITTLEBABY_AGENT_DIR = agentDir;
     __resetUsageFormatCachesForTest();
     __resetGatewayModelPricingCacheForTest();
@@ -66,7 +66,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
 
     const cost = resolveModelCostConfig({
       provider: "test",
@@ -105,7 +105,7 @@ describe("usage-format", () => {
     ).toBeUndefined();
   });
 
-  it("prefers models.json pricing over openclaw config and cached pricing", async () => {
+  it("prefers models.json pricing over littlebaby config and cached pricing", async () => {
     const config = {
       models: {
         providers: {
@@ -119,7 +119,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
 
     await fs.writeFile(
       path.join(agentDir, "models.json"),
@@ -164,7 +164,7 @@ describe("usage-format", () => {
     });
   });
 
-  it("falls back to openclaw config pricing when models.json is absent", () => {
+  it("falls back to littlebaby config pricing when models.json is absent", () => {
     const config = {
       models: {
         providers: {
@@ -178,7 +178,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
 
     __setGatewayModelPricingForTest([
       {
@@ -238,7 +238,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
 
     expect(
       resolveModelCostConfig({

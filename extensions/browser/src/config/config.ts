@@ -5,5 +5,5 @@ export {
   writeConfigFile,
   type BrowserConfig,
   type BrowserProfileConfig,
-  type OpenClawConfig,
-} from "openclaw/plugin-sdk/browser-config-runtime";
+  type LittleBabyConfig,
+} from "littlebaby/plugin-sdk/browser-config-runtime";

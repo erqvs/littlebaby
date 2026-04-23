@@ -1,13 +1,13 @@
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import {
   createDedupeCache,
   formatInboundFromLabel as formatInboundFromLabelShared,
   rawDataToString,
   resolveThreadSessionKeys as resolveThreadSessionKeysShared,
-  type OpenClawConfig,
+  type LittleBabyConfig,
 } from "./runtime-api.js";
 
 export { createDedupeCache, rawDataToString };
@@ -45,22 +45,22 @@ function normalizeAgentId(value: string | undefined | null): string {
   );
 }
 
-type AgentEntry = NonNullable<NonNullable<OpenClawConfig["agents"]>["list"]>[number];
+type AgentEntry = NonNullable<NonNullable<LittleBabyConfig["agents"]>["list"]>[number];
 
 function isAgentEntry(entry: unknown): entry is AgentEntry {
   return Boolean(entry && typeof entry === "object");
 }
 
-function listAgents(cfg: OpenClawConfig): AgentEntry[] {
+function listAgents(cfg: LittleBabyConfig): AgentEntry[] {
   return Array.isArray(cfg.agents?.list) ? cfg.agents.list.filter(isAgentEntry) : [];
 }
 
-function resolveAgentEntry(cfg: OpenClawConfig, agentId: string): AgentEntry | undefined {
+function resolveAgentEntry(cfg: LittleBabyConfig, agentId: string): AgentEntry | undefined {
   const id = normalizeAgentId(agentId);
   return listAgents(cfg).find((entry) => normalizeAgentId(entry.id) === id);
 }
 
-export function resolveIdentityName(cfg: OpenClawConfig, agentId: string): string | undefined {
+export function resolveIdentityName(cfg: LittleBabyConfig, agentId: string): string | undefined {
   const entry = resolveAgentEntry(cfg, agentId);
   return normalizeOptionalString(entry?.identity?.name);
 }

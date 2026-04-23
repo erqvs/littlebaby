@@ -2,17 +2,17 @@
  * Twitch setup wizard surface for CLI setup.
  */
 
-import { normalizeOptionalAccountId } from "openclaw/plugin-sdk/account-id";
-import { getChatChannelMeta, type ChannelPlugin } from "openclaw/plugin-sdk/core";
+import { normalizeOptionalAccountId } from "littlebaby/plugin-sdk/account-id";
+import { getChatChannelMeta, type ChannelPlugin } from "littlebaby/plugin-sdk/core";
 import {
   formatDocsLink,
   type ChannelSetupAdapter,
   type ChannelSetupDmPolicy,
   type ChannelSetupWizard,
-  type OpenClawConfig,
+  type LittleBabyConfig,
   type WizardPrompter,
   normalizeAccountId,
-} from "openclaw/plugin-sdk/setup";
+} from "littlebaby/plugin-sdk/setup";
 import {
   DEFAULT_ACCOUNT_ID,
   getAccountConfig,
@@ -34,7 +34,7 @@ function normalizeRequestedSetupAccountId(accountId: string): string {
   return normalized;
 }
 
-function resolveSetupAccountId(cfg: OpenClawConfig, requestedAccountId?: string): string {
+function resolveSetupAccountId(cfg: LittleBabyConfig, requestedAccountId?: string): string {
   const requested = requestedAccountId?.trim();
   if (requested) {
     return normalizeRequestedSetupAccountId(requested);
@@ -45,10 +45,10 @@ function resolveSetupAccountId(cfg: OpenClawConfig, requestedAccountId?: string)
 }
 
 export function setTwitchAccount(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   account: Partial<TwitchAccountConfig>,
   accountId: string = resolveSetupAccountId(cfg),
-): OpenClawConfig {
+): LittleBabyConfig {
   const resolvedAccountId = accountId.trim()
     ? normalizeRequestedSetupAccountId(accountId)
     : resolveSetupAccountId(cfg);
@@ -212,14 +212,14 @@ export async function promptRefreshTokenSetup(
 }
 
 export async function configureWithEnvToken(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   prompter: WizardPrompter,
   account: TwitchAccountConfig | null,
   envToken: string,
   forceAllowFrom: boolean,
   dmPolicy: ChannelSetupDmPolicy,
   accountId: string = resolveSetupAccountId(cfg),
-): Promise<{ cfg: OpenClawConfig } | null> {
+): Promise<{ cfg: LittleBabyConfig } | null> {
   const resolvedAccountId = accountId.trim()
     ? normalizeRequestedSetupAccountId(accountId)
     : resolveSetupAccountId(cfg);
@@ -263,11 +263,11 @@ export async function configureWithEnvToken(
 }
 
 function setTwitchAccessControl(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   allowedRoles: TwitchRole[],
   requireMention: boolean,
   accountId?: string,
-): OpenClawConfig {
+): LittleBabyConfig {
   const resolvedAccountId = resolveSetupAccountId(cfg, accountId);
   const account = getAccountConfig(cfg, resolvedAccountId);
   if (!account) {
@@ -286,7 +286,7 @@ function setTwitchAccessControl(
 }
 
 function resolveTwitchGroupPolicy(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId?: string,
 ): "open" | "allowlist" | "disabled" {
   const account = getAccountConfig(cfg, resolveSetupAccountId(cfg, accountId));
@@ -300,10 +300,10 @@ function resolveTwitchGroupPolicy(
 }
 
 function setTwitchGroupPolicy(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   policy: "open" | "allowlist" | "disabled",
   accountId?: string,
-): OpenClawConfig {
+): LittleBabyConfig {
   const allowedRoles: TwitchRole[] =
     policy === "open" ? ["all"] : policy === "allowlist" ? ["moderator", "vip"] : [];
   return setTwitchAccessControl(cfg, allowedRoles, true, accountId);

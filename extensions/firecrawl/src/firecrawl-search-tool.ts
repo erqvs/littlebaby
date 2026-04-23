@@ -1,11 +1,11 @@
 import { Type } from "@sinclair/typebox";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-runtime";
+import type { LittleBabyPluginApi } from "littlebaby/plugin-sdk/plugin-runtime";
 import {
   jsonResult,
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "littlebaby/plugin-sdk/provider-web-search";
 import { runFirecrawlSearch } from "./firecrawl-client.js";
 
 const FirecrawlSearchToolSchema = Type.Object(
@@ -43,7 +43,7 @@ const FirecrawlSearchToolSchema = Type.Object(
   { additionalProperties: false },
 );
 
-export function createFirecrawlSearchTool(api: OpenClawPluginApi) {
+export function createFirecrawlSearchTool(api: LittleBabyPluginApi) {
   return {
     name: "firecrawl_search",
     label: "Firecrawl Search",

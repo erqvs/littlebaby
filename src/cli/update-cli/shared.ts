@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveOpenClawPackageRoot } from "../../infra/openclaw-root.js";
+import { resolveLittleBabyPackageRoot } from "../../infra/littlebaby-root.js";
 import { readPackageName, readPackageVersion } from "../../infra/package-json.js";
 import { normalizePackageTagInput } from "../../infra/package-tag.js";
 import { trimLogTail } from "../../infra/restart-sentinel.js";
@@ -54,7 +54,7 @@ export function parseTimeoutMsOrExit(timeout?: string): number | undefined | nul
   return timeoutMs;
 }
 
-const LITTLEBABY_REPO_URL = "https://github.com/openclaw/openclaw.git";
+const LITTLEBABY_REPO_URL = "https://github.com/littlebaby/littlebaby.git";
 const MAX_LOG_CHARS = 8000;
 
 export const DEFAULT_PACKAGE_NAME = "littlebaby";
@@ -139,7 +139,7 @@ export function resolveNodeRunner(): string {
 
 export async function resolveUpdateRoot(): Promise<string> {
   return (
-    (await resolveOpenClawPackageRoot({
+    (await resolveLittleBabyPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),
@@ -215,7 +215,7 @@ export async function ensureGitCheckout(params: {
     const empty = await isEmptyDir(params.dir);
     if (!empty) {
       throw new Error(
-        `LITTLEBABY_GIT_DIR points at a non-git directory: ${params.dir}. Set LITTLEBABY_GIT_DIR to an empty folder or an openclaw checkout.`,
+        `LITTLEBABY_GIT_DIR points at a non-git directory: ${params.dir}. Set LITTLEBABY_GIT_DIR to an empty folder or an littlebaby checkout.`,
       );
     }
 

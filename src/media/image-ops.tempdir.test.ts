@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredLittleBabyTmpDir } from "../infra/tmp-littlebaby-dir.js";
 import { getImageMetadata } from "./image-ops.js";
 
 describe("image-ops temp dir", () => {
@@ -21,14 +21,14 @@ describe("image-ops temp dir", () => {
     vi.restoreAllMocks();
   });
 
-  it("creates sips temp dirs under the secured OpenClaw tmp root", async () => {
-    const secureRoot = resolvePreferredOpenClawTmpDir();
+  it("creates sips temp dirs under the secured LittleBaby tmp root", async () => {
+    const secureRoot = resolvePreferredLittleBabyTmpDir();
 
     await getImageMetadata(Buffer.from("image"));
 
     expect(fs.mkdtemp).toHaveBeenCalledTimes(1);
-    expect(fs.mkdtemp).toHaveBeenCalledWith(path.join(secureRoot, "openclaw-img-"));
-    expect(createdTempDir.startsWith(path.join(secureRoot, "openclaw-img-"))).toBe(true);
+    expect(fs.mkdtemp).toHaveBeenCalledWith(path.join(secureRoot, "littlebaby-img-"));
+    expect(createdTempDir.startsWith(path.join(secureRoot, "littlebaby-img-"))).toBe(true);
     await expect(fs.access(createdTempDir)).rejects.toMatchObject({ code: "ENOENT" });
   });
 });

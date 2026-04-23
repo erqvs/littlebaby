@@ -1,5 +1,5 @@
-import { hasOutboundReplyContent } from "openclaw/plugin-sdk/reply-payload";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { hasOutboundReplyContent } from "littlebaby/plugin-sdk/reply-payload";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import type { TtsAutoMode } from "../../config/types.tts.js";
 import { logVerbose } from "../../globals.js";
 import { formatErrorMessage } from "../../infra/errors.js";
@@ -90,7 +90,7 @@ async function shouldTreatDeliveredTextAsVisible(params: {
 
 async function maybeApplyAcpTts(params: {
   payload: ReplyPayload;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   channel?: string;
   kind: ReplyDispatchKind;
   inboundAudio: boolean;
@@ -155,7 +155,7 @@ export type AcpDispatchDeliveryCoordinator = {
 };
 
 export function createAcpDispatchDeliveryCoordinator(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   ctx: FinalizedMsgContext;
   dispatcher: ReplyDispatcher;
   inboundAudio: boolean;

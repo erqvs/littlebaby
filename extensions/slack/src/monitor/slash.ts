@@ -1,19 +1,19 @@
 import type { SlackActionMiddlewareArgs, SlackCommandMiddlewareArgs } from "@slack/bolt";
-import { createChannelReplyPipeline } from "openclaw/plugin-sdk/channel-reply-pipeline";
+import { createChannelReplyPipeline } from "littlebaby/plugin-sdk/channel-reply-pipeline";
 import {
   resolveCommandAuthorizedFromAuthorizers,
   resolveNativeCommandSessionTargets,
   listProviderPluginCommandSpecs,
-} from "openclaw/plugin-sdk/command-auth";
-import { type ChatCommandDefinition, type CommandArgs } from "openclaw/plugin-sdk/command-auth";
+} from "littlebaby/plugin-sdk/command-auth";
+import { type ChatCommandDefinition, type CommandArgs } from "littlebaby/plugin-sdk/command-auth";
 import {
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import { danger, logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { chunkItems, normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import type { ReplyPayload } from "littlebaby/plugin-sdk/reply-runtime";
+import { danger, logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { chunkItems, normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import type { ResolvedSlackAccount } from "../accounts.js";
 import { truncateSlackText } from "../truncate.js";
 import { resolveSlackAllowListMatch, resolveSlackUserAllowed } from "./allow-list.js";
@@ -34,8 +34,8 @@ import { resolveSlackRoomContextHints } from "./room-context.js";
 
 type SlackBlock = { type: string; [key: string]: unknown };
 
-const SLACK_COMMAND_ARG_ACTION_ID = "openclaw_cmdarg";
-const SLACK_COMMAND_ARG_ACTION_LISTENER = /^openclaw_cmdarg/;
+const SLACK_COMMAND_ARG_ACTION_ID = "littlebaby_cmdarg";
+const SLACK_COMMAND_ARG_ACTION_LISTENER = /^littlebaby_cmdarg/;
 const SLACK_COMMAND_ARG_VALUE_PREFIX = "cmdarg";
 const SLACK_COMMAND_ARG_BUTTON_ROW_SIZE = 5;
 const SLACK_COMMAND_ARG_OVERFLOW_MIN = 3;

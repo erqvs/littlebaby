@@ -1,1 +1,1 @@
-export * from "openclaw/plugin-sdk/diagnostics-otel";
+export * from "littlebaby/plugin-sdk/diagnostics-otel";

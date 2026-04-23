@@ -1,9 +1,9 @@
 import type { SlackEventMiddlewareArgs } from "@slack/bolt";
-import { resolveChannelConfigWrites } from "openclaw/plugin-sdk/channel-config-writes";
-import { loadConfig, writeConfigFile } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/infra-runtime";
-import { danger, warn } from "openclaw/plugin-sdk/runtime-env";
+import { resolveChannelConfigWrites } from "littlebaby/plugin-sdk/channel-config-writes";
+import { loadConfig, writeConfigFile } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { enqueueSystemEvent } from "littlebaby/plugin-sdk/infra-runtime";
+import { danger, warn } from "littlebaby/plugin-sdk/runtime-env";
 import { migrateSlackChannelConfig } from "../../channel-migration.js";
 import { resolveSlackChannelLabel } from "../channel-config.js";
 import type { SlackMonitorContext } from "../context.js";

@@ -37,7 +37,7 @@ Usage: $(basename "$0") [OPTIONS]
 
 
 Options:
-  --name NAME          Cluster name (default: openclaw)
+  --name NAME          Cluster name (default: littlebaby)
   --delete             Delete the cluster instead of creating it
   -h, --help           Show this help message
 
@@ -174,7 +174,7 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
   labels:
-    openclaw.dev/role: control-plane
+    littlebaby.dev/role: control-plane
   # Uncomment to expose services on host ports:
   # extraPortMappings:
   # - containerPort: 30080

@@ -3,14 +3,14 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "n
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { normalizeOptionalString } from "../../src/shared/string-coerce.ts";
-import { parseReleaseVersion } from "../openclaw-npm-release-check.ts";
+import { parseReleaseVersion } from "../littlebaby-npm-release-check.ts";
 import { resolveNpmPublishPlan } from "./npm-publish-plan.mjs";
 
 export type PluginPackageJson = {
   name?: string;
   version?: string;
   private?: boolean;
-  openclaw?: {
+  littlebaby?: {
     extensions?: string[];
     install?: {
       npmSpec?: string;
@@ -210,11 +210,11 @@ export function collectPublishablePluginPackageErrors(
   const errors: string[] = [];
   const packageName = packageJson.name?.trim() ?? "";
   const packageVersion = packageJson.version?.trim() ?? "";
-  const extensions = packageJson.openclaw?.extensions ?? [];
+  const extensions = packageJson.littlebaby?.extensions ?? [];
 
-  if (!packageName.startsWith("@openclaw/")) {
+  if (!packageName.startsWith("@littlebaby/")) {
     errors.push(
-      `package name must start with "@openclaw/"; found "${packageName || "<missing>"}".`,
+      `package name must start with "@littlebaby/"; found "${packageName || "<missing>"}".`,
     );
   }
   if (packageJson.private === true) {
@@ -228,10 +228,10 @@ export function collectPublishablePluginPackageErrors(
     );
   }
   if (!Array.isArray(extensions) || extensions.length === 0) {
-    errors.push("openclaw.extensions must contain at least one entry.");
+    errors.push("littlebaby.extensions must contain at least one entry.");
   }
   if (extensions.some((entry) => typeof entry !== "string" || !entry.trim())) {
-    errors.push("openclaw.extensions must contain only non-empty strings.");
+    errors.push("littlebaby.extensions must contain only non-empty strings.");
   }
 
   return errors;
@@ -245,7 +245,7 @@ export function collectPublishablePluginPackages(
 
   for (const candidate of collectExtensionPackageJsonCandidates(rootDir)) {
     const { extensionId, packageDir, packageJson } = candidate;
-    if (packageJson.openclaw?.release?.publishToNpm !== true) {
+    if (packageJson.littlebaby?.release?.publishToNpm !== true) {
       continue;
     }
 
@@ -272,7 +272,7 @@ export function collectPublishablePluginPackages(
       version,
       channel: parsedVersion.channel,
       publishTag: resolveNpmPublishPlan(version).publishTag,
-      installNpmSpec: normalizeOptionalString(packageJson.openclaw?.install?.npmSpec),
+      installNpmSpec: normalizeOptionalString(packageJson.littlebaby?.install?.npmSpec),
     });
   }
 
@@ -416,7 +416,7 @@ export function resolveChangedPublishablePluginPackages(params: {
 }
 
 export function isPluginVersionPublished(packageName: string, version: string): boolean {
-  const tempDir = mkdtempSync(join(tmpdir(), "openclaw-plugin-npm-view-"));
+  const tempDir = mkdtempSync(join(tmpdir(), "littlebaby-plugin-npm-view-"));
   const userconfigPath = join(tempDir, "npmrc");
   writeFileSync(userconfigPath, "");
 

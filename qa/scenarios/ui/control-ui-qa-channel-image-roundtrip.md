@@ -176,7 +176,7 @@ steps:
               args:
                 - pageId:
                     ref: uiAckPageId
-                  expression: "(() => { const app = document.querySelector('openclaw-app'); return app ? { sessionKey: app.sessionKey, settingsSessionKey: app.settings?.sessionKey, lastActiveSessionKey: app.settings?.lastActiveSessionKey, chatMessages: Array.isArray(app.chatMessages) ? app.chatMessages.length : null, chatLoading: app.chatLoading, lastError: app.lastError, connected: app.connected } : null; })()"
+                  expression: "(() => { const app = document.querySelector('littlebaby-app'); return app ? { sessionKey: app.sessionKey, settingsSessionKey: app.settings?.sessionKey, lastActiveSessionKey: app.settings?.lastActiveSessionKey, chatMessages: Array.isArray(app.chatMessages) ? app.chatMessages.length : null, chatLoading: app.chatLoading, lastError: app.lastError, connected: app.connected } : null; })()"
                   timeoutMs:
                     expr: liveTurnTimeoutMs(env, 15000)
             - throw:
@@ -267,7 +267,7 @@ steps:
               args:
                 - pageId:
                     ref: uiImagePageId
-                  expression: "(() => { const app = document.querySelector('openclaw-app'); return app ? { sessionKey: app.sessionKey, settingsSessionKey: app.settings?.sessionKey, lastActiveSessionKey: app.settings?.lastActiveSessionKey, chatMessages: Array.isArray(app.chatMessages) ? app.chatMessages.length : null, chatLoading: app.chatLoading, lastError: app.lastError, connected: app.connected } : null; })()"
+                  expression: "(() => { const app = document.querySelector('littlebaby-app'); return app ? { sessionKey: app.sessionKey, settingsSessionKey: app.settings?.sessionKey, lastActiveSessionKey: app.settings?.lastActiveSessionKey, chatMessages: Array.isArray(app.chatMessages) ? app.chatMessages.length : null, chatLoading: app.chatLoading, lastError: app.lastError, connected: app.connected } : null; })()"
                   timeoutMs:
                     expr: liveTurnTimeoutMs(env, 15000)
             - throw:

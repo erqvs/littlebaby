@@ -70,7 +70,7 @@ async function runStopLaunchAgentWithFakeTimers(args: Parameters<typeof stopLaun
 
 function expectLaunchctlEnableBootstrapOrder(env: Record<string, string | undefined>) {
   const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-  const label = "ai.openclaw.gateway";
+  const label = "ai.littlebaby.gateway";
   const plistPath = resolveLaunchAgentPlistPath(env);
   const serviceId = `${domain}/${label}`;
   const enableIndex = state.launchctlCalls.findIndex(
@@ -320,7 +320,7 @@ describe("launchd runtime parsing", () => {
 
 describe("launchctl list detection", () => {
   it("detects the resolved label in launchctl list", async () => {
-    state.listOutput = "123 0 ai.openclaw.gateway\n";
+    state.listOutput = "123 0 ai.littlebaby.gateway\n";
     const listed = await isLaunchAgentListed({
       env: { HOME: "/Users/test", LITTLEBABY_PROFILE: "default" },
     });
@@ -507,9 +507,9 @@ describe("launchd install", () => {
     await stopLaunchAgent({ env, stdout });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.littlebaby.gateway`;
     expect(state.launchctlCalls).toContainEqual(["disable", serviceId]);
-    expect(state.launchctlCalls).toContainEqual(["stop", "ai.openclaw.gateway"]);
+    expect(state.launchctlCalls).toContainEqual(["stop", "ai.littlebaby.gateway"]);
     expect(state.launchctlCalls.some((call) => call[0] === "bootout")).toBe(false);
     expect(output).toContain("Stopped LaunchAgent");
   });
@@ -530,7 +530,7 @@ describe("launchd install", () => {
 
     expect(state.launchctlCalls).toContainEqual([
       "disable",
-      `${typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501"}/ai.openclaw.gateway`,
+      `${typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501"}/ai.littlebaby.gateway`,
     ]);
     expect(state.launchctlCalls.some((call) => call[0] === "bootout")).toBe(false);
     expect(output).toContain("Stopped LaunchAgent");
@@ -661,7 +661,7 @@ describe("launchd install", () => {
     });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const label = "ai.openclaw.gateway";
+    const label = "ai.littlebaby.gateway";
     const serviceId = `${domain}/${label}`;
     expect(result).toEqual({ outcome: "completed" });
     expect(cleanStaleGatewayProcessesSync).toHaveBeenCalledWith(18789);
@@ -708,7 +708,7 @@ describe("launchd install", () => {
     });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.littlebaby.gateway`;
     const kickstartCalls = state.launchctlCalls.filter(
       (c) => c[0] === "kickstart" && c[1] === "-k" && c[2] === serviceId,
     );
@@ -818,7 +818,7 @@ describe("launchd install", () => {
     }
     expect(message).toContain("logged-in macOS GUI session");
     expect(message).toContain("wrong user (including sudo)");
-    expect(message).toContain("https://docs.openclaw.ai/gateway");
+    expect(message).toContain("https://docs.littlebaby.ai/gateway");
   });
 
   it("surfaces generic bootstrap failures without GUI-specific guidance", async () => {
@@ -840,12 +840,12 @@ describe("resolveLaunchAgentPlistPath", () => {
     {
       name: "uses default label when LITTLEBABY_PROFILE is unset",
       env: { HOME: "/Users/test" },
-      expected: "/Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist",
+      expected: "/Users/test/Library/LaunchAgents/ai.littlebaby.gateway.plist",
     },
     {
       name: "uses profile-specific label when LITTLEBABY_PROFILE is set to a custom value",
       env: { HOME: "/Users/test", LITTLEBABY_PROFILE: "jbphoenix" },
-      expected: "/Users/test/Library/LaunchAgents/ai.openclaw.jbphoenix.plist",
+      expected: "/Users/test/Library/LaunchAgents/ai.littlebaby.jbphoenix.plist",
     },
     {
       name: "prefers LITTLEBABY_LAUNCHD_LABEL over LITTLEBABY_PROFILE",
@@ -871,7 +871,7 @@ describe("resolveLaunchAgentPlistPath", () => {
         LITTLEBABY_PROFILE: "myprofile",
         LITTLEBABY_LAUNCHD_LABEL: "   ",
       },
-      expected: "/Users/test/Library/LaunchAgents/ai.openclaw.myprofile.plist",
+      expected: "/Users/test/Library/LaunchAgents/ai.littlebaby.myprofile.plist",
     },
   ])("$name", ({ env, expected }) => {
     expect(resolveLaunchAgentPlistPath(env)).toBe(expected);

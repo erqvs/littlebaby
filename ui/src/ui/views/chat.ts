@@ -750,7 +750,7 @@ function renderWelcomeState(props: ChatProps): TemplateResult {
             style="width:56px; height:56px; border-radius:50%; object-fit:cover;"
           />`
         : html`<div class="agent-chat__avatar agent-chat__avatar--logo">
-            <img src=${logoUrl} alt="OpenClaw" />
+            <img src=${logoUrl} alt="LittleBaby" />
           </div>`}
       <h2>${name}</h2>
       <div class="agent-chat__badges">
@@ -1630,7 +1630,7 @@ function buildChatItems(props: ChatProps): Array<ChatItem | MessageGroup> {
     const msg = history[i];
     const normalized = normalizeMessage(msg);
     const raw = msg as Record<string, unknown>;
-    const marker = raw.__openclaw as Record<string, unknown> | undefined;
+    const marker = raw.__littlebaby as Record<string, unknown> | undefined;
     if (marker && marker.kind === "compaction") {
       items.push({
         kind: "divider",

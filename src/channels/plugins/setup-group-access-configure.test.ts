@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import { configureChannelAccessWithAllowlist } from "./setup-group-access-configure.js";
 import type { ChannelAccessPolicy } from "./setup-group-access.js";
 
@@ -13,13 +13,13 @@ function createPrompter(params: { confirm: boolean; policy?: ChannelAccessPolicy
 }
 
 async function runConfigureChannelAccess<TResolved>(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   prompter: ReturnType<typeof createPrompter>;
   label?: string;
   placeholder?: string;
-  setPolicy: (cfg: OpenClawConfig, policy: ChannelAccessPolicy) => OpenClawConfig;
-  resolveAllowlist: (params: { cfg: OpenClawConfig; entries: string[] }) => Promise<TResolved>;
-  applyAllowlist: (params: { cfg: OpenClawConfig; resolved: TResolved }) => OpenClawConfig;
+  setPolicy: (cfg: LittleBabyConfig, policy: ChannelAccessPolicy) => LittleBabyConfig;
+  resolveAllowlist: (params: { cfg: LittleBabyConfig; entries: string[] }) => Promise<TResolved>;
+  applyAllowlist: (params: { cfg: LittleBabyConfig; resolved: TResolved }) => LittleBabyConfig;
 }) {
   return await configureChannelAccessWithAllowlist({
     cfg: params.cfg,
@@ -37,11 +37,11 @@ async function runConfigureChannelAccess<TResolved>(params: {
 
 describe("configureChannelAccessWithAllowlist", () => {
   it("returns input config when user skips access configuration", async () => {
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const prompter = createPrompter({ confirm: false });
-    const setPolicy = vi.fn((next: OpenClawConfig) => next);
+    const setPolicy = vi.fn((next: LittleBabyConfig) => next);
     const resolveAllowlist = vi.fn(async () => [] as string[]);
-    const applyAllowlist = vi.fn((params: { cfg: OpenClawConfig }) => params.cfg);
+    const applyAllowlist = vi.fn((params: { cfg: LittleBabyConfig }) => params.cfg);
 
     const next = await runConfigureChannelAccess({
       cfg,
@@ -58,19 +58,19 @@ describe("configureChannelAccessWithAllowlist", () => {
   });
 
   it("applies non-allowlist policy directly", async () => {
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const prompter = createPrompter({
       confirm: true,
       policy: "open",
     });
     const setPolicy = vi.fn(
-      (next: OpenClawConfig, policy: ChannelAccessPolicy): OpenClawConfig => ({
+      (next: LittleBabyConfig, policy: ChannelAccessPolicy): LittleBabyConfig => ({
         ...next,
         channels: { discord: { groupPolicy: policy } },
       }),
     );
     const resolveAllowlist = vi.fn(async () => ["ignored"]);
-    const applyAllowlist = vi.fn((params: { cfg: OpenClawConfig }) => params.cfg);
+    const applyAllowlist = vi.fn((params: { cfg: LittleBabyConfig }) => params.cfg);
 
     const next = await runConfigureChannelAccess({
       cfg,
@@ -89,19 +89,19 @@ describe("configureChannelAccessWithAllowlist", () => {
   });
 
   it("supports allowlist policies without prompting for entries", async () => {
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const prompter = createPrompter({
       confirm: true,
       policy: "allowlist",
     });
     const setPolicy = vi.fn(
-      (next: OpenClawConfig, policy: ChannelAccessPolicy): OpenClawConfig => ({
+      (next: LittleBabyConfig, policy: ChannelAccessPolicy): LittleBabyConfig => ({
         ...next,
         channels: { twitch: { groupPolicy: policy } },
       }),
     );
     const resolveAllowlist = vi.fn(async () => ["ignored"]);
-    const applyAllowlist = vi.fn((params: { cfg: OpenClawConfig }) => params.cfg);
+    const applyAllowlist = vi.fn((params: { cfg: LittleBabyConfig }) => params.cfg);
 
     const next = await configureChannelAccessWithAllowlist({
       cfg,
@@ -123,27 +123,27 @@ describe("configureChannelAccessWithAllowlist", () => {
   });
 
   it("resolves allowlist entries and applies them after forcing allowlist policy", async () => {
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const prompter = createPrompter({
       confirm: true,
       policy: "allowlist",
       text: "#general, #support",
     });
     const calls: string[] = [];
-    const setPolicy = vi.fn((next: OpenClawConfig, policy: ChannelAccessPolicy): OpenClawConfig => {
+    const setPolicy = vi.fn((next: LittleBabyConfig, policy: ChannelAccessPolicy): LittleBabyConfig => {
       calls.push("setPolicy");
       return {
         ...next,
         channels: { slack: { groupPolicy: policy } },
       };
     });
-    const resolveAllowlist = vi.fn(async (params: { cfg: OpenClawConfig; entries: string[] }) => {
+    const resolveAllowlist = vi.fn(async (params: { cfg: LittleBabyConfig; entries: string[] }) => {
       calls.push("resolve");
       expect(params.cfg).toBe(cfg);
       expect(params.entries).toEqual(["#general", "#support"]);
       return ["C1", "C2"];
     });
-    const applyAllowlist = vi.fn((params: { cfg: OpenClawConfig; resolved: string[] }) => {
+    const applyAllowlist = vi.fn((params: { cfg: LittleBabyConfig; resolved: string[] }) => {
       calls.push("apply");
       expect(params.cfg.channels?.slack?.groupPolicy).toBe("allowlist");
       return {

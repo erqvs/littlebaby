@@ -6,7 +6,7 @@ import {
   createSandboxPruneConfig,
   createSandboxSshConfig,
 } from "../../../test/helpers/sandbox-fixtures.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import type { SandboxConfig } from "./types.js";
 
 const sshMocks = vi.hoisted(() => ({
@@ -31,7 +31,7 @@ vi.mock("./ssh.js", async () => {
 
 const { createSshSandboxBackend, sshSandboxBackendManager } = await import("./ssh-backend.js");
 
-function createConfig(): OpenClawConfig {
+function createConfig(): LittleBabyConfig {
   return {
     agents: {
       defaults: {
@@ -43,7 +43,7 @@ function createConfig(): OpenClawConfig {
           ssh: {
             target: "peter@example.com:2222",
             command: "ssh",
-            workspaceRoot: "/remote/openclaw",
+            workspaceRoot: "/remote/littlebaby",
             strictHostKeyChecking: true,
             updateHostKeys: true,
           },
@@ -56,8 +56,8 @@ function createConfig(): OpenClawConfig {
 function createSession() {
   return {
     command: "ssh",
-    configPath: path.join(os.tmpdir(), "openclaw-test-ssh-config"),
-    host: "openclaw-sandbox",
+    configPath: path.join(os.tmpdir(), "littlebaby-test-ssh-config"),
+    host: "littlebaby-sandbox",
   };
 }
 
@@ -81,7 +81,7 @@ function createBackendSandboxConfig(params?: { binds?: string[]; target?: string
     },
     ssh: {
       ...createSandboxSshConfig(
-        "/remote/openclaw",
+        "/remote/littlebaby",
         params?.target ? { target: params.target } : {},
       ),
     },
@@ -153,9 +153,9 @@ describe("ssh sandbox backend", () => {
   it("describes runtimes via the configured ssh target", async () => {
     const result = await sshSandboxBackendManager.describeRuntime({
       entry: {
-        containerName: "openclaw-ssh-worker-abcd1234",
+        containerName: "littlebaby-ssh-worker-abcd1234",
         backendId: "ssh",
-        runtimeLabel: "openclaw-ssh-worker-abcd1234",
+        runtimeLabel: "littlebaby-ssh-worker-abcd1234",
         sessionKey: "agent:worker",
         createdAtMs: 1,
         lastUsedAtMs: 1,
@@ -173,12 +173,12 @@ describe("ssh sandbox backend", () => {
     expect(sshMocks.createSshSandboxSessionFromSettings).toHaveBeenCalledWith(
       expect.objectContaining({
         target: "peter@example.com:2222",
-        workspaceRoot: "/remote/openclaw",
+        workspaceRoot: "/remote/littlebaby",
       }),
     );
     expect(sshMocks.runSshSandboxCommand).toHaveBeenCalledWith(
       expect.objectContaining({
-        remoteCommand: expect.stringContaining("/remote/openclaw/openclaw-ssh-agent-worker"),
+        remoteCommand: expect.stringContaining("/remote/littlebaby/littlebaby-ssh-agent-worker"),
       }),
     );
   });
@@ -186,9 +186,9 @@ describe("ssh sandbox backend", () => {
   it("removes runtimes by deleting the remote scope root", async () => {
     await sshSandboxBackendManager.removeRuntime({
       entry: {
-        containerName: "openclaw-ssh-worker-abcd1234",
+        containerName: "littlebaby-ssh-worker-abcd1234",
         backendId: "ssh",
-        runtimeLabel: "openclaw-ssh-worker-abcd1234",
+        runtimeLabel: "littlebaby-ssh-worker-abcd1234",
         sessionKey: "agent:worker",
         createdAtMs: 1,
         lastUsedAtMs: 1,
@@ -236,8 +236,8 @@ describe("ssh sandbox backend", () => {
         workspaceAccess: "rw",
         workspaceRoot: "~/.littlebaby/sandboxes",
         docker: {
-          image: "openclaw-sandbox:bookworm-slim",
-          containerPrefix: "openclaw-sbx-",
+          image: "littlebaby-sandbox:bookworm-slim",
+          containerPrefix: "littlebaby-sbx-",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp"],
@@ -248,14 +248,14 @@ describe("ssh sandbox backend", () => {
         ssh: {
           target: "peter@example.com:2222",
           command: "ssh",
-          workspaceRoot: "/remote/openclaw",
+          workspaceRoot: "/remote/littlebaby",
           strictHostKeyChecking: true,
           updateHostKeys: true,
         },
         browser: {
           enabled: false,
-          image: "openclaw-browser",
-          containerPrefix: "openclaw-browser-",
+          image: "littlebaby-browser",
+          containerPrefix: "littlebaby-browser-",
           network: "bridge",
           cdpPort: 9222,
           vncPort: 5900,
@@ -280,7 +280,7 @@ describe("ssh sandbox backend", () => {
     expect(execSpec.argv).toEqual(
       expect.arrayContaining(["ssh", "-F", createSession().configPath, "-T", createSession().host]),
     );
-    expect(execSpec.argv.at(-1)).toContain("/remote/openclaw/openclaw-ssh-agent-worker");
+    expect(execSpec.argv.at(-1)).toContain("/remote/littlebaby/littlebaby-ssh-agent-worker");
     expect(sshMocks.uploadDirectoryToSshTarget).toHaveBeenCalledTimes(2);
     expect(sshMocks.uploadDirectoryToSshTarget).toHaveBeenNthCalledWith(
       1,

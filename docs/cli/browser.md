@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `openclaw browser` (lifecycle, profiles, tabs, actions, state, and debugging)"
+summary: "CLI reference for `littlebaby browser` (lifecycle, profiles, tabs, actions, state, and debugging)"
 read_when:
-  - You use `openclaw browser` and want examples for common tasks
+  - You use `littlebaby browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to attach to your local signed-in Chrome via Chrome MCP
 title: "browser"
 ---
 
-# `openclaw browser`
+# `littlebaby browser`
 
-Manage OpenClaw's browser control surface and run browser actions (lifecycle, profiles, tabs, snapshots, screenshots, navigation, input, state emulation, and debugging).
+Manage LittleBaby's browser control surface and run browser actions (lifecycle, profiles, tabs, snapshots, screenshots, navigation, input, state emulation, and debugging).
 
 Related:
 
@@ -27,10 +27,10 @@ Related:
 ## Quick start (local)
 
 ```bash
-openclaw browser profiles
-openclaw browser --browser-profile openclaw start
-openclaw browser --browser-profile openclaw open https://example.com
-openclaw browser --browser-profile openclaw snapshot
+littlebaby browser profiles
+littlebaby browser --browser-profile littlebaby start
+littlebaby browser --browser-profile littlebaby open https://example.com
+littlebaby browser --browser-profile littlebaby snapshot
 ```
 
 ## Quick troubleshooting
@@ -40,9 +40,9 @@ If `start` fails with `not reachable after start`, troubleshoot CDP readiness fi
 Minimal sequence:
 
 ```bash
-openclaw browser --browser-profile openclaw start
-openclaw browser --browser-profile openclaw tabs
-openclaw browser --browser-profile openclaw open https://example.com
+littlebaby browser --browser-profile littlebaby start
+littlebaby browser --browser-profile littlebaby tabs
+littlebaby browser --browser-profile littlebaby open https://example.com
 ```
 
 Detailed guidance: [Browser troubleshooting](/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
@@ -50,24 +50,24 @@ Detailed guidance: [Browser troubleshooting](/tools/browser#cdp-startup-failure-
 ## Lifecycle
 
 ```bash
-openclaw browser status
-openclaw browser start
-openclaw browser stop
-openclaw browser --browser-profile openclaw reset-profile
+littlebaby browser status
+littlebaby browser start
+littlebaby browser stop
+littlebaby browser --browser-profile littlebaby reset-profile
 ```
 
 Notes:
 
-- For `attachOnly` and remote CDP profiles, `openclaw browser stop` closes the
+- For `attachOnly` and remote CDP profiles, `littlebaby browser stop` closes the
   active control session and clears temporary emulation overrides even when
-  OpenClaw did not launch the browser process itself.
-- For local managed profiles, `openclaw browser stop` stops the spawned browser
+  LittleBaby did not launch the browser process itself.
+- For local managed profiles, `littlebaby browser stop` stops the spawned browser
   process.
 
 ## If the command is missing
 
-If `openclaw browser` is an unknown command, check `plugins.allow` in
-`~/.littlebaby/openclaw.json`.
+If `littlebaby browser` is an unknown command, check `plugins.allow` in
+`~/.littlebaby/littlebaby.json`.
 
 When `plugins.allow` is present, the bundled browser plugin must be listed
 explicitly:
@@ -89,34 +89,34 @@ Related: [Browser tool](/tools/browser#missing-browser-command-or-tool)
 
 Profiles are named browser routing configs. In practice:
 
-- `openclaw`: launches or attaches to a dedicated OpenClaw-managed Chrome instance (isolated user data dir).
+- `littlebaby`: launches or attaches to a dedicated LittleBaby-managed Chrome instance (isolated user data dir).
 - `user`: controls your existing signed-in Chrome session via Chrome DevTools MCP.
 - custom CDP profiles: point at a local or remote CDP endpoint.
 
 ```bash
-openclaw browser profiles
-openclaw browser create-profile --name work --color "#FF5A36"
-openclaw browser create-profile --name chrome-live --driver existing-session
-openclaw browser create-profile --name remote --cdp-url https://browser-host.example.com
-openclaw browser delete-profile --name work
+littlebaby browser profiles
+littlebaby browser create-profile --name work --color "#FF5A36"
+littlebaby browser create-profile --name chrome-live --driver existing-session
+littlebaby browser create-profile --name remote --cdp-url https://browser-host.example.com
+littlebaby browser delete-profile --name work
 ```
 
 Use a specific profile:
 
 ```bash
-openclaw browser --browser-profile work tabs
+littlebaby browser --browser-profile work tabs
 ```
 
 ## Tabs
 
 ```bash
-openclaw browser tabs
-openclaw browser tab new
-openclaw browser tab select 2
-openclaw browser tab close 2
-openclaw browser open https://docs.openclaw.ai
-openclaw browser focus <targetId>
-openclaw browser close <targetId>
+littlebaby browser tabs
+littlebaby browser tab new
+littlebaby browser tab select 2
+littlebaby browser tab close 2
+littlebaby browser open https://docs.littlebaby.ai
+littlebaby browser focus <targetId>
+littlebaby browser close <targetId>
 ```
 
 ## Snapshot / screenshot / actions
@@ -124,15 +124,15 @@ openclaw browser close <targetId>
 Snapshot:
 
 ```bash
-openclaw browser snapshot
+littlebaby browser snapshot
 ```
 
 Screenshot:
 
 ```bash
-openclaw browser screenshot
-openclaw browser screenshot --full-page
-openclaw browser screenshot --ref e12
+littlebaby browser screenshot
+littlebaby browser screenshot --full-page
+littlebaby browser screenshot --ref e12
 ```
 
 Notes:
@@ -145,26 +145,26 @@ Notes:
 Navigate/click/type (ref-based UI automation):
 
 ```bash
-openclaw browser navigate https://example.com
-openclaw browser click <ref>
-openclaw browser type <ref> "hello"
-openclaw browser press Enter
-openclaw browser hover <ref>
-openclaw browser scrollintoview <ref>
-openclaw browser drag <startRef> <endRef>
-openclaw browser select <ref> OptionA OptionB
-openclaw browser fill --fields '[{"ref":"1","value":"Ada"}]'
-openclaw browser wait --text "Done"
-openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
+littlebaby browser navigate https://example.com
+littlebaby browser click <ref>
+littlebaby browser type <ref> "hello"
+littlebaby browser press Enter
+littlebaby browser hover <ref>
+littlebaby browser scrollintoview <ref>
+littlebaby browser drag <startRef> <endRef>
+littlebaby browser select <ref> OptionA OptionB
+littlebaby browser fill --fields '[{"ref":"1","value":"Ada"}]'
+littlebaby browser wait --text "Done"
+littlebaby browser evaluate --fn '(el) => el.textContent' --ref <ref>
 ```
 
 File + dialog helpers:
 
 ```bash
-openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
-openclaw browser waitfordownload
-openclaw browser download <ref> report.pdf
-openclaw browser dialog --accept
+littlebaby browser upload /tmp/littlebaby/uploads/file.pdf --ref <ref>
+littlebaby browser waitfordownload
+littlebaby browser download <ref> report.pdf
+littlebaby browser dialog --accept
 ```
 
 ## State and storage
@@ -172,40 +172,40 @@ openclaw browser dialog --accept
 Viewport + emulation:
 
 ```bash
-openclaw browser resize 1280 720
-openclaw browser set viewport 1280 720
-openclaw browser set offline on
-openclaw browser set media dark
-openclaw browser set timezone Europe/London
-openclaw browser set locale en-GB
-openclaw browser set geo 51.5074 -0.1278 --accuracy 25
-openclaw browser set device "iPhone 14"
-openclaw browser set headers '{"x-test":"1"}'
-openclaw browser set credentials myuser mypass
+littlebaby browser resize 1280 720
+littlebaby browser set viewport 1280 720
+littlebaby browser set offline on
+littlebaby browser set media dark
+littlebaby browser set timezone Europe/London
+littlebaby browser set locale en-GB
+littlebaby browser set geo 51.5074 -0.1278 --accuracy 25
+littlebaby browser set device "iPhone 14"
+littlebaby browser set headers '{"x-test":"1"}'
+littlebaby browser set credentials myuser mypass
 ```
 
 Cookies + storage:
 
 ```bash
-openclaw browser cookies
-openclaw browser cookies set session abc123 --url https://example.com
-openclaw browser cookies clear
-openclaw browser storage local get
-openclaw browser storage local set token abc123
-openclaw browser storage session clear
+littlebaby browser cookies
+littlebaby browser cookies set session abc123 --url https://example.com
+littlebaby browser cookies clear
+littlebaby browser storage local get
+littlebaby browser storage local set token abc123
+littlebaby browser storage session clear
 ```
 
 ## Debugging
 
 ```bash
-openclaw browser console --level error
-openclaw browser pdf
-openclaw browser responsebody "**/api"
-openclaw browser highlight <ref>
-openclaw browser errors --clear
-openclaw browser requests --filter api
-openclaw browser trace start
-openclaw browser trace stop --out trace.zip
+littlebaby browser console --level error
+littlebaby browser pdf
+littlebaby browser responsebody "**/api"
+littlebaby browser highlight <ref>
+littlebaby browser errors --clear
+littlebaby browser requests --filter api
+littlebaby browser trace start
+littlebaby browser trace stop --out trace.zip
 ```
 
 ## Existing Chrome via MCP
@@ -213,10 +213,10 @@ openclaw browser trace stop --out trace.zip
 Use the built-in `user` profile, or create your own `existing-session` profile:
 
 ```bash
-openclaw browser --browser-profile user tabs
-openclaw browser create-profile --name chrome-live --driver existing-session
-openclaw browser create-profile --name brave-live --driver existing-session --user-data-dir "~/Library/Application Support/BraveSoftware/Brave-Browser"
-openclaw browser --browser-profile chrome-live tabs
+littlebaby browser --browser-profile user tabs
+littlebaby browser create-profile --name chrome-live --driver existing-session
+littlebaby browser create-profile --name brave-live --driver existing-session --user-data-dir "~/Library/Application Support/BraveSoftware/Brave-Browser"
+littlebaby browser --browser-profile chrome-live tabs
 ```
 
 This path is host-only. For Docker, headless servers, Browserless, or other remote setups, use a CDP profile instead.

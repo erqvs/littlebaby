@@ -5,7 +5,7 @@ import path from "node:path";
 import { Command } from "commander";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_BUNDLED_RUNTIME_SIDECAR_PATHS } from "../../test/helpers/bundled-runtime-sidecars.js";
-import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.openclaw.js";
+import type { LittleBabyConfig, ConfigFileSnapshot } from "../config/types.littlebaby.js";
 import { writePackageDistInventory } from "../infra/package-dist-inventory.js";
 import type { UpdateRunResult } from "../infra/update-runner.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -47,9 +47,9 @@ vi.mock("../infra/update-runner.js", () => ({
   runGatewayUpdate: vi.fn(),
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
-  resolveOpenClawPackageRoot: vi.fn(),
-  resolveOpenClawPackageRootSync: vi.fn(() => process.cwd()),
+vi.mock("../infra/littlebaby-root.js", () => ({
+  resolveLittleBabyPackageRoot: vi.fn(),
+  resolveLittleBabyPackageRootSync: vi.fn(() => process.cwd()),
 }));
 
 vi.mock("../config/config.js", () => ({
@@ -139,7 +139,7 @@ vi.mock("../utils.js", async (importOriginal) => {
     isRecord: (value: unknown) =>
       typeof value === "object" && value !== null && !Array.isArray(value),
     pathExists: (...args: unknown[]) => pathExists(...args),
-    resolveConfigDir: () => "/tmp/openclaw-config",
+    resolveConfigDir: () => "/tmp/littlebaby-config",
   };
 });
 
@@ -182,7 +182,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 const { runGatewayUpdate } = await import("../infra/update-runner.js");
-const { resolveOpenClawPackageRoot } = await import("../infra/openclaw-root.js");
+const { resolveLittleBabyPackageRoot } = await import("../infra/littlebaby-root.js");
 const { readConfigFileSnapshot, replaceConfigFile } = await import("../config/config.js");
 const { checkUpdateStatus, fetchNpmPackageTargetStatus, fetchNpmTagVersion, resolveNpmChannelTag } =
   await import("../infra/update-check.js");
@@ -201,7 +201,7 @@ type UpdateCliScenario = {
 };
 
 describe("update-cli", () => {
-  const fixtureRoot = "/tmp/openclaw-update-tests";
+  const fixtureRoot = "/tmp/littlebaby-update-tests";
   let fixtureCount = 0;
 
   const createCaseDir = (prefix: string) => {
@@ -210,9 +210,9 @@ describe("update-cli", () => {
     return dir;
   };
 
-  const baseConfig = {} as OpenClawConfig;
+  const baseConfig = {} as LittleBabyConfig;
   const baseSnapshot: ConfigFileSnapshot = {
-    path: "/tmp/openclaw-config.json",
+    path: "/tmp/littlebaby-config.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -241,7 +241,7 @@ describe("update-cli", () => {
   };
 
   const mockPackageInstallStatus = (root: string) => {
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(root);
+    vi.mocked(resolveLittleBabyPackageRoot).mockResolvedValue(root);
     vi.mocked(checkUpdateStatus).mockResolvedValue({
       root,
       installKind: "package",
@@ -305,7 +305,7 @@ describe("update-cli", () => {
   };
 
   const setupNonInteractiveDowngrade = async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
     setTty(false);
     readPackageVersion.mockResolvedValue("2.0.0");
 
@@ -330,7 +330,7 @@ describe("update-cli", () => {
     gatewayUpdateImpl?: () => Promise<UpdateRunResult>;
     entrypoints?: string[];
   }) => {
-    const root = createCaseDir("openclaw-updated-root");
+    const root = createCaseDir("littlebaby-updated-root");
     const entrypoints = params?.entrypoints ?? [path.join(root, "dist", "entry.js")];
     pathExists.mockImplementation(async (candidate: string) => entrypoints.includes(candidate));
     if (params?.gatewayUpdateImpl) {
@@ -361,7 +361,7 @@ describe("update-cli", () => {
       return child;
     });
     vi.mocked(defaultRuntime.exit).mockImplementation(() => {});
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(process.cwd());
+    vi.mocked(resolveLittleBabyPackageRoot).mockResolvedValue(process.cwd());
     vi.mocked(readConfigFileSnapshot).mockResolvedValue(baseSnapshot);
     vi.mocked(fetchNpmTagVersion).mockResolvedValue({
       tag: "latest",
@@ -422,7 +422,7 @@ describe("update-cli", () => {
       pid: 4242,
       state: "running",
     });
-    prepareRestartScript.mockResolvedValue("/tmp/openclaw-restart-test.sh");
+    prepareRestartScript.mockResolvedValue("/tmp/littlebaby-restart-test.sh");
     runRestartScript.mockResolvedValue(undefined);
     inspectPortUsage.mockResolvedValue({
       port: 18789,
@@ -484,7 +484,7 @@ describe("update-cli", () => {
       gatewayUpdateImpl: async () =>
         makeOkUpdateResult({
           mode: "npm",
-          root: createCaseDir("openclaw-downgraded-root"),
+          root: createCaseDir("littlebaby-downgraded-root"),
           before: { version: "2026.4.14" },
           after: { version: "2026.4.10" },
         }),
@@ -588,7 +588,7 @@ describe("update-cli", () => {
       },
       assert: () => {
         const logs = vi.mocked(defaultRuntime.log).mock.calls.map((call) => call[0]);
-        expect(logs.join("\n")).toContain("OpenClaw update status");
+        expect(logs.join("\n")).toContain("LittleBaby update status");
       },
     },
     {
@@ -638,7 +638,7 @@ describe("update-cli", () => {
       name: "defaults to stable channel for package installs when unset",
       options: { yes: true },
       prepare: async () => {
-        const tempDir = createCaseDir("openclaw-update");
+        const tempDir = createCaseDir("littlebaby-update");
         mockPackageInstallStatus(tempDir);
       },
       expectedChannel: undefined as "stable" | undefined,
@@ -651,7 +651,7 @@ describe("update-cli", () => {
       prepare: async () => {
         vi.mocked(readConfigFileSnapshot).mockResolvedValue({
           ...baseSnapshot,
-          config: { update: { channel: "beta" } } as OpenClawConfig,
+          config: { update: { channel: "beta" } } as LittleBabyConfig,
         });
       },
       expectedChannel: "beta" as const,
@@ -684,7 +684,7 @@ describe("update-cli", () => {
       } else {
         expect(runGatewayUpdate).not.toHaveBeenCalled();
         expect(runCommandWithTimeout).toHaveBeenCalledWith(
-          ["npm", "i", "-g", "openclaw@latest", "--no-fund", "--no-audit", "--loglevel=error"],
+          ["npm", "i", "-g", "littlebaby@latest", "--no-fund", "--no-audit", "--loglevel=error"],
           expect.any(Object),
         );
       }
@@ -700,12 +700,12 @@ describe("update-cli", () => {
   );
 
   it("falls back to latest when beta tag is older than release", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
 
     mockPackageInstallStatus(tempDir);
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
-      config: { update: { channel: "beta" } } as OpenClawConfig,
+      config: { update: { channel: "beta" } } as LittleBabyConfig,
     });
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
       tag: "latest",
@@ -715,13 +715,13 @@ describe("update-cli", () => {
 
     expect(runGatewayUpdate).not.toHaveBeenCalled();
     expect(runCommandWithTimeout).toHaveBeenCalledWith(
-      ["npm", "i", "-g", "openclaw@latest", "--no-fund", "--no-audit", "--loglevel=error"],
+      ["npm", "i", "-g", "littlebaby@latest", "--no-fund", "--no-audit", "--loglevel=error"],
       expect.any(Object),
     );
   });
 
   it("blocks package updates when the target requires a newer Node runtime", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("littlebaby-update"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "latest",
       version: "2026.3.23-2",
@@ -733,14 +733,14 @@ describe("update-cli", () => {
 
     expect(runGatewayUpdate).not.toHaveBeenCalled();
     expect(runCommandWithTimeout).not.toHaveBeenCalledWith(
-      ["npm", "i", "-g", "openclaw@latest", "--no-fund", "--no-audit", "--loglevel=error"],
+      ["npm", "i", "-g", "littlebaby@latest", "--no-fund", "--no-audit", "--loglevel=error"],
       expect.any(Object),
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain("Node ");
     expect(errors.join("\n")).toContain(
-      "Bare `npm i -g openclaw` can silently install an older compatible release.",
+      "Bare `npm i -g littlebaby` can silently install an older compatible release.",
     );
   });
 
@@ -748,39 +748,39 @@ describe("update-cli", () => {
     {
       name: "explicit dist-tag",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("littlebaby-update"));
         await updateCommand({ tag: "next" });
       },
-      expectedSpec: "openclaw@next",
+      expectedSpec: "littlebaby@next",
     },
     {
       name: "main shorthand",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("littlebaby-update"));
         await updateCommand({ yes: true, tag: "main" });
       },
-      expectedSpec: "github:openclaw/openclaw#main",
+      expectedSpec: "github:littlebaby/littlebaby#main",
     },
     {
       name: "explicit git package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "github:openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("littlebaby-update"));
+        await updateCommand({ yes: true, tag: "github:littlebaby/littlebaby#main" });
       },
-      expectedSpec: "github:openclaw/openclaw#main",
+      expectedSpec: "github:littlebaby/littlebaby#main",
     },
     {
       name: "LITTLEBABY_UPDATE_PACKAGE_SPEC override",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("littlebaby-update"));
         await withEnvAsync(
-          { LITTLEBABY_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/openclaw-next.tgz" },
+          { LITTLEBABY_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/littlebaby-next.tgz" },
           async () => {
             await updateCommand({ yes: true, tag: "latest" });
           },
         );
       },
-      expectedSpec: "http://10.211.55.2:8138/openclaw-next.tgz",
+      expectedSpec: "http://10.211.55.2:8138/littlebaby-next.tgz",
     },
   ] as const)(
     "resolves package install specs from tags and env overrides: $name",
@@ -789,14 +789,14 @@ describe("update-cli", () => {
       readPackageName.mockResolvedValue("littlebaby");
       readPackageVersion.mockResolvedValue("1.0.0");
       resolveGlobalManager.mockResolvedValue("npm");
-      vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(process.cwd());
+      vi.mocked(resolveLittleBabyPackageRoot).mockResolvedValue(process.cwd());
       await run();
       expectPackageInstallSpec(expectedSpec);
     },
   );
 
   it("fails package updates when the installed correction version does not match the requested target", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
     const nodeModules = path.join(tempDir, "node_modules");
     const pkgRoot = path.join(nodeModules, "littlebaby");
     mockPackageInstallStatus(tempDir);
@@ -911,7 +911,7 @@ describe("update-cli", () => {
           isOwningNpmCommand(argv[0], brewPrefix) &&
           argv[1] === "i" &&
           argv[2] === "-g" &&
-          argv[3] === "openclaw@latest",
+          argv[3] === "littlebaby@latest",
       );
 
     expect(installCall).toBeDefined();
@@ -936,11 +936,11 @@ describe("update-cli", () => {
 
   it("prepends portable Git PATH for package updates on Windows", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    const tempDir = createCaseDir("openclaw-update");
-    const localAppData = createCaseDir("openclaw-localappdata");
+    const tempDir = createCaseDir("littlebaby-update");
+    const localAppData = createCaseDir("littlebaby-localappdata");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "LittleBaby",
       "deps",
       "portable-git",
       "mingw64",
@@ -948,7 +948,7 @@ describe("update-cli", () => {
     );
     const portableGitUsr = path.join(
       localAppData,
-      "OpenClaw",
+      "LittleBaby",
       "deps",
       "portable-git",
       "usr",
@@ -1020,7 +1020,7 @@ describe("update-cli", () => {
   ] as const)("updateCommand reports outcomes: $name", runUpdateCliScenario);
 
   it("persists the requested channel only after a successful package update", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
     mockPackageInstallStatus(tempDir);
 
     await updateCommand({ channel: "beta", yes: true });
@@ -1052,7 +1052,7 @@ describe("update-cli", () => {
   });
 
   it("does not persist the requested channel when the package update fails", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
     mockPackageInstallStatus(tempDir);
     vi.mocked(runCommandWithTimeout).mockImplementation(async (argv) => {
       if (Array.isArray(argv) && argv[0] === "npm" && argv[1] === "i" && argv[2] === "-g") {
@@ -1082,7 +1082,7 @@ describe("update-cli", () => {
   });
 
   it("keeps the requested channel when plugin sync writes config after update", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
     mockPackageInstallStatus(tempDir);
     syncPluginsForUpdateChannel.mockImplementation(async ({ config }) => ({
       changed: true,
@@ -1109,7 +1109,7 @@ describe("update-cli", () => {
   });
 
   it("skips plugin sync in the old process after switching from package to git", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("littlebaby-update");
     const completionCacheSpy = vi
       .spyOn(updateCliShared, "tryWriteCompletionCache")
       .mockResolvedValue(undefined);
@@ -1165,7 +1165,7 @@ describe("update-cli", () => {
       "Git-based updates need a clean working tree before they can switch commits, fetch, or rebase.",
     );
     expect(logs.join("\n")).toContain(
-      "Commit, stash, or discard the local changes, then rerun `openclaw update`.",
+      "Commit, stash, or discard the local changes, then rerun `littlebaby update`.",
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(0);
   });
@@ -1270,7 +1270,7 @@ describe("update-cli", () => {
         await withEnvAsync(
           {
             LITTLEBABY_STATE_DIR: "./state",
-            LITTLEBABY_CONFIG_PATH: "./config/openclaw.json",
+            LITTLEBABY_CONFIG_PATH: "./config/littlebaby.json",
           },
           async () => {
             await updateCommand({});
@@ -1282,7 +1282,7 @@ describe("update-cli", () => {
           cwd: root,
           env: expect.objectContaining({
             LITTLEBABY_STATE_DIR: path.resolve("./state"),
-            LITTLEBABY_CONFIG_PATH: path.resolve("./config/openclaw.json"),
+            LITTLEBABY_CONFIG_PATH: path.resolve("./config/littlebaby.json"),
           }),
           timeoutMs: 60_000,
         }),
@@ -1456,7 +1456,7 @@ describe("update-cli", () => {
   });
 
   it("updateWizardCommand offers dev checkout and forwards selections", async () => {
-    const tempDir = createCaseDir("openclaw-update-wizard");
+    const tempDir = createCaseDir("littlebaby-update-wizard");
     await withEnvAsync({ LITTLEBABY_GIT_DIR: tempDir }, async () => {
       setTty(true);
 
@@ -1487,7 +1487,7 @@ describe("update-cli", () => {
     });
   });
 
-  it("uses ~/openclaw as the default dev checkout directory", async () => {
+  it("uses ~/littlebaby as the default dev checkout directory", async () => {
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/tmp/oc-home");
     await withEnvAsync({ LITTLEBABY_GIT_DIR: undefined }, async () => {
       expect(resolveGitInstallDir()).toBe(path.posix.join("/tmp/oc-home", "littlebaby"));

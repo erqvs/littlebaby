@@ -16,7 +16,7 @@ import { createSecretRefGatewayConfig } from "./test-support.js";
 describe("extractConfigSummary", () => {
   it("marks SecretRef-backed gateway auth credentials as configured", () => {
     const summary = extractConfigSummary({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/littlebaby.json",
       exists: true,
       valid: true,
       issues: [],
@@ -32,7 +32,7 @@ describe("extractConfigSummary", () => {
 
   it("still treats empty plaintext auth values as not configured", () => {
     const summary = extractConfigSummary({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/littlebaby.json",
       exists: true,
       valid: true,
       issues: [],

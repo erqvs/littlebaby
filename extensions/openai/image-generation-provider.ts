@@ -1,12 +1,12 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { ImageGenerationProvider } from "openclaw/plugin-sdk/image-generation";
-import { isProviderApiKeyConfigured } from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { ImageGenerationProvider } from "littlebaby/plugin-sdk/image-generation";
+import { isProviderApiKeyConfigured } from "littlebaby/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "littlebaby/plugin-sdk/provider-auth-runtime";
 import {
   assertOkOrThrowHttpError,
   postJsonRequest,
   resolveProviderHttpRequestConfig,
-} from "openclaw/plugin-sdk/provider-http";
+} from "littlebaby/plugin-sdk/provider-http";
 import { OPENAI_DEFAULT_IMAGE_MODEL as DEFAULT_OPENAI_IMAGE_MODEL } from "./default-models.js";
 import { resolveConfiguredOpenAIBaseUrl, toOpenAIDataUrl } from "./shared.js";
 
@@ -19,7 +19,7 @@ const MOCK_OPENAI_PROVIDER_ID = "mock-openai";
 
 function shouldAllowPrivateImageEndpoint(req: {
   provider: string;
-  cfg: OpenClawConfig | undefined;
+  cfg: LittleBabyConfig | undefined;
 }) {
   if (req.provider === MOCK_OPENAI_PROVIDER_ID) {
     return true;

@@ -2,7 +2,7 @@
 // Runs after install to keep packaged dist safe and compatible.
 // Bundled extension runtime dependencies are extension-owned. Do not install
 // every bundled extension dependency during core package install unless the
-// legacy eager-install escape hatch is explicitly enabled; `openclaw doctor
+// legacy eager-install escape hatch is explicitly enabled; `littlebaby doctor
 // --fix` owns the repair path for extensions that are actually used.
 import { spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
@@ -39,13 +39,13 @@ const LEGACY_UPDATE_COMPAT_SIDECARS = [
     path: "dist/extensions/qa-channel/runtime-api.js",
     removedPrefix: "dist/extensions/qa-channel/",
     content:
-      "// Compatibility stub for older OpenClaw updaters. The QA channel implementation is not packaged.\nexport {};\n",
+      "// Compatibility stub for older LittleBaby updaters. The QA channel implementation is not packaged.\nexport {};\n",
   },
   {
     path: "dist/extensions/qa-lab/runtime-api.js",
     removedPrefix: "dist/extensions/qa-lab/",
     content:
-      "// Compatibility stub for older OpenClaw updaters. The QA lab implementation is not packaged.\nexport {};\n",
+      "// Compatibility stub for older LittleBaby updaters. The QA lab implementation is not packaged.\nexport {};\n",
   },
 ];
 const BAILEYS_MEDIA_FILE = join(
@@ -485,7 +485,7 @@ export function applyBaileysEncryptedStreamFinishHotfix(params = {}) {
     ((unsafeTargetPath) =>
       join(
         dirname(unsafeTargetPath),
-        `.${basename(unsafeTargetPath)}.openclaw-hotfix-${randomUUID()}`,
+        `.${basename(unsafeTargetPath)}.littlebaby-hotfix-${randomUUID()}`,
       ));
   const writeFile =
     params.writeFileSync ?? ((filePath, value) => writeFileSync(filePath, value, "utf8"));

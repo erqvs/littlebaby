@@ -1,15 +1,15 @@
 import { join } from "node:path";
 import { loadConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { augmentModelCatalogWithProviderPlugins } from "../plugins/provider-runtime.runtime.js";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "../shared/string-coerce.js";
-import { resolveOpenClawAgentDir } from "./agent-paths.js";
+import { resolveLittleBabyAgentDir } from "./agent-paths.js";
 import type { ModelCatalogEntry, ModelInputType } from "./model-catalog.types.js";
-import { ensureOpenClawModelsJson } from "./models-config.js";
+import { ensureLittleBabyModelsJson } from "./models-config.js";
 import { normalizeProviderId } from "./provider-id.js";
 
 const log = createSubsystemLogger("model-catalog");
@@ -75,7 +75,7 @@ function instantiatePiModelRegistry(
 }
 
 export async function loadModelCatalog(params?: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   useCache?: boolean;
 }): Promise<ModelCatalogEntry[]> {
   if (params?.useCache === false) {
@@ -106,7 +106,7 @@ export async function loadModelCatalog(params?: {
       });
     try {
       const cfg = params?.config ?? loadConfig();
-      await ensureOpenClawModelsJson(cfg);
+      await ensureLittleBabyModelsJson(cfg);
       logStage("models-json-ready");
       // IMPORTANT: keep the dynamic import *inside* the try/catch.
       // If this fails once (e.g. during a pnpm install that temporarily swaps node_modules),
@@ -114,7 +114,7 @@ export async function loadModelCatalog(params?: {
       // will keep failing until restart).
       const piSdk = await importPiSdk();
       logStage("pi-sdk-imported");
-      const agentDir = resolveOpenClawAgentDir();
+      const agentDir = resolveLittleBabyAgentDir();
       const { shouldSuppressBuiltInModel } = await loadModelSuppression();
       logStage("catalog-deps-ready");
       const authStorage = piSdk.discoverAuthStorage(agentDir);

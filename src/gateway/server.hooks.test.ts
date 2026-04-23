@@ -214,7 +214,7 @@ describe("gateway server hooks", () => {
         port,
         "/hooks/wake",
         { text: "Header auth" },
-        { token: null, headers: { "x-openclaw-token": HOOK_TOKEN } },
+        { token: null, headers: { "x-littlebaby-token": HOOK_TOKEN } },
       );
       expect(resHeader.status).toBe(200);
       const headerEvents = await waitForSystemEvent();

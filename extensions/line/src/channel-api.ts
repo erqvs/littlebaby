@@ -1,7 +1,7 @@
-export { clearAccountEntryFields } from "openclaw/plugin-sdk/core";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/account-resolution";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+export { clearAccountEntryFields } from "littlebaby/plugin-sdk/core";
+import { DEFAULT_ACCOUNT_ID } from "littlebaby/plugin-sdk/account-id";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/account-resolution";
+import type { ChannelPlugin } from "littlebaby/plugin-sdk/core";
 import {
   listLineAccountIds,
   normalizeAccountId,
@@ -20,4 +20,4 @@ export {
   resolveLineAccount,
 };
 
-export type { ChannelPlugin, LineConfig, OpenClawConfig, ResolvedLineAccount };
+export type { ChannelPlugin, LineConfig, LittleBabyConfig, ResolvedLineAccount };

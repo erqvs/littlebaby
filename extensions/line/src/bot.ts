@@ -1,13 +1,13 @@
 import type { webhook } from "@line/bot-sdk";
 import type { NextFunction, Request, Response } from "express";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { loadConfig } from "openclaw/plugin-sdk/config-runtime";
-import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "openclaw/plugin-sdk/reply-history";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { loadConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "littlebaby/plugin-sdk/reply-history";
 import {
   createNonExitingRuntime,
   logVerbose,
   type RuntimeEnv,
-} from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/runtime-env";
 import { resolveLineAccount } from "./accounts.js";
 import { createLineWebhookReplayCache, handleLineWebhookEvents } from "./bot-handlers.js";
 import type { LineInboundContext } from "./bot-message-context.js";
@@ -19,7 +19,7 @@ export interface LineBotOptions {
   channelSecret: string;
   accountId?: string;
   runtime?: RuntimeEnv;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   mediaMaxMb?: number;
   onMessage?: (ctx: LineInboundContext) => Promise<void>;
 }

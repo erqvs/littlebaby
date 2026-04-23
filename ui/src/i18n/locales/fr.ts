@@ -180,7 +180,7 @@ export const fr: TranslationMap = {
     skills: "Skills et clés API.",
     nodes: "Appareils appairés et commandes.",
     chat: "Chat Gateway pour les interventions rapides.",
-    config: "Modifier openclaw.json.",
+    config: "Modifier littlebaby.json.",
     communications: "Canaux, messages et paramètres audio.",
     appearance: "Thème, UI et paramètres de l’assistant de configuration.",
     automation: "Commandes, hooks, cron et plugins.",
@@ -255,7 +255,7 @@ export const fr: TranslationMap = {
       metadataUpgradeSummary:
         "Cet appareil est déjà appairé, mais la modification des métadonnées est en attente d’approbation.",
       mobileHint:
-        "Sur mobile ? Copiez l’URL complète (y compris #token=...) depuis openclaw dashboard --no-open sur votre ordinateur.",
+        "Sur mobile ? Copiez l’URL complète (y compris #token=...) depuis littlebaby dashboard --no-open sur votre ordinateur.",
       docsTitle: "Documentation sur l’appairage des appareils (s’ouvre dans un nouvel onglet)",
       docsLink: "Documentation : Appairage des appareils",
     },
@@ -293,7 +293,7 @@ export const fr: TranslationMap = {
       modelAuthExpiresIn: "expire {when}",
       modelAuthAttentionExpiredTitle: "Authentification des modèles expirée",
       modelAuthAttentionExpiringTitle: "L'authentification des modèles expire bientôt",
-      modelAuthAttentionExpiredDesc: "{providers} — réauthentifiez-vous avec openclaw models auth",
+      modelAuthAttentionExpiredDesc: "{providers} — réauthentifiez-vous avec littlebaby models auth",
       modelAuthAttentionExpiringEntry: "{provider} ({when})",
     },
     attention: {

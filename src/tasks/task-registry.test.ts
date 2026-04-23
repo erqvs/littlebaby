@@ -162,7 +162,7 @@ async function flushAsyncWork(times = 4) {
 }
 
 async function withTaskRegistryTempDir<T>(run: (root: string) => Promise<T>): Promise<T> {
-  return await withTempDir({ prefix: "openclaw-task-registry-" }, async (root) => {
+  return await withTempDir({ prefix: "littlebaby-task-registry-" }, async (root) => {
     process.env.LITTLEBABY_STATE_DIR = root;
     resetTaskRegistryForTests();
     resetTaskFlowRegistryForTests();

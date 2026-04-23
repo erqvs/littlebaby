@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../runtime-api.js";
+import type { LittleBabyConfig } from "../runtime-api.js";
 import { createFeishuCardInteractionEnvelope } from "./card-interaction.js";
 import { feishuPlugin } from "./channel.js";
 import { looksLikeFeishuId, normalizeFeishuTarget, resolveReceiveIdType } from "./targets.js";
@@ -61,7 +61,7 @@ vi.mock("../../../src/channels/plugins/bundled.js", () => ({
   bundledChannelSetupPlugins: [],
 }));
 
-function getDescribedActions(cfg: OpenClawConfig, accountId?: string): string[] {
+function getDescribedActions(cfg: LittleBabyConfig, accountId?: string): string[] {
   return [...(feishuPlugin.actions?.describeMessageTool?.({ cfg, accountId })?.actions ?? [])];
 }
 
@@ -85,7 +85,7 @@ function createLegacyFeishuButtonCard(value: { command?: string; text?: string }
   };
 }
 
-async function expectLegacyFeishuCardPayloadRejected(cfg: OpenClawConfig, card: unknown) {
+async function expectLegacyFeishuCardPayloadRejected(cfg: LittleBabyConfig, card: unknown) {
   await expect(
     feishuPlugin.actions?.handleAction?.({
       action: "send",
@@ -115,7 +115,7 @@ describe("feishuPlugin.status.probeAccount", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     const account = feishuPlugin.config.resolveAccount(cfg, "main");
     probeFeishuMock.mockResolvedValueOnce({ ok: true, appId: "cli_main" });
@@ -157,7 +157,7 @@ describe("feishuPlugin.pairing.notifyApproval", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     await feishuPlugin.pairing?.notifyApproval?.({
       cfg,
@@ -222,7 +222,7 @@ describe("feishuPlugin actions", () => {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -258,7 +258,7 @@ describe("feishuPlugin actions", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     expect(getDescribedActions(disabledCfg)).toEqual([
       "send",
@@ -296,7 +296,7 @@ describe("feishuPlugin actions", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     expect(getDescribedActions(cfg, "default")).toEqual([
       "send",

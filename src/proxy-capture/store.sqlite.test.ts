@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 function makeStore() {
-  const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-proxy-capture-"));
+  const root = mkdtempSync(path.join(os.tmpdir(), "littlebaby-proxy-capture-"));
   cleanupDirs.push(root);
   return new DebugProxyCaptureStore(path.join(root, "capture.sqlite"), path.join(root, "blobs"));
 }

@@ -7,7 +7,7 @@ IMAGE_NAME="littlebaby-gateway-network-e2e"
 
 PORT="18789"
 TOKEN="e2e-$(date +%s)-$$"
-NET_NAME="openclaw-net-e2e-$$"
+NET_NAME="littlebaby-net-e2e-$$"
 GW_NAME="littlebaby-gateway-e2e-$$"
 
 cleanup() {

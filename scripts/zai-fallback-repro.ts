@@ -76,9 +76,9 @@ async function main() {
     process.exit(1);
   }
 
-  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-zai-fallback-"));
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-zai-fallback-"));
   const stateDir = path.join(baseDir, "state");
-  const configPath = path.join(baseDir, "openclaw.json");
+  const configPath = path.join(baseDir, "littlebaby.json");
   await fs.mkdir(stateDir, { recursive: true });
 
   const config = {

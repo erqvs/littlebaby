@@ -12,7 +12,7 @@ import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
-import { resolveOpenClawAgentDir } from "../src/agents/agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../src/agents/agent-paths.js";
 import { ensureAuthProfileStore, type AuthProfileCredential } from "../src/agents/auth-profiles.js";
 import { normalizeProviderId } from "../src/agents/model-selection.js";
 import { validateAnthropicSetupToken } from "../src/commands/auth-token.js";
@@ -185,7 +185,7 @@ function resolveSetupTokenSource(): TokenSource {
     };
   }
 
-  const agentDir = resolveOpenClawAgentDir();
+  const agentDir = resolveLittleBabyAgentDir();
   const store = ensureAuthProfileStore(agentDir, {
     allowKeychainPrompt: false,
   });
@@ -365,7 +365,7 @@ async function getFreePort(): Promise<number> {
 }
 
 async function runDirectPrompt(prompt: string): Promise<PromptResult> {
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-direct-prompt-probe-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-direct-prompt-probe-"));
   const proxyPort = ENABLE_CAPTURE ? await getFreePort() : undefined;
   const proxy =
     ENABLE_CAPTURE && proxyPort
@@ -494,7 +494,7 @@ async function runGatewayPrompt(prompt: string): Promise<PromptResult> {
   const stateDir = path.join(tmpDir, "state");
   const agentDir = path.join(stateDir, "agents", "main", "agent");
   const bundledPluginsDir = path.join(tmpDir, "bundled-plugins-empty");
-  const configPath = path.join(tmpDir, "openclaw.json");
+  const configPath = path.join(tmpDir, "littlebaby.json");
   const logPath = path.join(tmpDir, "gateway.log");
   const gatewayToken = `gw-${randomUUID()}`;
   const port = await getFreePort();

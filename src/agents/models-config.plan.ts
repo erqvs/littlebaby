@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { isRecord } from "../utils.js";
 import {
   mergeProviders,
@@ -13,10 +13,10 @@ import {
   type ProviderConfig,
 } from "./models-config.providers.js";
 
-type ModelsConfig = NonNullable<OpenClawConfig["models"]>;
+type ModelsConfig = NonNullable<LittleBabyConfig["models"]>;
 export type ResolveImplicitProvidersForModelsJson = (params: {
   agentDir: string;
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
   explicitProviders: Record<string, ProviderConfig>;
 }) => Promise<Record<string, ProviderConfig>>;
@@ -35,7 +35,7 @@ export type ModelsJsonPlan =
 
 export async function resolveProvidersForModelsJsonWithDeps(
   params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     agentDir: string;
     env: NodeJS.ProcessEnv;
   },
@@ -82,10 +82,10 @@ function resolveProvidersForMode(params: {
   });
 }
 
-export async function planOpenClawModelsJsonWithDeps(
+export async function planLittleBabyModelsJsonWithDeps(
   params: {
-    cfg: OpenClawConfig;
-    sourceConfigForSecrets?: OpenClawConfig;
+    cfg: LittleBabyConfig;
+    sourceConfigForSecrets?: LittleBabyConfig;
     agentDir: string;
     env: NodeJS.ProcessEnv;
     existingRaw: string;
@@ -140,8 +140,8 @@ export async function planOpenClawModelsJsonWithDeps(
   };
 }
 
-export async function planOpenClawModelsJson(
-  params: Parameters<typeof planOpenClawModelsJsonWithDeps>[0],
+export async function planLittleBabyModelsJson(
+  params: Parameters<typeof planLittleBabyModelsJsonWithDeps>[0],
 ): Promise<ModelsJsonPlan> {
-  return planOpenClawModelsJsonWithDeps(params);
+  return planLittleBabyModelsJsonWithDeps(params);
 }

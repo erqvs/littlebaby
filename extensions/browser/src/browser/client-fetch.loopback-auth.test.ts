@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { BrowserDispatchResponse } from "./routes/dispatcher.js";
 
-vi.mock("openclaw/plugin-sdk/browser-security-runtime", async () => {
+vi.mock("littlebaby/plugin-sdk/browser-security-runtime", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/browser-security-runtime")
-  >("openclaw/plugin-sdk/browser-security-runtime");
+    typeof import("littlebaby/plugin-sdk/browser-security-runtime")
+  >("littlebaby/plugin-sdk/browser-security-runtime");
   const lookupFn = async (_hostname: string, options?: { all?: boolean }) => {
     const result = { address: "93.184.216.34", family: 4 };
     return options?.all === true ? [result] : result;
@@ -16,9 +16,9 @@ vi.mock("openclaw/plugin-sdk/browser-security-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/ssrf-runtime")>(
-    "openclaw/plugin-sdk/ssrf-runtime",
+vi.mock("littlebaby/plugin-sdk/ssrf-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/ssrf-runtime")>(
+    "littlebaby/plugin-sdk/ssrf-runtime",
   );
   return {
     ...actual,
@@ -216,7 +216,7 @@ describe("fetchBrowserJson loopback auth", () => {
 
     await expectThrownBrowserFetchError(() => fetchBrowserJson<{ ok: boolean }>("/tabs"), {
       contains: ["Chrome CDP handshake timeout", "Do NOT retry the browser tool"],
-      omits: ["Can't reach the OpenClaw browser control service"],
+      omits: ["Can't reach the LittleBaby browser control service"],
     });
   });
 
@@ -308,7 +308,7 @@ describe("fetchBrowserJson loopback auth", () => {
       () => fetchBrowserJson<{ ok: boolean }>("http://example.com/"),
       {
         contains: [
-          "Can't reach the OpenClaw browser control service",
+          "Can't reach the LittleBaby browser control service",
           "Do NOT retry the browser tool",
         ],
       },

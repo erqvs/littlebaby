@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/core";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import type { LittleBabyPluginApi } from "littlebaby/plugin-sdk/core";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 
 interface RemindParams {
   action: "add" | "list" | "remove";
@@ -183,7 +183,7 @@ function formatDelay(ms: number): string {
   return `${hours}h${minutes}m`;
 }
 
-export function registerRemindTool(api: OpenClawPluginApi): void {
+export function registerRemindTool(api: LittleBabyPluginApi): void {
   api.registerTool(
     {
       name: "qqbot_remind",

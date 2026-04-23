@@ -4,7 +4,7 @@ import path from "node:path";
 import { resolveBrewPathDirs } from "./brew.js";
 import { isTruthyEnvValue } from "./env.js";
 
-type EnsureOpenClawPathOpts = {
+type EnsureLittleBabyPathOpts = {
   execPath?: string;
   cwd?: string;
   homeDir?: string;
@@ -49,7 +49,7 @@ function mergePath(params: { existing: string; prepend?: string[]; append?: stri
   return merged.join(path.delimiter);
 }
 
-function candidateBinDirs(opts: EnsureOpenClawPathOpts): { prepend: string[]; append: string[] } {
+function candidateBinDirs(opts: EnsureLittleBabyPathOpts): { prepend: string[]; append: string[] } {
   const execPath = opts.execPath ?? process.execPath;
   const cwd = opts.cwd ?? process.cwd();
   const homeDir = opts.homeDir ?? os.homedir();
@@ -59,7 +59,7 @@ function candidateBinDirs(opts: EnsureOpenClawPathOpts): { prepend: string[]; ap
   const append: string[] = [];
 
   // Keep the active runtime directory ahead of PATH hardening so shebang-based
-  // subprocesses keep using the same Node/Bun the current OpenClaw process is on.
+  // subprocesses keep using the same Node/Bun the current LittleBaby process is on.
   try {
     const execDir = path.dirname(execPath);
     if (isExecutable(execPath)) {
@@ -69,7 +69,7 @@ function candidateBinDirs(opts: EnsureOpenClawPathOpts): { prepend: string[]; ap
     // ignore
   }
 
-  // Bundled macOS app: `openclaw` lives next to the executable (process.execPath).
+  // Bundled macOS app: `littlebaby` lives next to the executable (process.execPath).
   try {
     const execDir = path.dirname(execPath);
     const siblingCli = path.join(execDir, "littlebaby");
@@ -98,7 +98,7 @@ function candidateBinDirs(opts: EnsureOpenClawPathOpts): { prepend: string[]; ap
 
   // User-writable / package-manager directories are appended so they never
   // shadow trusted OS binaries.
-  // This includes Brew/Homebrew dirs, which are useful for finding `openclaw`
+  // This includes Brew/Homebrew dirs, which are useful for finding `littlebaby`
   // in launchd/minimal environments but must not be treated as trusted.
   append.push(...resolveBrewPathDirs({ homeDir }));
   const miseDataDir = process.env.MISE_DATA_DIR ?? path.join(homeDir, ".local", "share", "mise");
@@ -121,10 +121,10 @@ function candidateBinDirs(opts: EnsureOpenClawPathOpts): { prepend: string[]; ap
 }
 
 /**
- * Best-effort PATH bootstrap so skills that require the `openclaw` CLI can run
+ * Best-effort PATH bootstrap so skills that require the `littlebaby` CLI can run
  * under launchd/minimal environments (and inside the macOS app bundle).
  */
-export function ensureOpenClawCliOnPath(opts: EnsureOpenClawPathOpts = {}) {
+export function ensureLittleBabyCliOnPath(opts: EnsureLittleBabyPathOpts = {}) {
   if (isTruthyEnvValue(process.env.LITTLEBABY_PATH_BOOTSTRAPPED)) {
     return;
   }

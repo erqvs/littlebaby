@@ -7,10 +7,10 @@ import {
 } from "../../config/sessions/reset-policy.js";
 import { loadSessionStore } from "../../config/sessions/store-load.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 
 export function resolveCronSession(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   sessionKey: string;
   nowMs: number;
   agentId: string;

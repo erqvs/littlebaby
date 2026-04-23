@@ -91,7 +91,7 @@ describe("openshell backend manager", () => {
     vi.clearAllMocks();
   });
 
-  it("checks runtime status with config override from OpenClaw config", async () => {
+  it("checks runtime status with config override from LittleBaby config", async () => {
     cliMocks.runOpenShellCli.mockResolvedValue({
       code: 0,
       stdout: "{}",
@@ -107,9 +107,9 @@ describe("openshell backend manager", () => {
 
     const result = await manager.describeRuntime({
       entry: {
-        containerName: "openclaw-session-1234",
+        containerName: "littlebaby-session-1234",
         backendId: "openshell",
-        runtimeLabel: "openclaw-session-1234",
+        runtimeLabel: "littlebaby-session-1234",
         sessionKey: "agent:main",
         createdAtMs: 1,
         lastUsedAtMs: 1,
@@ -138,12 +138,12 @@ describe("openshell backend manager", () => {
     });
     expect(cliMocks.runOpenShellCli).toHaveBeenCalledWith({
       context: expect.objectContaining({
-        sandboxName: "openclaw-session-1234",
+        sandboxName: "littlebaby-session-1234",
         config: expect.objectContaining({
           from: "custom-source",
         }),
       }),
-      args: ["sandbox", "get", "openclaw-session-1234"],
+      args: ["sandbox", "get", "littlebaby-session-1234"],
     });
   });
 
@@ -163,9 +163,9 @@ describe("openshell backend manager", () => {
 
     await manager.removeRuntime({
       entry: {
-        containerName: "openclaw-session-5678",
+        containerName: "littlebaby-session-5678",
         backendId: "openshell",
-        runtimeLabel: "openclaw-session-5678",
+        runtimeLabel: "littlebaby-session-5678",
         sessionKey: "agent:main",
         createdAtMs: 1,
         lastUsedAtMs: 1,
@@ -177,13 +177,13 @@ describe("openshell backend manager", () => {
 
     expect(cliMocks.runOpenShellCli).toHaveBeenCalledWith({
       context: expect.objectContaining({
-        sandboxName: "openclaw-session-5678",
+        sandboxName: "littlebaby-session-5678",
         config: expect.objectContaining({
           command: "/usr/local/bin/openshell",
           gateway: "lab",
         }),
       }),
-      args: ["sandbox", "delete", "openclaw-session-5678"],
+      args: ["sandbox", "delete", "littlebaby-session-5678"],
     });
   });
 });
@@ -222,7 +222,7 @@ function createMirrorBackendMock(): OpenShellSandboxBackend {
 
 describe("openshell fs bridges", () => {
   it("writes locally and syncs the file to the remote workspace", async () => {
-    const workspaceDir = await makeTempDir("openclaw-openshell-fs-");
+    const workspaceDir = await makeTempDir("littlebaby-openshell-fs-");
     const backend = createMirrorBackendMock();
     const sandbox = createSandboxTestContext({
       overrides: {
@@ -249,8 +249,8 @@ describe("openshell fs bridges", () => {
   });
 
   it("maps agent mount paths when the sandbox workspace is read-only", async () => {
-    const workspaceDir = await makeTempDir("openclaw-openshell-fs-");
-    const agentWorkspaceDir = await makeTempDir("openclaw-openshell-agent-");
+    const workspaceDir = await makeTempDir("littlebaby-openshell-fs-");
+    const agentWorkspaceDir = await makeTempDir("littlebaby-openshell-agent-");
     await fs.writeFile(path.join(agentWorkspaceDir, "note.txt"), "agent", "utf8");
     const backend = createMirrorBackendMock();
     const sandbox = createSandboxTestContext({

@@ -21,7 +21,7 @@ vi.mock("./logger.js", () => ({
 
 let loadConfigCalls = 0;
 let originalIsTty: boolean | undefined;
-let originalOpenClawTestConsole: string | undefined;
+let originalLittleBabyTestConsole: string | undefined;
 let snapshot: ConsoleSnapshot;
 let logging: typeof import("../logging.js");
 let state: typeof import("./state.js");
@@ -37,7 +37,7 @@ beforeEach(() => {
   shouldSkipMutatingLoggingConfigReadMock.mockReturnValue(false);
   snapshot = captureConsoleSnapshot();
   originalIsTty = process.stdout.isTTY;
-  originalOpenClawTestConsole = process.env.LITTLEBABY_TEST_CONSOLE;
+  originalLittleBabyTestConsole = process.env.LITTLEBABY_TEST_CONSOLE;
   process.env.LITTLEBABY_TEST_CONSOLE = "1";
   Object.defineProperty(process.stdout, "isTTY", { value: false, configurable: true });
 });
@@ -49,10 +49,10 @@ afterEach(() => {
   console.error = snapshot.error;
   console.debug = snapshot.debug;
   console.trace = snapshot.trace;
-  if (originalOpenClawTestConsole === undefined) {
+  if (originalLittleBabyTestConsole === undefined) {
     delete process.env.LITTLEBABY_TEST_CONSOLE;
   } else {
-    process.env.LITTLEBABY_TEST_CONSOLE = originalOpenClawTestConsole;
+    process.env.LITTLEBABY_TEST_CONSOLE = originalLittleBabyTestConsole;
   }
   Object.defineProperty(process.stdout, "isTTY", { value: originalIsTty, configurable: true });
   logging.setConsoleConfigLoaderForTests();

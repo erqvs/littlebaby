@@ -1,5 +1,5 @@
-import type { TelegramGroupConfig } from "openclaw/plugin-sdk/config-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+import type { TelegramGroupConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 export type {
   AuditTelegramGroupMembershipParams,
   TelegramGroupMembershipAudit,

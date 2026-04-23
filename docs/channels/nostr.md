@@ -1,7 +1,7 @@
 ---
 summary: "Nostr DM channel via NIP-04 encrypted messages"
 read_when:
-  - You want OpenClaw to receive DMs via Nostr
+  - You want LittleBaby to receive DMs via Nostr
   - You're setting up decentralized messaging
 title: "Nostr"
 ---
@@ -10,27 +10,27 @@ title: "Nostr"
 
 **Status:** Optional bundled plugin (disabled by default until configured).
 
-Nostr is a decentralized protocol for social networking. This channel enables OpenClaw to receive and respond to encrypted direct messages (DMs) via NIP-04.
+Nostr is a decentralized protocol for social networking. This channel enables LittleBaby to receive and respond to encrypted direct messages (DMs) via NIP-04.
 
 ## Bundled plugin
 
-Current OpenClaw releases ship Nostr as a bundled plugin, so normal packaged
+Current LittleBaby releases ship Nostr as a bundled plugin, so normal packaged
 builds do not need a separate install.
 
 ### Older/custom installs
 
-- Onboarding (`openclaw onboard`) and `openclaw channels add` still surface
+- Onboarding (`littlebaby onboard`) and `littlebaby channels add` still surface
   Nostr from the shared channel catalog.
 - If your build excludes bundled Nostr, install it manually.
 
 ```bash
-openclaw plugins install @openclaw/nostr
+littlebaby plugins install @littlebaby/nostr
 ```
 
 Use a local checkout (dev workflows):
 
 ```bash
-openclaw plugins install --link <path-to-local-nostr-plugin>
+littlebaby plugins install --link <path-to-local-nostr-plugin>
 ```
 
 Restart the Gateway after installing or enabling plugins.
@@ -38,8 +38,8 @@ Restart the Gateway after installing or enabling plugins.
 ### Non-interactive setup
 
 ```bash
-openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
-openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY" --relay-urls "wss://relay.damus.io,wss://relay.primal.net"
+littlebaby channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
+littlebaby channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY" --relay-urls "wss://relay.damus.io,wss://relay.primal.net"
 ```
 
 Use `--use-env` to keep `NOSTR_PRIVATE_KEY` in the environment instead of storing the key in config.
@@ -98,13 +98,13 @@ Example:
       privateKey: "${NOSTR_PRIVATE_KEY}",
       profile: {
         name: "littlebaby",
-        displayName: "OpenClaw",
+        displayName: "LittleBaby",
         about: "Personal assistant DM bot",
         picture: "https://example.com/avatar.png",
         banner: "https://example.com/banner.png",
         website: "https://example.com",
-        nip05: "openclaw@example.com",
-        lud16: "openclaw@example.com",
+        nip05: "littlebaby@example.com",
+        lud16: "littlebaby@example.com",
       },
     },
   },

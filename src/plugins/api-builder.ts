@@ -1,6 +1,6 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import type { PluginRuntime } from "./runtime/types.js";
-import type { OpenClawPluginApi, PluginLogger } from "./types.js";
+import type { LittleBabyPluginApi, PluginLogger } from "./types.js";
 
 export type BuildPluginApiParams = {
   id: string;
@@ -9,15 +9,15 @@ export type BuildPluginApiParams = {
   description?: string;
   source: string;
   rootDir?: string;
-  registrationMode: OpenClawPluginApi["registrationMode"];
-  config: OpenClawConfig;
+  registrationMode: LittleBabyPluginApi["registrationMode"];
+  config: LittleBabyConfig;
   pluginConfig?: Record<string, unknown>;
   runtime: PluginRuntime;
   logger: PluginLogger;
   resolvePath: (input: string) => string;
   handlers?: Partial<
     Pick<
-      OpenClawPluginApi,
+      LittleBabyPluginApi,
       | "registerTool"
       | "registerHook"
       | "registerHttpRoute"
@@ -61,58 +61,58 @@ export type BuildPluginApiParams = {
   >;
 };
 
-const noopRegisterTool: OpenClawPluginApi["registerTool"] = () => {};
-const noopRegisterHook: OpenClawPluginApi["registerHook"] = () => {};
-const noopRegisterHttpRoute: OpenClawPluginApi["registerHttpRoute"] = () => {};
-const noopRegisterChannel: OpenClawPluginApi["registerChannel"] = () => {};
-const noopRegisterGatewayMethod: OpenClawPluginApi["registerGatewayMethod"] = () => {};
-const noopRegisterCli: OpenClawPluginApi["registerCli"] = () => {};
-const noopRegisterReload: OpenClawPluginApi["registerReload"] = () => {};
-const noopRegisterNodeHostCommand: OpenClawPluginApi["registerNodeHostCommand"] = () => {};
-const noopRegisterSecurityAuditCollector: OpenClawPluginApi["registerSecurityAuditCollector"] =
+const noopRegisterTool: LittleBabyPluginApi["registerTool"] = () => {};
+const noopRegisterHook: LittleBabyPluginApi["registerHook"] = () => {};
+const noopRegisterHttpRoute: LittleBabyPluginApi["registerHttpRoute"] = () => {};
+const noopRegisterChannel: LittleBabyPluginApi["registerChannel"] = () => {};
+const noopRegisterGatewayMethod: LittleBabyPluginApi["registerGatewayMethod"] = () => {};
+const noopRegisterCli: LittleBabyPluginApi["registerCli"] = () => {};
+const noopRegisterReload: LittleBabyPluginApi["registerReload"] = () => {};
+const noopRegisterNodeHostCommand: LittleBabyPluginApi["registerNodeHostCommand"] = () => {};
+const noopRegisterSecurityAuditCollector: LittleBabyPluginApi["registerSecurityAuditCollector"] =
   () => {};
-const noopRegisterService: OpenClawPluginApi["registerService"] = () => {};
-const noopRegisterCliBackend: OpenClawPluginApi["registerCliBackend"] = () => {};
-const noopRegisterTextTransforms: OpenClawPluginApi["registerTextTransforms"] = () => {};
-const noopRegisterConfigMigration: OpenClawPluginApi["registerConfigMigration"] = () => {};
-const noopRegisterAutoEnableProbe: OpenClawPluginApi["registerAutoEnableProbe"] = () => {};
-const noopRegisterProvider: OpenClawPluginApi["registerProvider"] = () => {};
-const noopRegisterSpeechProvider: OpenClawPluginApi["registerSpeechProvider"] = () => {};
-const noopRegisterRealtimeTranscriptionProvider: OpenClawPluginApi["registerRealtimeTranscriptionProvider"] =
+const noopRegisterService: LittleBabyPluginApi["registerService"] = () => {};
+const noopRegisterCliBackend: LittleBabyPluginApi["registerCliBackend"] = () => {};
+const noopRegisterTextTransforms: LittleBabyPluginApi["registerTextTransforms"] = () => {};
+const noopRegisterConfigMigration: LittleBabyPluginApi["registerConfigMigration"] = () => {};
+const noopRegisterAutoEnableProbe: LittleBabyPluginApi["registerAutoEnableProbe"] = () => {};
+const noopRegisterProvider: LittleBabyPluginApi["registerProvider"] = () => {};
+const noopRegisterSpeechProvider: LittleBabyPluginApi["registerSpeechProvider"] = () => {};
+const noopRegisterRealtimeTranscriptionProvider: LittleBabyPluginApi["registerRealtimeTranscriptionProvider"] =
   () => {};
-const noopRegisterRealtimeVoiceProvider: OpenClawPluginApi["registerRealtimeVoiceProvider"] =
+const noopRegisterRealtimeVoiceProvider: LittleBabyPluginApi["registerRealtimeVoiceProvider"] =
   () => {};
-const noopRegisterMediaUnderstandingProvider: OpenClawPluginApi["registerMediaUnderstandingProvider"] =
+const noopRegisterMediaUnderstandingProvider: LittleBabyPluginApi["registerMediaUnderstandingProvider"] =
   () => {};
-const noopRegisterImageGenerationProvider: OpenClawPluginApi["registerImageGenerationProvider"] =
+const noopRegisterImageGenerationProvider: LittleBabyPluginApi["registerImageGenerationProvider"] =
   () => {};
-const noopRegisterVideoGenerationProvider: OpenClawPluginApi["registerVideoGenerationProvider"] =
+const noopRegisterVideoGenerationProvider: LittleBabyPluginApi["registerVideoGenerationProvider"] =
   () => {};
-const noopRegisterMusicGenerationProvider: OpenClawPluginApi["registerMusicGenerationProvider"] =
+const noopRegisterMusicGenerationProvider: LittleBabyPluginApi["registerMusicGenerationProvider"] =
   () => {};
-const noopRegisterWebFetchProvider: OpenClawPluginApi["registerWebFetchProvider"] = () => {};
-const noopRegisterWebSearchProvider: OpenClawPluginApi["registerWebSearchProvider"] = () => {};
-const noopRegisterInteractiveHandler: OpenClawPluginApi["registerInteractiveHandler"] = () => {};
-const noopOnConversationBindingResolved: OpenClawPluginApi["onConversationBindingResolved"] =
+const noopRegisterWebFetchProvider: LittleBabyPluginApi["registerWebFetchProvider"] = () => {};
+const noopRegisterWebSearchProvider: LittleBabyPluginApi["registerWebSearchProvider"] = () => {};
+const noopRegisterInteractiveHandler: LittleBabyPluginApi["registerInteractiveHandler"] = () => {};
+const noopOnConversationBindingResolved: LittleBabyPluginApi["onConversationBindingResolved"] =
   () => {};
-const noopRegisterCommand: OpenClawPluginApi["registerCommand"] = () => {};
-const noopRegisterContextEngine: OpenClawPluginApi["registerContextEngine"] = () => {};
-const noopRegisterCompactionProvider: OpenClawPluginApi["registerCompactionProvider"] = () => {};
-const noopRegisterAgentHarness: OpenClawPluginApi["registerAgentHarness"] = () => {};
-const noopRegisterDetachedTaskRuntime: OpenClawPluginApi["registerDetachedTaskRuntime"] = () => {};
-const noopRegisterMemoryCapability: OpenClawPluginApi["registerMemoryCapability"] = () => {};
-const noopRegisterMemoryPromptSection: OpenClawPluginApi["registerMemoryPromptSection"] = () => {};
-const noopRegisterMemoryPromptSupplement: OpenClawPluginApi["registerMemoryPromptSupplement"] =
+const noopRegisterCommand: LittleBabyPluginApi["registerCommand"] = () => {};
+const noopRegisterContextEngine: LittleBabyPluginApi["registerContextEngine"] = () => {};
+const noopRegisterCompactionProvider: LittleBabyPluginApi["registerCompactionProvider"] = () => {};
+const noopRegisterAgentHarness: LittleBabyPluginApi["registerAgentHarness"] = () => {};
+const noopRegisterDetachedTaskRuntime: LittleBabyPluginApi["registerDetachedTaskRuntime"] = () => {};
+const noopRegisterMemoryCapability: LittleBabyPluginApi["registerMemoryCapability"] = () => {};
+const noopRegisterMemoryPromptSection: LittleBabyPluginApi["registerMemoryPromptSection"] = () => {};
+const noopRegisterMemoryPromptSupplement: LittleBabyPluginApi["registerMemoryPromptSupplement"] =
   () => {};
-const noopRegisterMemoryCorpusSupplement: OpenClawPluginApi["registerMemoryCorpusSupplement"] =
+const noopRegisterMemoryCorpusSupplement: LittleBabyPluginApi["registerMemoryCorpusSupplement"] =
   () => {};
-const noopRegisterMemoryFlushPlan: OpenClawPluginApi["registerMemoryFlushPlan"] = () => {};
-const noopRegisterMemoryRuntime: OpenClawPluginApi["registerMemoryRuntime"] = () => {};
-const noopRegisterMemoryEmbeddingProvider: OpenClawPluginApi["registerMemoryEmbeddingProvider"] =
+const noopRegisterMemoryFlushPlan: LittleBabyPluginApi["registerMemoryFlushPlan"] = () => {};
+const noopRegisterMemoryRuntime: LittleBabyPluginApi["registerMemoryRuntime"] = () => {};
+const noopRegisterMemoryEmbeddingProvider: LittleBabyPluginApi["registerMemoryEmbeddingProvider"] =
   () => {};
-const noopOn: OpenClawPluginApi["on"] = () => {};
+const noopOn: LittleBabyPluginApi["on"] = () => {};
 
-export function buildPluginApi(params: BuildPluginApiParams): OpenClawPluginApi {
+export function buildPluginApi(params: BuildPluginApiParams): LittleBabyPluginApi {
   const handlers = params.handlers ?? {};
   return {
     id: params.id,

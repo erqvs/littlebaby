@@ -862,7 +862,7 @@ describe("gateway agent handler", () => {
       {
         message: [
           "[Mon 2026-04-06 02:42 GMT+1] <<<BEGIN_LITTLEBABY_INTERNAL_CONTEXT>>>",
-          "OpenClaw runtime context (internal):",
+          "LittleBaby runtime context (internal):",
           "This context is runtime-generated, not user-authored. Keep internal details private.",
         ].join("\n"),
         sessionKey: "agent:main:main",

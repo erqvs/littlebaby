@@ -111,9 +111,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("littlebaby-openai-responses-transport");
     expect(prepared).toMatchObject({
-      api: "openclaw-openai-responses-transport",
+      api: "littlebaby-openai-responses-transport",
       provider: "openai",
       id: "gpt-5.4",
     });
@@ -144,9 +144,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("littlebaby-openai-responses-transport");
     expect(prepared).toMatchObject({
-      api: "openclaw-openai-responses-transport",
+      api: "littlebaby-openai-responses-transport",
       provider: "openai-codex",
       id: "codex-mini-latest",
     });
@@ -177,9 +177,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-anthropic-messages-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("littlebaby-anthropic-messages-transport");
     expect(prepared).toMatchObject({
-      api: "openclaw-anthropic-messages-transport",
+      api: "littlebaby-anthropic-messages-transport",
       provider: "anthropic",
       id: "claude-sonnet-4-6",
     });
@@ -211,10 +211,10 @@ describe("openai transport stream", () => {
     const prepared = prepareTransportAwareSimpleModel(model);
 
     expect(resolveTransportAwareSimpleApi(model.api)).toBe(
-      "openclaw-google-generative-ai-transport",
+      "littlebaby-google-generative-ai-transport",
     );
     expect(prepared).toMatchObject({
-      api: "openclaw-google-generative-ai-transport",
+      api: "littlebaby-google-generative-ai-transport",
       provider: "google",
       id: "gemini-3.1-pro-preview",
     });
@@ -243,9 +243,9 @@ describe("openai transport stream", () => {
       },
     );
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("littlebaby-openai-responses-transport");
     expect(prepareTransportAwareSimpleModel(model)).toMatchObject({
-      api: "openclaw-openai-responses-transport",
+      api: "littlebaby-openai-responses-transport",
       provider: "github-copilot",
       id: "gpt-5.4",
     });
@@ -274,9 +274,9 @@ describe("openai transport stream", () => {
       },
     );
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-anthropic-messages-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("littlebaby-anthropic-messages-transport");
     expect(prepareTransportAwareSimpleModel(model)).toMatchObject({
-      api: "openclaw-anthropic-messages-transport",
+      api: "littlebaby-anthropic-messages-transport",
       provider: "github-copilot",
       id: "claude-sonnet-4.6",
     });
@@ -384,7 +384,7 @@ describe("openai transport stream", () => {
       {
         id: "anthropic/claude-sonnet-4",
         name: "Claude Sonnet 4",
-        api: "openclaw-openai-completions-transport",
+        api: "littlebaby-openai-completions-transport",
         provider: "openrouter",
         baseUrl: "https://proxy.example.com/v1",
         reasoning: true,
@@ -392,7 +392,7 @@ describe("openai transport stream", () => {
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         contextWindow: 200000,
         maxTokens: 8192,
-      } as Model<"openclaw-openai-completions-transport">,
+      } as Model<"littlebaby-openai-completions-transport">,
       {
         systemPrompt: "system",
         messages: [],
@@ -452,7 +452,7 @@ describe("openai transport stream", () => {
       {
         id: "anthropic/claude-sonnet-4",
         name: "Claude Sonnet 4",
-        api: "openclaw-openai-completions-transport",
+        api: "littlebaby-openai-completions-transport",
         provider: "custom-openrouter",
         baseUrl: "https://openrouter.ai/api/v1",
         reasoning: true,
@@ -460,7 +460,7 @@ describe("openai transport stream", () => {
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         contextWindow: 200000,
         maxTokens: 8192,
-      } as Model<"openclaw-openai-completions-transport">,
+      } as Model<"littlebaby-openai-completions-transport">,
       {
         systemPrompt: "system",
         messages: [],
@@ -896,18 +896,18 @@ describe("openai transport stream", () => {
       } as never,
       { sessionId: "session-123" } as never,
       {
-        openclaw_session_id: "session-123",
-        openclaw_turn_id: "turn-123",
-        openclaw_turn_attempt: "1",
-        openclaw_transport: "stream",
+        littlebaby_session_id: "session-123",
+        littlebaby_turn_id: "turn-123",
+        littlebaby_turn_attempt: "1",
+        littlebaby_transport: "stream",
       },
     ) as { metadata?: Record<string, string> };
 
     expect(params.metadata).toMatchObject({
-      openclaw_session_id: "session-123",
-      openclaw_turn_id: "turn-123",
-      openclaw_turn_attempt: "1",
-      openclaw_transport: "stream",
+      littlebaby_session_id: "session-123",
+      littlebaby_turn_id: "turn-123",
+      littlebaby_turn_attempt: "1",
+      littlebaby_transport: "stream",
     });
   });
 

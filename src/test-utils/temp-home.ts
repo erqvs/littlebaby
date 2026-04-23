@@ -46,12 +46,12 @@ export async function createTempHomeEnv(prefix: string): Promise<TempHomeEnv> {
   const home = path.join(prefixRoot, `home-${String(nextHomeIndex)}`);
   nextHomeIndex += 1;
   await fs.rm(home, { recursive: true, force: true });
-  await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+  await fs.mkdir(path.join(home, ".littlebaby"), { recursive: true });
 
   const snapshot = captureEnv([...HOME_ENV_KEYS]);
   process.env.HOME = home;
   process.env.USERPROFILE = home;
-  process.env.LITTLEBABY_STATE_DIR = path.join(home, ".openclaw");
+  process.env.LITTLEBABY_STATE_DIR = path.join(home, ".littlebaby");
 
   if (process.platform === "win32") {
     const match = home.match(/^([A-Za-z]:)(.*)$/);

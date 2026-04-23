@@ -5,8 +5,8 @@ import { formatPluginSourceForTable, resolvePluginSourceRoots } from "./source-d
 
 const PLUGIN_SOURCE_ROOTS = {
   stock: path.resolve(path.sep, "opt", "homebrew", "lib", "node_modules", "littlebaby", "extensions"),
-  global: path.resolve(path.sep, "Users", "x", ".openclaw", "extensions"),
-  workspace: path.resolve(path.sep, "Users", "x", "ws", ".openclaw", "extensions"),
+  global: path.resolve(path.sep, "Users", "x", ".littlebaby", "extensions"),
+  workspace: path.resolve(path.sep, "Users", "x", "ws", ".littlebaby", "extensions"),
 };
 
 function expectFormattedSource(params: {
@@ -72,7 +72,7 @@ describe("formatPluginSourceForTable", () => {
   ])("shortens $origin sources under the $sourceKey root", expectFormattedSourceCase);
 
   it("resolves source roots from an explicit env override", () => {
-    const homeDir = path.resolve(path.sep, "tmp", "openclaw-home");
+    const homeDir = path.resolve(path.sep, "tmp", "littlebaby-home");
     expectResolvedSourceRoots({
       homeDir,
       env: {
@@ -83,7 +83,7 @@ describe("formatPluginSourceForTable", () => {
       expected: {
         stock: path.join(homeDir, "bundled"),
         global: path.join(homeDir, "state", "extensions"),
-        workspace: path.join(homeDir, "ws", ".openclaw", "extensions"),
+        workspace: path.join(homeDir, "ws", ".littlebaby", "extensions"),
       },
     });
   });

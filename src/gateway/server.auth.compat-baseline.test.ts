@@ -188,7 +188,7 @@ describe("gateway auth compatibility baseline", () => {
     test("keeps local backend device-token reconnects out of pairing", async () => {
       const identityPath = path.join(
         os.tmpdir(),
-        `openclaw-backend-device-${process.pid}-${port}.json`,
+        `littlebaby-backend-device-${process.pid}-${port}.json`,
       );
       const { loadOrCreateDeviceIdentity, publicKeyRawBase64UrlFromPem } =
         await import("../infra/device-identity.js");

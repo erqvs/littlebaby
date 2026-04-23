@@ -14,7 +14,7 @@ import {
   resolveAgentModelFallbackValues,
   resolveAgentModelPrimaryValue,
 } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import type {
   MediaUnderstandingConfig,
   MediaUnderstandingModelConfig,
@@ -65,7 +65,7 @@ export type RunCapabilityResult = {
 };
 
 function resolveConfiguredKeyProviderOrder(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   providerRegistry: ProviderRegistry;
   capability: MediaUnderstandingCapability;
   fallbackProviders: readonly string[];
@@ -82,7 +82,7 @@ function resolveConfiguredKeyProviderOrder(params: {
 }
 
 function resolveConfiguredImageModelId(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   providerId: string;
 }): string | undefined {
   const providerCfg = findNormalizedProviderValue(
@@ -120,7 +120,7 @@ function resolveCatalogImageModelId(params: {
 }
 
 async function resolveAutoImageModelId(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   providerId: string;
   explicitModel?: string;
 }): Promise<string | undefined> {
@@ -149,13 +149,13 @@ async function resolveAutoImageModelId(params: {
 
 export function buildProviderRegistry(
   overrides?: Record<string, MediaUnderstandingProvider>,
-  cfg?: OpenClawConfig,
+  cfg?: LittleBabyConfig,
 ): ProviderRegistry {
   return buildMediaUnderstandingRegistry(overrides, cfg);
 }
 
 export function resolveMediaAttachmentLocalRoots(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   ctx: MsgContext;
 }): readonly string[] {
   return mergeInboundPathRoots(
@@ -401,7 +401,7 @@ async function resolveGeminiCliEntry(
 }
 
 async function resolveKeyEntry(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentDir?: string;
   providerRegistry: ProviderRegistry;
   capability: MediaUnderstandingCapability;
@@ -469,7 +469,7 @@ async function resolveKeyEntry(params: {
   return null;
 }
 
-function resolveImageModelFromAgentDefaults(cfg: OpenClawConfig): MediaUnderstandingModelConfig[] {
+function resolveImageModelFromAgentDefaults(cfg: LittleBabyConfig): MediaUnderstandingModelConfig[] {
   const refs: string[] = [];
   const primary = resolveAgentModelPrimaryValue(cfg.agents?.defaults?.imageModel);
   if (primary?.trim()) {
@@ -499,7 +499,7 @@ function resolveImageModelFromAgentDefaults(cfg: OpenClawConfig): MediaUnderstan
 }
 
 async function resolveAutoEntries(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentDir?: string;
   providerRegistry: ProviderRegistry;
   capability: MediaUnderstandingCapability;
@@ -533,7 +533,7 @@ async function resolveAutoEntries(params: {
 }
 
 export async function resolveAutoImageModel(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentDir?: string;
   activeModel?: ActiveMediaModel;
 }): Promise<ActiveMediaModel | null> {
@@ -571,7 +571,7 @@ export async function resolveAutoImageModel(params: {
 }
 
 async function resolveActiveModelEntry(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentDir?: string;
   providerRegistry: ProviderRegistry;
   capability: MediaUnderstandingCapability;
@@ -626,7 +626,7 @@ async function resolveActiveModelEntry(params: {
 
 async function runAttachmentEntries(params: {
   capability: MediaUnderstandingCapability;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   ctx: MsgContext;
   attachmentIndex: number;
   agentDir?: string;
@@ -719,7 +719,7 @@ function hasFailedMediaAttempt(attachments: MediaUnderstandingDecision["attachme
 
 export async function runCapability(params: {
   capability: MediaUnderstandingCapability;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   ctx: MsgContext;
   attachments: MediaAttachmentCache;
   media: MediaAttachment[];

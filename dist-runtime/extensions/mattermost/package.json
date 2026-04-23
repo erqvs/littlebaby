@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/mattermost",
+  "name": "@littlebaby/mattermost",
   "version": "2026.4.20",
-  "description": "OpenClaw Mattermost channel plugin",
+  "description": "LittleBaby Mattermost channel plugin",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.49",
     "ws": "^8.20.0"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -22,7 +22,7 @@
       "order": 65
     },
     "install": {
-      "npmSpec": "@openclaw/mattermost",
+      "npmSpec": "@littlebaby/mattermost",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     }

@@ -436,7 +436,7 @@ describe("provider request config", () => {
     expect(resolved).toMatchObject({
       originator: "littlebaby",
       version: expect.any(String),
-      "User-Agent": expect.stringMatching(/^openclaw\//),
+      "User-Agent": expect.stringMatching(/^littlebaby\//),
       "X-Custom": "1",
     });
   });
@@ -455,8 +455,8 @@ describe("provider request config", () => {
     });
 
     expect(resolved).toEqual({
-      "HTTP-Referer": "https://openclaw.ai",
-      "X-OpenRouter-Title": "OpenClaw",
+      "HTTP-Referer": "https://littlebaby.ai",
+      "X-OpenRouter-Title": "LittleBaby",
       "X-OpenRouter-Categories": "cli-agent",
       "X-Custom": "1",
     });
@@ -478,7 +478,7 @@ describe("provider request config", () => {
     expect(
       Object.keys(resolved ?? {}).filter((key) => key.toLowerCase() === "user-agent"),
     ).toHaveLength(1);
-    expect(resolved?.["User-Agent"]).toMatch(/^openclaw\//);
+    expect(resolved?.["User-Agent"]).toMatch(/^littlebaby\//);
   });
 
   it("drops forbidden header keys while merging", () => {
@@ -529,7 +529,7 @@ describe("provider request config", () => {
       authorization: "Bearer test-key",
       originator: "littlebaby",
       version: expect.any(String),
-      "User-Agent": expect.stringMatching(/^openclaw\//),
+      "User-Agent": expect.stringMatching(/^littlebaby\//),
       "X-Custom": "1",
     });
   });

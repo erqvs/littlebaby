@@ -13,7 +13,7 @@ import { runGatewayUpdate } from "./update-runner.js";
 type CommandResponse = { stdout?: string; stderr?: string; code?: number | null };
 type CommandResult = { stdout: string; stderr: string; code: number | null };
 const WHATSAPP_LIGHT_RUNTIME_API = bundledDistPluginFile("whatsapp", "light-runtime-api.js");
-const fixtureRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-update-" });
+const fixtureRootTracker = createSuiteTempRootTracker({ prefix: "littlebaby-update-" });
 
 function toCommandResult(response?: CommandResponse): CommandResult {
   return {
@@ -34,7 +34,7 @@ function createRunner(responses: Record<string, CommandResponse>) {
 }
 
 describe("runGatewayUpdate", () => {
-  const preflightPrefixPattern = /(?:openclaw-update-preflight-|ocu-pf-)/;
+  const preflightPrefixPattern = /(?:littlebaby-update-preflight-|ocu-pf-)/;
 
   let tempDir: string;
 
@@ -277,9 +277,9 @@ describe("runGatewayUpdate", () => {
     onBaseInstall?: () => Promise<CommandResult>;
     onOmitOptionalInstall?: () => Promise<CommandResult>;
   }) {
-    const baseInstallKey = "npm i -g openclaw@latest --no-fund --no-audit --loglevel=error";
+    const baseInstallKey = "npm i -g littlebaby@latest --no-fund --no-audit --loglevel=error";
     const omitOptionalInstallKey =
-      "npm i -g openclaw@latest --omit=optional --no-fund --no-audit --loglevel=error";
+      "npm i -g littlebaby@latest --omit=optional --no-fund --no-audit --loglevel=error";
 
     return async (argv: string[]): Promise<CommandResult> => {
       const key = argv.join(" ");
@@ -406,7 +406,7 @@ describe("runGatewayUpdate", () => {
       onCommand: (key, options) => {
         if (key === "pnpm --version") {
           const envPath = options?.env?.PATH ?? options?.env?.Path ?? "";
-          if (envPath.includes("openclaw-update-pnpm-")) {
+          if (envPath.includes("littlebaby-update-pnpm-")) {
             return { stdout: "10.0.0" };
           }
           throw new Error("spawn pnpm ENOENT");
@@ -516,7 +516,7 @@ describe("runGatewayUpdate", () => {
       }
       if (key === "pnpm --version") {
         const envPath = options?.env?.PATH ?? options?.env?.Path ?? "";
-        if (envPath.includes("openclaw-update-pnpm-")) {
+        if (envPath.includes("littlebaby-update-pnpm-")) {
           pnpmEnvPaths.push(envPath);
           return { stdout: "10.0.0", stderr: "", code: 0 };
         }
@@ -585,7 +585,7 @@ describe("runGatewayUpdate", () => {
     expect(calls).toContain("pnpm build");
     expect(calls).toContain("pnpm lint");
     expect(calls).toContain("pnpm ui:build");
-    expect(pnpmEnvPaths.some((value) => value.includes("openclaw-update-pnpm-"))).toBe(true);
+    expect(pnpmEnvPaths.some((value) => value.includes("littlebaby-update-pnpm-"))).toBe(true);
   });
 
   it("retries windows pnpm git installs with --ignore-scripts for dev updates", async () => {
@@ -650,7 +650,7 @@ describe("runGatewayUpdate", () => {
           return { stdout: "", stderr: "", code: 0 };
         }
         if (key === "pnpm install") {
-          if (options?.cwd && /(?:openclaw-update-preflight-|ocu-pf-)/.test(options.cwd)) {
+          if (options?.cwd && /(?:littlebaby-update-preflight-|ocu-pf-)/.test(options.cwd)) {
             preflightInstallAttempts += 1;
             return preflightInstallAttempts === 1
               ? { stdout: "", stderr: "sharp: Please add node-gyp to your dependencies", code: 1 }
@@ -664,7 +664,7 @@ describe("runGatewayUpdate", () => {
           }
         }
         if (key === "pnpm install --ignore-scripts") {
-          if (options?.cwd && /(?:openclaw-update-preflight-|ocu-pf-)/.test(options.cwd)) {
+          if (options?.cwd && /(?:littlebaby-update-preflight-|ocu-pf-)/.test(options.cwd)) {
             preflightIgnoreScriptsAttempts += 1;
           }
           return { stdout: "", stderr: "", code: 0 };
@@ -1292,16 +1292,16 @@ describe("runGatewayUpdate", () => {
   it.each([
     {
       title: "updates global npm installs when detected",
-      expectedInstallCommand: "npm i -g openclaw@latest --no-fund --no-audit --loglevel=error",
+      expectedInstallCommand: "npm i -g littlebaby@latest --no-fund --no-audit --loglevel=error",
     },
     {
       title: "uses update channel for global npm installs when tag is omitted",
-      expectedInstallCommand: "npm i -g openclaw@beta --no-fund --no-audit --loglevel=error",
+      expectedInstallCommand: "npm i -g littlebaby@beta --no-fund --no-audit --loglevel=error",
       channel: "beta" as const,
     },
     {
       title: "updates global npm installs with tag override",
-      expectedInstallCommand: "npm i -g openclaw@beta --no-fund --no-audit --loglevel=error",
+      expectedInstallCommand: "npm i -g littlebaby@beta --no-fund --no-audit --loglevel=error",
       tag: "beta",
     },
   ])("$title", async ({ expectedInstallCommand, channel, tag }) => {
@@ -1321,14 +1321,14 @@ describe("runGatewayUpdate", () => {
   it("updates global npm installs from the GitHub main package spec", async () => {
     const { calls, result } = await runNpmGlobalUpdateCase({
       expectedInstallCommand:
-        "npm i -g github:openclaw/openclaw#main --no-fund --no-audit --loglevel=error",
+        "npm i -g github:littlebaby/littlebaby#main --no-fund --no-audit --loglevel=error",
       tag: "main",
     });
 
     expect(result.status).toBe("ok");
     expect(result.mode).toBe("npm");
     expect(calls).toContain(
-      "npm i -g github:openclaw/openclaw#main --no-fund --no-audit --loglevel=error",
+      "npm i -g github:littlebaby/littlebaby#main --no-fund --no-audit --loglevel=error",
     );
   });
 
@@ -1337,7 +1337,7 @@ describe("runGatewayUpdate", () => {
     const { calls, runCommand } = createGlobalInstallHarness({
       pkgRoot,
       npmRootOutput: nodeModules,
-      installCommand: "npm i -g openclaw@latest --no-fund --no-audit --loglevel=error",
+      installCommand: "npm i -g littlebaby@latest --no-fund --no-audit --loglevel=error",
       gitRootMode: "missing",
       onInstall: async () => writeGlobalPackageVersion(pkgRoot),
     });
@@ -1346,13 +1346,13 @@ describe("runGatewayUpdate", () => {
 
     expect(result.status).toBe("ok");
     expect(result.mode).toBe("npm");
-    expect(calls).toContain("npm i -g openclaw@latest --no-fund --no-audit --loglevel=error");
+    expect(calls).toContain("npm i -g littlebaby@latest --no-fund --no-audit --loglevel=error");
   });
 
   it("cleans stale npm rename dirs before global update", async () => {
     const nodeModules = path.join(tempDir, "node_modules");
     const pkgRoot = path.join(nodeModules, "littlebaby");
-    const staleDir = path.join(nodeModules, ".openclaw-stale");
+    const staleDir = path.join(nodeModules, ".littlebaby-stale");
     await fs.mkdir(staleDir, { recursive: true });
     await seedGlobalPackageRoot(pkgRoot);
 
@@ -1405,7 +1405,7 @@ describe("runGatewayUpdate", () => {
 
   it("fails global npm update when the installed version misses the requested correction", async () => {
     const { calls, result } = await runNpmGlobalUpdateCase({
-      expectedInstallCommand: "npm i -g openclaw@2026.3.23-2 --no-fund --no-audit --loglevel=error",
+      expectedInstallCommand: "npm i -g littlebaby@2026.3.23-2 --no-fund --no-audit --loglevel=error",
       tag: "2026.3.23-2",
     });
 
@@ -1415,12 +1415,12 @@ describe("runGatewayUpdate", () => {
     expect(result.steps.at(-1)?.stderrTail).toContain(
       "expected installed version 2026.3.23-2, found 2.0.0",
     );
-    expect(calls).toContain("npm i -g openclaw@2026.3.23-2 --no-fund --no-audit --loglevel=error");
+    expect(calls).toContain("npm i -g littlebaby@2026.3.23-2 --no-fund --no-audit --loglevel=error");
   });
 
   it("fails global npm update when bundled runtime sidecars are missing after install", async () => {
     const { nodeModules, pkgRoot } = await createGlobalPackageFixture(tempDir);
-    const expectedInstallCommand = "npm i -g openclaw@latest --no-fund --no-audit --loglevel=error";
+    const expectedInstallCommand = "npm i -g littlebaby@latest --no-fund --no-audit --loglevel=error";
     const { runCommand } = createGlobalInstallHarness({
       pkgRoot,
       npmRootOutput: nodeModules,
@@ -1451,7 +1451,7 @@ describe("runGatewayUpdate", () => {
     const localAppData = path.join(tempDir, "local-app-data");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "LittleBaby",
       "deps",
       "portable-git",
       "mingw64",
@@ -1459,7 +1459,7 @@ describe("runGatewayUpdate", () => {
     );
     const portableGitUsr = path.join(
       localAppData,
-      "OpenClaw",
+      "LittleBaby",
       "deps",
       "portable-git",
       "usr",
@@ -1473,7 +1473,7 @@ describe("runGatewayUpdate", () => {
     const { runCommand } = createGlobalInstallHarness({
       pkgRoot,
       npmRootOutput: nodeModules,
-      installCommand: "npm i -g openclaw@latest --no-fund --no-audit --loglevel=error",
+      installCommand: "npm i -g littlebaby@latest --no-fund --no-audit --loglevel=error",
       onInstall: async (options) => {
         installEnv = options?.env;
         await writeGlobalPackageVersion(pkgRoot);
@@ -1499,7 +1499,7 @@ describe("runGatewayUpdate", () => {
   it("uses LITTLEBABY_UPDATE_PACKAGE_SPEC for global package updates", async () => {
     const { nodeModules, pkgRoot } = await createGlobalPackageFixture(tempDir);
     const expectedInstallCommand =
-      "npm i -g http://10.211.55.2:8138/openclaw-next.tgz --no-fund --no-audit --loglevel=error";
+      "npm i -g http://10.211.55.2:8138/littlebaby-next.tgz --no-fund --no-audit --loglevel=error";
     const { calls, runCommand } = createGlobalInstallHarness({
       pkgRoot,
       npmRootOutput: nodeModules,
@@ -1508,7 +1508,7 @@ describe("runGatewayUpdate", () => {
     });
 
     await withEnvAsync(
-      { LITTLEBABY_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/openclaw-next.tgz" },
+      { LITTLEBABY_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/littlebaby-next.tgz" },
       async () => {
         const result = await runWithCommand(runCommand, { cwd: pkgRoot });
         expect(result.status).toBe("ok");
@@ -1527,7 +1527,7 @@ describe("runGatewayUpdate", () => {
 
       const { calls, runCommand } = createGlobalInstallHarness({
         pkgRoot,
-        installCommand: "bun add -g openclaw@latest",
+        installCommand: "bun add -g littlebaby@latest",
         onInstall: async () => {
           await writeGlobalPackageVersion(pkgRoot);
         },
@@ -1539,11 +1539,11 @@ describe("runGatewayUpdate", () => {
       expect(result.mode).toBe("bun");
       expect(result.before?.version).toBe("1.0.0");
       expect(result.after?.version).toBe("2.0.0");
-      expect(calls.some((call) => call === "bun add -g openclaw@latest")).toBe(true);
+      expect(calls.some((call) => call === "bun add -g littlebaby@latest")).toBe(true);
     });
   });
 
-  it("rejects git roots that are not a openclaw checkout", async () => {
+  it("rejects git roots that are not a littlebaby checkout", async () => {
     await fs.mkdir(path.join(tempDir, ".git"));
     const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(tempDir);
     const { runner, calls } = createRunner({
@@ -1555,7 +1555,7 @@ describe("runGatewayUpdate", () => {
     cwdSpy.mockRestore();
 
     expect(result.status).toBe("error");
-    expect(result.reason).toBe("not-openclaw-root");
+    expect(result.reason).toBe("not-littlebaby-root");
     expect(calls.some((call) => call.includes("status --porcelain"))).toBe(false);
   });
 
@@ -1575,7 +1575,7 @@ describe("runGatewayUpdate", () => {
 
     expect(result.status).toBe("error");
     expect(result.reason).toBe("doctor-entry-missing");
-    expect(result.steps.at(-1)?.name).toBe("openclaw doctor entry");
+    expect(result.steps.at(-1)?.name).toBe("littlebaby doctor entry");
   });
 
   it("repairs UI assets when doctor run removes control-ui files", async () => {

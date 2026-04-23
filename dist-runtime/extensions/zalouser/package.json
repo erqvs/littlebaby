@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/zalouser",
+  "name": "@littlebaby/zalouser",
   "version": "2026.4.20",
-  "description": "OpenClaw Zalo Personal Account plugin via native zca-js integration",
+  "description": "LittleBaby Zalo Personal Account plugin via native zca-js integration",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.49",
     "zca-js": "2.1.2"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -26,7 +26,7 @@
       "quickstartAllowFrom": false
     },
     "install": {
-      "npmSpec": "@openclaw/zalouser",
+      "npmSpec": "@littlebaby/zalouser",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -34,7 +34,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

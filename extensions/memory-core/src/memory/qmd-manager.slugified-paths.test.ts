@@ -48,10 +48,10 @@ function emitAndClose(
   });
 }
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-foundation", async () => {
+vi.mock("littlebaby/plugin-sdk/memory-core-host-engine-foundation", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/memory-core-host-engine-foundation")
-  >("openclaw/plugin-sdk/memory-core-host-engine-foundation");
+    typeof import("littlebaby/plugin-sdk/memory-core-host-engine-foundation")
+  >("littlebaby/plugin-sdk/memory-core-host-engine-foundation");
   return {
     ...actual,
     createSubsystemLogger: () => {
@@ -75,8 +75,8 @@ vi.mock("node:child_process", async () => {
 });
 
 import { spawn as mockedSpawn } from "node:child_process";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import { resolveMemoryBackendConfig } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/memory-core-host-engine-foundation";
+import { resolveMemoryBackendConfig } from "littlebaby/plugin-sdk/memory-core-host-engine-storage";
 import { QmdMemoryManager } from "./qmd-manager.js";
 
 const spawnMock = mockedSpawn as unknown as Mock;
@@ -85,7 +85,7 @@ describe("QmdMemoryManager slugified path resolution", () => {
   let tmpRoot: string;
   let workspaceDir: string;
   let stateDir: string;
-  let cfg: OpenClawConfig;
+  let cfg: LittleBabyConfig;
   const agentId = "main";
   const openManagers = new Set<QmdMemoryManager>();
 
@@ -96,7 +96,7 @@ describe("QmdMemoryManager slugified path resolution", () => {
     return manager;
   }
 
-  async function createManager(params?: { cfg?: OpenClawConfig }) {
+  async function createManager(params?: { cfg?: LittleBabyConfig }) {
     const cfgToUse = params?.cfg ?? cfg;
     const resolved = resolveMemoryBackendConfig({ cfg: cfgToUse, agentId });
     const manager = trackManager(
@@ -172,7 +172,7 @@ describe("QmdMemoryManager slugified path resolution", () => {
     logDebugMock.mockClear();
     logInfoMock.mockClear();
 
-    tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-slugified-"));
+    tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-qmd-slugified-"));
     workspaceDir = path.join(tmpRoot, "workspace");
     stateDir = path.join(tmpRoot, "state");
     await fs.mkdir(workspaceDir, { recursive: true });
@@ -190,7 +190,7 @@ describe("QmdMemoryManager slugified path resolution", () => {
           paths: [{ path: workspaceDir, pattern: "**/*.md", name: "workspace" }],
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
   });
 
   afterEach(async () => {
@@ -272,7 +272,7 @@ describe("QmdMemoryManager slugified path resolution", () => {
           paths: [{ path: extraRoot, pattern: "**/*.md", name: "vault" }],
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     const actualRelative = "Topics/Sub Category/Topic Name.md";
     const actualFile = path.join(extraRoot, actualRelative);

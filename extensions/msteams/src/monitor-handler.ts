@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveThreadSessionKeys } from "openclaw/plugin-sdk/routing";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/text-runtime";
+import { resolveThreadSessionKeys } from "littlebaby/plugin-sdk/routing";
+import { normalizeOptionalLowercaseString } from "littlebaby/plugin-sdk/text-runtime";
 import { formatUnknownError } from "./errors.js";
 import { buildFeedbackEvent, runFeedbackReflection } from "./feedback-reflection.js";
 import { buildFileInfoCard, parseFileConsentInvoke, uploadToConsentUrl } from "./file-consent.js";

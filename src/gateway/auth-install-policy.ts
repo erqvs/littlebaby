@@ -1,9 +1,9 @@
 import { collectDurableServiceEnvVars } from "../config/state-dir-dotenv.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { hasConfiguredSecretInput } from "../config/types.secrets.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 
-type GatewayInstallAuthMode = NonNullable<NonNullable<OpenClawConfig["gateway"]>["auth"]>["mode"];
+type GatewayInstallAuthMode = NonNullable<NonNullable<LittleBabyConfig["gateway"]>["auth"]>["mode"];
 
 function hasExplicitGatewayInstallAuthMode(
   mode: GatewayInstallAuthMode | undefined,
@@ -17,12 +17,12 @@ function hasExplicitGatewayInstallAuthMode(
   return undefined;
 }
 
-function hasConfiguredGatewayPasswordForInstall(cfg: OpenClawConfig): boolean {
+function hasConfiguredGatewayPasswordForInstall(cfg: LittleBabyConfig): boolean {
   return hasConfiguredSecretInput(cfg.gateway?.auth?.password, cfg.secrets?.defaults);
 }
 
 function hasDurableGatewayPasswordEnvForInstall(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   env: NodeJS.ProcessEnv,
 ): boolean {
   const durableServiceEnv = collectDurableServiceEnvVars({ env, config: cfg });
@@ -33,7 +33,7 @@ function hasDurableGatewayPasswordEnvForInstall(
 }
 
 export function shouldRequireGatewayTokenForInstall(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   env: NodeJS.ProcessEnv,
 ): boolean {
   const explicitModeDecision = hasExplicitGatewayInstallAuthMode(cfg.gateway?.auth?.mode);

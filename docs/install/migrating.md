@@ -1,27 +1,27 @@
 ---
-summary: "Move (migrate) an OpenClaw install from one machine to another"
+summary: "Move (migrate) an LittleBaby install from one machine to another"
 read_when:
-  - You are moving OpenClaw to a new laptop/server
+  - You are moving LittleBaby to a new laptop/server
   - You want to preserve sessions, auth, and channel logins (WhatsApp, etc.)
 title: "Migration Guide"
 ---
 
-# Migrating OpenClaw to a New Machine
+# Migrating LittleBaby to a New Machine
 
-This guide moves an OpenClaw gateway to a new machine without redoing onboarding.
+This guide moves an LittleBaby gateway to a new machine without redoing onboarding.
 
 ## What Gets Migrated
 
 When you copy the **state directory** (`~/.littlebaby/` by default) and your **workspace**, you preserve:
 
-- **Config** -- `openclaw.json` and all gateway settings
+- **Config** -- `littlebaby.json` and all gateway settings
 - **Auth** -- per-agent `auth-profiles.json` (API keys + OAuth), plus any channel/provider state under `credentials/`
 - **Sessions** -- conversation history and agent state
 - **Channel state** -- WhatsApp login, Telegram session, etc.
 - **Workspace files** -- `MEMORY.md`, `USER.md`, skills, and prompts
 
 <Tip>
-Run `openclaw status` on the old machine to confirm your state directory path.
+Run `littlebaby status` on the old machine to confirm your state directory path.
 Custom profiles use `~/.littlebaby-<profile>/` or a path set via `LITTLEBABY_STATE_DIR`.
 </Tip>
 
@@ -32,16 +32,16 @@ Custom profiles use `~/.littlebaby-<profile>/` or a path set via `LITTLEBABY_STA
     On the **old** machine, stop the gateway so files are not changing mid-copy, then archive:
 
     ```bash
-    openclaw gateway stop
+    littlebaby gateway stop
     cd ~
-    tar -czf openclaw-state.tgz .openclaw
+    tar -czf littlebaby-state.tgz .littlebaby
     ```
 
     If you use multiple profiles (e.g. `~/.littlebaby-work`), archive each separately.
 
   </Step>
 
-  <Step title="Install OpenClaw on the new machine">
+  <Step title="Install LittleBaby on the new machine">
     [Install](/install) the CLI (and Node if needed) on the new machine.
     It is fine if onboarding creates a fresh `~/.littlebaby/` -- you will overwrite it next.
   </Step>
@@ -51,7 +51,7 @@ Custom profiles use `~/.littlebaby-<profile>/` or a path set via `LITTLEBABY_STA
 
     ```bash
     cd ~
-    tar -xzf openclaw-state.tgz
+    tar -xzf littlebaby-state.tgz
     ```
 
     Ensure hidden directories were included and file ownership matches the user that will run the gateway.
@@ -62,9 +62,9 @@ Custom profiles use `~/.littlebaby-<profile>/` or a path set via `LITTLEBABY_STA
     On the new machine, run [Doctor](/gateway/doctor) to apply config migrations and repair services:
 
     ```bash
-    openclaw doctor
-    openclaw gateway restart
-    openclaw status
+    littlebaby doctor
+    littlebaby gateway restart
+    littlebaby status
     ```
 
   </Step>
@@ -76,10 +76,10 @@ Custom profiles use `~/.littlebaby-<profile>/` or a path set via `LITTLEBABY_STA
   <Accordion title="Profile or state-dir mismatch">
     If the old gateway used `--profile` or `LITTLEBABY_STATE_DIR` and the new one does not,
     channels will appear logged out and sessions will be empty.
-    Launch the gateway with the **same** profile or state-dir you migrated, then rerun `openclaw doctor`.
+    Launch the gateway with the **same** profile or state-dir you migrated, then rerun `littlebaby doctor`.
   </Accordion>
 
-  <Accordion title="Copying only openclaw.json">
+  <Accordion title="Copying only littlebaby.json">
     The config file alone is not enough. Model auth profiles live under
     `agents/<agentId>/agent/auth-profiles.json`, and channel/provider state still
     lives under `credentials/`. Always migrate the **entire** state directory.
@@ -106,7 +106,7 @@ Custom profiles use `~/.littlebaby-<profile>/` or a path set via `LITTLEBABY_STA
 
 On the new machine, confirm:
 
-- [ ] `openclaw status` shows the gateway running
+- [ ] `littlebaby status` shows the gateway running
 - [ ] Channels are still connected (no re-pairing needed)
 - [ ] The dashboard opens and shows existing sessions
 - [ ] Workspace files (memory, configs) are present

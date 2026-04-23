@@ -39,7 +39,7 @@ function createAuditRecordBase(configPath: string) {
 
 function createRenameAuditRecord(home: string) {
   return finalizeConfigWriteAuditRecord({
-    base: createAuditRecordBase(path.join(home, ".openclaw", "openclaw.json")),
+    base: createAuditRecordBase(path.join(home, ".littlebaby", "littlebaby.json")),
     result: "rename",
     nextMetadata: {
       dev: "12",
@@ -53,7 +53,7 @@ function createRenameAuditRecord(home: string) {
 }
 
 function readAuditLog(home: string): unknown[] {
-  const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+  const auditPath = path.join(home, ".littlebaby", "logs", "config-audit.jsonl");
   return fs
     .readFileSync(auditPath, "utf-8")
     .trim()
@@ -62,7 +62,7 @@ function readAuditLog(home: string): unknown[] {
 }
 
 describe("config io audit helpers", () => {
-  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-config-audit-" });
+  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "littlebaby-config-audit-" });
 
   beforeAll(async () => {
     await suiteRootTracker.setup();
@@ -82,26 +82,26 @@ describe("config io audit helpers", () => {
       } as NodeJS.ProcessEnv,
       () => home,
     );
-    expect(auditPath).toBe(path.join(home, ".openclaw", "logs", "config-audit.jsonl"));
+    expect(auditPath).toBe(path.join(home, ".littlebaby", "logs", "config-audit.jsonl"));
     expect(auditPath.startsWith(path.resolve("undefined"))).toBe(false);
   });
 
   it("formats overwrite warnings with hash transition and backup path", () => {
     expect(
       formatConfigOverwriteLogMessage({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/littlebaby.json",
         previousHash: "prev-hash",
         nextHash: "next-hash",
         changedPathCount: 3,
       }),
     ).toBe(
-      "Config overwrite: /tmp/openclaw.json (sha256 prev-hash -> next-hash, backup=/tmp/openclaw.json.bak, changedPaths=3)",
+      "Config overwrite: /tmp/littlebaby.json (sha256 prev-hash -> next-hash, backup=/tmp/littlebaby.json.bak, changedPaths=3)",
     );
   });
 
   it("captures watch markers and next stat metadata for successful writes", () => {
     const base = createConfigWriteAuditRecordBase({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/littlebaby.json",
       env: {
         LITTLEBABY_WATCH_MODE: "1",
         LITTLEBABY_WATCH_SESSION: "watch-session-1",
@@ -159,7 +159,7 @@ describe("config io audit helpers", () => {
   });
 
   it("drops next-file metadata and preserves error details for failed writes", () => {
-    const base = createAuditRecordBase("/tmp/openclaw.json");
+    const base = createAuditRecordBase("/tmp/littlebaby.json");
     const err = Object.assign(new Error("disk full"), { code: "ENOSPC" });
     const record = finalizeConfigWriteAuditRecord({
       base,

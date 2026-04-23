@@ -135,9 +135,9 @@ describe("memory-wiki cli", () => {
         body: `# Alpha
 
 ## Notes
-<!-- openclaw:human:start -->
+<!-- littlebaby:human:start -->
 cli note
-<!-- openclaw:human:end -->
+<!-- littlebaby:human:end -->
 `,
       }),
       "utf8",

@@ -1,10 +1,10 @@
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { retryAsync } from "openclaw/plugin-sdk/retry-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { retryAsync } from "littlebaby/plugin-sdk/retry-runtime";
 import {
   coerceSecretRef,
   normalizeResolvedSecretInputString,
-} from "openclaw/plugin-sdk/secret-input-runtime";
-import type { PinnedDispatcherPolicy } from "openclaw/plugin-sdk/ssrf-dispatcher";
+} from "littlebaby/plugin-sdk/secret-input-runtime";
+import type { PinnedDispatcherPolicy } from "littlebaby/plugin-sdk/ssrf-dispatcher";
 import {
   requiresExplicitMatrixDefaultAccount,
   resolveMatrixDefaultOrOnlyAccountId,
@@ -874,7 +874,7 @@ export async function resolveMatrixAuth(params?: {
       identifier: { type: "m.id.user", user: resolved.userId },
       password,
       device_id: resolved.deviceId,
-      initial_device_display_name: resolved.deviceName ?? "OpenClaw Gateway",
+      initial_device_display_name: resolved.deviceName ?? "LittleBaby Gateway",
     })) as {
       access_token?: string;
       user_id?: string;

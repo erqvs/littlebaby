@@ -1,2 +1,2 @@
-export { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-export type { OpenClawPluginApi, PluginRuntime } from "openclaw/plugin-sdk/core";
+export { definePluginEntry } from "littlebaby/plugin-sdk/plugin-entry";
+export type { LittleBabyPluginApi, PluginRuntime } from "littlebaby/plugin-sdk/core";

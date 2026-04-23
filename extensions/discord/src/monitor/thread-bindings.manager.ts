@@ -6,14 +6,14 @@ import {
   type BindingTargetKind,
   type SessionBindingAdapter,
   type SessionBindingRecord,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { normalizeAccountId, resolveAgentIdFromSessionKey } from "openclaw/plugin-sdk/routing";
+} from "littlebaby/plugin-sdk/conversation-runtime";
+import { normalizeAccountId, resolveAgentIdFromSessionKey } from "littlebaby/plugin-sdk/routing";
 import {
   getRuntimeConfigSnapshot,
-  type OpenClawConfig,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+  type LittleBabyConfig,
+} from "littlebaby/plugin-sdk/runtime-config-snapshot";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { createDiscordRestClient } from "../client.js";
 import {
   createThreadForBinding,
@@ -176,7 +176,7 @@ export function createThreadBindingManager(
   params: {
     accountId?: string;
     token?: string;
-    cfg?: OpenClawConfig;
+    cfg?: LittleBabyConfig;
     persist?: boolean;
     enableSweeper?: boolean;
     idleTimeoutMs?: number;

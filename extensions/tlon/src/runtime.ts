@@ -1,5 +1,5 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "littlebaby/plugin-sdk/plugin-runtime";
+import { createPluginRuntimeStore } from "littlebaby/plugin-sdk/runtime-store";
 
 const { setRuntime: setTlonRuntime, getRuntime: getTlonRuntime } =
   createPluginRuntimeStore<PluginRuntime>({

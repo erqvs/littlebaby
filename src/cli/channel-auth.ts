@@ -9,7 +9,7 @@ import {
   loadConfig,
   readConfigFileSnapshot,
   replaceConfigFile,
-  type OpenClawConfig,
+  type LittleBabyConfig,
 } from "../config/config.js";
 import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
 import { callGateway } from "../gateway/call.js";
@@ -34,7 +34,7 @@ function supportsChannelAuthMode(plugin: ChannelPlugin, mode: ChannelAuthMode): 
   return mode === "login" ? Boolean(plugin.auth?.login) : Boolean(plugin.gateway?.logoutAccount);
 }
 
-function isConfiguredAuthPlugin(plugin: ChannelPlugin, cfg: OpenClawConfig): boolean {
+function isConfiguredAuthPlugin(plugin: ChannelPlugin, cfg: LittleBabyConfig): boolean {
   const key = plugin.id;
   if (isBlockedObjectKey(key)) {
     return false;
@@ -68,7 +68,7 @@ function isConfiguredAuthPlugin(plugin: ChannelPlugin, cfg: OpenClawConfig): boo
   return false;
 }
 
-function resolveConfiguredAuthChannelInput(cfg: OpenClawConfig, mode: ChannelAuthMode): string {
+function resolveConfiguredAuthChannelInput(cfg: LittleBabyConfig, mode: ChannelAuthMode): string {
   const configured = listChannelPlugins()
     .filter((plugin): plugin is ChannelPlugin => supportsChannelAuthMode(plugin, mode))
     .filter((plugin) => isConfiguredAuthPlugin(plugin, cfg))
@@ -89,10 +89,10 @@ function resolveConfiguredAuthChannelInput(cfg: OpenClawConfig, mode: ChannelAut
 async function resolveChannelPluginForMode(
   opts: ChannelAuthOptions,
   mode: ChannelAuthMode,
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   runtime: RuntimeEnv,
 ): Promise<{
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   configChanged: boolean;
   channelInput: string;
   channelId: string;
@@ -130,7 +130,7 @@ async function resolveChannelPluginForMode(
 function resolveAccountContext(
   plugin: ChannelPlugin,
   opts: ChannelAuthOptions,
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
 ) {
   const accountId =
     normalizeOptionalString(opts.account) || resolveChannelDefaultAccountId({ plugin, cfg });
@@ -138,7 +138,7 @@ function resolveAccountContext(
 }
 
 async function reconcileGatewayRuntimeAfterLocalLogin(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   plugin: ChannelPlugin;
   channelId: string;
   accountId: string;

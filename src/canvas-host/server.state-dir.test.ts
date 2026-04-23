@@ -12,7 +12,7 @@ describe("canvas host state dir defaults", () => {
   });
 
   it("uses LITTLEBABY_STATE_DIR for the default canvas root", async () => {
-    await withStateDirEnv("openclaw-canvas-state-", async ({ stateDir }) => {
+    await withStateDirEnv("littlebaby-canvas-state-", async ({ stateDir }) => {
       const handler = await createCanvasHostHandler({
         runtime: defaultRuntime,
         allowInTests: true,
@@ -24,7 +24,7 @@ describe("canvas host state dir defaults", () => {
         expect(actualRoot).toBe(expectedRoot);
         const indexPath = path.join(expectedRoot, "index.html");
         const indexContents = await fs.readFile(indexPath, "utf8");
-        expect(indexContents).toContain("OpenClaw Canvas");
+        expect(indexContents).toContain("LittleBaby Canvas");
       } finally {
         await handler.close();
       }

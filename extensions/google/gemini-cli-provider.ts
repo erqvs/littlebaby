@@ -1,12 +1,12 @@
 import type {
-  OpenClawPluginApi,
+  LittleBabyPluginApi,
   ProviderAuthContext,
   ProviderFetchUsageSnapshotContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { buildOauthProviderAuthResult } from "openclaw/plugin-sdk/provider-auth-result";
-import type { ProviderPlugin } from "openclaw/plugin-sdk/provider-model-shared";
-import { buildProviderToolCompatFamilyHooks } from "openclaw/plugin-sdk/provider-tools";
-import { fetchGeminiUsage } from "openclaw/plugin-sdk/provider-usage";
+} from "littlebaby/plugin-sdk/plugin-entry";
+import { buildOauthProviderAuthResult } from "littlebaby/plugin-sdk/provider-auth-result";
+import type { ProviderPlugin } from "littlebaby/plugin-sdk/provider-model-shared";
+import { buildProviderToolCompatFamilyHooks } from "littlebaby/plugin-sdk/provider-tools";
+import { fetchGeminiUsage } from "littlebaby/plugin-sdk/provider-usage";
 import { formatGoogleOauthApiKey, parseGoogleUsageToken } from "./oauth-token-shared.js";
 import { GOOGLE_GEMINI_PROVIDER_HOOKS } from "./provider-hooks.js";
 import { isModernGoogleModel, resolveGoogleGeminiForwardCompatModel } from "./provider-models.js";
@@ -132,6 +132,6 @@ export function buildGoogleGeminiCliProvider(): ProviderPlugin {
   };
 }
 
-export function registerGoogleGeminiCliProvider(api: OpenClawPluginApi) {
+export function registerGoogleGeminiCliProvider(api: LittleBabyPluginApi) {
   api.registerProvider(buildGoogleGeminiCliProvider());
 }

@@ -166,7 +166,7 @@ function throwBootstrapGuiSessionError(params: {
       `LaunchAgent ${params.actionHint} requires a logged-in macOS GUI session for this user (${params.domain}).`,
       "This usually means you are running from SSH/headless context or as the wrong user (including sudo).",
       `Fix: sign in to the macOS desktop as the target user and rerun \`${params.actionHint}\`.`,
-      "Headless deployments should use a dedicated logged-in user session or a custom LaunchDaemon (not shipped): https://docs.openclaw.ai/gateway",
+      "Headless deployments should use a dedicated logged-in user session or a custom LaunchDaemon (not shipped): https://docs.littlebaby.ai/gateway",
     ].join("\n"),
   );
 }
@@ -578,7 +578,7 @@ async function activateLaunchAgent(params: { env: GatewayServiceEnv; plistPath: 
     domain,
     serviceTarget: `${domain}/${label}`,
     plistPath: params.plistPath,
-    actionHint: "openclaw gateway install --force",
+    actionHint: "littlebaby gateway install --force",
   });
 }
 
@@ -615,7 +615,7 @@ async function ensureLaunchAgentLoadedAfterFailure(params: {
       domain: params.domain,
       serviceTarget: params.serviceTarget,
       plistPath: params.plistPath,
-      actionHint: "openclaw gateway start",
+      actionHint: "littlebaby gateway start",
     });
   } catch {
     // Best-effort only. Preserve the original kickstart failure below.
@@ -653,7 +653,7 @@ export async function restartLaunchAgent({
     cleanStaleGatewayProcessesSync(cleanupPort);
   }
 
-  // `openclaw gateway restart` is an explicit operator request to bring the
+  // `littlebaby gateway restart` is an explicit operator request to bring the
   // LaunchAgent back, so clear any persisted disabled state before restart.
   await execLaunchctl(["enable", serviceTarget]);
 
@@ -673,7 +673,7 @@ export async function restartLaunchAgent({
     domain,
     serviceTarget,
     plistPath,
-    actionHint: "openclaw gateway restart",
+    actionHint: "littlebaby gateway restart",
   });
 
   const retry = await execLaunchctl(["kickstart", "-k", serviceTarget]);

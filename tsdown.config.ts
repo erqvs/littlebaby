@@ -141,7 +141,7 @@ function shouldStageBundledPluginRuntimeDependencies(packageJson: unknown): bool
   return (
     typeof packageJson === "object" &&
     packageJson !== null &&
-    (packageJson as { openclaw?: { bundle?: { stageRuntimeDependencies?: boolean } } }).openclaw
+    (packageJson as { littlebaby?: { bundle?: { stageRuntimeDependencies?: boolean } } }).littlebaby
       ?.bundle?.stageRuntimeDependencies === true
   );
 }
@@ -173,10 +173,10 @@ function normalizeBundledPluginOutEntry(entry: string): string {
 
 function isPluginSdkSelfReference(id: string): boolean {
   return (
-    id === "openclaw/plugin-sdk" ||
-    id.startsWith("openclaw/plugin-sdk/") ||
-    id === "@openclaw/plugin-sdk" ||
-    id.startsWith("@openclaw/plugin-sdk/")
+    id === "littlebaby/plugin-sdk" ||
+    id.startsWith("littlebaby/plugin-sdk/") ||
+    id === "@littlebaby/plugin-sdk" ||
+    id.startsWith("@littlebaby/plugin-sdk/")
   );
 }
 

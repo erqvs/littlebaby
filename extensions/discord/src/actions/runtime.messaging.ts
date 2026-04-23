@@ -12,7 +12,7 @@ import {
   readStringParam,
   resolvePollMaxSelections,
   type DiscordActionConfig,
-  type OpenClawConfig,
+  type LittleBabyConfig,
   withNormalizedTimestamp,
   readBooleanParam,
 } from "../runtime-api.js";
@@ -100,7 +100,7 @@ export async function handleDiscordMessagingAction(
     mediaLocalRoots?: readonly string[];
     mediaReadFile?: (filePath: string) => Promise<Buffer>;
   },
-  cfg?: OpenClawConfig,
+  cfg?: LittleBabyConfig,
 ): Promise<AgentToolResult<unknown>> {
   const resolveChannelId = () =>
     discordMessagingActionRuntime.resolveDiscordChannelId(

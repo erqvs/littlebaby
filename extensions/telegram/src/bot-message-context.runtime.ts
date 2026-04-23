@@ -1,4 +1,4 @@
-export { createStatusReactionController } from "openclaw/plugin-sdk/channel-feedback";
-export { recordChannelActivity } from "openclaw/plugin-sdk/infra-runtime";
-export { loadConfig } from "openclaw/plugin-sdk/config-runtime";
-export { ensureConfiguredBindingRouteReady } from "openclaw/plugin-sdk/conversation-runtime";
+export { createStatusReactionController } from "littlebaby/plugin-sdk/channel-feedback";
+export { recordChannelActivity } from "littlebaby/plugin-sdk/infra-runtime";
+export { loadConfig } from "littlebaby/plugin-sdk/config-runtime";
+export { ensureConfiguredBindingRouteReady } from "littlebaby/plugin-sdk/conversation-runtime";

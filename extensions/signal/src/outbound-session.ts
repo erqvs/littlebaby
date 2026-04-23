@@ -1,5 +1,5 @@
-import { type RoutePeer } from "openclaw/plugin-sdk/routing";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { type RoutePeer } from "littlebaby/plugin-sdk/routing";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { resolveSignalPeerId, resolveSignalRecipient, resolveSignalSender } from "./identity.js";
 import { looksLikeUuid } from "./uuid.js";
 

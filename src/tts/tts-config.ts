@@ -1,12 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import type { TtsAutoMode, TtsMode } from "../config/types.tts.js";
 import { resolveConfigDir, resolveUserPath } from "../utils.js";
 import { normalizeTtsAutoMode } from "./tts-auto-mode.js";
 export { normalizeTtsAutoMode } from "./tts-auto-mode.js";
 
-export function resolveConfiguredTtsMode(cfg: OpenClawConfig): TtsMode {
+export function resolveConfiguredTtsMode(cfg: LittleBabyConfig): TtsMode {
   return cfg.messages?.tts?.mode ?? "final";
 }
 
@@ -43,7 +43,7 @@ function readTtsPrefsAutoMode(prefsPath: string): TtsAutoMode | undefined {
 }
 
 export function shouldAttemptTtsPayload(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   ttsAuto?: string;
 }): boolean {
   const sessionAuto = normalizeTtsAutoMode(params.ttsAuto);

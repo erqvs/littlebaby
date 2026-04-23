@@ -8,29 +8,29 @@ title: "Hooks"
 
 # Hooks
 
-Hooks are small scripts that run when something happens inside the Gateway. They are automatically discovered from directories and can be inspected with `openclaw hooks`.
+Hooks are small scripts that run when something happens inside the Gateway. They are automatically discovered from directories and can be inspected with `littlebaby hooks`.
 
-There are two kinds of hooks in OpenClaw:
+There are two kinds of hooks in LittleBaby:
 
 - **Internal hooks** (this page): run inside the Gateway when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
-- **Webhooks**: external HTTP endpoints that let other systems trigger work in OpenClaw. See [Webhooks](/automation/cron-jobs#webhooks).
+- **Webhooks**: external HTTP endpoints that let other systems trigger work in LittleBaby. See [Webhooks](/automation/cron-jobs#webhooks).
 
-Hooks can also be bundled inside plugins. `openclaw hooks list` shows both standalone hooks and plugin-managed hooks.
+Hooks can also be bundled inside plugins. `littlebaby hooks list` shows both standalone hooks and plugin-managed hooks.
 
 ## Quick start
 
 ```bash
 # List available hooks
-openclaw hooks list
+littlebaby hooks list
 
 # Enable a hook
-openclaw hooks enable session-memory
+littlebaby hooks enable session-memory
 
 # Check hook status
-openclaw hooks check
+littlebaby hooks check
 
 # Get detailed information
-openclaw hooks info session-memory
+littlebaby hooks info session-memory
 ```
 
 ## Event types
@@ -78,7 +78,7 @@ metadata:
 Detailed documentation goes here.
 ```
 
-**Metadata fields** (`metadata.openclaw`):
+**Metadata fields** (`metadata.littlebaby`):
 
 | Field      | Description                                          |
 | ---------- | ---------------------------------------------------- |
@@ -132,7 +132,7 @@ Each event includes: `type`, `action`, `sessionKey`, `timestamp`, `messages` (pu
 
 Hooks are discovered from these directories, in order of increasing override precedence:
 
-1. **Bundled hooks**: shipped with OpenClaw
+1. **Bundled hooks**: shipped with LittleBaby
 2. **Plugin hooks**: hooks bundled inside installed plugins
 3. **Managed hooks**: `~/.littlebaby/hooks/` (user-installed, shared across workspaces). Extra directories from `hooks.internal.load.extraDirs` share this precedence.
 4. **Workspace hooks**: `<workspace>/hooks/` (per-agent, disabled by default until explicitly enabled)
@@ -141,10 +141,10 @@ Workspace hooks can add new hook names but cannot override bundled, managed, or 
 
 ### Hook packs
 
-Hook packs are npm packages that export hooks via `openclaw.hooks` in `package.json`. Install with:
+Hook packs are npm packages that export hooks via `littlebaby.hooks` in `package.json`. Install with:
 
 ```bash
-openclaw plugins install <path-or-spec>
+littlebaby plugins install <path-or-spec>
 ```
 
 Npm specs are registry-only (package name + optional exact version or dist-tag). Git/URL/file specs and semver ranges are rejected.
@@ -161,7 +161,7 @@ Npm specs are registry-only (package name + optional exact version or dist-tag).
 Enable any bundled hook:
 
 ```bash
-openclaw hooks enable <hook-name>
+littlebaby hooks enable <hook-name>
 ```
 
 <a id="session-memory"></a>
@@ -264,17 +264,17 @@ The legacy `hooks.internal.handlers` array config format is still supported for 
 
 ```bash
 # List all hooks (add --eligible, --verbose, or --json)
-openclaw hooks list
+littlebaby hooks list
 
 # Show detailed info about a hook
-openclaw hooks info <hook-name>
+littlebaby hooks info <hook-name>
 
 # Show eligibility summary
-openclaw hooks check
+littlebaby hooks check
 
 # Enable/disable
-openclaw hooks enable <hook-name>
-openclaw hooks disable <hook-name>
+littlebaby hooks enable <hook-name>
+littlebaby hooks disable <hook-name>
 ```
 
 ## Best practices
@@ -294,20 +294,20 @@ ls -la ~/.littlebaby/hooks/my-hook/
 # Should show: HOOK.md, handler.ts
 
 # List all discovered hooks
-openclaw hooks list
+littlebaby hooks list
 ```
 
 ### Hook not eligible
 
 ```bash
-openclaw hooks info my-hook
+littlebaby hooks info my-hook
 ```
 
 Check for missing binaries (PATH), environment variables, config values, or OS compatibility.
 
 ### Hook not executing
 
-1. Verify the hook is enabled: `openclaw hooks list`
+1. Verify the hook is enabled: `littlebaby hooks list`
 2. Restart your gateway process so hooks reload.
 3. Check gateway logs: `./scripts/clawlog.sh | grep hook`
 

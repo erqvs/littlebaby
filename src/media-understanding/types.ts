@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 
 export type MediaUnderstandingKind =
   | "audio.transcription"
@@ -137,7 +137,7 @@ export type ImageDescriptionRequest = {
   profile?: string;
   preferredProfile?: string;
   agentDir: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   model: string;
   provider: string;
 };
@@ -158,7 +158,7 @@ export type ImagesDescriptionRequest = {
   profile?: string;
   preferredProfile?: string;
   agentDir: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
 };
 
 export type ImageDescriptionResult = {

@@ -13,13 +13,13 @@ title: "TUI"
 1. Start the Gateway.
 
 ```bash
-openclaw gateway
+littlebaby gateway
 ```
 
 2. Open the TUI.
 
 ```bash
-openclaw tui
+littlebaby tui
 ```
 
 3. Type a message and press Enter.
@@ -27,7 +27,7 @@ openclaw tui
 Remote Gateway:
 
 ```bash
-openclaw tui --url ws://<host>:<port> --token <gateway-token>
+littlebaby tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
 Use `--password` if your Gateway uses password auth.
@@ -58,7 +58,7 @@ Use `--password` if your Gateway uses password auth.
 - Turn delivery on:
   - `/deliver on`
   - or the Settings panel
-  - or start with `openclaw tui --deliver`
+  - or start with `littlebaby tui --deliver`
 
 ## Pickers + overlays
 
@@ -127,7 +127,7 @@ Other Gateway slash commands (for example, `/context`) are forwarded to the Gate
 ## Terminal colors
 
 - The TUI keeps assistant body text in your terminal's default foreground so dark and light terminals both stay readable.
-- If your terminal uses a light background and auto-detection is wrong, set `LITTLEBABY_THEME=light` before launching `openclaw tui`.
+- If your terminal uses a light background and auto-detection is wrong, set `LITTLEBABY_THEME=light` before launching `littlebaby tui`.
 - To force the original dark palette instead, set `LITTLEBABY_THEME=dark`.
 
 ## History + streaming
@@ -161,14 +161,14 @@ Pass `--token` or `--password` explicitly. Missing explicit credentials is an er
 No output after sending a message:
 
 - Run `/status` in the TUI to confirm the Gateway is connected and idle/busy.
-- Check the Gateway logs: `openclaw logs --follow`.
-- Confirm the agent can run: `openclaw status` and `openclaw models status`.
+- Check the Gateway logs: `littlebaby logs --follow`.
+- Confirm the agent can run: `littlebaby status` and `littlebaby models status`.
 - If you expect messages in a chat channel, enable delivery (`/deliver on` or `--deliver`).
 
 ## Connection troubleshooting
 
 - `disconnected`: ensure the Gateway is running and your `--url/--token/--password` are correct.
-- No agents in picker: check `openclaw agents list` and your routing config.
+- No agents in picker: check `littlebaby agents list` and your routing config.
 - Empty session picker: you might be in global scope or have no sessions yet.
 
 ## Related

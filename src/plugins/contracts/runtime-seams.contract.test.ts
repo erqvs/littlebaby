@@ -25,10 +25,10 @@ function createInstalledRuntimePluginDir(
   pluginRoot: string;
 } {
   const bundledDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), `openclaw-runtime-contract-bundled-${pluginId}-`),
+    path.join(os.tmpdir(), `littlebaby-runtime-contract-bundled-${pluginId}-`),
   );
   const stateDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), `openclaw-runtime-contract-state-${pluginId}-`),
+    path.join(os.tmpdir(), `littlebaby-runtime-contract-state-${pluginId}-`),
   );
   tempDirs.push(bundledDir, stateDir);
   const pluginRoot = path.join(stateDir, "extensions", pluginId);
@@ -41,9 +41,9 @@ function createInstalledRuntimePluginDir(
   fs.writeFileSync(
     path.join(pluginRoot, "package.json"),
     JSON.stringify({
-      name: `@openclaw/${pluginId}`,
+      name: `@littlebaby/${pluginId}`,
       version: "0.0.0",
-      openclaw: {
+      littlebaby: {
         extensions: ["./runtime-api.js"],
         channel: { id: pluginId },
       },
@@ -51,7 +51,7 @@ function createInstalledRuntimePluginDir(
     "utf8",
   );
   fs.writeFileSync(
-    path.join(pluginRoot, "openclaw.plugin.json"),
+    path.join(pluginRoot, "littlebaby.plugin.json"),
     JSON.stringify({
       id: pluginId,
       channels: [pluginId],

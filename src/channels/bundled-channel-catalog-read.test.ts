@@ -14,12 +14,12 @@ vi.mock("../plugins/bundled-dir.js", () => ({
 }));
 
 // The channel-catalog.json fallback still walks package roots via
-// resolveOpenClawPackageRootSync. Isolate from the real repo by mocking
+// resolveLittleBabyPackageRootSync. Isolate from the real repo by mocking
 // moduleUrl/argv1 resolution to null and deriving only from the tmp cwd.
-vi.mock("../infra/openclaw-root.js", () => ({
-  resolveOpenClawPackageRootSync: (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>
+vi.mock("../infra/littlebaby-root.js", () => ({
+  resolveLittleBabyPackageRootSync: (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>
     opts.cwd ?? null,
-  resolveOpenClawPackageRoot: async (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>
+  resolveLittleBabyPackageRoot: async (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>
     opts.cwd ?? null,
 }));
 
@@ -46,8 +46,8 @@ function seedChannelPkg(
   opts: { id: string; docsPath: string; label?: string; blurb?: string },
 ): void {
   writeJsonFile(pkgJsonPath, {
-    name: `@openclaw/${opts.id}`,
-    openclaw: {
+    name: `@littlebaby/${opts.id}`,
+    littlebaby: {
       channel: {
         id: opts.id,
         label: opts.label ?? opts.id,
@@ -96,8 +96,8 @@ describe("listBundledChannelCatalogEntries", () => {
     writeJsonFile(path.join(root, "dist", "channel-catalog.json"), {
       entries: [
         {
-          name: "@openclaw/fallback",
-          openclaw: {
+          name: "@littlebaby/fallback",
+          littlebaby: {
             channel: {
               id: "fallback-channel",
               label: "Fallback",
@@ -125,8 +125,8 @@ describe("listBundledChannelCatalogEntries", () => {
     writeJsonFile(path.join(root, "dist", "channel-catalog.json"), {
       entries: [
         {
-          name: "@openclaw/fallback",
-          openclaw: {
+          name: "@littlebaby/fallback",
+          littlebaby: {
             channel: {
               id: "fallback-channel",
               label: "Fallback",

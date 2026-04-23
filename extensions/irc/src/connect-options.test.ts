@@ -9,7 +9,7 @@ describe("buildIrcConnectOptions", () => {
       tls: true,
       nick: "littlebaby",
       username: "littlebaby",
-      realname: "OpenClaw Bot",
+      realname: "LittleBaby Bot",
       password: "server-pass",
       config: {
         nickserv: {
@@ -32,7 +32,7 @@ describe("buildIrcConnectOptions", () => {
       tls: true,
       nick: "littlebaby",
       username: "littlebaby",
-      realname: "OpenClaw Bot",
+      realname: "LittleBaby Bot",
       password: "server-pass",
       nickserv: {
         enabled: true,

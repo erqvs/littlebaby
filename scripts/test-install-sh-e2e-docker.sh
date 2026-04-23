@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IMAGE_NAME="${LITTLEBABY_INSTALL_E2E_IMAGE:-openclaw-install-e2e:local}"
-INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://openclaw.bot/install.sh}"
+IMAGE_NAME="${LITTLEBABY_INSTALL_E2E_IMAGE:-littlebaby-install-e2e:local}"
+INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://littlebaby.bot/install.sh}"
 
 OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import type { MatrixQaProvisionedTopology } from "./topology.js";
 
 export type MatrixQaReplyToMode = "off" | "first" | "all" | "batched";
@@ -98,7 +98,7 @@ type MatrixQaGroupSnapshot = {
 };
 
 type MatrixQaGroupEntry = Omit<MatrixQaGroupSnapshot, "roomId">;
-type MatrixQaChannelConfig = NonNullable<OpenClawConfig["channels"]>["matrix"];
+type MatrixQaChannelConfig = NonNullable<LittleBabyConfig["channels"]>["matrix"];
 type MatrixQaChannelAccountConfig = NonNullable<
   NonNullable<MatrixQaChannelConfig>["accounts"]
 >[string];
@@ -376,7 +376,7 @@ export function summarizeMatrixQaConfigSnapshot(snapshot: MatrixQaConfigSnapshot
 }
 
 export function buildMatrixQaConfig(
-  baseCfg: OpenClawConfig,
+  baseCfg: LittleBabyConfig,
   params: {
     driverUserId: string;
     homeserver: string;
@@ -388,7 +388,7 @@ export function buildMatrixQaConfig(
     sutUserId: string;
     topology: MatrixQaProvisionedTopology;
   },
-): OpenClawConfig {
+): LittleBabyConfig {
   const pluginAllow = [...new Set([...(baseCfg.plugins?.allow ?? []), "matrix"])];
   const snapshot = buildMatrixQaConfigSnapshot({
     driverUserId: params.driverUserId,

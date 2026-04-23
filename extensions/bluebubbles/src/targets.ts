@@ -1,15 +1,15 @@
-import { isAllowedParsedChatSender } from "openclaw/plugin-sdk/allow-from";
+import { isAllowedParsedChatSender } from "littlebaby/plugin-sdk/allow-from";
 import {
   parseChatAllowTargetPrefixes,
   parseChatTargetPrefixesOrThrow,
   type ParsedChatTarget,
   resolveServicePrefixedAllowTarget,
   resolveServicePrefixedTarget,
-} from "openclaw/plugin-sdk/channel-targets";
+} from "littlebaby/plugin-sdk/channel-targets";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 
 export type BlueBubblesService = "imessage" | "sms" | "auto";
 

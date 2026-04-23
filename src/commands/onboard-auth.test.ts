@@ -27,11 +27,11 @@ const providerEnvVarsById = vi.hoisted(
 );
 
 vi.mock("../agents/agent-paths.js", () => ({
-  resolveOpenClawAgentDir: () => process.env.LITTLEBABY_AGENT_DIR ?? "/tmp/openclaw-agent",
+  resolveLittleBabyAgentDir: () => process.env.LITTLEBABY_AGENT_DIR ?? "/tmp/littlebaby-agent",
 }));
 
 vi.mock("../config/paths.js", () => ({
-  resolveStateDir: () => process.env.LITTLEBABY_STATE_DIR ?? "/tmp/openclaw-state",
+  resolveStateDir: () => process.env.LITTLEBABY_STATE_DIR ?? "/tmp/littlebaby-state",
 }));
 
 vi.mock("../agents/auth-profiles/profiles.js", async () => {
@@ -39,7 +39,7 @@ vi.mock("../agents/auth-profiles/profiles.js", async () => {
   const path = await import("node:path");
   return {
     upsertAuthProfile: (params: { profileId: string; credential: unknown; agentDir?: string }) => {
-      const agentDir = params.agentDir ?? process.env.LITTLEBABY_AGENT_DIR ?? "/tmp/openclaw-agent";
+      const agentDir = params.agentDir ?? process.env.LITTLEBABY_AGENT_DIR ?? "/tmp/littlebaby-agent";
       const file = path.join(agentDir, "auth-profiles.json");
       fs.mkdirSync(agentDir, { recursive: true });
       const existing = (() => {
@@ -100,7 +100,7 @@ describe("writeOAuthCredentials", () => {
   });
 
   it("writes auth-profiles.json under LITTLEBABY_AGENT_DIR when set", async () => {
-    const env = await setupAuthTestEnv("openclaw-oauth-");
+    const env = await setupAuthTestEnv("littlebaby-oauth-");
     lifecycle.setStateDir(env.stateDir);
 
     const creds = {
@@ -126,7 +126,7 @@ describe("writeOAuthCredentials", () => {
   });
 
   it("writes OAuth credentials to all sibling agent dirs when syncSiblingAgents=true", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-oauth-sync-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-oauth-sync-"));
     process.env.LITTLEBABY_STATE_DIR = tempStateDir;
 
     const mainAgentDir = path.join(tempStateDir, "agents", "main", "agent");
@@ -163,7 +163,7 @@ describe("writeOAuthCredentials", () => {
   });
 
   it("writes OAuth credentials only to target dir by default", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-oauth-nosync-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-oauth-nosync-"));
     process.env.LITTLEBABY_STATE_DIR = tempStateDir;
 
     const mainAgentDir = path.join(tempStateDir, "agents", "main", "agent");
@@ -195,7 +195,7 @@ describe("writeOAuthCredentials", () => {
   });
 
   it("syncs siblings from explicit agentDir outside LITTLEBABY_STATE_DIR", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-oauth-external-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-oauth-external-"));
     process.env.LITTLEBABY_STATE_DIR = tempStateDir;
 
     // Create standard-layout agents tree *outside* LITTLEBABY_STATE_DIR
@@ -266,7 +266,7 @@ describe("upsertApiKeyProfile secret refs", () => {
   }
 
   it("handles plaintext, ref mode, and inline env-ref provider keys", async () => {
-    const env = await setupAuthTestEnv("openclaw-onboard-auth-credentials-");
+    const env = await setupAuthTestEnv("littlebaby-onboard-auth-credentials-");
     lifecycle.setStateDir(env.stateDir);
     process.env.MOONSHOT_API_KEY = "sk-moonshot-env"; // pragma: allowlist secret
     process.env.OPENAI_API_KEY = "sk-openai-env"; // pragma: allowlist secret
@@ -331,7 +331,7 @@ describe("upsertApiKeyProfile secret refs", () => {
   });
 
   it("stores provider-specific env refs and metadata in ref mode", async () => {
-    const env = await setupAuthTestEnv("openclaw-onboard-auth-credentials-provider-ref-");
+    const env = await setupAuthTestEnv("littlebaby-onboard-auth-credentials-provider-ref-");
     lifecycle.setStateDir(env.stateDir);
     process.env.CLOUDFLARE_AI_GATEWAY_API_KEY = "cf-secret"; // pragma: allowlist secret
     process.env.VOLCANO_ENGINE_API_KEY = "volcengine-secret"; // pragma: allowlist secret
@@ -394,7 +394,7 @@ describe("upsertApiKeyProfile", () => {
   });
 
   it("writes to LITTLEBABY_AGENT_DIR when set", async () => {
-    const env = await setupAuthTestEnv("openclaw-minimax-", { agentSubdir: "custom-agent" });
+    const env = await setupAuthTestEnv("littlebaby-minimax-", { agentSubdir: "custom-agent" });
     lifecycle.setStateDir(env.stateDir);
 
     upsertApiKeyProfile({ provider: "minimax", input: "sk-minimax-test" });

@@ -1,22 +1,22 @@
 import type { App } from "@slack/bolt";
-import { formatAllowlistMatchMeta } from "openclaw/plugin-sdk/allow-from";
+import { formatAllowlistMatchMeta } from "littlebaby/plugin-sdk/allow-from";
 import type {
-  OpenClawConfig,
+  LittleBabyConfig,
   SlackReactionNotificationMode,
-} from "openclaw/plugin-sdk/config-runtime";
-import type { SessionScope } from "openclaw/plugin-sdk/config-runtime";
-import type { DmPolicy, GroupPolicy } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createDedupeCache } from "openclaw/plugin-sdk/infra-runtime";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { getChildLogger } from "openclaw/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/config-runtime";
+import type { SessionScope } from "littlebaby/plugin-sdk/config-runtime";
+import type { DmPolicy, GroupPolicy } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { createDedupeCache } from "littlebaby/plugin-sdk/infra-runtime";
+import type { HistoryEntry } from "littlebaby/plugin-sdk/reply-history";
+import { resolveAgentRoute } from "littlebaby/plugin-sdk/routing";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { getChildLogger } from "littlebaby/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime-env";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import type { SlackMessageEvent } from "../types.js";
 import { normalizeAllowList, normalizeAllowListLower, normalizeSlackSlug } from "./allow-list.js";
 import type { SlackChannelConfigEntries } from "./channel-config.js";
@@ -28,7 +28,7 @@ import { isSlackChannelAllowedByPolicy } from "./policy.js";
 export { inferSlackChannelType, normalizeSlackChannelType } from "./channel-type.js";
 
 export type SlackMonitorContext = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   botToken: string;
   app: App;
@@ -60,7 +60,7 @@ export type SlackMonitorContext = {
   threadHistoryScope: "thread" | "channel";
   threadInheritParent: boolean;
   threadRequireExplicitMention: boolean;
-  slashCommand: Required<import("openclaw/plugin-sdk/config-runtime").SlackSlashCommandConfig>;
+  slashCommand: Required<import("littlebaby/plugin-sdk/config-runtime").SlackSlashCommandConfig>;
   textLimit: number;
   ackReactionScope: string;
   typingReaction: string;
@@ -96,7 +96,7 @@ export type SlackMonitorContext = {
 };
 
 export function createSlackMonitorContext(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   botToken: string;
   app: App;

@@ -43,7 +43,7 @@ vi.mock("../infra/env.js", () => ({
 }));
 
 vi.mock("../infra/path-env.js", () => ({
-  ensureOpenClawCliOnPath: ensurePathMock,
+  ensureLittleBabyCliOnPath: ensurePathMock,
 }));
 
 vi.mock("../infra/runtime-guard.js", () => ({
@@ -231,7 +231,7 @@ describe("runCli exit behavior", () => {
         "process.exit(1)",
       );
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[openclaw] Uncaught exception:",
+        "[littlebaby] Uncaught exception:",
         expect.stringContaining("boom"),
       );
       expect(restoreTerminalStateMock).toHaveBeenCalledWith("uncaught exception", {

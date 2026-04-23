@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { saveAuthProfileStore } from "openclaw/plugin-sdk/agent-runtime";
+import { saveAuthProfileStore } from "littlebaby/plugin-sdk/agent-runtime";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 let bridgeCodexAppServerStartOptions: typeof import("./auth-bridge.js").bridgeCodexAppServerStartOptions;
@@ -27,8 +27,8 @@ describe("bridgeCodexAppServerStartOptions", () => {
     );
   });
 
-  it("bridges canonical OpenClaw oauth into an isolated CODEX_HOME", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-app-server-"));
+  it("bridges canonical LittleBaby oauth into an isolated CODEX_HOME", async () => {
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-app-server-"));
     tempDirs.push(agentDir);
     saveAuthProfileStore(
       {
@@ -88,7 +88,7 @@ describe("bridgeCodexAppServerStartOptions", () => {
   });
 
   it("leaves start options unchanged when canonical oauth is unavailable", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-app-server-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-app-server-"));
     tempDirs.push(agentDir);
     const startOptions = {
       transport: "stdio" as const,
@@ -110,7 +110,7 @@ describe("bridgeCodexAppServerStartOptions", () => {
   });
 
   it("refuses to overwrite a symlinked auth bridge file", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-app-server-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-app-server-"));
     tempDirs.push(agentDir);
     saveAuthProfileStore(
       {

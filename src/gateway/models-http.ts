@@ -58,9 +58,9 @@ function loadAgentModelIds(): string[] {
   const cfg = loadConfig();
   const defaultAgentId = resolveDefaultAgentId(cfg);
   const ids = new Set<string>([LITTLEBABY_MODEL_ID, LITTLEBABY_DEFAULT_MODEL_ID]);
-  ids.add(`openclaw/${defaultAgentId}`);
+  ids.add(`littlebaby/${defaultAgentId}`);
   for (const agentId of listAgentIds(cfg)) {
-    ids.add(`openclaw/${agentId}`);
+    ids.add(`littlebaby/${agentId}`);
   }
   return Array.from(ids);
 }

@@ -4,7 +4,7 @@ import path from "node:path";
 import { withEnvAsync } from "../test-utils/env.js";
 
 export async function withChannelSecurityStateDir(fn: (tmp: string) => Promise<void>) {
-  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-audit-channel-"));
+  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-security-audit-channel-"));
   const stateDir = path.join(fixtureRoot, "state");
   const credentialsDir = path.join(stateDir, "credentials");
   await fs.mkdir(credentialsDir, {

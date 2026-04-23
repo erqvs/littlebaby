@@ -3,9 +3,9 @@ import {
   isSenderIdAllowed,
   mergeDmAllowFromSources,
   type AllowlistMatch,
-} from "openclaw/plugin-sdk/allow-from";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/allow-from";
+import { createSubsystemLogger } from "littlebaby/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 
 export type NormalizedAllowFrom = {
   entries: string[];

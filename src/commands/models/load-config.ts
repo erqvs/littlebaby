@@ -4,17 +4,17 @@ import {
   getRuntimeConfig,
   readSourceConfigSnapshotForWrite,
   setRuntimeConfigSnapshot,
-  type OpenClawConfig,
+  type LittleBabyConfig,
   getModelsCommandSecretTargetIds,
 } from "./load-config.runtime.js";
 
 export type LoadedModelsConfig = {
-  sourceConfig: OpenClawConfig;
-  resolvedConfig: OpenClawConfig;
+  sourceConfig: LittleBabyConfig;
+  resolvedConfig: LittleBabyConfig;
   diagnostics: string[];
 };
 
-async function loadSourceConfigSnapshot(fallback: OpenClawConfig): Promise<OpenClawConfig> {
+async function loadSourceConfigSnapshot(fallback: LittleBabyConfig): Promise<LittleBabyConfig> {
   try {
     const { snapshot } = await readSourceConfigSnapshotForWrite();
     if (snapshot.valid) {
@@ -49,6 +49,6 @@ export async function loadModelsConfigWithSource(params: {
 export async function loadModelsConfig(params: {
   commandName: string;
   runtime?: RuntimeEnv;
-}): Promise<OpenClawConfig> {
+}): Promise<LittleBabyConfig> {
   return (await loadModelsConfigWithSource(params)).resolvedConfig;
 }

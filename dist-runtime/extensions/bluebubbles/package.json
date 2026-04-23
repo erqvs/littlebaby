@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/bluebubbles",
+  "name": "@littlebaby/bluebubbles",
   "version": "2026.4.20",
-  "description": "OpenClaw BlueBubbles channel plugin",
+  "description": "LittleBaby BlueBubbles channel plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -26,7 +26,7 @@
       "order": 75
     },
     "install": {
-      "npmSpec": "@openclaw/bluebubbles",
+      "npmSpec": "@littlebaby/bluebubbles",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -34,7 +34,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

@@ -1,25 +1,25 @@
 {
-  "name": "@openclaw/line",
+  "name": "@littlebaby/line",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw LINE channel plugin",
+  "description": "LittleBaby LINE channel plugin",
   "type": "module",
   "dependencies": {
     "@line/bot-sdk": "^11.0.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*",
+    "littlebaby": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.20"
+    "littlebaby": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],
@@ -37,7 +37,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/line",
+      "npmSpec": "@littlebaby/line",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     }

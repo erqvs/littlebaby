@@ -221,7 +221,7 @@ function auditGatewayToken(
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenEmbedded,
     message: "Gateway service embeds LITTLEBABY_GATEWAY_TOKEN and should be reinstalled.",
-    detail: "Run `openclaw gateway install --force` to remove embedded service token.",
+    detail: "Run `littlebaby gateway install --force` to remove embedded service token.",
     level: "recommended",
   });
   const expectedToken = normalizeOptionalString(expectedGatewayToken);
@@ -231,7 +231,7 @@ function auditGatewayToken(
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenMismatch,
     message:
-      "Gateway service LITTLEBABY_GATEWAY_TOKEN does not match gateway.auth.token in openclaw.json",
+      "Gateway service LITTLEBABY_GATEWAY_TOKEN does not match gateway.auth.token in littlebaby.json",
     detail: "service token is stale",
     level: "recommended",
   });
@@ -395,7 +395,7 @@ export function checkTokenDrift(params: {
       code: SERVICE_AUDIT_CODES.gatewayTokenDrift,
       message:
         "Config token differs from service token. The daemon will use the old token after restart.",
-      detail: "Run `openclaw gateway install --force` to sync the token.",
+      detail: "Run `littlebaby gateway install --force` to sync the token.",
       level: "recommended",
     };
   }

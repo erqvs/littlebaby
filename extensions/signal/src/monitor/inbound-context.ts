@@ -1,9 +1,9 @@
-import { resolveChannelContextVisibilityMode } from "openclaw/plugin-sdk/config-runtime";
+import { resolveChannelContextVisibilityMode } from "littlebaby/plugin-sdk/config-runtime";
 import {
   evaluateSupplementalContextVisibility,
   type ContextVisibilityDecision,
-} from "openclaw/plugin-sdk/security-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/security-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import {
   formatSignalSenderDisplay,
   isSignalSenderAllowed,

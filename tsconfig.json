@@ -19,13 +19,13 @@
     "types": ["node"],
     "useDefineForClassFields": false,
     "paths": {
-      "openclaw/extension-api": ["./src/extensionAPI.ts"],
-      "openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
-      "openclaw/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
-      "@openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
-      "@openclaw/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
-      "openclaw/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"],
-      "@openclaw/*": ["./extensions/*"]
+      "littlebaby/extension-api": ["./src/extensionAPI.ts"],
+      "littlebaby/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "littlebaby/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
+      "@littlebaby/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "@littlebaby/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
+      "littlebaby/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"],
+      "@littlebaby/*": ["./extensions/*"]
     }
   },
   "include": ["src/**/*", "ui/**/*", "extensions/**/*", "packages/**/*"],

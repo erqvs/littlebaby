@@ -81,7 +81,7 @@ describe("ports helpers", () => {
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
 
-  it("prints an OpenClaw-specific hint when port details look like another OpenClaw instance", async () => {
+  it("prints an LittleBaby-specific hint when port details look like another LittleBaby instance", async () => {
     const runtime = {
       error: vi.fn(),
       log: vi.fn(),
@@ -89,14 +89,14 @@ describe("ports helpers", () => {
     };
 
     await handlePortError(
-      new PortInUseError(18789, "node dist/index.js openclaw gateway"),
+      new PortInUseError(18789, "node dist/index.js littlebaby gateway"),
       18789,
       "gateway start",
       runtime,
     ).catch(() => {});
 
     const messages = runtime.error.mock.calls.map((call) => stripAnsi(String(call[0] ?? "")));
-    expect(messages.join("\n")).toContain("another OpenClaw instance is already running");
+    expect(messages.join("\n")).toContain("another LittleBaby instance is already running");
   });
 });
 
@@ -148,7 +148,7 @@ describeUnix("inspectPortUsage", () => {
       if (command === "ps") {
         if (argv.includes("command=")) {
           return {
-            stdout: "node /tmp/openclaw/dist/index.js gateway --port 18789\n",
+            stdout: "node /tmp/littlebaby/dist/index.js gateway --port 18789\n",
             stderr: "",
             code: 0,
           };

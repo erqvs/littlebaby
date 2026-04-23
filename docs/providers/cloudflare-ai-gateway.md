@@ -2,13 +2,13 @@
 title: "Cloudflare AI Gateway"
 summary: "Cloudflare AI Gateway setup (auth + model selection)"
 read_when:
-  - You want to use Cloudflare AI Gateway with OpenClaw
+  - You want to use Cloudflare AI Gateway with LittleBaby
   - You need the account ID, gateway ID, or API key env var
 ---
 
 # Cloudflare AI Gateway
 
-Cloudflare AI Gateway sits in front of provider APIs and lets you add analytics, caching, and controls. For Anthropic, OpenClaw uses the Anthropic Messages API through your Gateway endpoint.
+Cloudflare AI Gateway sits in front of provider APIs and lets you add analytics, caching, and controls. For Anthropic, LittleBaby uses the Anthropic Messages API through your Gateway endpoint.
 
 | Property      | Value                                                                                    |
 | ------------- | ---------------------------------------------------------------------------------------- |
@@ -28,14 +28,14 @@ For Anthropic models routed through Cloudflare AI Gateway, use your **Anthropic 
     Run onboarding and choose the Cloudflare AI Gateway auth option:
 
     ```bash
-    openclaw onboard --auth-choice cloudflare-ai-gateway-api-key
+    littlebaby onboard --auth-choice cloudflare-ai-gateway-api-key
     ```
 
     This prompts for your account ID, gateway ID, and API key.
 
   </Step>
   <Step title="Set a default model">
-    Add the model to your OpenClaw config:
+    Add the model to your LittleBaby config:
 
     ```json5
     {
@@ -50,7 +50,7 @@ For Anthropic models routed through Cloudflare AI Gateway, use your **Anthropic 
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider cloudflare-ai-gateway
+    littlebaby models list --provider cloudflare-ai-gateway
     ```
   </Step>
 </Steps>
@@ -60,7 +60,7 @@ For Anthropic models routed through Cloudflare AI Gateway, use your **Anthropic 
 For scripted or CI setups, pass all values on the command line:
 
 ```bash
-openclaw onboard --non-interactive \
+littlebaby onboard --non-interactive \
   --mode local \
   --auth-choice cloudflare-ai-gateway-api-key \
   --cloudflare-ai-gateway-account-id "your-account-id" \

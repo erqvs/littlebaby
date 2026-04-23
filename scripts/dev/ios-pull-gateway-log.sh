@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DEVICE_UDID="${1:-00008130-000630CE0146001C}"
-BUNDLE_ID="${2:-ai.openclaw.ios.dev.mariano.test}"
+BUNDLE_ID="${2:-ai.littlebaby.ios.dev.mariano.test}"
 DEST="${3:-/tmp/littlebaby-gateway.log}"
 
 xcrun devicectl device copy from \

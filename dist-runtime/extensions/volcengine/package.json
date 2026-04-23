@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/volcengine-provider",
+  "name": "@littlebaby/volcengine-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Volcengine provider plugin",
+  "description": "LittleBaby Volcengine provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

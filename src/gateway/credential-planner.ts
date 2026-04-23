@@ -1,5 +1,5 @@
 import { containsEnvVarReference } from "../config/env-substitution.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { hasConfiguredSecretInput, resolveSecretInputRef } from "../config/types.secrets.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 
@@ -41,7 +41,7 @@ export type GatewayCredentialPlan = {
   remotePasswordActive: boolean;
 };
 
-type GatewaySecretDefaults = NonNullable<OpenClawConfig["secrets"]>["defaults"];
+type GatewaySecretDefaults = NonNullable<LittleBabyConfig["secrets"]>["defaults"];
 
 export const trimToUndefined = normalizeOptionalString;
 
@@ -87,7 +87,7 @@ function resolveConfiguredGatewayCredentialInput(params: {
 }
 
 export function createGatewayCredentialPlan(params: {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   defaults?: GatewaySecretDefaults;
 }): GatewayCredentialPlan {

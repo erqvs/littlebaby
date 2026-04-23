@@ -1,4 +1,4 @@
-import { readStoreAllowFromForDmPolicy } from "openclaw/plugin-sdk/security-runtime";
+import { readStoreAllowFromForDmPolicy } from "littlebaby/plugin-sdk/security-runtime";
 import {
   allowListMatches,
   normalizeAllowList,

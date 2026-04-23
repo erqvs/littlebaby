@@ -119,14 +119,14 @@ describe("env test utils", () => {
   });
 
   it("createPathResolutionEnv clears leaked path overrides before applying explicit ones", () => {
-    const homeDir = path.join(path.sep, "tmp", "openclaw-home");
+    const homeDir = path.join(path.sep, "tmp", "littlebaby-home");
     const resolvedHomeDir = path.resolve(homeDir);
-    const previousOpenClawHome = process.env.LITTLEBABY_HOME;
+    const previousLittleBabyHome = process.env.LITTLEBABY_HOME;
     const previousStateDir = process.env.LITTLEBABY_STATE_DIR;
     const previousBundledDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
-    process.env.LITTLEBABY_HOME = "/srv/openclaw-home";
-    process.env.LITTLEBABY_STATE_DIR = "/srv/openclaw-state";
-    process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR = "/srv/openclaw-bundled";
+    process.env.LITTLEBABY_HOME = "/srv/littlebaby-home";
+    process.env.LITTLEBABY_STATE_DIR = "/srv/littlebaby-state";
+    process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR = "/srv/littlebaby-bundled";
 
     try {
       const env = createPathResolutionEnv(homeDir, {
@@ -138,17 +138,17 @@ describe("env test utils", () => {
       expect(env.LITTLEBABY_BUNDLED_PLUGINS_DIR).toBeUndefined();
       expect(env.LITTLEBABY_STATE_DIR).toBe("~/state");
     } finally {
-      restoreEnvKey("LITTLEBABY_HOME", previousOpenClawHome);
+      restoreEnvKey("LITTLEBABY_HOME", previousLittleBabyHome);
       restoreEnvKey("LITTLEBABY_STATE_DIR", previousStateDir);
       restoreEnvKey("LITTLEBABY_BUNDLED_PLUGINS_DIR", previousBundledDir);
     }
   });
 
   it("withPathResolutionEnv only applies the explicit path env inside the callback", () => {
-    const homeDir = path.join(path.sep, "tmp", "openclaw-home");
+    const homeDir = path.join(path.sep, "tmp", "littlebaby-home");
     const resolvedHomeDir = path.resolve(homeDir);
-    const previousOpenClawHome = process.env.LITTLEBABY_HOME;
-    process.env.LITTLEBABY_HOME = "/srv/openclaw-home";
+    const previousLittleBabyHome = process.env.LITTLEBABY_HOME;
+    process.env.LITTLEBABY_HOME = "/srv/littlebaby-home";
 
     try {
       const seen = withPathResolutionEnv(
@@ -156,7 +156,7 @@ describe("env test utils", () => {
         { LITTLEBABY_BUNDLED_PLUGINS_DIR: "~/bundled" },
         (env) => ({
           processHome: process.env.HOME,
-          processOpenClawHome: process.env.LITTLEBABY_HOME,
+          processLittleBabyHome: process.env.LITTLEBABY_HOME,
           processBundledDir: process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR,
           envBundledDir: env.LITTLEBABY_BUNDLED_PLUGINS_DIR,
         }),
@@ -164,13 +164,13 @@ describe("env test utils", () => {
 
       expect(seen).toEqual({
         processHome: resolvedHomeDir,
-        processOpenClawHome: undefined,
+        processLittleBabyHome: undefined,
         processBundledDir: "~/bundled",
         envBundledDir: "~/bundled",
       });
-      expect(process.env.LITTLEBABY_HOME).toBe("/srv/openclaw-home");
+      expect(process.env.LITTLEBABY_HOME).toBe("/srv/littlebaby-home");
     } finally {
-      restoreEnvKey("LITTLEBABY_HOME", previousOpenClawHome);
+      restoreEnvKey("LITTLEBABY_HOME", previousLittleBabyHome);
     }
   });
 });

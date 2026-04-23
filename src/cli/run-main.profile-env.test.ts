@@ -49,7 +49,7 @@ vi.mock("../infra/runtime-guard.js", () => ({
 }));
 
 vi.mock("../infra/path-env.js", () => ({
-  ensureOpenClawCliOnPath: vi.fn(),
+  ensureLittleBabyCliOnPath: vi.fn(),
 }));
 
 vi.mock("./route.js", () => ({
@@ -212,7 +212,7 @@ describe("runCli profile env bootstrap", () => {
   });
 
   it("allows container mode when only LITTLEBABY_STATE_DIR is set in env", async () => {
-    process.env.LITTLEBABY_STATE_DIR = "/tmp/openclaw-host-state";
+    process.env.LITTLEBABY_STATE_DIR = "/tmp/littlebaby-host-state";
 
     await expect(
       runCli(["node", "littlebaby", "--container", "demo", "status"]),
@@ -220,7 +220,7 @@ describe("runCli profile env bootstrap", () => {
   });
 
   it("allows container mode when only LITTLEBABY_CONFIG_PATH is set in env", async () => {
-    process.env.LITTLEBABY_CONFIG_PATH = "/tmp/openclaw-host-state/openclaw.json";
+    process.env.LITTLEBABY_CONFIG_PATH = "/tmp/littlebaby-host-state/littlebaby.json";
 
     await expect(
       runCli(["node", "littlebaby", "--container", "demo", "status"]),

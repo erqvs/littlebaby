@@ -9,7 +9,7 @@ const tempDirs: string[] = [];
 const originalBundledPluginsDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
 
 function createTempDir(): string {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-public-surface-loader-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-public-surface-loader-"));
   tempDirs.push(tempDir);
   return tempDir;
 }

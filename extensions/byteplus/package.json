@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/byteplus-provider",
+  "name": "@littlebaby/byteplus-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw BytePlus provider plugin",
+  "description": "LittleBaby BytePlus provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

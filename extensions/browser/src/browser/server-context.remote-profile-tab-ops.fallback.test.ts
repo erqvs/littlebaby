@@ -12,7 +12,7 @@ describe("browser remote profile fallback and attachOnly behavior", () => {
   it("uses profile-level attachOnly when global attachOnly is false", async () => {
     const state = deps.makeState("littlebaby");
     state.resolved.attachOnly = false;
-    state.resolved.profiles.openclaw = {
+    state.resolved.profiles.littlebaby = {
       cdpPort: 18800,
       attachOnly: true,
       color: "#FF4500",
@@ -21,7 +21,7 @@ describe("browser remote profile fallback and attachOnly behavior", () => {
     const reachableMock = vi
       .mocked(deps.chromeModule.isChromeReachable)
       .mockResolvedValueOnce(false);
-    const launchMock = vi.mocked(deps.chromeModule.launchOpenClawChrome);
+    const launchMock = vi.mocked(deps.chromeModule.launchLittleBabyChrome);
     const ctx = deps.createBrowserRouteContext({ getState: () => state });
 
     await expect(ctx.forProfile("littlebaby").ensureBrowserAvailable()).rejects.toThrow(
@@ -34,7 +34,7 @@ describe("browser remote profile fallback and attachOnly behavior", () => {
   it("keeps attachOnly websocket failures off the loopback ownership error path", async () => {
     const state = deps.makeState("littlebaby");
     state.resolved.attachOnly = false;
-    state.resolved.profiles.openclaw = {
+    state.resolved.profiles.littlebaby = {
       cdpPort: 18800,
       attachOnly: true,
       color: "#FF4500",
@@ -46,7 +46,7 @@ describe("browser remote profile fallback and attachOnly behavior", () => {
     const wsReachableMock = vi
       .mocked(deps.chromeModule.isChromeCdpReady)
       .mockResolvedValueOnce(false);
-    const launchMock = vi.mocked(deps.chromeModule.launchOpenClawChrome);
+    const launchMock = vi.mocked(deps.chromeModule.launchLittleBabyChrome);
     const ctx = deps.createBrowserRouteContext({ getState: () => state });
 
     await expect(ctx.forProfile("littlebaby").ensureBrowserAvailable()).rejects.toThrow(
@@ -88,7 +88,7 @@ describe("browser remote profile fallback and attachOnly behavior", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("does not enforce managed tab cap for remote openclaw profiles", async () => {
+  it("does not enforce managed tab cap for remote littlebaby profiles", async () => {
     const listPagesViaPlaywright = vi
       .fn()
       .mockResolvedValueOnce([

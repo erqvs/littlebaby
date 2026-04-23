@@ -49,7 +49,7 @@ vi.mock("./reply/agent-runner.runtime.js", () => ({
         return "⚠️ Context overflow — prompt too large for this model. Try a shorter message or a larger-context model.";
       }
       const trimmed = message.replace(/\.\s*$/, "");
-      return `⚠️ Agent failed before reply: ${trimmed}.\nLogs: openclaw logs --follow`;
+      return `⚠️ Agent failed before reply: ${trimmed}.\nLogs: littlebaby logs --follow`;
     };
     const stripHeartbeat = (text?: string) => {
       const trimmed = text?.trim();
@@ -215,7 +215,7 @@ describe("trigger handling", () => {
     {
       error: "sandbox is not defined.",
       expected:
-        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: openclaw logs --follow",
+        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: littlebaby logs --follow",
     },
     {
       error: "Context window exceeded",
@@ -679,7 +679,7 @@ describe("trigger handling", () => {
       if (!storePath) {
         throw new Error("missing session store path");
       }
-      const authDir = join(home, ".openclaw", "agents", "main", "agent");
+      const authDir = join(home, ".littlebaby", "agents", "main", "agent");
       await fs.mkdir(authDir, { recursive: true });
       await fs.writeFile(
         join(authDir, "auth-profiles.json"),

@@ -24,24 +24,24 @@ describe("renderGatewayServiceStartHints", () => {
   it("resolves daemon container context from either env key", () => {
     expect(
       resolveDaemonContainerContext({
-        LITTLEBABY_CONTAINER: "openclaw-demo-container",
+        LITTLEBABY_CONTAINER: "littlebaby-demo-container",
       } as NodeJS.ProcessEnv),
-    ).toBe("openclaw-demo-container");
+    ).toBe("littlebaby-demo-container");
     expect(
       resolveDaemonContainerContext({
-        LITTLEBABY_CONTAINER_HINT: "openclaw-demo-container",
+        LITTLEBABY_CONTAINER_HINT: "littlebaby-demo-container",
       } as NodeJS.ProcessEnv),
-    ).toBe("openclaw-demo-container");
+    ).toBe("littlebaby-demo-container");
   });
 
   it("prepends a single container restart hint when LITTLEBABY_CONTAINER is set", () => {
     expect(
       renderGatewayServiceStartHints({
-        LITTLEBABY_CONTAINER: "openclaw-demo-container",
+        LITTLEBABY_CONTAINER: "littlebaby-demo-container",
       } as NodeJS.ProcessEnv),
     ).toEqual(
       expect.arrayContaining([
-        "Restart the container or the service that manages it for openclaw-demo-container.",
+        "Restart the container or the service that manages it for littlebaby-demo-container.",
       ]),
     );
   });
@@ -49,11 +49,11 @@ describe("renderGatewayServiceStartHints", () => {
   it("prepends a single container restart hint when LITTLEBABY_CONTAINER_HINT is set", () => {
     expect(
       renderGatewayServiceStartHints({
-        LITTLEBABY_CONTAINER_HINT: "openclaw-demo-container",
+        LITTLEBABY_CONTAINER_HINT: "littlebaby-demo-container",
       } as NodeJS.ProcessEnv),
     ).toEqual(
       expect.arrayContaining([
-        "Restart the container or the service that manages it for openclaw-demo-container.",
+        "Restart the container or the service that manages it for littlebaby-demo-container.",
       ]),
     );
   });
@@ -65,9 +65,9 @@ describe("filterContainerGenericHints", () => {
       filterContainerGenericHints(
         [
           "systemd user services are unavailable; install/enable systemd or run the gateway under your supervisor.",
-          "If you're in a container, run the gateway in the foreground instead of `openclaw gateway`.",
+          "If you're in a container, run the gateway in the foreground instead of `littlebaby gateway`.",
         ],
-        { LITTLEBABY_CONTAINER: "openclaw-demo-container" } as NodeJS.ProcessEnv,
+        { LITTLEBABY_CONTAINER: "littlebaby-demo-container" } as NodeJS.ProcessEnv,
       ),
     ).toEqual([]);
   });
@@ -77,9 +77,9 @@ describe("filterContainerGenericHints", () => {
       filterContainerGenericHints(
         [
           "systemd user services are unavailable; install/enable systemd or run the gateway under your supervisor.",
-          "If you're in a container, run the gateway in the foreground instead of `openclaw gateway`.",
+          "If you're in a container, run the gateway in the foreground instead of `littlebaby gateway`.",
         ],
-        { LITTLEBABY_CONTAINER_HINT: "openclaw-demo-container" } as NodeJS.ProcessEnv,
+        { LITTLEBABY_CONTAINER_HINT: "littlebaby-demo-container" } as NodeJS.ProcessEnv,
       ),
     ).toEqual([]);
   });

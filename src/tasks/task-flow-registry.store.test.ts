@@ -38,7 +38,7 @@ function createStoredFlow(): TaskFlowRecord {
 }
 
 async function withFlowRegistryTempDir<T>(run: (root: string) => Promise<T>): Promise<T> {
-  return await withTempDir({ prefix: "openclaw-task-flow-store-" }, async (root) => {
+  return await withTempDir({ prefix: "littlebaby-task-flow-store-" }, async (root) => {
     process.env.LITTLEBABY_STATE_DIR = root;
     resetTaskFlowRegistryForTests();
     try {

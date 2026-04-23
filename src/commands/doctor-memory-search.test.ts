@@ -1,6 +1,6 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "../memory-host-sdk/engine-qmd.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 
@@ -122,7 +122,7 @@ function resetMemoryRecallMocks() {
 }
 
 describe("noteMemorySearchHealth", () => {
-  const cfg = {} as OpenClawConfig;
+  const cfg = {} as LittleBabyConfig;
 
   async function expectNoWarningWithConfiguredRemoteApiKey(provider: string) {
     resolveMemorySearchConfig.mockReturnValue({
@@ -388,7 +388,7 @@ describe("noteMemorySearchHealth", () => {
     const message = String(note.mock.calls[0]?.[0] ?? "");
     expect(message).toContain('provider "lmstudio" is configured');
     expect(message).toContain("could not confirm embeddings are ready");
-    expect(message).toContain("openclaw memory status --deep");
+    expect(message).toContain("littlebaby memory status --deep");
   });
 
   it("notes when gateway probe reports embeddings ready and CLI API key is missing", async () => {
@@ -423,8 +423,8 @@ describe("noteMemorySearchHealth", () => {
 
     const message = note.mock.calls[0]?.[0] as string;
     expect(message).toContain("Gateway memory probe for default agent is not ready");
-    expect(message).toContain("openclaw configure --section model");
-    expect(message).not.toContain("openclaw auth add --provider");
+    expect(message).toContain("littlebaby configure --section model");
+    expect(message).not.toContain("littlebaby auth add --provider");
   });
 
   it("warns in auto mode when no local modelPath and no API keys are configured", async () => {
@@ -442,7 +442,7 @@ describe("noteMemorySearchHealth", () => {
     expect(note).toHaveBeenCalledTimes(1);
     const message = String(note.mock.calls[0]?.[0] ?? "");
     expect(message).toContain("needs at least one embedding provider");
-    expect(message).toContain("openclaw configure --section model");
+    expect(message).toContain("littlebaby configure --section model");
   });
 
   it("does not probe unrelated embedding providers in auto mode", async () => {
@@ -492,7 +492,7 @@ describe("noteMemorySearchHealth", () => {
 });
 
 describe("memory recall doctor integration", () => {
-  const cfg = {} as OpenClawConfig;
+  const cfg = {} as LittleBabyConfig;
 
   beforeEach(() => {
     note.mockClear();
@@ -642,7 +642,7 @@ describe("memory recall doctor integration", () => {
 
 describe("detectLegacyWorkspaceDirs", () => {
   it("returns active workspace and no legacy dirs", () => {
-    const workspaceDir = "/home/user/openclaw";
+    const workspaceDir = "/home/user/littlebaby";
     const detection = detectLegacyWorkspaceDirs({ workspaceDir });
     expect(detection.activeWorkspace).toBe(path.resolve(workspaceDir));
     expect(detection.legacyDirs).toEqual([]);

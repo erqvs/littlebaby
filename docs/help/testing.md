@@ -9,7 +9,7 @@ title: "Testing"
 
 # Testing
 
-OpenClaw has three Vitest suites (unit/integration, e2e, live) and a small set of Docker runners.
+LittleBaby has three Vitest suites (unit/integration, e2e, live) and a small set of Docker runners.
 
 This doc is a “how we test” guide:
 
@@ -28,7 +28,7 @@ Most days:
 - Direct file targeting now routes extension/channel paths too: `pnpm test extensions/discord/src/monitor/message-handler.preflight.test.ts`
 - Prefer targeted runs first when you are iterating on a single failure.
 - Docker-backed QA site: `pnpm qa:lab:up`
-- Linux VM-backed QA lane: `pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline`
+- Linux VM-backed QA lane: `pnpm littlebaby qa suite --runner multipass --scenario channel-chat-baseline`
 
 When you touch tests or want extra confidence:
 
@@ -46,7 +46,7 @@ Tip: when you only need one failing case, prefer narrowing live tests via the al
 
 These commands sit beside the main test suites when you need QA-lab realism:
 
-- `pnpm openclaw qa suite`
+- `pnpm littlebaby qa suite`
   - Runs repo-backed QA scenarios directly on the host.
   - Runs multiple selected scenarios in parallel by default with isolated
     gateway workers. `qa-channel` defaults to concurrency 4 (bounded by the
@@ -58,7 +58,7 @@ These commands sit beside the main test suites when you need QA-lab realism:
     `aimock` starts a local AIMock-backed provider server for experimental
     fixture and protocol-mock coverage without replacing the scenario-aware
     `mock-openai` lane.
-- `pnpm openclaw qa suite --runner multipass`
+- `pnpm littlebaby qa suite --runner multipass`
   - Runs the same QA suite inside a disposable Multipass Linux VM.
   - Keeps the same scenario-selection behavior as `qa suite` on the host.
   - Reuses the same provider/model selection flags as `qa suite`.
@@ -71,20 +71,20 @@ These commands sit beside the main test suites when you need QA-lab realism:
     `.artifacts/qa-e2e/...`.
 - `pnpm qa:lab:up`
   - Starts the Docker-backed QA site for operator-style QA work.
-- `pnpm openclaw qa aimock`
+- `pnpm littlebaby qa aimock`
   - Starts only the local AIMock provider server for direct protocol smoke
     testing.
-- `pnpm openclaw qa matrix`
+- `pnpm littlebaby qa matrix`
   - Runs the Matrix live QA lane against a disposable Docker-backed Tuwunel homeserver.
-  - This QA host is repo/dev-only today. Packaged OpenClaw installs do not ship
-    `qa-lab`, so they do not expose `openclaw qa`.
+  - This QA host is repo/dev-only today. Packaged LittleBaby installs do not ship
+    `qa-lab`, so they do not expose `littlebaby qa`.
   - Repo checkouts load the bundled runner directly; no separate plugin install
     step is needed.
   - Provisions three temporary Matrix users (`driver`, `sut`, `observer`) plus one private room, then starts a QA gateway child with the real Matrix plugin as the SUT transport.
   - Uses the pinned stable Tuwunel image `ghcr.io/matrix-construct/tuwunel:v1.5.1` by default. Override with `LITTLEBABY_QA_MATRIX_TUWUNEL_IMAGE` when you need to test a different image.
   - Matrix does not expose shared credential-source flags because the lane provisions disposable users locally.
   - Writes a Matrix QA report, summary, observed-events artifact, and combined stdout/stderr output log under `.artifacts/qa-e2e/...`.
-- `pnpm openclaw qa telegram`
+- `pnpm littlebaby qa telegram`
   - Runs the Telegram live QA lane against a real private group using the driver and SUT bot tokens from env.
   - Requires `LITTLEBABY_QA_TELEGRAM_GROUP_ID`, `LITTLEBABY_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and `LITTLEBABY_QA_TELEGRAM_SUT_BOT_TOKEN`. The group id must be the numeric Telegram chat id.
   - Supports `--credential-source convex` for shared pooled credentials. Use env mode by default, or set `LITTLEBABY_QA_CREDENTIAL_SOURCE=convex` to opt into pooled leases.
@@ -107,7 +107,7 @@ transport coverage matrix.
 ### Shared Telegram credentials via Convex (v1)
 
 When `--credential-source convex` (or `LITTLEBABY_QA_CREDENTIAL_SOURCE=convex`) is enabled for
-`openclaw qa telegram`, QA lab acquires an exclusive lease from a Convex-backed pool, heartbeats
+`littlebaby qa telegram`, QA lab acquires an exclusive lease from a Convex-backed pool, heartbeats
 that lease while the lane is running, and releases the lease on shutdown.
 
 Reference Convex project scaffold:
@@ -142,9 +142,9 @@ Maintainer admin commands (pool add/remove/list) require
 CLI helpers for maintainers:
 
 ```bash
-pnpm openclaw qa credentials add --kind telegram --payload-file qa/telegram-credential.json
-pnpm openclaw qa credentials list --kind telegram
-pnpm openclaw qa credentials remove --credential-id <credential-id>
+pnpm littlebaby qa credentials add --kind telegram --payload-file qa/telegram-credential.json
+pnpm littlebaby qa credentials list --kind telegram
+pnpm littlebaby qa credentials remove --credential-id <credential-id>
 ```
 
 Use `--json` for machine-readable output in scripts and CI utilities.
@@ -190,7 +190,7 @@ own the flow.
 
 `qa-lab` owns the shared host mechanics:
 
-- the `openclaw qa` command root
+- the `littlebaby qa` command root
 - suite startup and teardown
 - worker concurrency
 - artifact writing
@@ -200,7 +200,7 @@ own the flow.
 
 Runner plugins own the transport contract:
 
-- how `openclaw qa <runner>` is mounted beneath the shared `qa` root
+- how `littlebaby qa <runner>` is mounted beneath the shared `qa` root
 - how the gateway is configured for that transport
 - how readiness is checked
 - how inbound events are injected
@@ -214,8 +214,8 @@ The minimum adoption bar for a new channel is:
 1. Keep `qa-lab` as the owner of the shared `qa` root.
 2. Implement the transport runner on the shared `qa-lab` host seam.
 3. Keep transport-specific mechanics inside the runner plugin or channel harness.
-4. Mount the runner as `openclaw qa <runner>` instead of registering a competing root command.
-   Runner plugins should declare `qaRunners` in `openclaw.plugin.json` and export a matching `qaRunnerCliRegistrations` array from `runtime-api.ts`.
+4. Mount the runner as `littlebaby qa <runner>` instead of registering a competing root command.
+   Runner plugins should declare `qaRunners` in `littlebaby.plugin.json` and export a matching `qaRunnerCliRegistrations` array from `runtime-api.ts`.
    Keep `runtime-api.ts` light; lazy CLI and runner execution should stay behind separate entrypoints.
 5. Author or adapt markdown scenarios under the themed `qa/scenarios/` directories.
 6. Use the generic scenario helpers for new scenarios.
@@ -277,7 +277,7 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
   - `pnpm test --watch` still uses the native root `vitest.config.ts` project graph, because a multi-shard watch loop is not practical.
   - `pnpm test`, `pnpm test:watch`, and `pnpm test:perf:imports` route explicit file/directory targets through scoped lanes first, so `pnpm test extensions/discord/src/monitor/message-handler.preflight.test.ts` avoids paying the full root project startup tax.
   - `pnpm test:changed` expands changed git paths into the same scoped lanes when the diff only touches routable source/test files; config/setup edits still fall back to the broad root-project rerun.
-  - Import-light unit tests from agents, commands, plugins, auto-reply helpers, `plugin-sdk`, and similar pure utility areas route through the `unit-fast` lane, which skips `test/setup-openclaw-runtime.ts`; stateful/runtime-heavy files stay on the existing lanes.
+  - Import-light unit tests from agents, commands, plugins, auto-reply helpers, `plugin-sdk`, and similar pure utility areas route through the `unit-fast` lane, which skips `test/setup-littlebaby-runtime.ts`; stateful/runtime-heavy files stay on the existing lanes.
   - Selected `plugin-sdk` and `commands` helper source files also map changed-mode runs to explicit sibling tests in those light lanes, so helper edits avoid rerunning the full heavy suite for that directory.
   - `auto-reply` now has three dedicated buckets: top-level core helpers, top-level `reply.*` integration tests, and the `src/auto-reply/reply/**` subtree. This keeps the heaviest reply harness work off the cheap status/chunk/token tests.
 - Embedded runner note:
@@ -338,7 +338,7 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
 - Scope:
   - Starts an isolated OpenShell gateway on the host via Docker
   - Creates a sandbox from a temporary local Dockerfile
-  - Exercises OpenClaw's OpenShell backend over real `sandbox ssh-config` + SSH exec
+  - Exercises LittleBaby's OpenShell backend over real `sandbox ssh-config` + SSH exec
   - Verifies remote-canonical filesystem behavior through the sandbox fs bridge
 - Expectations:
   - Opt-in only; not part of the default `pnpm test:e2e` run
@@ -428,7 +428,7 @@ Live tests are split into two layers so we can isolate failures:
   - Separates “provider API is broken / key is invalid” from “gateway agent pipeline is broken”
   - Contains small, isolated regressions (example: OpenAI Responses/Codex Responses reasoning replay + tool-call flows)
 
-### Layer 2: Gateway + dev agent smoke (what "@openclaw" actually does)
+### Layer 2: Gateway + dev agent smoke (what "@littlebaby" actually does)
 
 - Test: `src/gateway/gateway-models.profiles.live.test.ts`
 - Goal:
@@ -466,8 +466,8 @@ Live tests are split into two layers so we can isolate failures:
 Tip: to see what you can test on your machine (and the exact `provider/model` ids), run:
 
 ```bash
-openclaw models list
-openclaw models list --json
+littlebaby models list
+littlebaby models list --json
 ```
 
 ## Live: CLI backend smoke (Claude, Codex, Gemini, or other local CLIs)
@@ -518,7 +518,7 @@ Notes:
 
 - The Docker runner lives at `scripts/test-live-cli-backend-docker.sh`.
 - It runs the live CLI-backend smoke inside the repo Docker image as the non-root `node` user.
-- It resolves CLI smoke metadata from the owning extension, then installs the matching Linux CLI package (`@anthropic-ai/claude-code`, `@openai/codex`, or `@google/gemini-cli`) into a cached writable prefix at `LITTLEBABY_DOCKER_CLI_TOOLS_DIR` (default: `~/.cache/openclaw/docker-cli-tools`).
+- It resolves CLI smoke metadata from the owning extension, then installs the matching Linux CLI package (`@anthropic-ai/claude-code`, `@openai/codex`, or `@google/gemini-cli`) into a cached writable prefix at `LITTLEBABY_DOCKER_CLI_TOOLS_DIR` (default: `~/.cache/littlebaby/docker-cli-tools`).
 - `pnpm test:docker:live-cli-backend:claude-subscription` requires portable Claude Code subscription OAuth through either `~/.claude/.credentials.json` with `claudeAiOauth.subscriptionType` or `CLAUDE_CODE_OAUTH_TOKEN` from `claude setup-token`. It first proves direct `claude -p` in Docker, then runs two Gateway CLI-backend turns without preserving Anthropic API-key env vars. This subscription lane disables the Claude MCP/tool and image probes by default because Claude currently routes third-party app usage through extra-usage billing instead of normal subscription plan limits.
 - The live CLI-backend smoke now exercises the same end-to-end flow for Claude, Codex, and Gemini: text turn, image classification turn, then MCP `cron` tool call verified through the gateway CLI.
 - Claude's default smoke also patches the session from Sonnet to Opus and verifies the resumed session still remembers an earlier note.
@@ -586,7 +586,7 @@ Docker notes:
   - load the bundled `codex` plugin
   - select `LITTLEBABY_AGENT_RUNTIME=codex`
   - send a first gateway agent turn to `codex/gpt-5.4`
-  - send a second turn to the same OpenClaw session and verify the app-server
+  - send a second turn to the same LittleBaby session and verify the app-server
     thread can resume
   - run `/codex status` and `/codex models` through the same gateway command
     path
@@ -654,8 +654,8 @@ Notes:
 - `google-antigravity/...` uses the Antigravity OAuth bridge (Cloud Code Assist-style agent endpoint).
 - `google-gemini-cli/...` uses the local Gemini CLI on your machine (separate auth + tooling quirks).
 - Gemini API vs Gemini CLI:
-  - API: OpenClaw calls Google’s hosted Gemini API over HTTP (API key / profile auth); this is what most users mean by “Gemini”.
-  - CLI: OpenClaw shells out to a local `gemini` binary; it has its own auth and can behave differently (streaming/tool support/version skew).
+  - API: LittleBaby calls Google’s hosted Gemini API over HTTP (API key / profile auth); this is what most users mean by “Gemini”.
+  - CLI: LittleBaby shells out to a local `gemini` binary; it has its own auth and can behave differently (streaming/tool support/version skew).
 
 ## Live: model matrix (what we cover)
 
@@ -701,7 +701,7 @@ Include at least one image-capable model in `LITTLEBABY_LIVE_GATEWAY_MODELS` (Cl
 
 If you have keys enabled, we also support testing via:
 
-- OpenRouter: `openrouter/...` (hundreds of models; use `openclaw models scan` to find tool+image capable candidates)
+- OpenRouter: `openrouter/...` (hundreds of models; use `littlebaby models scan` to find tool+image capable candidates)
 - OpenCode: `opencode/...` for Zen and `opencode-go/...` for Go (auth via `OPENCODE_API_KEY` / `OPENCODE_ZEN_API_KEY`)
 
 More providers you can include in the live matrix (if you have creds/config):
@@ -716,10 +716,10 @@ Tip: don’t try to hardcode “all models” in docs. The authoritative list is
 Live tests discover credentials the same way the CLI does. Practical implications:
 
 - If the CLI works, live tests should find the same keys.
-- If a live test says “no creds”, debug the same way you’d debug `openclaw models list` / model selection.
+- If a live test says “no creds”, debug the same way you’d debug `littlebaby models list` / model selection.
 
 - Per-agent auth profiles: `~/.littlebaby/agents/<agentId>/agent/auth-profiles.json` (this is what “profile keys” means in the live tests)
-- Config: `~/.littlebaby/openclaw.json` (or `LITTLEBABY_CONFIG_PATH`)
+- Config: `~/.littlebaby/littlebaby.json` (or `LITTLEBABY_CONFIG_PATH`)
 - Legacy state dir: `~/.littlebaby/credentials/` (copied into the staged live home when present, but not the main profile-key store)
 - Live local runs copy the active config, per-agent `auth-profiles.json` files, legacy `credentials/`, and supported external CLI auth dirs into a temp test home by default; staged live homes skip `workspace/` and `sandboxes/`, and `agents.*.workspace` / `agentDir` path overrides are stripped so probes stay off your real host workspace.
 
@@ -875,7 +875,7 @@ The live-model Docker runners also bind-mount the current checkout read-only and
 stage it into a temporary workdir inside the container. This keeps the runtime
 image slim while still running Vitest against your exact local source/config.
 The staging step skips large local-only caches and app build outputs such as
-`.pnpm-store`, `.worktrees`, `__openclaw_vitest__`, and app-local `.build` or
+`.pnpm-store`, `.worktrees`, `__littlebaby_vitest__`, and app-local `.build` or
 Gradle output directories so Docker live runs do not spend minutes copying
 machine-specific artifacts.
 They also set `LITTLEBABY_SKIP_CHANNELS=1` so gateway live probes do not start
@@ -884,19 +884,19 @@ real Telegram/Discord/etc. channel workers inside the container.
 `LITTLEBABY_LIVE_GATEWAY_*` as well when you need to narrow or exclude gateway
 live coverage from that Docker lane.
 `test:docker:openwebui` is a higher-level compatibility smoke: it starts an
-OpenClaw gateway container with the OpenAI-compatible HTTP endpoints enabled,
+LittleBaby gateway container with the OpenAI-compatible HTTP endpoints enabled,
 starts a pinned Open WebUI container against that gateway, signs in through
-Open WebUI, verifies `/api/models` exposes `openclaw/default`, then sends a
+Open WebUI, verifies `/api/models` exposes `littlebaby/default`, then sends a
 real chat request through Open WebUI's `/api/chat/completions` proxy.
 The first run can be noticeably slower because Docker may need to pull the
 Open WebUI image and Open WebUI may need to finish its own cold-start setup.
 This lane expects a usable live model key, and `LITTLEBABY_PROFILE_FILE`
 (`~/.profile` by default) is the primary way to provide it in Dockerized runs.
 Successful runs print a small JSON payload like `{ "ok": true, "model":
-"openclaw/default", ... }`.
+"littlebaby/default", ... }`.
 `test:docker:mcp-channels` is intentionally deterministic and does not need a
 real Telegram, Discord, or iMessage account. It boots a seeded Gateway
-container, starts a second container that spawns `openclaw mcp serve`, then
+container, starts a second container that spawns `littlebaby mcp serve`, then
 verifies routed conversation discovery, transcript reads, attachment metadata,
 live event queue behavior, outbound send routing, and Claude-style channel +
 permission notifications over the real stdio MCP bridge. The notification check
@@ -914,7 +914,7 @@ Useful env vars:
 - `LITTLEBABY_WORKSPACE_DIR=...` (default: `~/.littlebaby/workspace`) mounted to `/home/node/.littlebaby/workspace`
 - `LITTLEBABY_PROFILE_FILE=...` (default: `~/.profile`) mounted to `/home/node/.profile` and sourced before running tests
 - `LITTLEBABY_DOCKER_PROFILE_ENV_ONLY=1` to verify only env vars sourced from `LITTLEBABY_PROFILE_FILE`, using temporary config/workspace dirs and no external CLI auth mounts
-- `LITTLEBABY_DOCKER_CLI_TOOLS_DIR=...` (default: `~/.cache/openclaw/docker-cli-tools`) mounted to `/home/node/.npm-global` for cached CLI installs inside Docker
+- `LITTLEBABY_DOCKER_CLI_TOOLS_DIR=...` (default: `~/.cache/littlebaby/docker-cli-tools`) mounted to `/home/node/.npm-global` for cached CLI installs inside Docker
 - External CLI auth dirs/files under `$HOME` are mounted read-only under `/host-auth...`, then copied into `/home/node/...` before tests start
   - Default dirs: `.minimax`
   - Default files: `~/.codex/auth.json`, `~/.codex/config.toml`, `.claude.json`, `~/.claude/.credentials.json`, `~/.claude/settings.json`, `~/.claude/settings.local.json`
@@ -922,7 +922,7 @@ Useful env vars:
   - Override manually with `LITTLEBABY_DOCKER_AUTH_DIRS=all`, `LITTLEBABY_DOCKER_AUTH_DIRS=none`, or a comma list like `LITTLEBABY_DOCKER_AUTH_DIRS=.claude,.codex`
 - `LITTLEBABY_LIVE_GATEWAY_MODELS=...` / `LITTLEBABY_LIVE_MODELS=...` to narrow the run
 - `LITTLEBABY_LIVE_GATEWAY_PROVIDERS=...` / `LITTLEBABY_LIVE_PROVIDERS=...` to filter providers in-container
-- `LITTLEBABY_SKIP_DOCKER_BUILD=1` to reuse an existing `openclaw:local-live` image for reruns that do not need a rebuild
+- `LITTLEBABY_SKIP_DOCKER_BUILD=1` to reuse an existing `littlebaby:local-live` image for reruns that do not need a rebuild
 - `LITTLEBABY_LIVE_REQUIRE_PROFILE_KEYS=1` to ensure creds come from the profile store (not env)
 - `LITTLEBABY_OPENWEBUI_MODEL=...` to choose the model exposed by the gateway for the Open WebUI smoke
 - `LITTLEBABY_OPENWEBUI_PROMPT=...` to override the nonce-check prompt used by the Open WebUI smoke

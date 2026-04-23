@@ -43,7 +43,7 @@ vi.mock("./backup-rotation.js", async (importOriginal) => {
 });
 
 describe("config io write", () => {
-  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-config-io-" });
+  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "littlebaby-config-io-" });
   const silentLogger = {
     warn: () => {},
     error: () => {},
@@ -104,7 +104,7 @@ describe("config io write", () => {
     "tightens world-writable state dir when writing the default config",
     async () => {
       await withSuiteHome(async (home) => {
-        const stateDir = path.join(home, ".openclaw");
+        const stateDir = path.join(home, ".littlebaby");
         await fs.mkdir(stateDir, { recursive: true, mode: 0o777 });
         await fs.chmod(stateDir, 0o777);
 
@@ -124,7 +124,7 @@ describe("config io write", () => {
 
   it("keeps writes inside an LITTLEBABY_STATE_DIR override even when the real home config exists", async () => {
     await withSuiteHome(async (home) => {
-      const liveConfigPath = path.join(home, ".openclaw", "openclaw.json");
+      const liveConfigPath = path.join(home, ".littlebaby", "littlebaby.json");
       await fs.mkdir(path.dirname(liveConfigPath), { recursive: true });
       await fs.writeFile(
         liveConfigPath,
@@ -140,7 +140,7 @@ describe("config io write", () => {
         logger: silentLogger,
       });
 
-      expect(io.configPath).toBe(path.join(overrideDir, "openclaw.json"));
+      expect(io.configPath).toBe(path.join(overrideDir, "littlebaby.json"));
 
       await io.writeConfigFile({
         agents: { list: [{ id: "main", default: true }] },
@@ -154,7 +154,7 @@ describe("config io write", () => {
       expect(livePersisted.gateway).toEqual({ mode: "local", port: 18789 });
 
       const overridePersisted = JSON.parse(
-        await fs.readFile(path.join(overrideDir, "openclaw.json"), "utf-8"),
+        await fs.readFile(path.join(overrideDir, "littlebaby.json"), "utf-8"),
       ) as {
         session?: { store?: unknown };
       };
@@ -164,7 +164,7 @@ describe("config io write", () => {
 
   it("does not mutate caller config when unsetPaths is applied on first write", async () => {
     await withSuiteHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".littlebaby", "littlebaby.json");
       const io = createConfigIO({
         env: {} as NodeJS.ProcessEnv,
         homedir: () => home,
@@ -212,13 +212,13 @@ describe("config io write", () => {
 
   it("preserves root $schema during partial writes", async () => {
     await withSuiteHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".littlebaby", "littlebaby.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
         `${JSON.stringify(
           {
-            $schema: "https://openclaw.ai/config.json",
+            $schema: "https://littlebaby.ai/config.json",
             gateway: { mode: "local" },
           },
           null,
@@ -228,19 +228,19 @@ describe("config io write", () => {
       );
 
       const persisted = await writeGatewayPortAndReadConfig(home, configPath);
-      expect(persisted.$schema).toBe("https://openclaw.ai/config.json");
+      expect(persisted.$schema).toBe("https://littlebaby.ai/config.json");
       expect(persisted.gateway).toEqual({ mode: "local", port: 18789 });
     });
   });
 
   it("rejects destructive internal writes before replacing the config", async () => {
     await withSuiteHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".littlebaby", "littlebaby.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       const original = {
         gateway: { mode: "local" },
         channels: { telegram: { enabled: true, dmPolicy: "pairing" } },
-        agents: { list: [{ id: "main", default: true, workspace: "/tmp/openclaw-main" }] },
+        agents: { list: [{ id: "main", default: true, workspace: "/tmp/littlebaby-main" }] },
         tools: { profile: "safe" },
         commands: { ownerDisplay: "hash" },
       };
@@ -267,12 +267,12 @@ describe("config io write", () => {
 
   it("does not inject include-only $schema into the root config during partial writes", async () => {
     await withSuiteHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
-      const includePath = path.join(home, ".openclaw", "extra.json5");
+      const configPath = path.join(home, ".littlebaby", "littlebaby.json");
+      const includePath = path.join(home, ".littlebaby", "extra.json5");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         includePath,
-        `${JSON.stringify({ $schema: "https://openclaw.ai/config-from-include.json" }, null, 2)}\n`,
+        `${JSON.stringify({ $schema: "https://littlebaby.ai/config-from-include.json" }, null, 2)}\n`,
         "utf-8",
       );
       await fs.writeFile(
@@ -299,9 +299,9 @@ describe("config io write", () => {
           cliBackends: [],
           skills: [],
           hooks: [],
-          rootDir: "/tmp/openclaw-test-required-plugin",
-          source: "/tmp/openclaw-test-required-plugin/index.ts",
-          manifestPath: "/tmp/openclaw-test-required-plugin/openclaw.plugin.json",
+          rootDir: "/tmp/littlebaby-test-required-plugin",
+          source: "/tmp/littlebaby-test-required-plugin/index.ts",
+          manifestPath: "/tmp/littlebaby-test-required-plugin/littlebaby.plugin.json",
           configSchema: {
             type: "object",
             properties: {

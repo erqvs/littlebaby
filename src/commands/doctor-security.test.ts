@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 
 const note = vi.hoisted(() => vi.fn());
 const pluginRegistry = vi.hoisted(() => ({ list: [] as unknown[] }));
@@ -60,11 +60,11 @@ describe("noteSecurityWarnings gateway exposure", () => {
     file: Record<string, unknown>,
     run: () => Promise<void>,
   ): Promise<void> {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-security-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-doctor-security-"));
     process.env.HOME = home;
-    await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+    await fs.mkdir(path.join(home, ".littlebaby"), { recursive: true });
     await fs.writeFile(
-      path.join(home, ".openclaw", "exec-approvals.json"),
+      path.join(home, ".littlebaby", "exec-approvals.json"),
       JSON.stringify(file, null, 2),
     );
     await run();
@@ -103,7 +103,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
               },
             ],
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -114,7 +114,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
   }
 
   it("warns when exposed without auth", async () => {
-    const cfg = { gateway: { bind: "lan" } } as OpenClawConfig;
+    const cfg = { gateway: { bind: "lan" } } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("CRITICAL");
@@ -125,7 +125,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
 
   it("uses env token to avoid critical warning", async () => {
     process.env.LITTLEBABY_GATEWAY_TOKEN = "token-123";
-    const cfg = { gateway: { bind: "lan" } } as OpenClawConfig;
+    const cfg = { gateway: { bind: "lan" } } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("WARNING");
@@ -141,7 +141,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
           token: { source: "env", provider: "default", id: "LITTLEBABY_GATEWAY_TOKEN" },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("WARNING");
@@ -151,14 +151,14 @@ describe("noteSecurityWarnings gateway exposure", () => {
   it("treats whitespace token as missing", async () => {
     const cfg = {
       gateway: { bind: "lan", auth: { mode: "token", token: "   " } },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("CRITICAL");
   });
 
   it("skips warning for loopback bind", async () => {
-    const cfg = { gateway: { bind: "loopback" } } as OpenClawConfig;
+    const cfg = { gateway: { bind: "loopback" } } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("No channel security warnings detected");
@@ -166,7 +166,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
   });
 
   it("treats unset bind as loopback for host-side doctor checks", async () => {
-    const cfg = { gateway: {} } as OpenClawConfig;
+    const cfg = { gateway: {} } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("No channel security warnings detected");
@@ -195,7 +195,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
         },
       },
     ];
-    const cfg = { session: { dmScope: "main" } } as OpenClawConfig;
+    const cfg = { session: { dmScope: "main" } } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain('config set session.dmScope "per-channel-peer"');
@@ -208,12 +208,12 @@ describe("noteSecurityWarnings gateway exposure", () => {
           enabled: false,
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("disables approval forwarding only");
     expect(message).toContain("exec-approvals.json");
-    expect(message).toContain("openclaw approvals get --gateway");
+    expect(message).toContain("littlebaby approvals get --gateway");
   });
 
   it("warns when tools.exec is broader than host exec defaults", async () => {
@@ -233,7 +233,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
               ask: "off",
             },
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -262,7 +262,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
               ask: "on-miss",
             },
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -284,7 +284,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
               ask: "always",
             },
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -319,7 +319,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
           agents: {
             list: [{ id: "runner" }],
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -354,7 +354,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
           agents: {
             list: [{ id: "runner" }],
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -389,7 +389,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
               ask: "always",
             },
           },
-        } as OpenClawConfig);
+        } as LittleBabyConfig);
       },
     );
 
@@ -406,7 +406,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain("Heartbeat defaults");
@@ -426,7 +426,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).toContain('Heartbeat agent "ops"');
@@ -453,11 +453,11 @@ describe("noteSecurityWarnings gateway exposure", () => {
       },
     ];
 
-    await noteSecurityWarnings({} as OpenClawConfig);
+    await noteSecurityWarnings({} as LittleBabyConfig);
     const message = lastMessage();
     expect(message).toContain("[secrets]");
     expect(message).toContain("failed to resolve account");
-    expect(message).toContain("Run: openclaw security audit --deep");
+    expect(message).toContain("Run: littlebaby security audit --deep");
   });
 
   it("skips heartbeat directPolicy warning when delivery is internal-only or explicit", async () => {
@@ -478,7 +478,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
     expect(message).not.toContain("Heartbeat defaults");

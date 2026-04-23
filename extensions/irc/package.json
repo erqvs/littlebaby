@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/irc",
+  "name": "@littlebaby/irc",
   "version": "2026.4.20",
-  "description": "OpenClaw IRC channel plugin",
+  "description": "LittleBaby IRC channel plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],

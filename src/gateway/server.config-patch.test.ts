@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { resolveOpenClawAgentDir } from "../agents/agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../agents/agent-paths.js";
 import { AUTH_PROFILE_FILENAME } from "../agents/auth-profiles/constants.js";
 import { __testing as controlPlaneRateLimitTesting } from "./control-plane-rate-limit.js";
 import {
@@ -29,7 +29,7 @@ function requireWs(): Awaited<ReturnType<typeof startServerWithClient>>["ws"] {
 }
 
 beforeAll(async () => {
-  sharedTempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-config-"));
+  sharedTempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sessions-config-"));
   startedServer = await startServerWithClient(undefined, { controlUiEnabled: true });
   await connectOk(requireWs());
 });
@@ -72,7 +72,7 @@ async function expectSchemaLookupInvalid(path: unknown) {
 
 async function writeUnresolvedAuthProfileTokenRef(missingEnvVar: string) {
   delete process.env[missingEnvVar];
-  const authStorePath = path.join(resolveOpenClawAgentDir(), AUTH_PROFILE_FILENAME);
+  const authStorePath = path.join(resolveLittleBabyAgentDir(), AUTH_PROFILE_FILENAME);
   await fs.mkdir(path.dirname(authStorePath), { recursive: true });
   await fs.writeFile(
     authStorePath,

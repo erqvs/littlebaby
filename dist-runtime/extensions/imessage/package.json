@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/imessage",
+  "name": "@littlebaby/imessage",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw iMessage channel plugin",
+  "description": "LittleBaby iMessage channel plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],

@@ -39,7 +39,7 @@ Think of the split like this:
 | Active memory plugin (`memory-core`, QMD, Honcho, etc.) | Recall, semantic search, promotion, dreaming, memory runtime                               |
 | `memory-wiki`                                           | Compiled wiki pages, provenance-rich syntheses, dashboards, wiki-specific search/get/apply |
 
-If the active memory plugin exposes shared recall artifacts, OpenClaw can search
+If the active memory plugin exposes shared recall artifacts, LittleBaby can search
 both layers in one pass with `memory_search corpus=all`.
 
 When you need wiki-specific ranking, provenance, or direct page access, use the
@@ -64,7 +64,7 @@ Practical rule:
 - use `memory_search corpus=all` when you want shared search to span both layers
 
 If bridge mode reports zero exported artifacts, the active memory plugin is not
-currently exposing public bridge inputs yet. Run `openclaw wiki doctor` first,
+currently exposing public bridge inputs yet. Run `littlebaby wiki doctor` first,
 then confirm the active memory plugin supports public artifacts.
 
 ## Vault modes
@@ -118,7 +118,7 @@ The plugin initializes a vault like this:
   reports/
   _attachments/
   _views/
-  .openclaw-wiki/
+  .littlebaby-wiki/
 ```
 
 Managed content stays inside generated blocks. Human note blocks are preserved.
@@ -161,8 +161,8 @@ dump. Claims can be tracked, scored, contested, and resolved back to sources.
 The compile step reads wiki pages, normalizes summaries, and emits stable
 machine-facing artifacts under:
 
-- `.openclaw-wiki/cache/agent-digest.json`
-- `.openclaw-wiki/cache/claims.jsonl`
+- `.littlebaby-wiki/cache/agent-digest.json`
+- `.littlebaby-wiki/cache/claims.jsonl`
 
 These digests exist so agents and runtime code do not have to scrape Markdown
 pages.
@@ -279,7 +279,7 @@ Put config under `plugins.entries.memory-wiki.config`:
           obsidian: {
             enabled: true,
             useOfficialCli: true,
-            vaultName: "OpenClaw Wiki",
+            vaultName: "LittleBaby Wiki",
             openAfterWrites: false,
           },
           bridge: {
@@ -372,17 +372,17 @@ This keeps:
 `memory-wiki` also exposes a top-level CLI surface:
 
 ```bash
-openclaw wiki status
-openclaw wiki doctor
-openclaw wiki init
-openclaw wiki ingest ./notes/alpha.md
-openclaw wiki compile
-openclaw wiki lint
-openclaw wiki search "alpha"
-openclaw wiki get entity.alpha
-openclaw wiki apply synthesis "Alpha Summary" --body "..." --source-id source.alpha
-openclaw wiki bridge import
-openclaw wiki obsidian status
+littlebaby wiki status
+littlebaby wiki doctor
+littlebaby wiki init
+littlebaby wiki ingest ./notes/alpha.md
+littlebaby wiki compile
+littlebaby wiki lint
+littlebaby wiki search "alpha"
+littlebaby wiki get entity.alpha
+littlebaby wiki apply synthesis "Alpha Summary" --body "..." --source-id source.alpha
+littlebaby wiki bridge import
+littlebaby wiki obsidian status
 ```
 
 See [CLI: wiki](/cli/wiki) for the full command reference.

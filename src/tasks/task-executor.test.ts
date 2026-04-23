@@ -63,7 +63,7 @@ vi.mock("../agents/subagent-control.js", () => ({
 }));
 
 async function withTaskExecutorStateDir(run: (stateDir: string) => Promise<void>): Promise<void> {
-  await withStateDirEnv("openclaw-task-executor-", async ({ stateDir }) => {
+  await withStateDirEnv("littlebaby-task-executor-", async ({ stateDir }) => {
     resetDetachedTaskLifecycleRuntimeForTests();
     resetSystemEventsForTest();
     resetHeartbeatWakeStateForTests();

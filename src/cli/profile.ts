@@ -66,7 +66,7 @@ function resolveProfileStateDir(
   homedir: () => string,
 ): string {
   const suffix = normalizeLowercaseStringOrEmpty(profile) === "default" ? "" : `-${profile}`;
-  return path.join(resolveRequiredHomeDir(env as NodeJS.ProcessEnv, homedir), `.openclaw${suffix}`);
+  return path.join(resolveRequiredHomeDir(env as NodeJS.ProcessEnv, homedir), `.littlebaby${suffix}`);
 }
 
 export function applyCliProfileEnv(params: {
@@ -91,7 +91,7 @@ export function applyCliProfileEnv(params: {
   }
 
   if (!normalizeOptionalString(env.LITTLEBABY_CONFIG_PATH)) {
-    env.LITTLEBABY_CONFIG_PATH = path.join(stateDir, "openclaw.json");
+    env.LITTLEBABY_CONFIG_PATH = path.join(stateDir, "littlebaby.json");
   }
 
   if (profile === "dev" && !env.LITTLEBABY_GATEWAY_PORT?.trim()) {

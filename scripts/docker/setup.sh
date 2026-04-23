@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 COMPOSE_FILE="$ROOT_DIR/docker-compose.yml"
 EXTRA_COMPOSE_FILE="$ROOT_DIR/docker-compose.extra.yml"
-IMAGE_NAME="${LITTLEBABY_IMAGE:-openclaw:local}"
+IMAGE_NAME="${LITTLEBABY_IMAGE:-littlebaby:local}"
 EXTRA_MOUNTS="${LITTLEBABY_EXTRA_MOUNTS:-}"
 HOME_VOLUME_NAME="${LITTLEBABY_HOME_VOLUME:-}"
 RAW_SANDBOX_SETTING="${LITTLEBABY_SANDBOX:-}"
@@ -40,7 +40,7 @@ is_truthy_value() {
 }
 
 read_config_gateway_token() {
-  local config_path="$LITTLEBABY_CONFIG_DIR/openclaw.json"
+  local config_path="$LITTLEBABY_CONFIG_DIR/littlebaby.json"
   if [[ ! -f "$config_path" ]]; then
     return 0
   fi
@@ -142,7 +142,7 @@ run_prestart_gateway() {
 }
 
 run_prestart_cli() {
-  # During setup, avoid the shared-network openclaw-cli service because it
+  # During setup, avoid the shared-network littlebaby-cli service because it
   # requires the gateway container's network namespace to already exist. That
   # creates a circular dependency for config writes that are needed before the
   # gateway can start cleanly.
@@ -170,7 +170,7 @@ run_runtime_cli() {
     *) fail "Unknown runtime CLI deps mode: $deps_mode" ;;
   esac
 
-  docker compose "${compose_args[@]}" "${run_args[@]}" openclaw-cli "$@"
+  docker compose "${compose_args[@]}" "${run_args[@]}" littlebaby-cli "$@"
 }
 
 contains_disallowed_chars() {
@@ -296,7 +296,7 @@ if [[ -z "${LITTLEBABY_GATEWAY_TOKEN:-}" ]]; then
   EXISTING_CONFIG_TOKEN="$(read_config_gateway_token || true)"
   if [[ -n "$EXISTING_CONFIG_TOKEN" ]]; then
     LITTLEBABY_GATEWAY_TOKEN="$EXISTING_CONFIG_TOKEN"
-    echo "Reusing gateway token from $LITTLEBABY_CONFIG_DIR/openclaw.json"
+    echo "Reusing gateway token from $LITTLEBABY_CONFIG_DIR/littlebaby.json"
   else
     DOTENV_GATEWAY_TOKEN="$(read_env_gateway_token "$ROOT_DIR/.env" || true)"
     if [[ -n "$DOTENV_GATEWAY_TOKEN" ]]; then
@@ -350,7 +350,7 @@ YAML
   done
 
   cat >>"$EXTRA_COMPOSE_FILE" <<'YAML'
-  openclaw-cli:
+  littlebaby-cli:
     volumes:
 YAML
 
@@ -471,7 +471,7 @@ upsert_env "$ENV_FILE" \
   LITTLEBABY_ALLOW_INSECURE_PRIVATE_WS \
   LITTLEBABY_TZ
 
-if [[ "$IMAGE_NAME" == "openclaw:local" ]]; then
+if [[ "$IMAGE_NAME" == "littlebaby:local" ]]; then
   echo "==> Building Docker image: $IMAGE_NAME"
   run_docker_build \
     --build-arg "LITTLEBABY_DOCKER_APT_PACKAGES=${LITTLEBABY_DOCKER_APT_PACKAGES}" \
@@ -498,8 +498,8 @@ echo "==> Fixing data-directory permissions"
 # Use -xdev to restrict chown to the config-dir mount only — without it,
 # the recursive chown would cross into the workspace bind mount and rewrite
 # ownership of all user project files on Linux hosts.
-# After fixing the config dir, only the OpenClaw metadata subdirectory
-# (.openclaw/) inside the workspace gets chowned, not the user's project files.
+# After fixing the config dir, only the LittleBaby metadata subdirectory
+# (.littlebaby/) inside the workspace gets chowned, not the user's project files.
 run_prestart_gateway --user root --entrypoint sh littlebaby-gateway -c \
   'find /home/node/.littlebaby -xdev -exec chown node:node {} +; \
    [ -d /home/node/.littlebaby/workspace/.littlebaby ] && chown -R node:node /home/node/.littlebaby/workspace/.littlebaby || true'
@@ -522,12 +522,12 @@ sync_gateway_config
 echo ""
 echo "==> Provider setup (optional)"
 echo "WhatsApp (QR):"
-echo "  ${COMPOSE_HINT} run --rm openclaw-cli channels login"
+echo "  ${COMPOSE_HINT} run --rm littlebaby-cli channels login"
 echo "Telegram (bot token):"
-echo "  ${COMPOSE_HINT} run --rm openclaw-cli channels add --channel telegram --token <token>"
+echo "  ${COMPOSE_HINT} run --rm littlebaby-cli channels add --channel telegram --token <token>"
 echo "Discord (bot token):"
-echo "  ${COMPOSE_HINT} run --rm openclaw-cli channels add --channel discord --token <token>"
-echo "Docs: https://docs.openclaw.ai/channels"
+echo "  ${COMPOSE_HINT} run --rm littlebaby-cli channels add --channel discord --token <token>"
+echo "Docs: https://docs.littlebaby.ai/channels"
 
 echo ""
 echo "==> Starting gateway"
@@ -540,9 +540,9 @@ if [[ -n "$SANDBOX_ENABLED" ]]; then
 
   # Build sandbox image if Dockerfile.sandbox exists.
   if [[ -f "$ROOT_DIR/Dockerfile.sandbox" ]]; then
-    echo "Building sandbox image: openclaw-sandbox:bookworm-slim"
+    echo "Building sandbox image: littlebaby-sandbox:bookworm-slim"
     run_docker_build \
-      -t "openclaw-sandbox:bookworm-slim" \
+      -t "littlebaby-sandbox:bookworm-slim" \
       -f "$ROOT_DIR/Dockerfile.sandbox" \
       "$ROOT_DIR"
   else
@@ -557,7 +557,7 @@ if [[ -n "$SANDBOX_ENABLED" ]]; then
   if ! docker compose "${COMPOSE_ARGS[@]}" run --rm --entrypoint docker littlebaby-gateway --version >/dev/null 2>&1; then
     echo "WARNING: Docker CLI not found inside the container image." >&2
     echo "  Sandbox requires Docker CLI. Rebuild with --build-arg LITTLEBABY_INSTALL_DOCKER_CLI=1" >&2
-    echo "  or use a local build (LITTLEBABY_IMAGE=openclaw:local). Skipping sandbox setup." >&2
+    echo "  or use a local build (LITTLEBABY_IMAGE=littlebaby:local). Skipping sandbox setup." >&2
     SANDBOX_ENABLED=""
   fi
 fi
@@ -591,7 +591,7 @@ YAML
 fi
 
 if [[ -n "$SANDBOX_ENABLED" ]]; then
-  # Enable sandbox in OpenClaw config.
+  # Enable sandbox in LittleBaby config.
   sandbox_config_ok=true
   if ! run_runtime_cli current no-deps \
     config set agents.defaults.sandbox.mode "non-main" >/dev/null; then
@@ -611,7 +611,7 @@ if [[ -n "$SANDBOX_ENABLED" ]]; then
 
   if [[ "$sandbox_config_ok" == true ]]; then
     echo "Sandbox enabled: mode=non-main, scope=agent, workspaceAccess=none"
-    echo "Docs: https://docs.openclaw.ai/gateway/sandboxing"
+    echo "Docs: https://docs.littlebaby.ai/gateway/sandboxing"
     # Restart gateway with sandbox compose overlay to pick up socket mount + config.
     docker compose "${COMPOSE_ARGS[@]}" up -d littlebaby-gateway
   else

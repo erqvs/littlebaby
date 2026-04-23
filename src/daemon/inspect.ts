@@ -81,8 +81,8 @@ export function detectMarkerLineWithGateway(contents: string): Marker | null {
 
 function hasGatewayServiceMarker(content: string): boolean {
   const lower = normalizeLowercaseStringOrEmpty(content);
-  const markerKeys = ["openclaw_service_marker"];
-  const kindKeys = ["openclaw_service_kind"];
+  const markerKeys = ["littlebaby_service_marker"];
+  const kindKeys = ["littlebaby_service_kind"];
   const markerValues = [normalizeLowercaseStringOrEmpty(GATEWAY_SERVICE_MARKER)];
   const hasMarkerKey = markerKeys.some((key) => lower.includes(key));
   const hasKindKey = kindKeys.some((key) => lower.includes(key));
@@ -95,7 +95,7 @@ function hasGatewayServiceMarker(content: string): boolean {
   );
 }
 
-function isOpenClawGatewayLaunchdService(label: string, contents: string): boolean {
+function isLittleBabyGatewayLaunchdService(label: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
@@ -103,10 +103,10 @@ function isOpenClawGatewayLaunchdService(label: string, contents: string): boole
   if (!lowerContents.includes("gateway")) {
     return false;
   }
-  return label.startsWith("ai.openclaw.");
+  return label.startsWith("ai.littlebaby.");
 }
 
-function isOpenClawGatewaySystemdService(name: string, contents: string): boolean {
+function isLittleBabyGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
@@ -116,13 +116,13 @@ function isOpenClawGatewaySystemdService(name: string, contents: string): boolea
   return normalizeLowercaseStringOrEmpty(contents).includes("gateway");
 }
 
-function isOpenClawGatewayTaskName(name: string): boolean {
+function isLittleBabyGatewayTaskName(name: string): boolean {
   const normalized = normalizeLowercaseStringOrEmpty(name);
   if (!normalized) {
     return false;
   }
   const defaultName = normalizeLowercaseStringOrEmpty(resolveGatewayWindowsTaskName());
-  return normalized === defaultName || normalized.startsWith("openclaw gateway");
+  return normalized === defaultName || normalized.startsWith("littlebaby gateway");
 }
 
 function tryExtractPlistLabel(contents: string): string | null {
@@ -226,7 +226,7 @@ async function scanLaunchdDir(params: {
     if (isIgnoredLaunchdLabel(label)) {
       continue;
     }
-    if (marker === "littlebaby" && isOpenClawGatewayLaunchdService(label, contents)) {
+    if (marker === "littlebaby" && isLittleBabyGatewayLaunchdService(label, contents)) {
       continue;
     }
     results.push({
@@ -258,7 +258,7 @@ async function scanSystemdDir(params: {
     if (!marker) {
       continue;
     }
-    if (marker === "littlebaby" && isOpenClawGatewaySystemdService(name, contents)) {
+    if (marker === "littlebaby" && isLittleBabyGatewaySystemdService(name, contents)) {
       continue;
     }
     results.push({
@@ -411,7 +411,7 @@ export async function findExtraGatewayServices(
       if (!name) {
         continue;
       }
-      if (isOpenClawGatewayTaskName(name)) {
+      if (isLittleBabyGatewayTaskName(name)) {
         continue;
       }
       const lowerName = normalizeLowercaseStringOrEmpty(name);

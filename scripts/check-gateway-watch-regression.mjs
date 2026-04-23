@@ -347,7 +347,7 @@ function buildTimedWatchCommand(pidFilePath, timeFilePath, isolatedHomeDir, port
   const shellSource = [
     'echo "$$" > "$LITTLEBABY_WATCH_PID_FILE"',
     'mkdir -p "$LITTLEBABY_HOME/.littlebaby"',
-    `printf '%s\n' '{"gateway":{"controlUi":{"enabled":false}}}' > "$LITTLEBABY_HOME/.littlebaby/openclaw.json"`,
+    `printf '%s\n' '{"gateway":{"controlUi":{"enabled":false}}}' > "$LITTLEBABY_HOME/.littlebaby/littlebaby.json"`,
     `exec node scripts/watch-node.mjs gateway --force --allow-unconfigured --port ${String(port)} --token watch-regression-token`,
   ].join("\n");
   const env = {

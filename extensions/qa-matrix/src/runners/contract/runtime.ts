@@ -2,9 +2,9 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { loadQaRuntimeModule } from "openclaw/plugin-sdk/qa-runner-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { loadQaRuntimeModule } from "littlebaby/plugin-sdk/qa-runner-runtime";
 import type { QaReportCheck } from "../../report.js";
 import { renderQaMarkdownReport } from "../../report.js";
 import { type QaProviderModeInput } from "../../run-config.js";
@@ -393,7 +393,7 @@ async function startMatrixQaLiveLaneGateway(params: {
     requiredPluginIds: readonly string[];
     createGatewayConfig: (params: {
       baseUrl: string;
-    }) => Pick<OpenClawConfig, "channels" | "messages">;
+    }) => Pick<LittleBabyConfig, "channels" | "messages">;
   };
   transportBaseUrl: string;
   providerMode: "mock-openai" | "live-frontier";
@@ -401,7 +401,7 @@ async function startMatrixQaLiveLaneGateway(params: {
   alternateModel: string;
   fastMode?: boolean;
   controlUiEnabled?: boolean;
-  mutateConfig?: (cfg: OpenClawConfig) => OpenClawConfig;
+  mutateConfig?: (cfg: LittleBabyConfig) => LittleBabyConfig;
 }): Promise<MatrixQaLiveLaneGatewayHarness> {
   return (await loadQaRuntimeModule().startQaLiveLaneGateway(
     params,
@@ -433,7 +433,7 @@ export async function runMatrixQaLive(params: {
   const scenarios = findMatrixQaScenarios(params.scenarioIds);
   const runSuffix = randomUUID().slice(0, 8);
   const topology = buildMatrixQaTopologyForScenarios({
-    defaultRoomName: `OpenClaw Matrix QA ${runSuffix}`,
+    defaultRoomName: `LittleBaby Matrix QA ${runSuffix}`,
     scenarios,
   });
   const observedEvents: MatrixQaObservedEvent[] = [];
@@ -462,7 +462,7 @@ export async function runMatrixQaLive(params: {
           driverLocalpart: `qa-driver-${runSuffix}`,
           observerLocalpart: `qa-observer-${runSuffix}`,
           registrationToken: harness.registrationToken,
-          roomName: `OpenClaw Matrix QA ${runSuffix}`,
+          roomName: `LittleBaby Matrix QA ${runSuffix}`,
           sutLocalpart: `qa-sut-${runSuffix}`,
           topology,
         }),

@@ -6,7 +6,7 @@ import { resolveSessionTranscriptPath, resolveStorePath } from "../../config/ses
 import { resolveSessionKey } from "../../config/sessions/session-key.js";
 import { loadSessionStore } from "../../config/sessions/store.js";
 import type { SessionEntry, SessionScope } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
@@ -17,10 +17,10 @@ import type { CommandContext } from "./commands-types.js";
 import { stripMentions, stripStructuralPrefixes } from "./mentions.js";
 import type { SessionInitResult } from "./session.js";
 
-const COMPLETE_REPLY_CONFIG_SYMBOL = Symbol.for("openclaw.reply.complete-config");
-const FULL_REPLY_RUNTIME_SYMBOL = Symbol.for("openclaw.reply.full-runtime");
+const COMPLETE_REPLY_CONFIG_SYMBOL = Symbol.for("littlebaby.reply.complete-config");
+const FULL_REPLY_RUNTIME_SYMBOL = Symbol.for("littlebaby.reply.full-runtime");
 
-type ReplyConfigWithMarker = OpenClawConfig & {
+type ReplyConfigWithMarker = LittleBabyConfig & {
   [COMPLETE_REPLY_CONFIG_SYMBOL]?: true;
   [FULL_REPLY_RUNTIME_SYMBOL]?: true;
 };
@@ -56,7 +56,7 @@ function markReplyConfigRuntimeMode(
   });
 }
 
-export function markCompleteReplyConfig<T extends OpenClawConfig>(
+export function markCompleteReplyConfig<T extends LittleBabyConfig>(
   config: T,
   options?: { runtimeMode?: "fast" | "full" },
 ): T {
@@ -69,15 +69,15 @@ export function markCompleteReplyConfig<T extends OpenClawConfig>(
   return config;
 }
 
-export function withFastReplyConfig<T extends OpenClawConfig>(config: T): T {
+export function withFastReplyConfig<T extends LittleBabyConfig>(config: T): T {
   return markCompleteReplyConfig(config, { runtimeMode: "fast" });
 }
 
-export function withFullRuntimeReplyConfig<T extends OpenClawConfig>(config: T): T {
+export function withFullRuntimeReplyConfig<T extends LittleBabyConfig>(config: T): T {
   return markCompleteReplyConfig(config, { runtimeMode: "full" });
 }
 
-export function isCompleteReplyConfig(config: unknown): config is OpenClawConfig {
+export function isCompleteReplyConfig(config: unknown): config is LittleBabyConfig {
   return Boolean(
     config &&
     typeof config === "object" &&
@@ -94,10 +94,10 @@ export function usesFullReplyRuntime(config: unknown): boolean {
 }
 
 export function resolveGetReplyConfig(params: {
-  loadConfig: () => OpenClawConfig;
+  loadConfig: () => LittleBabyConfig;
   isFastTestEnv: boolean;
-  configOverride?: OpenClawConfig;
-}): OpenClawConfig {
+  configOverride?: LittleBabyConfig;
+}): LittleBabyConfig {
   const { configOverride } = params;
   if (configOverride == null) {
     return params.loadConfig();
@@ -110,12 +110,12 @@ export function resolveGetReplyConfig(params: {
   if (params.isFastTestEnv && isCompleteReplyConfig(configOverride)) {
     return configOverride;
   }
-  return applyMergePatch(params.loadConfig(), configOverride) as OpenClawConfig;
+  return applyMergePatch(params.loadConfig(), configOverride) as LittleBabyConfig;
 }
 
 export function shouldUseReplyFastTestBootstrap(params: {
   isFastTestEnv: boolean;
-  configOverride?: OpenClawConfig;
+  configOverride?: LittleBabyConfig;
 }): boolean {
   return (
     params.isFastTestEnv &&
@@ -125,7 +125,7 @@ export function shouldUseReplyFastTestBootstrap(params: {
 }
 
 export function shouldUseReplyFastTestRuntime(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   isFastTestEnv: boolean;
 }): boolean {
   return (
@@ -153,7 +153,7 @@ export function shouldUseReplyFastDirectiveExecution(params: {
 
 export function buildFastReplyCommandContext(params: {
   ctx: MsgContext;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId?: string;
   sessionKey?: string;
   isGroup: boolean;
@@ -186,7 +186,7 @@ export function buildFastReplyCommandContext(params: {
 }
 
 export function shouldHandleFastReplyTextCommands(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   commandSource?: string;
 }): boolean {
   return params.commandSource === "native" || params.cfg.commands?.text !== false;
@@ -194,7 +194,7 @@ export function shouldHandleFastReplyTextCommands(params: {
 
 export function initFastReplySessionState(params: {
   ctx: MsgContext;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
   commandAuthorized: boolean;
   workspaceDir: string;

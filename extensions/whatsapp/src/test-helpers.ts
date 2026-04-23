@@ -1,15 +1,15 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { vi } from "vitest";
 import { formatEnvelopeTimestamp } from "../../../test/helpers/envelope-timestamp.js";
 import type { MockBaileysSocket } from "../../../test/mocks/baileys.js";
 import { createMockBaileys } from "../../../test/mocks/baileys.js";
 
 // Use globalThis to store the mock config so it survives vi.mock hoisting
-const CONFIG_KEY = Symbol.for("openclaw:testConfigMock");
-const SOURCE_CONFIG_KEY = Symbol.for("openclaw:testSourceConfigMock");
+const CONFIG_KEY = Symbol.for("littlebaby:testConfigMock");
+const SOURCE_CONFIG_KEY = Symbol.for("littlebaby:testSourceConfigMock");
 const DEFAULT_CONFIG = {
   channels: {
     whatsapp: {
@@ -50,7 +50,7 @@ function resolveStorePathFallback(store?: string, opts?: { agentId?: string }) {
     const agentId = normalizeLowercaseStringOrEmpty(opts?.agentId?.trim() || "main");
     return path.join(
       process.env.HOME ?? "/tmp",
-      ".openclaw",
+      ".littlebaby",
       "agents",
       agentId,
       "sessions",
@@ -592,17 +592,17 @@ vi.mock("./auto-reply/monitor/message-line.runtime.js", () => ({
     if (configured !== undefined) {
       return configured;
     }
-    return params?.hasAllowFrom === true ? "" : "[openclaw]";
+    return params?.hasAllowFrom === true ? "" : "[littlebaby]";
   },
 }));
 
 vi.mock("./auth-store.runtime.js", () => ({
-  resolveOAuthDir: () => "/tmp/openclaw-oauth",
+  resolveOAuthDir: () => "/tmp/littlebaby-oauth",
 }));
 
 vi.mock("./session.runtime.js", () => {
   const created = createMockBaileys();
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw:lastSocket")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("littlebaby:lastSocket")] =
     created.lastSocket;
   return {
     ...created.mod,
@@ -634,7 +634,7 @@ function resetMockExport<T extends (...args: never[]) => unknown>(params: {
 
 export function resetBaileysMocks() {
   const recreated = createMockBaileys();
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw:lastSocket")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("littlebaby:lastSocket")] =
     recreated.lastSocket;
 
   const makeWASocket = vi.mocked(baileys.makeWASocket);
@@ -678,7 +678,7 @@ export function resetBaileysMocks() {
 }
 
 export function getLastSocket(): MockBaileysSocket {
-  const getter = (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw:lastSocket")];
+  const getter = (globalThis as Record<PropertyKey, unknown>)[Symbol.for("littlebaby:lastSocket")];
   if (typeof getter === "function") {
     return (getter as () => MockBaileysSocket)();
   }

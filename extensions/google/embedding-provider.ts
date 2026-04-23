@@ -1,4 +1,4 @@
-import { parseGeminiAuth } from "openclaw/plugin-sdk/image-generation-core";
+import { parseGeminiAuth } from "littlebaby/plugin-sdk/image-generation-core";
 import {
   buildRemoteBaseUrlPolicy,
   debugEmbeddingsLog,
@@ -7,16 +7,16 @@ import {
   type EmbeddingInput,
   type MemoryEmbeddingProvider,
   type MemoryEmbeddingProviderCreateOptions,
-} from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
-import { resolveMemorySecretInputString } from "openclaw/plugin-sdk/memory-core-host-secret";
+} from "littlebaby/plugin-sdk/memory-core-host-engine-embeddings";
+import { resolveMemorySecretInputString } from "littlebaby/plugin-sdk/memory-core-host-secret";
 import {
   collectProviderApiKeysForExecution,
   executeWithApiKeyRotation,
   requireApiKey,
   resolveApiKeyForProvider,
-} from "openclaw/plugin-sdk/provider-auth-runtime";
-import type { SsrFPolicy } from "openclaw/plugin-sdk/ssrf-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/provider-auth-runtime";
+import type { SsrFPolicy } from "littlebaby/plugin-sdk/ssrf-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 
 export type GeminiEmbeddingClient = {
   baseUrl: string;

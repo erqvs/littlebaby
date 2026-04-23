@@ -1,1 +1,1 @@
-export { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-openclaw-dir.js";
+export { resolvePreferredLittleBabyTmpDir } from "../../infra/tmp-littlebaby-dir.js";

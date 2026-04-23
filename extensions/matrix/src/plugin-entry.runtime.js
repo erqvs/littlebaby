@@ -12,7 +12,7 @@ const { createJiti } = require("jiti");
 const PLUGIN_ID = "matrix";
 const LITTLEBABY_PLUGIN_SDK_PACKAGE_NAMES = [
   ["littlebaby", "plugin-sdk"].join("/"),
-  ["@openclaw", "plugin-sdk"].join("/"),
+  ["@littlebaby", "plugin-sdk"].join("/"),
 ];
 const PLUGIN_SDK_EXPORT_PREFIX = "./plugin-sdk/";
 const PLUGIN_SDK_SOURCE_EXTENSIONS = [".ts", ".mts", ".js", ".mjs", ".cts", ".cjs"];
@@ -42,27 +42,27 @@ function normalizeLowercaseStringOrEmpty(value) {
   return typeof value === "string" ? value.toLowerCase() : "";
 }
 
-function hasTrustedOpenClawRootIndicator(packageRoot, packageJson) {
+function hasTrustedLittleBabyRootIndicator(packageRoot, packageJson) {
   const packageExports = packageJson?.exports ?? {};
   if (!Object.prototype.hasOwnProperty.call(packageExports, "./plugin-sdk")) {
     return false;
   }
   const hasCliEntryExport = Object.prototype.hasOwnProperty.call(packageExports, "./cli-entry");
-  const hasOpenClawBin =
+  const hasLittleBabyBin =
     (typeof packageJson?.bin === "string" &&
       normalizeLowercaseStringOrEmpty(packageJson.bin).includes("littlebaby")) ||
     (typeof packageJson?.bin === "object" &&
       packageJson.bin !== null &&
-      typeof packageJson.bin.openclaw === "string");
-  const hasOpenClawEntrypoint = fs.existsSync(path.join(packageRoot, "littlebaby.mjs"));
-  return hasCliEntryExport || hasOpenClawBin || hasOpenClawEntrypoint;
+      typeof packageJson.bin.littlebaby === "string");
+  const hasLittleBabyEntrypoint = fs.existsSync(path.join(packageRoot, "littlebaby.mjs"));
+  return hasCliEntryExport || hasLittleBabyBin || hasLittleBabyEntrypoint;
 }
 
-function findOpenClawPackageRoot(startDir) {
+function findLittleBabyPackageRoot(startDir) {
   let cursor = path.resolve(startDir);
   for (let i = 0; i < 12; i += 1) {
     const pkg = readPackageJson(cursor);
-    if (pkg?.name === "littlebaby" && hasTrustedOpenClawRootIndicator(cursor, pkg)) {
+    if (pkg?.name === "littlebaby" && hasTrustedLittleBabyRootIndicator(cursor, pkg)) {
       return { packageRoot: cursor, packageJson: pkg };
     }
     const parent = path.dirname(cursor);
@@ -85,7 +85,7 @@ function resolveExistingFile(basePath, extensions) {
 }
 
 function buildPluginSdkAliasMap(moduleUrl) {
-  const location = findOpenClawPackageRoot(path.dirname(fileURLToPath(moduleUrl)));
+  const location = findLittleBabyPackageRoot(path.dirname(fileURLToPath(moduleUrl)));
   if (!location) {
     return {};
   }
@@ -127,7 +127,7 @@ function buildPluginSdkAliasMap(moduleUrl) {
       PLUGIN_SDK_SOURCE_EXTENSIONS,
     ) ?? resolveExistingFile(path.join(packageRoot, "dist", "extensionAPI"), [".js"]);
   if (extensionApi) {
-    aliasMap["openclaw/extension-api"] = extensionApi;
+    aliasMap["littlebaby/extension-api"] = extensionApi;
   }
 
   return aliasMap;
@@ -148,7 +148,7 @@ function resolveBundledPluginRuntimeModulePath(moduleUrl, params) {
     }
   }
 
-  const location = findOpenClawPackageRoot(moduleDir);
+  const location = findLittleBabyPackageRoot(moduleDir);
   if (location) {
     const { packageRoot } = location;
     const packageCandidates = [

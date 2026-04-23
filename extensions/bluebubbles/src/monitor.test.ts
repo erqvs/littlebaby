@@ -21,7 +21,7 @@ import {
   resetBlueBubblesParticipantContactNameCacheForTest,
   setBlueBubblesParticipantContactDepsForTest,
 } from "./participant-contact-names.js";
-import type { OpenClawConfig, PluginRuntime } from "./runtime-api.js";
+import type { LittleBabyConfig, PluginRuntime } from "./runtime-api.js";
 import { createBlueBubblesFetchGuardPassthroughInstaller } from "./test-harness.js";
 import {
   createBlueBubblesMonitorTestRuntime,
@@ -229,7 +229,7 @@ describe("BlueBubbles webhook monitor", () => {
 
   function setupWebhookTarget(params?: {
     account?: ReturnType<typeof createMockAccount>;
-    config?: OpenClawConfig;
+    config?: LittleBabyConfig;
     core?: PluginRuntime;
   }) {
     const registration = trackWebhookRegistrationForTest(
@@ -1020,7 +1020,7 @@ describe("BlueBubbles webhook monitor", () => {
               contextVisibility: "allowlist",
             },
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
       });
 
       const payload = createTimestampedNewMessagePayloadForTest({
@@ -1057,7 +1057,7 @@ describe("BlueBubbles webhook monitor", () => {
               contextVisibility: "allowlist_quote",
             },
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
       });
 
       const payload = createTimestampedNewMessagePayloadForTest({

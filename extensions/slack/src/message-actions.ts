@@ -1,11 +1,11 @@
-import { createActionGate } from "openclaw/plugin-sdk/channel-actions";
-import type { ChannelMessageActionName } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { extractToolSend, type ChannelToolSend } from "openclaw/plugin-sdk/tool-send";
+import { createActionGate } from "littlebaby/plugin-sdk/channel-actions";
+import type { ChannelMessageActionName } from "littlebaby/plugin-sdk/channel-contract";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { extractToolSend, type ChannelToolSend } from "littlebaby/plugin-sdk/tool-send";
 import { listEnabledSlackAccounts, resolveSlackAccount } from "./accounts.js";
 
 export function listSlackMessageActions(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId?: string | null,
 ): ChannelMessageActionName[] {
   const accounts = (

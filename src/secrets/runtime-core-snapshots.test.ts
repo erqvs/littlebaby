@@ -95,7 +95,7 @@ describe("secrets runtime snapshot core lanes", () => {
             },
           }),
           env: { OPENAI_API_KEY: "sk-runtime" },
-          agentDirs: ["/tmp/openclaw-agent-main"],
+          agentDirs: ["/tmp/littlebaby-agent-main"],
           includeAuthStoreRefs: params?.includeAuthStoreRefs,
           loadablePluginOrigins: new Map(),
           loadAuthStore: () =>
@@ -206,7 +206,7 @@ describe("secrets runtime snapshot core lanes", () => {
         OPENAI_API_KEY: "sk-env-openai",
         GITHUB_TOKEN: "ghp-env-token",
       },
-      agentDirs: ["/tmp/openclaw-agent-main"],
+      agentDirs: ["/tmp/littlebaby-agent-main"],
       loadablePluginOrigins: new Map(),
       loadAuthStore: () =>
         loadAuthStoreWithProfiles({
@@ -227,8 +227,8 @@ describe("secrets runtime snapshot core lanes", () => {
 
     expect(snapshot.warnings.map((warning) => warning.path)).toEqual(
       expect.arrayContaining([
-        "/tmp/openclaw-agent-main.auth-profiles.openai:default.key",
-        "/tmp/openclaw-agent-main.auth-profiles.github-copilot:default.token",
+        "/tmp/littlebaby-agent-main.auth-profiles.openai:default.key",
+        "/tmp/littlebaby-agent-main.auth-profiles.github-copilot:default.token",
       ]),
     );
     expect(snapshot.authStores[0]?.store.profiles["openai:default"]).toMatchObject({
@@ -247,7 +247,7 @@ describe("secrets runtime snapshot core lanes", () => {
       env: {
         OPENAI_API_KEY: "sk-env-openai",
       },
-      agentDirs: ["/tmp/openclaw-agent-main"],
+      agentDirs: ["/tmp/littlebaby-agent-main"],
       loadablePluginOrigins: new Map(),
       loadAuthStore: () =>
         loadAuthStoreWithProfiles({
@@ -285,7 +285,7 @@ describe("secrets runtime snapshot core lanes", () => {
     activateSecretsRuntimeSnapshot(prepared);
 
     expect(
-      ensureAuthProfileStore("/tmp/openclaw-agent-main").profiles["openai:default"],
+      ensureAuthProfileStore("/tmp/littlebaby-agent-main").profiles["openai:default"],
     ).toMatchObject({
       type: "api_key",
       key: "sk-runtime",

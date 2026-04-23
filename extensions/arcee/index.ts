@@ -1,10 +1,10 @@
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
+import { definePluginEntry } from "littlebaby/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "littlebaby/plugin-sdk/provider-auth-api-key";
 import {
   readConfiguredProviderCatalogEntries,
   type ProviderCatalogContext,
-} from "openclaw/plugin-sdk/provider-catalog-shared";
-import { OPENAI_COMPATIBLE_REPLAY_HOOKS } from "openclaw/plugin-sdk/provider-model-shared";
+} from "littlebaby/plugin-sdk/provider-catalog-shared";
+import { OPENAI_COMPATIBLE_REPLAY_HOOKS } from "littlebaby/plugin-sdk/provider-model-shared";
 import {
   applyArceeConfig,
   applyArceeOpenRouterConfig,

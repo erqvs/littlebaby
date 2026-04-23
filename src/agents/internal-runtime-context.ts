@@ -6,7 +6,7 @@ const ESCAPED_INTERNAL_RUNTIME_CONTEXT_END = "[[LITTLEBABY_INTERNAL_CONTEXT_END]
 
 const LEGACY_INTERNAL_CONTEXT_HEADER =
   [
-    "OpenClaw runtime context (internal):",
+    "LittleBaby runtime context (internal):",
     "This context is runtime-generated, not user-authored. Keep internal details private.",
     "",
   ].join("\n") + "\n";

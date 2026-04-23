@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/deepseek-provider",
+  "name": "@littlebaby/deepseek-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw DeepSeek provider plugin",
+  "description": "LittleBaby DeepSeek provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

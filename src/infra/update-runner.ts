@@ -106,7 +106,7 @@ const START_DIRS = ["cwd", "argv1", "process"];
 const DEFAULT_PACKAGE_NAME = "littlebaby";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 const PREFLIGHT_TEMP_PREFIX =
-  process.platform === "win32" ? "ocu-pf-" : "openclaw-update-preflight-";
+  process.platform === "win32" ? "ocu-pf-" : "littlebaby-update-preflight-";
 const PREFLIGHT_WORKTREE_DIRNAME = process.platform === "win32" ? "wt" : "worktree";
 const WINDOWS_PREFLIGHT_BASE_DIR = "ocu";
 const WINDOWS_BUILD_MAX_OLD_SPACE_MB = 4096;
@@ -566,7 +566,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       status: "error",
       mode: "unknown",
       root: gitRoot,
-      reason: "not-openclaw-root",
+      reason: "not-littlebaby-root",
       steps: [],
       durationMs: Date.now() - startedAt,
     };
@@ -1124,7 +1124,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         .catch(() => false);
       if (!doctorEntryExists) {
         steps.push({
-          name: "openclaw doctor entry",
+          name: "littlebaby doctor entry",
           command: `verify ${doctorEntry}`,
           cwd: gitRoot,
           durationMs: 0,
@@ -1147,7 +1147,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       const doctorNodePath = await resolveStableNodePath(process.execPath);
       const doctorArgv = [doctorNodePath, doctorEntry, "doctor", "--non-interactive", "--fix"];
       const doctorStep = await runStep(
-        step("openclaw doctor", doctorArgv, gitRoot, { LITTLEBABY_UPDATE_IN_PROGRESS: "1" }),
+        step("littlebaby doctor", doctorArgv, gitRoot, { LITTLEBABY_UPDATE_IN_PROGRESS: "1" }),
       );
       steps.push(doctorStep);
 

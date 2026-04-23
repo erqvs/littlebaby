@@ -2,7 +2,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { createEmptyPluginRegistry } from "../registry.js";
 
 const mocks = vi.hoisted(() => ({
-  loadOpenClawPlugins: vi.fn<typeof import("../loader.js").loadOpenClawPlugins>(),
+  loadLittleBabyPlugins: vi.fn<typeof import("../loader.js").loadLittleBabyPlugins>(),
   getActivePluginRegistry: vi.fn<typeof import("../runtime.js").getActivePluginRegistry>(),
   resolveConfiguredChannelPluginIds:
     vi.fn<typeof import("../channel-plugin-ids.js").resolveConfiguredChannelPluginIds>(),
@@ -22,8 +22,8 @@ let ensurePluginRegistryLoaded: typeof import("./runtime-registry-loader.js").en
 let resetPluginRegistryLoadedForTests: typeof import("./runtime-registry-loader.js").__testing.resetPluginRegistryLoadedForTests;
 
 vi.mock("../loader.js", () => ({
-  loadOpenClawPlugins: (...args: Parameters<typeof mocks.loadOpenClawPlugins>) =>
-    mocks.loadOpenClawPlugins(...args),
+  loadLittleBabyPlugins: (...args: Parameters<typeof mocks.loadLittleBabyPlugins>) =>
+    mocks.loadLittleBabyPlugins(...args),
 }));
 
 vi.mock("../runtime.js", () => ({
@@ -60,7 +60,7 @@ describe("ensurePluginRegistryLoaded", () => {
   });
 
   beforeEach(() => {
-    mocks.loadOpenClawPlugins.mockReset();
+    mocks.loadLittleBabyPlugins.mockReset();
     mocks.getActivePluginRegistry.mockReset();
     mocks.resolveConfiguredChannelPluginIds.mockReset();
     mocks.resolveChannelPluginIds.mockReset();
@@ -99,7 +99,7 @@ describe("ensurePluginRegistryLoaded", () => {
         },
       },
     };
-    const env = { HOME: "/tmp/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { HOME: "/tmp/littlebaby-home" } as NodeJS.ProcessEnv;
 
     mocks.resolveConfiguredChannelPluginIds.mockReturnValue(["demo-channel"]);
     ensurePluginRegistryLoaded({
@@ -121,7 +121,7 @@ describe("ensurePluginRegistryLoaded", () => {
       config: rawConfig,
       env,
     });
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenCalledWith(
       expect.objectContaining({
         config: expect.objectContaining({
           ...resolvedConfig,
@@ -161,7 +161,7 @@ describe("ensurePluginRegistryLoaded", () => {
       config: rawConfig as never,
     });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenCalledWith(
       expect.objectContaining({
         config: expect.objectContaining({
           plugins: expect.objectContaining({
@@ -196,12 +196,12 @@ describe("ensurePluginRegistryLoaded", () => {
       onlyPluginIds: ["demo-b"],
     });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledTimes(2);
-    expect(mocks.loadOpenClawPlugins).toHaveBeenNthCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenCalledTimes(2);
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({ onlyPluginIds: ["demo-a"] }),
     );
-    expect(mocks.loadOpenClawPlugins).toHaveBeenNthCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({ onlyPluginIds: ["demo-b"] }),
     );
@@ -216,7 +216,7 @@ describe("ensurePluginRegistryLoaded", () => {
 
     expect(mocks.resolveConfiguredChannelPluginIds).not.toHaveBeenCalled();
     expect(mocks.resolveChannelPluginIds).not.toHaveBeenCalled();
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenCalledWith(
       expect.objectContaining({
         onlyPluginIds: [],
       }),
@@ -231,7 +231,7 @@ describe("ensurePluginRegistryLoaded", () => {
       config: { channels: { demo: { enabled: true } } } as never,
     });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenCalledWith(
       expect.objectContaining({
         onlyPluginIds: [],
       }),
@@ -246,13 +246,13 @@ describe("ensurePluginRegistryLoaded", () => {
       config: {} as never,
     });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledWith(
+    expect(mocks.loadLittleBabyPlugins).toHaveBeenCalledWith(
       expect.not.objectContaining({
         onlyPluginIds: [],
       }),
     );
     expect(
-      (mocks.loadOpenClawPlugins.mock.calls[0]?.[0] as { onlyPluginIds?: string[] }).onlyPluginIds,
+      (mocks.loadLittleBabyPlugins.mock.calls[0]?.[0] as { onlyPluginIds?: string[] }).onlyPluginIds,
     ).toBeUndefined();
   });
 });

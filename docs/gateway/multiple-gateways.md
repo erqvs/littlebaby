@@ -1,5 +1,5 @@
 ---
-summary: "Run multiple OpenClaw Gateways on one host (isolation, ports, and profiles)"
+summary: "Run multiple LittleBaby Gateways on one host (isolation, ports, and profiles)"
 read_when:
   - Running more than one Gateway on the same machine
   - You need isolated config/state/ports per Gateway
@@ -26,19 +26,19 @@ Profiles auto-scope `LITTLEBABY_STATE_DIR` + `LITTLEBABY_CONFIG_PATH` and suffix
 
 ```bash
 # main
-openclaw --profile main setup
-openclaw --profile main gateway --port 18789
+littlebaby --profile main setup
+littlebaby --profile main gateway --port 18789
 
 # rescue
-openclaw --profile rescue setup
-openclaw --profile rescue gateway --port 19001
+littlebaby --profile rescue setup
+littlebaby --profile rescue gateway --port 19001
 ```
 
 Per-profile services:
 
 ```bash
-openclaw --profile main gateway install
-openclaw --profile rescue gateway install
+littlebaby --profile main gateway install
+littlebaby --profile rescue gateway install
 ```
 
 ## Rescue-bot guide
@@ -59,11 +59,11 @@ Port spacing: leave at least 20 ports between base ports so the derived browser/
 ```bash
 # Main bot (existing or fresh, without --profile param)
 # Runs on port 18789 + Chrome CDC/Canvas/... Ports
-openclaw onboard
-openclaw gateway install
+littlebaby onboard
+littlebaby gateway install
 
 # Rescue bot (isolated profile + ports)
-openclaw --profile rescue onboard
+littlebaby --profile rescue onboard
 # Notes:
 # - workspace name will be postfixed with -rescue per default
 # - Port should be at least 18789 + 20 Ports,
@@ -71,7 +71,7 @@ openclaw --profile rescue onboard
 # - rest of the onboarding is the same as normal
 
 # To install the service (if not happened automatically during setup)
-openclaw --profile rescue gateway install
+littlebaby --profile rescue gateway install
 ```
 
 ## Port mapping (derived)
@@ -96,22 +96,22 @@ If you override any of these in config or env, you must keep them unique per ins
 ```bash
 LITTLEBABY_CONFIG_PATH=~/.littlebaby/main.json \
 LITTLEBABY_STATE_DIR=~/.littlebaby-main \
-openclaw gateway --port 18789
+littlebaby gateway --port 18789
 
 LITTLEBABY_CONFIG_PATH=~/.littlebaby/rescue.json \
 LITTLEBABY_STATE_DIR=~/.littlebaby-rescue \
-openclaw gateway --port 19001
+littlebaby gateway --port 19001
 ```
 
 ## Quick checks
 
 ```bash
-openclaw --profile main gateway status --deep
-openclaw --profile rescue gateway status --deep
-openclaw --profile rescue gateway probe
-openclaw --profile main status
-openclaw --profile rescue status
-openclaw --profile rescue browser status
+littlebaby --profile main gateway status --deep
+littlebaby --profile rescue gateway status --deep
+littlebaby --profile rescue gateway probe
+littlebaby --profile main status
+littlebaby --profile rescue status
+littlebaby --profile rescue browser status
 ```
 
 Interpretation:

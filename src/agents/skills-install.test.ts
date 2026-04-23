@@ -13,7 +13,7 @@ import {
   runCommandWithTimeoutMock,
   scanDirectoryWithSummaryMock,
 } from "./skills-install.test-mocks.js";
-import { resolveOpenClawMetadata, resolveSkillInvocationPolicy } from "./skills/frontmatter.js";
+import { resolveLittleBabyMetadata, resolveSkillInvocationPolicy } from "./skills/frontmatter.js";
 import { loadSkillsFromDirSafe, readSkillFrontmatterSafe } from "./skills/local-loader.js";
 import type { SkillEntry } from "./skills/types.js";
 
@@ -70,7 +70,7 @@ function mockDangerousSkillScanFinding(skillDir: string) {
 function loadTestWorkspaceSkillEntries(workspaceDir: string): SkillEntry[] {
   const skills = loadSkillsFromDirSafe({
     dir: path.join(workspaceDir, "skills"),
-    source: "openclaw-workspace",
+    source: "littlebaby-workspace",
   }).skills;
   return skills.map((skill) => {
     const frontmatter =
@@ -82,7 +82,7 @@ function loadTestWorkspaceSkillEntries(workspaceDir: string): SkillEntry[] {
     return {
       skill,
       frontmatter,
-      metadata: resolveOpenClawMetadata(frontmatter),
+      metadata: resolveLittleBabyMetadata(frontmatter),
       invocation,
       exposure: {
         includeInRuntimeRegistry: true,
@@ -93,7 +93,7 @@ function loadTestWorkspaceSkillEntries(workspaceDir: string): SkillEntry[] {
   });
 }
 
-const workspaceSuite = createFixtureSuite("openclaw-skills-install-");
+const workspaceSuite = createFixtureSuite("littlebaby-skills-install-");
 
 beforeAll(async () => {
   await workspaceSuite.setup();
@@ -231,7 +231,7 @@ describe("installSkill code safety scanning", () => {
       expect(handler.mock.calls[0]?.[0]).toMatchObject({
         targetName: "policy-skill",
         targetType: "skill",
-        origin: "openclaw-workspace",
+        origin: "littlebaby-workspace",
         sourcePath: expect.stringContaining("policy-skill"),
         sourcePathKind: "directory",
         request: {
@@ -251,7 +251,7 @@ describe("installSkill code safety scanning", () => {
         },
       });
       expect(handler.mock.calls[0]?.[1]).toEqual({
-        origin: "openclaw-workspace",
+        origin: "littlebaby-workspace",
         targetType: "skill",
         requestKind: "skill-install",
       });

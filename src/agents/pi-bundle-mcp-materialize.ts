@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { logWarn } from "../logger.js";
 import { normalizeLowercaseStringOrEmpty } from "../shared/string-coerce.js";
 import {
@@ -127,12 +127,12 @@ export async function materializeBundleMcpToolsForRun(params: {
 
 export async function createBundleMcpToolRuntime(params: {
   workspaceDir: string;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   reservedToolNames?: Iterable<string>;
   createRuntime?: (params: {
     sessionId: string;
     workspaceDir: string;
-    cfg?: OpenClawConfig;
+    cfg?: LittleBabyConfig;
   }) => SessionMcpRuntime;
 }): Promise<BundleMcpToolRuntime> {
   const createRuntime =

@@ -1,9 +1,9 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { buildOutboundBaseSessionKey } from "openclaw/plugin-sdk/routing";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { buildOutboundBaseSessionKey } from "littlebaby/plugin-sdk/routing";
 import { stripNextcloudTalkTargetPrefix } from "./normalize.js";
 
 type NextcloudTalkOutboundSessionRouteParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
   accountId?: string | null;
   target: string;

@@ -1,1 +1,1 @@
-export { resolveRequestUrl } from "openclaw/plugin-sdk/request-url";
+export { resolveRequestUrl } from "littlebaby/plugin-sdk/request-url";

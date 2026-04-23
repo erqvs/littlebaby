@@ -17,7 +17,7 @@ import {
 async function withRestartSentinelStateDir(run: () => Promise<void>): Promise<void> {
   const envSnapshot = captureEnv(["LITTLEBABY_STATE_DIR"]);
   try {
-    await withTempDir({ prefix: "openclaw-sentinel-" }, async (tempDir) => {
+    await withTempDir({ prefix: "littlebaby-sentinel-" }, async (tempDir) => {
       process.env.LITTLEBABY_STATE_DIR = tempDir;
       await run();
     });
@@ -114,7 +114,7 @@ describe("restart sentinel", () => {
       status: "error" as const,
       ts: Date.now(),
       message: "Patch failed",
-      doctorHint: "Run openclaw doctor",
+      doctorHint: "Run littlebaby doctor",
       stats: { mode: "patch", reason: "validation failed" },
     };
 
@@ -123,7 +123,7 @@ describe("restart sentinel", () => {
         "Gateway restart config-patch error (patch)",
         "Patch failed",
         "Reason: validation failed",
-        "Run openclaw doctor",
+        "Run littlebaby doctor",
       ].join("\n"),
     );
   });
@@ -195,7 +195,7 @@ describe("restart sentinel message dedup", () => {
 
   it("formats the non-interactive doctor command", () => {
     expect(formatDoctorNonInteractiveHint({ PATH: "/usr/bin:/bin" })).toContain(
-      "openclaw doctor --non-interactive",
+      "littlebaby doctor --non-interactive",
     );
   });
 });

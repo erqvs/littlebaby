@@ -1,5 +1,5 @@
 import type { FallbackAttempt } from "../agents/model-fallback.types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   buildMediaGenerationNormalizationMetadata,
@@ -73,7 +73,7 @@ function validateProviderOptionsAgainstDeclaration(params: {
   return undefined;
 }
 
-function buildNoVideoGenerationModelConfiguredMessage(cfg: OpenClawConfig): string {
+function buildNoVideoGenerationModelConfiguredMessage(cfg: LittleBabyConfig): string {
   return buildNoCapabilityModelConfiguredMessage({
     capabilityLabel: "video-generation",
     modelConfigKey: "videoGenerationModel",
@@ -81,7 +81,7 @@ function buildNoVideoGenerationModelConfiguredMessage(cfg: OpenClawConfig): stri
   });
 }
 
-export function listRuntimeVideoGenerationProviders(params?: { config?: OpenClawConfig }) {
+export function listRuntimeVideoGenerationProviders(params?: { config?: LittleBabyConfig }) {
   return listVideoGenerationProviders(params?.config);
 }
 
