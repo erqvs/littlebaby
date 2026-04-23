@@ -49,7 +49,7 @@ function isCurrentLittleBabyClient(clientId: string | undefined): boolean {
 
 function isLegacyLittlebabyClient(clientId: string | undefined): boolean {
   const normalized = normalizeOptionalLowercaseString(clientId) ?? "";
-  return normalized.startsWith("littlebaby-") || normalized.startsWith("moldbot-");
+  return normalized.startsWith("littlebaby-") || normalized.startsWith("littlebaby-");
 }
 
 function pickPreferredLegacyMigrationMatch(
