@@ -90,13 +90,13 @@ You can gate them via `metadata.littlebaby.requires.config` on the plugin’s co
 entry. See [Plugins](/tools/plugin) for discovery/config and [Tools](/tools) for the
 tool surface those skills teach.
 
-## ClawHub (install + sync)
+## LittleBabyHub (install + sync)
 
-ClawHub is the public skills registry for LittleBaby. Browse at
-[https://clawhub.ai](https://clawhub.ai). Use native `littlebaby skills`
-commands to discover/install/update skills, or the separate `clawhub` CLI when
+LittleBabyHub is the public skills registry for LittleBaby. Browse at
+[https://littlebabyhub.ai](https://littlebabyhub.ai). Use native `littlebaby skills`
+commands to discover/install/update skills, or the separate `littlebabyhub` CLI when
 you need publish/sync workflows.
-Full guide: [ClawHub](/tools/clawhub).
+Full guide: [LittleBabyHub](/tools/littlebabyhub).
 
 Common flows:
 
@@ -105,10 +105,10 @@ Common flows:
 - Update all installed skills:
   - `littlebaby skills update --all`
 - Sync (scan + publish updates):
-  - `clawhub sync --all`
+  - `littlebabyhub sync --all`
 
 Native `littlebaby skills install` installs into the active workspace `skills/`
-directory. The separate `clawhub` CLI also installs into `./skills` under your
+directory. The separate `littlebabyhub` CLI also installs into `./skills` under your
 current working directory (or falls back to the configured LittleBaby workspace).
 LittleBaby picks that up as `<workspace>/skills` on the next session.
 
@@ -118,7 +118,7 @@ LittleBaby picks that up as `<workspace>/skills` on the next session.
 - Prefer sandboxed runs for untrusted inputs and risky tools. See [Sandboxing](/gateway/sandboxing).
 - Workspace and extra-dir skill discovery only accepts skill roots and `SKILL.md` files whose resolved realpath stays inside the configured root.
 - Gateway-backed skill dependency installs (`skills.install`, onboarding, and the Skills settings UI) run the built-in dangerous-code scanner before executing installer metadata. `critical` findings block by default unless the caller explicitly sets the dangerous override; suspicious findings still warn only.
-- `littlebaby skills install <slug>` is different: it downloads a ClawHub skill folder into the workspace and does not use the installer-metadata path above.
+- `littlebaby skills install <slug>` is different: it downloads a LittleBabyHub skill folder into the workspace and does not use the installer-metadata path above.
 - `skills.entries.*.env` and `skills.entries.*.apiKey` inject secrets into the **host** process
   for that agent turn (not the sandbox). Keep secrets out of prompts and logs.
 - For a broader threat model and checklists, see [Security](/gateway/security).
@@ -372,7 +372,7 @@ See [Skills config](/tools/skills-config) for the full configuration schema.
 
 ## Looking for more skills?
 
-Browse [https://clawhub.ai](https://clawhub.ai).
+Browse [https://littlebabyhub.ai](https://littlebabyhub.ai).
 
 ---
 

@@ -6,10 +6,10 @@ import { createCommandWorkspaceHarness } from "./commands-filesystem.test-suppor
 import { handlePluginsCommand } from "./commands-plugins.js";
 import type { HandleCommandsParams } from "./commands-types.js";
 
-const { installPluginFromPathMock, installPluginFromClawHubMock, persistPluginInstallMock } =
+const { installPluginFromPathMock, installPluginFromLittleBabyHubMock, persistPluginInstallMock } =
   vi.hoisted(() => ({
     installPluginFromPathMock: vi.fn(),
-    installPluginFromClawHubMock: vi.fn(),
+    installPluginFromLittleBabyHubMock: vi.fn(),
     persistPluginInstallMock: vi.fn(),
   }));
 
@@ -23,13 +23,13 @@ vi.mock("../../plugins/install.js", async () => {
   };
 });
 
-vi.mock("../../plugins/clawhub.js", async () => {
-  const actual = await vi.importActual<typeof import("../../plugins/clawhub.js")>(
-    "../../plugins/clawhub.js",
+vi.mock("../../plugins/littlebabyhub.js", async () => {
+  const actual = await vi.importActual<typeof import("../../plugins/littlebabyhub.js")>(
+    "../../plugins/littlebabyhub.js",
   );
   return {
     ...actual,
-    installPluginFromClawHub: installPluginFromClawHubMock,
+    installPluginFromLittleBabyHub: installPluginFromLittleBabyHubMock,
   };
 });
 
@@ -83,7 +83,7 @@ function buildPluginsParams(
 describe("handleCommands /plugins install", () => {
   afterEach(async () => {
     installPluginFromPathMock.mockReset();
-    installPluginFromClawHubMock.mockReset();
+    installPluginFromLittleBabyHubMock.mockReset();
     persistPluginInstallMock.mockReset();
     await workspaceHarness.cleanupWorkspaces();
   });
@@ -128,20 +128,20 @@ describe("handleCommands /plugins install", () => {
     });
   });
 
-  it("installs from an explicit clawhub: spec", async () => {
-    installPluginFromClawHubMock.mockResolvedValue({
+  it("installs from an explicit littlebabyhub: spec", async () => {
+    installPluginFromLittleBabyHubMock.mockResolvedValue({
       ok: true,
-      pluginId: "clawhub-demo",
-      targetDir: "/tmp/clawhub-demo",
+      pluginId: "littlebabyhub-demo",
+      targetDir: "/tmp/littlebabyhub-demo",
       version: "1.2.3",
       extensions: ["index.js"],
-      packageName: "@littlebaby/clawhub-demo",
-      clawhub: {
-        source: "clawhub",
-        clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@littlebaby/clawhub-demo",
-        clawhubFamily: "code-plugin",
-        clawhubChannel: "official",
+      packageName: "@littlebaby/littlebabyhub-demo",
+      littlebabyhub: {
+        source: "littlebabyhub",
+        littlebabyhubUrl: "https://littlebabyhub.ai",
+        littlebabyhubPackage: "@littlebaby/littlebabyhub-demo",
+        littlebabyhubFamily: "code-plugin",
+        littlebabyhubChannel: "official",
         version: "1.2.3",
         integrity: "sha512-demo",
         resolvedAt: "2026-03-22T12:00:00.000Z",
@@ -152,30 +152,30 @@ describe("handleCommands /plugins install", () => {
     await withTempHome("littlebaby-command-plugins-home-", async () => {
       const workspaceDir = await workspaceHarness.createWorkspace();
       const params = buildPluginsParams(
-        "/plugins install clawhub:@littlebaby/clawhub-demo@1.2.3",
+        "/plugins install littlebabyhub:@littlebaby/littlebabyhub-demo@1.2.3",
         workspaceDir,
       );
       const result = await handlePluginsCommand(params, true);
       if (result === null) {
         throw new Error("expected plugin install result");
       }
-      expect(result.reply?.text).toContain('Installed plugin "clawhub-demo"');
-      expect(installPluginFromClawHubMock).toHaveBeenCalledWith(
+      expect(result.reply?.text).toContain('Installed plugin "littlebabyhub-demo"');
+      expect(installPluginFromLittleBabyHubMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          spec: "clawhub:@littlebaby/clawhub-demo@1.2.3",
+          spec: "littlebabyhub:@littlebaby/littlebabyhub-demo@1.2.3",
         }),
       );
       expect(persistPluginInstallMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          pluginId: "clawhub-demo",
+          pluginId: "littlebabyhub-demo",
           install: expect.objectContaining({
-            source: "clawhub",
-            spec: "clawhub:@littlebaby/clawhub-demo@1.2.3",
-            installPath: "/tmp/clawhub-demo",
+            source: "littlebabyhub",
+            spec: "littlebabyhub:@littlebaby/littlebabyhub-demo@1.2.3",
+            installPath: "/tmp/littlebabyhub-demo",
             version: "1.2.3",
             integrity: "sha512-demo",
-            clawhubPackage: "@littlebaby/clawhub-demo",
-            clawhubChannel: "official",
+            littlebabyhubPackage: "@littlebaby/littlebabyhub-demo",
+            littlebabyhubChannel: "official",
           }),
         }),
       );
@@ -183,19 +183,19 @@ describe("handleCommands /plugins install", () => {
   });
 
   it("treats /plugin add as an install alias", async () => {
-    installPluginFromClawHubMock.mockResolvedValue({
+    installPluginFromLittleBabyHubMock.mockResolvedValue({
       ok: true,
       pluginId: "alias-demo",
       targetDir: "/tmp/alias-demo",
       version: "1.0.0",
       extensions: ["index.js"],
       packageName: "@littlebaby/alias-demo",
-      clawhub: {
-        source: "clawhub",
-        clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@littlebaby/alias-demo",
-        clawhubFamily: "code-plugin",
-        clawhubChannel: "official",
+      littlebabyhub: {
+        source: "littlebabyhub",
+        littlebabyhubUrl: "https://littlebabyhub.ai",
+        littlebabyhubPackage: "@littlebaby/alias-demo",
+        littlebabyhubFamily: "code-plugin",
+        littlebabyhubChannel: "official",
         version: "1.0.0",
         integrity: "sha512-alias",
         resolvedAt: "2026-03-23T12:00:00.000Z",
@@ -206,7 +206,7 @@ describe("handleCommands /plugins install", () => {
     await withTempHome("littlebaby-command-plugins-home-", async () => {
       const workspaceDir = await workspaceHarness.createWorkspace();
       const params = buildPluginsParams(
-        "/plugin add clawhub:@littlebaby/alias-demo@1.0.0",
+        "/plugin add littlebabyhub:@littlebaby/alias-demo@1.0.0",
         workspaceDir,
       );
       const result = await handlePluginsCommand(params, true);
@@ -214,9 +214,9 @@ describe("handleCommands /plugins install", () => {
         throw new Error("expected plugin install result");
       }
       expect(result.reply?.text).toContain('Installed plugin "alias-demo"');
-      expect(installPluginFromClawHubMock).toHaveBeenCalledWith(
+      expect(installPluginFromLittleBabyHubMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          spec: "clawhub:@littlebaby/alias-demo@1.0.0",
+          spec: "littlebabyhub:@littlebaby/alias-demo@1.0.0",
         }),
       );
     });

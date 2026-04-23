@@ -1,18 +1,18 @@
 import { execFileSync, execSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { ApiContributor, Entry, MapConfig, User } from "./update-clawtributors.types.js";
+import type { ApiContributor, Entry, MapConfig, User } from "./update-littlebabytributors.types.js";
 
 const REPO = "littlebaby/littlebaby";
 const PER_LINE = 10;
 const AVATAR_PROBE_SIZE = 40;
 const AVATAR_SIZE = 48;
-const CLAWTRIBUTORS_START = "<!-- clawtributors:start -->";
-const CLAWTRIBUTORS_END = "<!-- clawtributors:end -->";
-const CLAWTRIBUTORS_HIDDEN_START = "<!-- clawtributors:hidden:start";
-const CLAWTRIBUTORS_HIDDEN_END = "clawtributors:hidden:end -->";
+const LITTLEBABYTRIBUTORS_START = "<!-- littlebabytributors:start -->";
+const LITTLEBABYTRIBUTORS_END = "<!-- littlebabytributors:end -->";
+const LITTLEBABYTRIBUTORS_HIDDEN_START = "<!-- littlebabytributors:hidden:start";
+const LITTLEBABYTRIBUTORS_HIDDEN_END = "littlebabytributors:hidden:end -->";
 
-const mapPath = resolve("scripts/clawtributors-map.json");
+const mapPath = resolve("scripts/littlebabytributors-map.json");
 const mapConfig = JSON.parse(readFileSync(mapPath, "utf8")) as MapConfig;
 
 const displayName = mapConfig.displayName ?? {};
@@ -299,23 +299,23 @@ for (let i = 0; i < visibleEntries.length; i += PER_LINE) {
   markdownLines.push(parts.join(" "));
 }
 
-const block = `${CLAWTRIBUTORS_START}\n${markdownLines.join("\n")}\n${CLAWTRIBUTORS_END}`;
+const block = `${LITTLEBABYTRIBUTORS_START}\n${markdownLines.join("\n")}\n${LITTLEBABYTRIBUTORS_END}`;
 const hiddenBlock = buildHiddenReadmeBlock(entries, visibleEntries);
 const hiddenRange = findHiddenReadmeRange(currentReadme);
 const readmeWithoutMeta = hiddenRange
   ? `${currentReadme.slice(0, hiddenRange.start)}${currentReadme.slice(hiddenRange.end)}`
   : currentReadme;
-const range = findClawtributorsRange(readmeWithoutMeta);
+const range = findLittlebabytributorsRange(readmeWithoutMeta);
 
 if (!range) {
-  throw new Error("README.md missing clawtributors block");
+  throw new Error("README.md missing littlebabytributors block");
 }
 
 const next = `${readmeWithoutMeta.slice(0, range.start)}${block}\n${hiddenBlock}${readmeWithoutMeta.slice(range.end)}`;
 writeFileSync(readmePath, next);
 
 console.log(
-  `Updated README clawtributors: ${visibleEntries.length} visible (${entries.length - visibleEntries.length} default-avatar entries hidden)`,
+  `Updated README littlebabytributors: ${visibleEntries.length} visible (${entries.length - visibleEntries.length} default-avatar entries hidden)`,
 );
 console.log(`\nTop 25 by composite score: (commits*2 + PRs*10 + sqrt(LOC)) * tenure`);
 console.log(`  tenure = 1.0 + (days_since_first_commit / repo_age)^2 * 0.5`);
@@ -453,7 +453,7 @@ function isDefaultGitHubAvatar(login: string): Promise<boolean> {
 async function probeDefaultGitHubAvatar(login: string): Promise<boolean> {
   try {
     const response = await fetch(`https://github.com/${login}.png?size=${AVATAR_PROBE_SIZE}`, {
-      headers: { "user-agent": "littlebaby-clawtributors" },
+      headers: { "user-agent": "littlebaby-littlebabytributors" },
       signal: AbortSignal.timeout(8000),
     });
     if (!response.ok) {
@@ -681,7 +681,7 @@ function escapeMarkdownLabel(value: string): string {
 function parseReadmeEntries(
   content: string,
 ): Array<{ display: string; html_url: string; avatar_url: string }> {
-  const range = findClawtributorsRange(content);
+  const range = findLittlebabytributorsRange(content);
   if (!range) {
     return [];
   }
@@ -743,18 +743,18 @@ function buildHiddenReadmeBlock(entries: Entry[], visibleEntries: Entry[]): stri
   const notice =
     "default-avatar-cache: hidden from the rendered wall because these users still use GitHub's default avatar";
   if (hiddenLogins.length === 0) {
-    return `${CLAWTRIBUTORS_HIDDEN_START}\n${notice}\n${CLAWTRIBUTORS_HIDDEN_END}\n`;
+    return `${LITTLEBABYTRIBUTORS_HIDDEN_START}\n${notice}\n${LITTLEBABYTRIBUTORS_HIDDEN_END}\n`;
   }
-  return `${CLAWTRIBUTORS_HIDDEN_START}\n${notice}\n${hiddenLogins.join("\n")}\n${CLAWTRIBUTORS_HIDDEN_END}\n`;
+  return `${LITTLEBABYTRIBUTORS_HIDDEN_START}\n${notice}\n${hiddenLogins.join("\n")}\n${LITTLEBABYTRIBUTORS_HIDDEN_END}\n`;
 }
 
-function findClawtributorsRange(content: string): { start: number; end: number } | null {
-  const markerStart = content.indexOf(CLAWTRIBUTORS_START);
-  const markerEnd = content.indexOf(CLAWTRIBUTORS_END, markerStart);
+function findLittlebabytributorsRange(content: string): { start: number; end: number } | null {
+  const markerStart = content.indexOf(LITTLEBABYTRIBUTORS_START);
+  const markerEnd = content.indexOf(LITTLEBABYTRIBUTORS_END, markerStart);
   if (markerStart !== -1 && markerEnd !== -1) {
     return {
       start: markerStart,
-      end: markerEnd + CLAWTRIBUTORS_END.length,
+      end: markerEnd + LITTLEBABYTRIBUTORS_END.length,
     };
   }
 
@@ -770,14 +770,14 @@ function findClawtributorsRange(content: string): { start: number; end: number }
 }
 
 function findHiddenReadmeRange(content: string): { start: number; end: number } | null {
-  const markerStart = content.indexOf(CLAWTRIBUTORS_HIDDEN_START);
-  const markerEnd = content.indexOf(CLAWTRIBUTORS_HIDDEN_END, markerStart);
+  const markerStart = content.indexOf(LITTLEBABYTRIBUTORS_HIDDEN_START);
+  const markerEnd = content.indexOf(LITTLEBABYTRIBUTORS_HIDDEN_END, markerStart);
   if (markerStart === -1 || markerEnd === -1) {
     return null;
   }
   return {
     start: markerStart,
-    end: markerEnd + CLAWTRIBUTORS_HIDDEN_END.length,
+    end: markerEnd + LITTLEBABYTRIBUTORS_HIDDEN_END.length,
   };
 }
 

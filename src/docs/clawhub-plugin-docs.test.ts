@@ -5,7 +5,7 @@ import { validateExternalCodePluginPackageJson } from "../../packages/plugin-pac
 
 const DOCS_ROOT = path.join(process.cwd(), "docs");
 const pluginDocs = [
-  path.join(DOCS_ROOT, "tools", "clawhub.md"),
+  path.join(DOCS_ROOT, "tools", "littlebabyhub.md"),
   path.join(DOCS_ROOT, "plugins", "building-plugins.md"),
   path.join(DOCS_ROOT, "plugins", "sdk-setup.md"),
   path.join(DOCS_ROOT, "plugins", "sdk-provider-plugins.md"),
@@ -25,7 +25,7 @@ function extractNamedJsonBlock(markdown: string, label: string) {
   return JSON.parse(match[1].trim()) as unknown;
 }
 
-describe("ClawHub plugin docs", () => {
+describe("LittleBabyHub plugin docs", () => {
   it("keeps the canonical plugin-publish snippets contract-valid", async () => {
     const packageJson = JSON.parse(
       await fs.readFile(
@@ -45,10 +45,10 @@ describe("ClawHub plugin docs", () => {
     expect(pluginManifest.configSchema).toBeTruthy();
   });
 
-  it("does not tell plugin authors to use bare clawhub publish", async () => {
+  it("does not tell plugin authors to use bare littlebabyhub publish", async () => {
     for (const docPath of pluginDocs) {
       const markdown = await fs.readFile(docPath, "utf8");
-      expect(markdown).not.toMatch(/(^|[\s`])clawhub publish\b/);
+      expect(markdown).not.toMatch(/(^|[\s`])littlebabyhub publish\b/);
     }
   });
 
@@ -66,6 +66,6 @@ describe("ClawHub plugin docs", () => {
     const sdkSetup = await fs.readFile(path.join(DOCS_ROOT, "plugins", "sdk-setup.md"), "utf8");
 
     expect(extractNamedJsonBlock(buildingPlugins, "package.json")).toEqual(snippet);
-    expect(extractNamedJsonBlock(sdkSetup, "littlebaby-clawhub-package.json")).toEqual(snippet);
+    expect(extractNamedJsonBlock(sdkSetup, "littlebaby-littlebabyhub-package.json")).toEqual(snippet);
   });
 });

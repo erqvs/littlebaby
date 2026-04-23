@@ -215,7 +215,7 @@ export const SkillsInstallParamsSchema = Type.Union([
   ),
   Type.Object(
     {
-      source: Type.Literal("clawhub"),
+      source: Type.Literal("littlebabyhub"),
       slug: NonEmptyString,
       version: Type.Optional(NonEmptyString),
       force: Type.Optional(Type.Boolean()),
@@ -237,7 +237,7 @@ export const SkillsUpdateParamsSchema = Type.Union([
   ),
   Type.Object(
     {
-      source: Type.Literal("clawhub"),
+      source: Type.Literal("littlebabyhub"),
       slug: Type.Optional(NonEmptyString),
       all: Type.Optional(Type.Boolean()),
     },

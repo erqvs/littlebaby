@@ -63,16 +63,16 @@ function createProps(overrides: Partial<SkillsProps> = {}): SkillsProps {
     busyKey: null,
     messages: {},
     detailKey: null,
-    clawhubQuery: "",
-    clawhubResults: null,
-    clawhubSearchLoading: false,
-    clawhubSearchError: null,
-    clawhubDetail: null,
-    clawhubDetailSlug: null,
-    clawhubDetailLoading: false,
-    clawhubDetailError: null,
-    clawhubInstallSlug: null,
-    clawhubInstallMessage: null,
+    littlebabyhubQuery: "",
+    littlebabyhubResults: null,
+    littlebabyhubSearchLoading: false,
+    littlebabyhubSearchError: null,
+    littlebabyhubDetail: null,
+    littlebabyhubDetailSlug: null,
+    littlebabyhubDetailLoading: false,
+    littlebabyhubDetailError: null,
+    littlebabyhubInstallSlug: null,
+    littlebabyhubInstallMessage: null,
     onFilterChange: () => undefined,
     onStatusFilterChange: () => undefined,
     onRefresh: () => undefined,
@@ -82,10 +82,10 @@ function createProps(overrides: Partial<SkillsProps> = {}): SkillsProps {
     onInstall: () => undefined,
     onDetailOpen: () => undefined,
     onDetailClose: () => undefined,
-    onClawHubQueryChange: () => undefined,
-    onClawHubDetailOpen: () => undefined,
-    onClawHubDetailClose: () => undefined,
-    onClawHubInstall: () => undefined,
+    onLittleBabyHubQueryChange: () => undefined,
+    onLittleBabyHubDetailOpen: () => undefined,
+    onLittleBabyHubDetailClose: () => undefined,
+    onLittleBabyHubInstall: () => undefined,
     ...overrides,
   };
 }
@@ -98,14 +98,14 @@ describe("renderSkills", () => {
     }
   });
 
-  it("opens detail dialogs and routes ClawHub actions", async () => {
+  it("opens detail dialogs and routes LittleBabyHub actions", async () => {
     const container = document.createElement("div");
     const onDetailClose = vi.fn();
     const showModal = vi.fn(function (this: HTMLDialogElement) {
       this.setAttribute("open", "");
     });
-    const onClawHubDetailOpen = vi.fn();
-    const onClawHubInstall = vi.fn();
+    const onLittleBabyHubDetailOpen = vi.fn();
+    const onLittleBabyHubInstall = vi.fn();
 
     installDialogMethod("showModal", showModal);
     installDialogMethod("close", function (this: HTMLDialogElement) {
@@ -134,8 +134,8 @@ describe("renderSkills", () => {
     render(
       renderSkills(
         createProps({
-          clawhubQuery: "git",
-          clawhubResults: [
+          littlebabyhubQuery: "git",
+          littlebabyhubResults: [
             {
               score: 0.95,
               slug: "github",
@@ -144,8 +144,8 @@ describe("renderSkills", () => {
               version: "1.2.3",
             },
           ],
-          onClawHubDetailOpen,
-          onClawHubInstall,
+          onLittleBabyHubDetailOpen,
+          onLittleBabyHubInstall,
         }),
       ),
       container,
@@ -162,21 +162,21 @@ describe("renderSkills", () => {
       .querySelector<HTMLButtonElement>(".list-item .btn.btn--sm")
       ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    expect(onClawHubDetailOpen).toHaveBeenCalledTimes(1);
-    expect(onClawHubDetailOpen).toHaveBeenCalledWith("github");
-    expect(onClawHubInstall).toHaveBeenCalledTimes(1);
-    expect(onClawHubInstall).toHaveBeenCalledWith("github");
+    expect(onLittleBabyHubDetailOpen).toHaveBeenCalledTimes(1);
+    expect(onLittleBabyHubDetailOpen).toHaveBeenCalledWith("github");
+    expect(onLittleBabyHubInstall).toHaveBeenCalledTimes(1);
+    expect(onLittleBabyHubInstall).toHaveBeenCalledWith("github");
 
-    onClawHubInstall.mockClear();
+    onLittleBabyHubInstall.mockClear();
     showModal.mockClear();
 
     render(
       renderSkills(
         createProps({
-          clawhubSearchError: "rate limited",
-          clawhubInstallMessage: { kind: "success", text: "Installed github" },
-          clawhubDetailSlug: "github",
-          clawhubDetail: {
+          littlebabyhubSearchError: "rate limited",
+          littlebabyhubInstallMessage: { kind: "success", text: "Installed github" },
+          littlebabyhubDetailSlug: "github",
+          littlebabyhubDetail: {
             skill: {
               slug: "github",
               displayName: "GitHub",
@@ -197,7 +197,7 @@ describe("renderSkills", () => {
               handle: "littlebaby",
             },
           },
-          onClawHubInstall,
+          onLittleBabyHubInstall,
         }),
       ),
       container,
@@ -217,8 +217,8 @@ describe("renderSkills", () => {
       .querySelector<HTMLButtonElement>(".md-preview-dialog__body .btn.primary")
       ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    expect(onClawHubInstall).toHaveBeenCalledTimes(1);
-    expect(onClawHubInstall).toHaveBeenCalledWith("github");
+    expect(onLittleBabyHubInstall).toHaveBeenCalledTimes(1);
+    expect(onLittleBabyHubInstall).toHaveBeenCalledWith("github");
   });
 });
 

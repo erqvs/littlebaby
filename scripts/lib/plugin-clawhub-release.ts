@@ -48,7 +48,7 @@ export type PluginPackageJson = {
       pluginSdkVersion?: string;
     };
     release?: {
-      publishToClawHub?: boolean;
+      publishToLittleBabyHub?: boolean;
       publishToNpm?: boolean;
     };
   };
@@ -73,33 +73,33 @@ export type PluginReleasePlan = {
   skippedPublished: PluginReleasePlanItem[];
 };
 
-const CLAWHUB_DEFAULT_REGISTRY = "https://clawhub.ai";
+const LITTLEBABYHUB_DEFAULT_REGISTRY = "https://littlebabyhub.ai";
 const SAFE_EXTENSION_ID_RE = /^[a-z0-9][a-z0-9._-]*$/;
-const CLAWHUB_SHARED_RELEASE_INPUT_PATHS = [
-  ".github/workflows/plugin-clawhub-release.yml",
+const LITTLEBABYHUB_SHARED_RELEASE_INPUT_PATHS = [
+  ".github/workflows/plugin-littlebabyhub-release.yml",
   ".github/actions/setup-node-env",
   "package.json",
   "pnpm-lock.yaml",
   "packages/plugin-package-contract/src/index.ts",
   "scripts/lib/npm-publish-plan.mjs",
   "scripts/lib/plugin-npm-release.ts",
-  "scripts/lib/plugin-clawhub-release.ts",
+  "scripts/lib/plugin-littlebabyhub-release.ts",
   "scripts/littlebaby-npm-release-check.ts",
-  "scripts/plugin-clawhub-publish.sh",
-  "scripts/plugin-clawhub-release-check.ts",
-  "scripts/plugin-clawhub-release-plan.ts",
+  "scripts/plugin-littlebabyhub-publish.sh",
+  "scripts/plugin-littlebabyhub-release-check.ts",
+  "scripts/plugin-littlebabyhub-release-plan.ts",
 ] as const;
 
 function getRegistryBaseUrl(explicit?: string) {
   return (
     explicit?.trim() ||
-    process.env.CLAWHUB_REGISTRY?.trim() ||
-    process.env.CLAWHUB_SITE?.trim() ||
-    CLAWHUB_DEFAULT_REGISTRY
+    process.env.LITTLEBABYHUB_REGISTRY?.trim() ||
+    process.env.LITTLEBABYHUB_SITE?.trim() ||
+    LITTLEBABYHUB_DEFAULT_REGISTRY
   );
 }
 
-export function collectClawHubPublishablePluginPackages(
+export function collectLittleBabyHubPublishablePluginPackages(
   rootDir = resolve("."),
 ): PublishablePluginPackage[] {
   const publishable: PublishablePluginPackage[] = [];
@@ -107,12 +107,12 @@ export function collectClawHubPublishablePluginPackages(
 
   for (const candidate of collectExtensionPackageJsonCandidates(rootDir)) {
     const { extensionId, packageDir, packageJson } = candidate;
-    if (packageJson.littlebaby?.release?.publishToClawHub !== true) {
+    if (packageJson.littlebaby?.release?.publishToLittleBabyHub !== true) {
       continue;
     }
     if (!SAFE_EXTENSION_ID_RE.test(extensionId)) {
       validationErrors.push(
-        `${extensionId}: extension directory name must match ^[a-z0-9][a-z0-9._-]*$ for ClawHub publish.`,
+        `${extensionId}: extension directory name must match ^[a-z0-9][a-z0-9._-]*$ for LittleBabyHub publish.`,
       );
       continue;
     }
@@ -156,31 +156,31 @@ export function collectClawHubPublishablePluginPackages(
 
   if (validationErrors.length > 0) {
     throw new Error(
-      `Publishable ClawHub plugin metadata validation failed:\n${validationErrors.map((error) => `- ${error}`).join("\n")}`,
+      `Publishable LittleBabyHub plugin metadata validation failed:\n${validationErrors.map((error) => `- ${error}`).join("\n")}`,
     );
   }
 
   return publishable.toSorted((left, right) => left.packageName.localeCompare(right.packageName));
 }
 
-export function collectPluginClawHubReleasePathsFromGitRange(params: {
+export function collectPluginLittleBabyHubReleasePathsFromGitRange(params: {
   rootDir?: string;
   gitRange: GitRangeSelection;
 }): string[] {
-  return collectPluginClawHubReleasePathsFromGitRangeForPathspecs(params, ["extensions"]);
+  return collectPluginLittleBabyHubReleasePathsFromGitRangeForPathspecs(params, ["extensions"]);
 }
 
-function collectPluginClawHubRelevantPathsFromGitRange(params: {
+function collectPluginLittleBabyHubRelevantPathsFromGitRange(params: {
   rootDir?: string;
   gitRange: GitRangeSelection;
 }): string[] {
-  return collectPluginClawHubReleasePathsFromGitRangeForPathspecs(params, [
+  return collectPluginLittleBabyHubReleasePathsFromGitRangeForPathspecs(params, [
     "extensions",
-    ...CLAWHUB_SHARED_RELEASE_INPUT_PATHS,
+    ...LITTLEBABYHUB_SHARED_RELEASE_INPUT_PATHS,
   ]);
 }
 
-function collectPluginClawHubReleasePathsFromGitRangeForPathspecs(
+function collectPluginLittleBabyHubReleasePathsFromGitRangeForPathspecs(
   params: {
     rootDir?: string;
     gitRange: GitRangeSelection;
@@ -194,15 +194,15 @@ function collectPluginClawHubReleasePathsFromGitRangeForPathspecs(
   });
 }
 
-function hasSharedClawHubReleaseInputChanges(changedPaths: readonly string[]) {
+function hasSharedLittleBabyHubReleaseInputChanges(changedPaths: readonly string[]) {
   return changedPaths.some((path) =>
-    CLAWHUB_SHARED_RELEASE_INPUT_PATHS.some(
+    LITTLEBABYHUB_SHARED_RELEASE_INPUT_PATHS.some(
       (sharedPath) => path === sharedPath || path.startsWith(`${sharedPath}/`),
     ),
   );
 }
 
-export function resolveChangedClawHubPublishablePluginPackages(params: {
+export function resolveChangedLittleBabyHubPublishablePluginPackages(params: {
   plugins: PublishablePluginPackage[];
   changedPaths: readonly string[];
 }): PublishablePluginPackage[] {
@@ -212,7 +212,7 @@ export function resolveChangedClawHubPublishablePluginPackages(params: {
   });
 }
 
-export function resolveSelectedClawHubPublishablePluginPackages(params: {
+export function resolveSelectedLittleBabyHubPublishablePluginPackages(params: {
   plugins: PublishablePluginPackage[];
   selection?: string[];
   selectionMode?: PluginReleaseSelectionMode;
@@ -229,14 +229,14 @@ export function resolveSelectedClawHubPublishablePluginPackages(params: {
     });
   }
   if (params.gitRange) {
-    const changedPaths = collectPluginClawHubRelevantPathsFromGitRange({
+    const changedPaths = collectPluginLittleBabyHubRelevantPathsFromGitRange({
       rootDir: params.rootDir,
       gitRange: params.gitRange,
     });
-    if (hasSharedClawHubReleaseInputChanges(changedPaths)) {
+    if (hasSharedLittleBabyHubReleaseInputChanges(changedPaths)) {
       return params.plugins;
     }
-    return resolveChangedClawHubPublishablePluginPackages({
+    return resolveChangedLittleBabyHubPublishablePluginPackages({
       plugins: params.plugins,
       changedPaths,
     });
@@ -263,16 +263,16 @@ function readPackageManifestAtGitRef(params: {
   }
 }
 
-export function collectClawHubVersionGateErrors(params: {
+export function collectLittleBabyHubVersionGateErrors(params: {
   plugins: PublishablePluginPackage[];
   gitRange: GitRangeSelection;
   rootDir?: string;
 }): string[] {
-  const changedPaths = collectPluginClawHubReleasePathsFromGitRange({
+  const changedPaths = collectPluginLittleBabyHubReleasePathsFromGitRange({
     rootDir: params.rootDir,
     gitRange: params.gitRange,
   });
-  const changedPlugins = resolveChangedClawHubPublishablePluginPackages({
+  const changedPlugins = resolveChangedLittleBabyHubPublishablePluginPackages({
     plugins: params.plugins,
     changedPaths,
   });
@@ -284,7 +284,7 @@ export function collectClawHubVersionGateErrors(params: {
       ref: params.gitRange.baseRef,
       packageDir: plugin.packageDir,
     });
-    if (baseManifest?.littlebaby?.release?.publishToClawHub !== true) {
+    if (baseManifest?.littlebaby?.release?.publishToLittleBabyHub !== true) {
       continue;
     }
     const baseVersion =
@@ -302,7 +302,7 @@ export function collectClawHubVersionGateErrors(params: {
   return errors;
 }
 
-export async function isPluginVersionPublishedOnClawHub(
+export async function isPluginVersionPublishedOnLittleBabyHub(
   packageName: string,
   version: string,
   options: {
@@ -330,11 +330,11 @@ export async function isPluginVersionPublishedOnClawHub(
   }
 
   throw new Error(
-    `Failed to query ClawHub for ${packageName}@${version}: ${response.status} ${response.statusText}`,
+    `Failed to query LittleBabyHub for ${packageName}@${version}: ${response.status} ${response.statusText}`,
   );
 }
 
-export async function collectPluginClawHubReleasePlan(params?: {
+export async function collectPluginLittleBabyHubReleasePlan(params?: {
   rootDir?: string;
   selection?: string[];
   selectionMode?: PluginReleaseSelectionMode;
@@ -342,8 +342,8 @@ export async function collectPluginClawHubReleasePlan(params?: {
   registryBaseUrl?: string;
   fetchImpl?: typeof fetch;
 }): Promise<PluginReleasePlan> {
-  const allPublishable = collectClawHubPublishablePluginPackages(params?.rootDir);
-  const selectedPublishable = resolveSelectedClawHubPublishablePluginPackages({
+  const allPublishable = collectLittleBabyHubPublishablePluginPackages(params?.rootDir);
+  const selectedPublishable = resolveSelectedLittleBabyHubPublishablePluginPackages({
     plugins: allPublishable,
     selection: params?.selection,
     selectionMode: params?.selectionMode,
@@ -354,7 +354,7 @@ export async function collectPluginClawHubReleasePlan(params?: {
   const all = await Promise.all(
     selectedPublishable.map(async (plugin) =>
       Object.assign({}, plugin, {
-        alreadyPublished: await isPluginVersionPublishedOnClawHub(
+        alreadyPublished: await isPluginVersionPublishedOnLittleBabyHub(
           plugin.packageName,
           plugin.version,
           { registryBaseUrl: params?.registryBaseUrl, fetchImpl: params?.fetchImpl },

@@ -10,18 +10,18 @@ title: "Community Plugins"
 
 Community plugins are third-party packages that extend LittleBaby with new
 channels, tools, providers, or other capabilities. They are built and maintained
-by the community, published on [ClawHub](/tools/clawhub) or npm, and
+by the community, published on [LittleBabyHub](/tools/littlebabyhub) or npm, and
 installable with a single command.
 
-ClawHub is the canonical discovery surface for community plugins. Do not open
+LittleBabyHub is the canonical discovery surface for community plugins. Do not open
 docs-only PRs just to add your plugin here for discoverability; publish it on
-ClawHub instead.
+LittleBabyHub instead.
 
 ```bash
 littlebaby plugins install <package-name>
 ```
 
-LittleBaby checks ClawHub first and falls back to npm automatically.
+LittleBaby checks LittleBabyHub first and falls back to npm automatically.
 
 ## Listed plugins
 
@@ -50,17 +50,17 @@ file messages via any DingTalk client.
 littlebaby plugins install @largezhou/ddingtalk
 ```
 
-### Lossless Claw (LCM)
+### Lossless LittleBaby (LCM)
 
 Lossless Context Management plugin for LittleBaby. DAG-based conversation
 summarization with incremental compaction — preserves full context fidelity
 while reducing token usage.
 
-- **npm:** `@martian-engineering/lossless-claw`
-- **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
+- **npm:** `@martian-engineering/lossless-littlebaby`
+- **repo:** [github.com/Martian-Engineering/lossless-littlebaby](https://github.com/Martian-Engineering/lossless-littlebaby)
 
 ```bash
-littlebaby plugins install @martian-engineering/lossless-claw
+littlebaby plugins install @martian-engineering/lossless-littlebaby
 ```
 
 ### Opik
@@ -107,9 +107,9 @@ littlebaby plugins install @wecom/wecom-littlebaby-plugin
 We welcome community plugins that are useful, documented, and safe to operate.
 
 <Steps>
-  <Step title="Publish to ClawHub or npm">
+  <Step title="Publish to LittleBabyHub or npm">
     Your plugin must be installable via `littlebaby plugins install \<package-name\>`.
-    Publish to [ClawHub](/tools/clawhub) (preferred) or npm.
+    Publish to [LittleBabyHub](/tools/littlebabyhub) (preferred) or npm.
     See [Building Plugins](/plugins/building-plugins) for the full guide.
 
   </Step>
@@ -122,7 +122,7 @@ We welcome community plugins that are useful, documented, and safe to operate.
 
   <Step title="Use docs PRs only for source-doc changes">
     You do not need a docs PR just to make your plugin discoverable. Publish it
-    on ClawHub instead.
+    on LittleBabyHub instead.
 
     Open a docs PR only when LittleBaby's source docs need an actual content
     change, such as correcting install guidance or adding cross-repo
@@ -135,7 +135,7 @@ We welcome community plugins that are useful, documented, and safe to operate.
 
 | Requirement                 | Why                                           |
 | --------------------------- | --------------------------------------------- |
-| Published on ClawHub or npm | Users need `littlebaby plugins install` to work |
+| Published on LittleBabyHub or npm | Users need `littlebaby plugins install` to work |
 | Public GitHub repo          | Source review, issue tracking, transparency   |
 | Setup and usage docs        | Users need to know how to configure it        |
 | Active maintenance          | Recent updates or responsive issue handling   |

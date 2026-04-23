@@ -3,9 +3,9 @@ import type { LittleBabyConfig } from "../config/config.js";
 import { resolvePluginUninstallId } from "./plugins-uninstall-selection.js";
 
 describe("resolvePluginUninstallId", () => {
-  it("accepts the recorded ClawHub spec as an uninstall target", () => {
+  it("accepts the recorded LittleBabyHub spec as an uninstall target", () => {
     const result = resolvePluginUninstallId({
-      rawId: "clawhub:linkmind-context",
+      rawId: "littlebabyhub:linkmind-context",
       config: {
         plugins: {
           entries: {
@@ -14,8 +14,8 @@ describe("resolvePluginUninstallId", () => {
           installs: {
             "linkmind-context": {
               source: "npm",
-              spec: "clawhub:linkmind-context",
-              clawhubPackage: "linkmind-context",
+              spec: "littlebabyhub:linkmind-context",
+              littlebabyhubPackage: "linkmind-context",
             },
           },
         },
@@ -26,9 +26,9 @@ describe("resolvePluginUninstallId", () => {
     expect(result.pluginId).toBe("linkmind-context");
   });
 
-  it("accepts a versionless ClawHub spec when the install was pinned", () => {
+  it("accepts a versionless LittleBabyHub spec when the install was pinned", () => {
     const result = resolvePluginUninstallId({
-      rawId: "clawhub:linkmind-context",
+      rawId: "littlebabyhub:linkmind-context",
       config: {
         plugins: {
           entries: {
@@ -37,7 +37,7 @@ describe("resolvePluginUninstallId", () => {
           installs: {
             "linkmind-context": {
               source: "npm",
-              spec: "clawhub:linkmind-context@1.2.3",
+              spec: "littlebabyhub:linkmind-context@1.2.3",
             },
           },
         },

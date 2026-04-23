@@ -9,7 +9,7 @@ title: "Credits"
 
 ## The name
 
-LittleBaby = CLAW + TARDIS, because every space lobster needs a time and space machine.
+LittleBaby = LITTLEBABY + TARDIS, because every space littlebaby needs a time and space machine.
 
 ## Credits
 

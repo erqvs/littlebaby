@@ -36,7 +36,7 @@
           if (typeof t !== "string") t = "";
           if (typeof m !== "string") m = "";
           var legacy = LEGACY[t];
-          var theme = THEMES[t] ? t : legacy ? legacy.split(":")[0] : "claw";
+          var theme = THEMES[t] ? t : legacy ? legacy.split(":")[0] : "littlebaby";
           var mode = MODES[m] ? m : legacy ? legacy.split(":")[1] : "system";
           if (mode === "system") {
             mode = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";

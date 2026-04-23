@@ -2,8 +2,8 @@ import { html, nothing } from "lit";
 import { ref } from "lit/directives/ref.js";
 import { t } from "../../i18n/index.ts";
 import type {
-  ClawHubSearchResult,
-  ClawHubSkillDetail,
+  LittleBabyHubSearchResult,
+  LittleBabyHubSkillDetail,
   SkillMessageMap,
 } from "../controllers/skills.ts";
 import { clampText } from "../format.ts";
@@ -37,16 +37,16 @@ export type SkillsProps = {
   busyKey: string | null;
   messages: SkillMessageMap;
   detailKey: string | null;
-  clawhubQuery: string;
-  clawhubResults: ClawHubSearchResult[] | null;
-  clawhubSearchLoading: boolean;
-  clawhubSearchError: string | null;
-  clawhubDetail: ClawHubSkillDetail | null;
-  clawhubDetailSlug: string | null;
-  clawhubDetailLoading: boolean;
-  clawhubDetailError: string | null;
-  clawhubInstallSlug: string | null;
-  clawhubInstallMessage: { kind: "success" | "error"; text: string } | null;
+  littlebabyhubQuery: string;
+  littlebabyhubResults: LittleBabyHubSearchResult[] | null;
+  littlebabyhubSearchLoading: boolean;
+  littlebabyhubSearchError: string | null;
+  littlebabyhubDetail: LittleBabyHubSkillDetail | null;
+  littlebabyhubDetailSlug: string | null;
+  littlebabyhubDetailLoading: boolean;
+  littlebabyhubDetailError: string | null;
+  littlebabyhubInstallSlug: string | null;
+  littlebabyhubInstallMessage: { kind: "success" | "error"; text: string } | null;
   onFilterChange: (next: string) => void;
   onStatusFilterChange: (next: SkillsStatusFilter) => void;
   onRefresh: () => void;
@@ -56,10 +56,10 @@ export type SkillsProps = {
   onInstall: (skillKey: string, name: string, installId: string) => void;
   onDetailOpen: (skillKey: string) => void;
   onDetailClose: () => void;
-  onClawHubQueryChange: (query: string) => void;
-  onClawHubDetailOpen: (slug: string) => void;
-  onClawHubDetailClose: () => void;
-  onClawHubInstall: (slug: string) => void;
+  onLittleBabyHubQueryChange: (query: string) => void;
+  onLittleBabyHubDetailOpen: (slug: string) => void;
+  onLittleBabyHubDetailClose: () => void;
+  onLittleBabyHubInstall: (slug: string) => void;
 };
 
 type StatusTabDef = { id: SkillsStatusFilter; label: string };
@@ -177,7 +177,7 @@ export function renderSkills(props: SkillsProps) {
 
       <div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-          <div style="font-weight: 600;">ClawHub</div>
+          <div style="font-weight: 600;">LittleBabyHub</div>
           <div class="muted" style="font-size: 13px;">
             Search and install skills from the registry
           </div>
@@ -185,30 +185,30 @@ export function renderSkills(props: SkillsProps) {
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           <label class="field" style="flex: 1; min-width: 180px;">
             <input
-              .value=${props.clawhubQuery}
+              .value=${props.littlebabyhubQuery}
               @input=${(e: Event) =>
-                props.onClawHubQueryChange((e.target as HTMLInputElement).value)}
-              placeholder="Search ClawHub skills…"
+                props.onLittleBabyHubQueryChange((e.target as HTMLInputElement).value)}
+              placeholder="Search LittleBabyHub skills…"
               autocomplete="off"
-              name="clawhub-search"
+              name="littlebabyhub-search"
             />
           </label>
-          ${props.clawhubSearchLoading ? html`<span class="muted">Searching…</span>` : nothing}
+          ${props.littlebabyhubSearchLoading ? html`<span class="muted">Searching…</span>` : nothing}
         </div>
-        ${props.clawhubSearchError
+        ${props.littlebabyhubSearchError
           ? html`<div class="callout danger" style="margin-top: 8px;">
-              ${props.clawhubSearchError}
+              ${props.littlebabyhubSearchError}
             </div>`
           : nothing}
-        ${props.clawhubInstallMessage
+        ${props.littlebabyhubInstallMessage
           ? html`<div
-              class="callout ${props.clawhubInstallMessage.kind === "error" ? "danger" : "success"}"
+              class="callout ${props.littlebabyhubInstallMessage.kind === "error" ? "danger" : "success"}"
               style="margin-top: 8px;"
             >
-              ${props.clawhubInstallMessage.text}
+              ${props.littlebabyhubInstallMessage.text}
             </div>`
           : nothing}
-        ${renderClawHubResults(props)}
+        ${renderLittleBabyHubResults(props)}
       </div>
 
       ${props.error
@@ -242,17 +242,17 @@ export function renderSkills(props: SkillsProps) {
     </section>
 
     ${detailSkill ? renderSkillDetail(detailSkill, props) : nothing}
-    ${props.clawhubDetailSlug ? renderClawHubDetailDialog(props) : nothing}
+    ${props.littlebabyhubDetailSlug ? renderLittleBabyHubDetailDialog(props) : nothing}
   `;
 }
 
-function renderClawHubResults(props: SkillsProps) {
-  const results = props.clawhubResults;
+function renderLittleBabyHubResults(props: SkillsProps) {
+  const results = props.littlebabyhubResults;
   if (!results) {
     return nothing;
   }
   if (results.length === 0) {
-    return html`<div class="muted" style="margin-top: 8px;">No skills found on ClawHub.</div>`;
+    return html`<div class="muted" style="margin-top: 8px;">No skills found on LittleBabyHub.</div>`;
   }
   return html`
     <div class="list" style="margin-top: 8px;">
@@ -260,7 +260,7 @@ function renderClawHubResults(props: SkillsProps) {
         (r) => html`
           <div
             class="list-item list-item-clickable"
-            @click=${() => props.onClawHubDetailOpen(r.slug)}
+            @click=${() => props.onLittleBabyHubDetailOpen(r.slug)}
           >
             <div class="list-main">
               <div class="list-title">${r.displayName}</div>
@@ -272,13 +272,13 @@ function renderClawHubResults(props: SkillsProps) {
                 : nothing}
               <button
                 class="btn btn--sm"
-                ?disabled=${props.clawhubInstallSlug !== null}
+                ?disabled=${props.littlebabyhubInstallSlug !== null}
                 @click=${(e: Event) => {
                   e.stopPropagation();
-                  props.onClawHubInstall(r.slug);
+                  props.onLittleBabyHubInstall(r.slug);
                 }}
               >
-                ${props.clawhubInstallSlug === r.slug ? "Installing\u2026" : "Install"}
+                ${props.littlebabyhubInstallSlug === r.slug ? "Installing\u2026" : "Install"}
               </button>
             </div>
           </div>
@@ -288,8 +288,8 @@ function renderClawHubResults(props: SkillsProps) {
   `;
 }
 
-function renderClawHubDetailDialog(props: SkillsProps) {
-  const detail = props.clawhubDetail;
+function renderLittleBabyHubDetailDialog(props: SkillsProps) {
+  const detail = props.littlebabyhubDetail;
   const ensureModalOpen = (el?: Element) => {
     if (!(el instanceof HTMLDialogElement) || el.open) {
       return;
@@ -307,12 +307,12 @@ function renderClawHubDetailDialog(props: SkillsProps) {
           dialog.close();
         }
       }}
-      @close=${props.onClawHubDetailClose}
+      @close=${props.onLittleBabyHubDetailClose}
     >
       <div class="md-preview-dialog__panel">
         <div class="md-preview-dialog__header">
           <div class="md-preview-dialog__title">
-            ${detail?.skill?.displayName ?? props.clawhubDetailSlug}
+            ${detail?.skill?.displayName ?? props.littlebabyhubDetailSlug}
           </div>
           <button
             class="btn btn--sm"
@@ -324,10 +324,10 @@ function renderClawHubDetailDialog(props: SkillsProps) {
           </button>
         </div>
         <div class="md-preview-dialog__body" style="display: grid; gap: 16px;">
-          ${props.clawhubDetailLoading
+          ${props.littlebabyhubDetailLoading
             ? html`<div class="muted">${t("common.loading")}</div>`
-            : props.clawhubDetailError
-              ? html`<div class="callout danger">${props.clawhubDetailError}</div>`
+            : props.littlebabyhubDetailError
+              ? html`<div class="callout danger">${props.littlebabyhubDetailError}</div>`
               : detail?.skill
                 ? html`
                     <div style="font-size: 14px; line-height: 1.5;">
@@ -360,14 +360,14 @@ function renderClawHubDetailDialog(props: SkillsProps) {
                       : nothing}
                     <button
                       class="btn primary"
-                      ?disabled=${props.clawhubInstallSlug !== null}
+                      ?disabled=${props.littlebabyhubInstallSlug !== null}
                       @click=${() => {
-                        if (props.clawhubDetailSlug) {
-                          props.onClawHubInstall(props.clawhubDetailSlug);
+                        if (props.littlebabyhubDetailSlug) {
+                          props.onLittleBabyHubInstall(props.littlebabyhubDetailSlug);
                         }
                       }}
                     >
-                      ${props.clawhubInstallSlug === props.clawhubDetailSlug
+                      ${props.littlebabyhubInstallSlug === props.littlebabyhubDetailSlug
                         ? "Installing\u2026"
                         : `Install ${detail.skill.displayName}`}
                     </button>

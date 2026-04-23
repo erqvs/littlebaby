@@ -20,11 +20,11 @@ describe("littlebabyhub helpers", () => {
   const originalHome = process.env.HOME;
 
   afterEach(() => {
-    delete process.env.LITTLEBABY_CLAWHUB_TOKEN;
-    delete process.env.CLAWHUB_TOKEN;
-    delete process.env.CLAWHUB_AUTH_TOKEN;
-    delete process.env.LITTLEBABY_CLAWHUB_CONFIG_PATH;
-    delete process.env.CLAWHUB_CONFIG_PATH;
+    delete process.env.LITTLEBABY_LITTLEBABYHUB_TOKEN;
+    delete process.env.LITTLEBABYHUB_TOKEN;
+    delete process.env.LITTLEBABYHUB_AUTH_TOKEN;
+    delete process.env.LITTLEBABY_LITTLEBABYHUB_CONFIG_PATH;
+    delete process.env.LITTLEBABYHUB_CONFIG_PATH;
     delete process.env.LITTLEBABYHUB_CONFIG_PATH;
     delete process.env.XDG_CONFIG_HOME;
     if (originalHome == null) {
@@ -115,7 +115,7 @@ describe("littlebabyhub helpers", () => {
   it("resolves LittleBabyHub auth token from config.json", async () => {
     await withTempDir({ prefix: "littlebaby-littlebabyhub-config-" }, async (configRoot) => {
       const configPath = path.join(configRoot, "littlebabyhub", "config.json");
-      process.env.LITTLEBABY_CLAWHUB_CONFIG_PATH = configPath;
+      process.env.LITTLEBABY_LITTLEBABYHUB_CONFIG_PATH = configPath;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, JSON.stringify({ auth: { token: "cfg-token-123" } }), "utf8");
 
@@ -179,7 +179,7 @@ describe("littlebabyhub helpers", () => {
   );
 
   it("injects resolved auth token into LittleBabyHub requests", async () => {
-    process.env.LITTLEBABY_CLAWHUB_TOKEN = "env-token-123";
+    process.env.LITTLEBABY_LITTLEBABYHUB_TOKEN = "env-token-123";
     const fetchImpl = async (input: string | URL | Request, init?: RequestInit) => {
       const url = input instanceof Request ? input.url : String(input);
       expect(url).toContain("/api/v1/search");

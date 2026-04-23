@@ -2,17 +2,17 @@
 
 import { pathToFileURL } from "node:url";
 import {
-  collectClawHubPublishablePluginPackages,
-  collectClawHubVersionGateErrors,
+  collectLittleBabyHubPublishablePluginPackages,
+  collectLittleBabyHubVersionGateErrors,
   parsePluginReleaseArgs,
-  resolveSelectedClawHubPublishablePluginPackages,
-} from "./lib/plugin-clawhub-release.ts";
+  resolveSelectedLittleBabyHubPublishablePluginPackages,
+} from "./lib/plugin-littlebabyhub-release.ts";
 
-export async function runPluginClawHubReleaseCheck(argv: string[]) {
+export async function runPluginLittleBabyHubReleaseCheck(argv: string[]) {
   const { selection, selectionMode, baseRef, headRef } = parsePluginReleaseArgs(argv);
-  const publishable = collectClawHubPublishablePluginPackages();
+  const publishable = collectLittleBabyHubPublishablePluginPackages();
   const gitRange = baseRef && headRef ? { baseRef, headRef } : undefined;
-  const selected = resolveSelectedClawHubPublishablePluginPackages({
+  const selected = resolveSelectedLittleBabyHubPublishablePluginPackages({
     plugins: publishable,
     selection,
     selectionMode,
@@ -20,20 +20,20 @@ export async function runPluginClawHubReleaseCheck(argv: string[]) {
   });
 
   if (gitRange) {
-    const errors = collectClawHubVersionGateErrors({
+    const errors = collectLittleBabyHubVersionGateErrors({
       plugins: publishable,
       gitRange,
     });
     if (errors.length > 0) {
       throw new Error(
-        `plugin-clawhub-release-check: version bumps required before ClawHub publish:\n${errors
+        `plugin-littlebabyhub-release-check: version bumps required before LittleBabyHub publish:\n${errors
           .map((error) => `  - ${error}`)
           .join("\n")}`,
       );
     }
   }
 
-  console.log("plugin-clawhub-release-check: publishable plugin metadata looks OK.");
+  console.log("plugin-littlebabyhub-release-check: publishable plugin metadata looks OK.");
   if (gitRange && selected.length === 0) {
     console.log(
       `  - no publishable plugin package changes detected between ${gitRange.baseRef} and ${gitRange.headRef}`,
@@ -47,5 +47,5 @@ export async function runPluginClawHubReleaseCheck(argv: string[]) {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
-  await runPluginClawHubReleaseCheck(process.argv.slice(2));
+  await runPluginLittleBabyHubReleaseCheck(process.argv.slice(2));
 }

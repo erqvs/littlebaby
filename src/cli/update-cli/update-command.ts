@@ -95,7 +95,7 @@ const UPDATE_QUIPS = [
   "I've evolved. Try to keep up.",
   "New version, who dis? Oh right, still me but shinier.",
   "Patched, polished, and ready to pinch. Let's go.",
-  "The lobster has littlebabied. Harder shell, sharper claws.",
+  "The lobster has littlebabied. Harder shell, sharper littlebabys.",
   "Update done! Check the changelog or just trust me, it's good.",
   "Reborn from the boiling waters of npm. Stronger now.",
   "I went away and came back smarter. You should try it sometime.",

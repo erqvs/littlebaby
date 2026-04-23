@@ -1,7 +1,7 @@
 import type { GatewayBrowserClient } from "../gateway.ts";
 import type { SkillStatusReport } from "../types.ts";
 
-export type ClawHubSearchResult = {
+export type LittleBabyHubSearchResult = {
   score: number;
   slug: string;
   displayName: string;
@@ -10,7 +10,7 @@ export type ClawHubSearchResult = {
   updatedAt?: number;
 };
 
-export type ClawHubSkillDetail = {
+export type LittleBabyHubSkillDetail = {
   skill: {
     slug: string;
     displayName: string;
@@ -44,16 +44,16 @@ export type SkillsState = {
   skillsBusyKey: string | null;
   skillEdits: Record<string, string>;
   skillMessages: SkillMessageMap;
-  clawhubSearchQuery: string;
-  clawhubSearchResults: ClawHubSearchResult[] | null;
-  clawhubSearchLoading: boolean;
-  clawhubSearchError: string | null;
-  clawhubDetail: ClawHubSkillDetail | null;
-  clawhubDetailSlug: string | null;
-  clawhubDetailLoading: boolean;
-  clawhubDetailError: string | null;
-  clawhubInstallSlug: string | null;
-  clawhubInstallMessage: { kind: "success" | "error"; text: string } | null;
+  littlebabyhubSearchQuery: string;
+  littlebabyhubSearchResults: LittleBabyHubSearchResult[] | null;
+  littlebabyhubSearchLoading: boolean;
+  littlebabyhubSearchError: string | null;
+  littlebabyhubDetail: LittleBabyHubSkillDetail | null;
+  littlebabyhubDetailSlug: string | null;
+  littlebabyhubDetailLoading: boolean;
+  littlebabyhubDetailError: string | null;
+  littlebabyhubInstallSlug: string | null;
+  littlebabyhubInstallMessage: { kind: "success" | "error"; text: string } | null;
 };
 
 export type SkillMessage = {
@@ -94,12 +94,12 @@ async function runStaleAwareRequest<T>(
   onFinally();
 }
 
-export function setClawHubSearchQuery(state: SkillsState, query: string) {
-  state.clawhubSearchQuery = query;
-  state.clawhubInstallMessage = null;
-  state.clawhubSearchResults = null;
-  state.clawhubSearchError = null;
-  state.clawhubSearchLoading = false;
+export function setLittleBabyHubSearchQuery(state: SkillsState, query: string) {
+  state.littlebabyhubSearchQuery = query;
+  state.littlebabyhubInstallMessage = null;
+  state.littlebabyhubSearchResults = null;
+  state.littlebabyhubSearchError = null;
+  state.littlebabyhubSearchLoading = false;
 }
 
 export async function loadSkills(state: SkillsState, options?: { clearMessages?: boolean }) {
@@ -196,85 +196,85 @@ export async function installSkill(
   });
 }
 
-export async function searchClawHub(state: SkillsState, query: string) {
+export async function searchLittleBabyHub(state: SkillsState, query: string) {
   if (!state.client || !state.connected) {
     return;
   }
   if (!query.trim()) {
-    state.clawhubSearchResults = null;
-    state.clawhubSearchError = null;
-    state.clawhubSearchLoading = false;
+    state.littlebabyhubSearchResults = null;
+    state.littlebabyhubSearchError = null;
+    state.littlebabyhubSearchLoading = false;
     return;
   }
   const client = state.client;
   // Clear stale entries as soon as a new search begins so the UI cannot act on
   // results that no longer match the current query while the next request is in flight.
-  state.clawhubSearchResults = null;
-  state.clawhubSearchLoading = true;
-  state.clawhubSearchError = null;
+  state.littlebabyhubSearchResults = null;
+  state.littlebabyhubSearchLoading = true;
+  state.littlebabyhubSearchError = null;
   await runStaleAwareRequest(
-    () => query === state.clawhubSearchQuery,
+    () => query === state.littlebabyhubSearchQuery,
     () =>
-      client.request<{ results: ClawHubSearchResult[] }>("skills.search", {
+      client.request<{ results: LittleBabyHubSearchResult[] }>("skills.search", {
         query,
         limit: 20,
       }),
     (res) => {
-      state.clawhubSearchResults = res?.results ?? [];
+      state.littlebabyhubSearchResults = res?.results ?? [];
     },
     (err) => {
-      state.clawhubSearchError = getErrorMessage(err);
+      state.littlebabyhubSearchError = getErrorMessage(err);
     },
     () => {
-      state.clawhubSearchLoading = false;
+      state.littlebabyhubSearchLoading = false;
     },
   );
 }
 
-export async function loadClawHubDetail(state: SkillsState, slug: string) {
+export async function loadLittleBabyHubDetail(state: SkillsState, slug: string) {
   if (!state.client || !state.connected) {
     return;
   }
   const client = state.client;
-  state.clawhubDetailSlug = slug;
-  state.clawhubDetailLoading = true;
-  state.clawhubDetailError = null;
-  state.clawhubDetail = null;
+  state.littlebabyhubDetailSlug = slug;
+  state.littlebabyhubDetailLoading = true;
+  state.littlebabyhubDetailError = null;
+  state.littlebabyhubDetail = null;
   await runStaleAwareRequest(
-    () => slug === state.clawhubDetailSlug,
-    () => client.request<ClawHubSkillDetail>("skills.detail", { slug }),
+    () => slug === state.littlebabyhubDetailSlug,
+    () => client.request<LittleBabyHubSkillDetail>("skills.detail", { slug }),
     (res) => {
-      state.clawhubDetail = res ?? null;
+      state.littlebabyhubDetail = res ?? null;
     },
     (err) => {
-      state.clawhubDetailError = getErrorMessage(err);
+      state.littlebabyhubDetailError = getErrorMessage(err);
     },
     () => {
-      state.clawhubDetailLoading = false;
+      state.littlebabyhubDetailLoading = false;
     },
   );
 }
 
-export function closeClawHubDetail(state: SkillsState) {
-  state.clawhubDetailSlug = null;
-  state.clawhubDetail = null;
-  state.clawhubDetailError = null;
-  state.clawhubDetailLoading = false;
+export function closeLittleBabyHubDetail(state: SkillsState) {
+  state.littlebabyhubDetailSlug = null;
+  state.littlebabyhubDetail = null;
+  state.littlebabyhubDetailError = null;
+  state.littlebabyhubDetailLoading = false;
 }
 
-export async function installFromClawHub(state: SkillsState, slug: string) {
+export async function installFromLittleBabyHub(state: SkillsState, slug: string) {
   if (!state.client || !state.connected) {
     return;
   }
-  state.clawhubInstallSlug = slug;
-  state.clawhubInstallMessage = null;
+  state.littlebabyhubInstallSlug = slug;
+  state.littlebabyhubInstallMessage = null;
   try {
-    await state.client.request("skills.install", { source: "clawhub", slug });
+    await state.client.request("skills.install", { source: "littlebabyhub", slug });
     await loadSkills(state);
-    state.clawhubInstallMessage = { kind: "success", text: `Installed ${slug}` };
+    state.littlebabyhubInstallMessage = { kind: "success", text: `Installed ${slug}` };
   } catch (err) {
-    state.clawhubInstallMessage = { kind: "error", text: getErrorMessage(err) };
+    state.littlebabyhubInstallMessage = { kind: "error", text: getErrorMessage(err) };
   } finally {
-    state.clawhubInstallSlug = null;
+    state.littlebabyhubInstallSlug = null;
   }
 }

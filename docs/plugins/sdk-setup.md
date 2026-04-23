@@ -43,9 +43,9 @@ your plugin provides:
 }
 ```
 
-**Provider plugin / ClawHub publish baseline:**
+**Provider plugin / LittleBabyHub publish baseline:**
 
-```json littlebaby-clawhub-package.json
+```json littlebaby-littlebabyhub-package.json
 {
   "name": "@myorg/littlebaby-my-plugin",
   "version": "1.0.0",
@@ -64,7 +64,7 @@ your plugin provides:
 }
 ```
 
-If you publish the plugin externally on ClawHub, those `compat` and `build`
+If you publish the plugin externally on LittleBabyHub, those `compat` and `build`
 fields are required. The canonical publish snippets live in
 `docs/snippets/plugin-publish/`.
 
@@ -250,17 +250,17 @@ Even plugins with no config must ship a schema. An empty schema is valid:
 
 See [Plugin Manifest](/plugins/manifest) for the full schema reference.
 
-## ClawHub publishing
+## LittleBabyHub publishing
 
-For plugin packages, use the package-specific ClawHub command:
+For plugin packages, use the package-specific LittleBabyHub command:
 
 ```bash
-clawhub package publish your-org/your-plugin --dry-run
-clawhub package publish your-org/your-plugin
+littlebabyhub package publish your-org/your-plugin --dry-run
+littlebabyhub package publish your-org/your-plugin
 ```
 
 The legacy skill-only publish alias is for skills. Plugin packages should
-always use `clawhub package publish`.
+always use `littlebabyhub package publish`.
 
 ## Setup entry
 
@@ -494,21 +494,21 @@ copying the same binary/status glue into every channel:
 
 ## Publishing and installing
 
-**External plugins:** publish to [ClawHub](/tools/clawhub) or npm, then install:
+**External plugins:** publish to [LittleBabyHub](/tools/littlebabyhub) or npm, then install:
 
 ```bash
 littlebaby plugins install @myorg/littlebaby-my-plugin
 ```
 
-LittleBaby tries ClawHub first and falls back to npm automatically. You can also
-force ClawHub explicitly:
+LittleBaby tries LittleBabyHub first and falls back to npm automatically. You can also
+force LittleBabyHub explicitly:
 
 ```bash
-littlebaby plugins install clawhub:@myorg/littlebaby-my-plugin   # ClawHub only
+littlebaby plugins install littlebabyhub:@myorg/littlebaby-my-plugin   # LittleBabyHub only
 ```
 
 There is no matching `npm:` override. Use the normal npm package spec when you
-want the npm path after ClawHub fallback:
+want the npm path after LittleBabyHub fallback:
 
 ```bash
 littlebaby plugins install @myorg/littlebaby-my-plugin

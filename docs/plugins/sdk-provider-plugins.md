@@ -94,7 +94,7 @@ API key auth, and dynamic model resolution.
     when a provider variant should reuse another provider id's auth. `modelSupport`
     is optional and lets LittleBaby auto-load your provider plugin from shorthand
     model ids like `acme-large` before runtime hooks exist. If you publish the
-    provider on ClawHub, those `littlebaby.compat` and `littlebaby.build` fields
+    provider on LittleBabyHub, those `littlebaby.compat` and `littlebaby.build` fields
     are required in `package.json`.
 
   </Step>
@@ -723,17 +723,17 @@ API key auth, and dynamic model resolution.
   </Step>
 </Steps>
 
-## Publish to ClawHub
+## Publish to LittleBabyHub
 
 Provider plugins publish the same way as any other external code plugin:
 
 ```bash
-clawhub package publish your-org/your-plugin --dry-run
-clawhub package publish your-org/your-plugin
+littlebabyhub package publish your-org/your-plugin --dry-run
+littlebabyhub package publish your-org/your-plugin
 ```
 
 Do not use the legacy skill-only publish alias here; plugin packages should use
-`clawhub package publish`.
+`littlebabyhub package publish`.
 
 ## File structure
 

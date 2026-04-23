@@ -40,7 +40,7 @@
       "stageRuntimeDependencies": true
     },
     "release": {
-      "publishToClawHub": true,
+      "publishToLittleBabyHub": true,
       "publishToNpm": true
     }
   }

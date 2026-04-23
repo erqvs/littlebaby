@@ -1,21 +1,21 @@
 ---
-summary: "CLI reference for `littlebaby clawbot` (legacy alias namespace)"
+summary: "CLI reference for `littlebaby littlebabybot` (legacy alias namespace)"
 read_when:
-  - You maintain older scripts using `littlebaby clawbot ...`
+  - You maintain older scripts using `littlebaby littlebabybot ...`
   - You need migration guidance to current commands
-title: "clawbot"
+title: "littlebabybot"
 ---
 
-# `littlebaby clawbot`
+# `littlebaby littlebabybot`
 
 Legacy alias namespace kept for backwards compatibility.
 
 Current supported alias:
 
-- `littlebaby clawbot qr` (same behavior as [`littlebaby qr`](/cli/qr))
+- `littlebaby littlebabybot qr` (same behavior as [`littlebaby qr`](/cli/qr))
 
 ## Migration
 
 Prefer modern top-level commands directly:
 
-- `littlebaby clawbot qr` -> `littlebaby qr`
+- `littlebaby littlebabybot qr` -> `littlebaby qr`

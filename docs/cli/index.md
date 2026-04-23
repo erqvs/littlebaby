@@ -61,7 +61,7 @@ This page describes the current CLI behavior. If commands change, update this do
 - [`secrets`](/cli/secrets)
 - [`skills`](/cli/skills)
 - [`daemon`](/cli/daemon) (legacy alias for gateway service commands)
-- [`clawbot`](/cli/clawbot) (legacy alias namespace)
+- [`littlebabybot`](/cli/littlebabybot) (legacy alias namespace)
 - [`voicecall`](/cli/voicecall) (plugin; if installed)
 
 ## Global flags
@@ -367,7 +367,7 @@ littlebaby [--dev] [--profile <name>] <command>
     list
     approve
   qr
-  clawbot
+  littlebabybot
     qr
   docs
   dns
@@ -799,12 +799,12 @@ List and inspect available skills plus readiness info.
 
 Subcommands:
 
-- `skills search [query...]`: search ClawHub skills.
+- `skills search [query...]`: search LittleBabyHub skills.
 - `skills search --limit <n> --json`: cap search results or emit machine-readable output.
-- `skills install <slug>`: install a skill from ClawHub into the active workspace.
-- `skills install <slug> --version <version>`: install a specific ClawHub version.
+- `skills install <slug>`: install a skill from LittleBabyHub into the active workspace.
+- `skills install <slug> --version <version>`: install a specific LittleBabyHub version.
 - `skills install <slug> --force`: overwrite an existing workspace skill folder.
-- `skills update <slug|--all>`: update tracked ClawHub skills.
+- `skills update <slug|--all>`: update tracked LittleBabyHub skills.
 - `skills list`: list skills (default when no subcommand).
 - `skills list --json`: emit machine-readable skill inventory on stdout.
 - `skills list --verbose`: include missing requirements in the table.
@@ -819,7 +819,7 @@ Options:
 - `--json`: output JSON (no styling).
 - `-v`, `--verbose`: include missing requirements detail.
 
-Tip: use `littlebaby skills search`, `littlebaby skills install`, and `littlebaby skills update` for ClawHub-backed skills.
+Tip: use `littlebaby skills search`, `littlebaby skills install`, and `littlebaby skills update` for LittleBabyHub-backed skills.
 
 ### `pairing`
 
@@ -884,9 +884,9 @@ Notes:
 - `--remote` can use `gateway.remote.url` or the active Tailscale Serve/Funnel URL.
 - After scanning, approve the request with `littlebaby devices list` / `littlebaby devices approve <requestId>`.
 
-### `clawbot`
+### `littlebabybot`
 
-Legacy alias namespace. Currently supports `littlebaby clawbot qr`, which maps to [`littlebaby qr`](/cli/qr).
+Legacy alias namespace. Currently supports `littlebaby littlebabybot qr`, which maps to [`littlebaby qr`](/cli/qr).
 
 ### `hooks`
 

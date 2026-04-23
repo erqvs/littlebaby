@@ -14,7 +14,7 @@ Welcome to the lobster tank! 🦞
 - **Peter Steinberger** - Benevolent Dictator
   - GitHub: [@steipete](https://github.com/steipete) · X: [@steipete](https://x.com/steipete)
 
-- **Shadow** - Discord subsystem, Discord admin, Clawhub, all community moderation
+- **Shadow** - Discord subsystem, Discord admin, Littlebabyhub, all community moderation
   - GitHub: [@thewilloftheshadow](https://github.com/thewilloftheshadow) · X: [@4shadowed](https://x.com/4shadowed)
 
 - **Vignesh** - Memory (QMD), formal modeling, TUI, IRC, and Lobster
@@ -95,7 +95,7 @@ Welcome to the lobster tank! 🦞
 
 We cap at **10 open PRs per author**. If you exceed this, the `r: too-many-prs` label is added and your PR is auto-closed. This is a hard limit.
 
-For coordinated change sets that genuinely need more than 10 PRs, join the **#clawtributors** channel in Discord and talk to maintainers first.
+For coordinated change sets that genuinely need more than 10 PRs, join the **#littlebabytributors** channel in Discord and talk to maintainers first.
 
 ## Before You PR
 
@@ -174,7 +174,7 @@ We are currently prioritizing:
 
 - **Stability**: Fixing edge cases in channel connections (WhatsApp/Telegram).
 - **UX**: Improving the onboarding wizard and error messages.
-- **Skills**: For skill contributions, head to [ClawHub](https://clawhub.ai/) — the community hub for LittleBaby skills.
+- **Skills**: For skill contributions, head to [LittleBabyHub](https://littlebabyhub.ai/) — the community hub for LittleBaby skills.
 - **Performance**: Optimizing token usage and compaction logic.
 
 Check the [GitHub Issues](https://github.com/littlebaby/littlebaby/issues) for
@@ -210,7 +210,7 @@ We take security reports seriously. Report vulnerabilities directly to the repos
 - **macOS desktop app** — [littlebaby/littlebaby](https://github.com/littlebaby/littlebaby) (apps/macos)
 - **iOS app** — [littlebaby/littlebaby](https://github.com/littlebaby/littlebaby) (apps/ios)
 - **Android app** — [littlebaby/littlebaby](https://github.com/littlebaby/littlebaby) (apps/android)
-- **ClawHub** — [littlebaby/clawhub](https://github.com/littlebaby/clawhub)
+- **LittleBabyHub** — [littlebaby/littlebabyhub](https://github.com/littlebaby/littlebabyhub)
 - **Trust and threat model** — [littlebaby/trust](https://github.com/littlebaby/trust)
 
 For issues that don't fit a specific repo, or if you're unsure, email **security@littlebaby.ai** and we'll route it.

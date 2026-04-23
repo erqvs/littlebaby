@@ -1,22 +1,22 @@
 ---
-summary: "ClawHub guide: public registry, native LittleBaby install flows, and ClawHub CLI workflows"
+summary: "LittleBabyHub guide: public registry, native LittleBaby install flows, and LittleBabyHub CLI workflows"
 read_when:
-  - Introducing ClawHub to new users
+  - Introducing LittleBabyHub to new users
   - Installing, searching, or publishing skills or plugins
-  - Explaining ClawHub CLI flags and sync behavior
-title: "ClawHub"
+  - Explaining LittleBabyHub CLI flags and sync behavior
+title: "LittleBabyHub"
 ---
 
-# ClawHub
+# LittleBabyHub
 
-ClawHub is the public registry for **LittleBaby skills and plugins**.
+LittleBabyHub is the public registry for **LittleBaby skills and plugins**.
 
 - Use native `littlebaby` commands to search/install/update skills and install
-  plugins from ClawHub.
-- Use the separate `clawhub` CLI when you need registry auth, publish, delete,
+  plugins from LittleBabyHub.
+- Use the separate `littlebabyhub` CLI when you need registry auth, publish, delete,
   undelete, or sync workflows.
 
-Site: [clawhub.ai](https://clawhub.ai)
+Site: [littlebabyhub.ai](https://littlebabyhub.ai)
 
 ## Native LittleBaby flows
 
@@ -31,28 +31,28 @@ littlebaby skills update --all
 Plugins:
 
 ```bash
-littlebaby plugins install clawhub:<package>
+littlebaby plugins install littlebabyhub:<package>
 littlebaby plugins update --all
 ```
 
-Bare npm-safe plugin specs are also tried against ClawHub before npm:
+Bare npm-safe plugin specs are also tried against LittleBabyHub before npm:
 
 ```bash
 littlebaby plugins install littlebaby-codex-app-server
 ```
 
 Native `littlebaby` commands install into your active workspace and persist source
-metadata so later `update` calls can stay on ClawHub.
+metadata so later `update` calls can stay on LittleBabyHub.
 
 Plugin installs validate advertised `pluginApi` and `minGatewayVersion`
 compatibility before archive install runs, so incompatible hosts fail closed
 early instead of partially installing the package.
 
-`littlebaby plugins install clawhub:...` only accepts installable plugin families.
-If a ClawHub package is actually a skill, LittleBaby stops and points you at
+`littlebaby plugins install littlebabyhub:...` only accepts installable plugin families.
+If a LittleBabyHub package is actually a skill, LittleBaby stops and points you at
 `littlebaby skills install <slug>` instead.
 
-## What ClawHub is
+## What LittleBabyHub is
 
 - A public registry for LittleBaby skills and plugins.
 - A versioned store of skill bundles and metadata.
@@ -61,7 +61,7 @@ If a ClawHub package is actually a skill, LittleBaby stops and points you at
 ## How it works
 
 1. A user publishes a skill bundle (files + metadata).
-2. ClawHub stores the bundle, parses metadata, and assigns a version.
+2. LittleBabyHub stores the bundle, parses metadata, and assigns a version.
 3. The registry indexes the skill for search and discovery.
 4. Users browse, download, and install skills in LittleBaby.
 
@@ -75,7 +75,7 @@ If a ClawHub package is actually a skill, LittleBaby stops and points you at
 
 ## Who this is for (beginner-friendly)
 
-If you want to add new capabilities to your LittleBaby agent, ClawHub is the easiest way to find and install skills. You do not need to know how the backend works. You can:
+If you want to add new capabilities to your LittleBaby agent, LittleBabyHub is the easiest way to find and install skills. You do not need to know how the backend works. You can:
 
 - Search for skills by plain language.
 - Install a skill into your workspace.
@@ -90,34 +90,34 @@ If you want to add new capabilities to your LittleBaby agent, ClawHub is the eas
    - `littlebaby skills install <skill-slug>`
 3. Start a new LittleBaby session so it picks up the new skill.
 4. If you want to publish or manage registry auth, install the separate
-   `clawhub` CLI too.
+   `littlebabyhub` CLI too.
 
-## Install the ClawHub CLI
+## Install the LittleBabyHub CLI
 
 You only need this for registry-authenticated workflows such as publish/sync:
 
 ```bash
-npm i -g clawhub
+npm i -g littlebabyhub
 ```
 
 ```bash
-pnpm add -g clawhub
+pnpm add -g littlebabyhub
 ```
 
 ## How it fits into LittleBaby
 
 Native `littlebaby skills install` installs into the active workspace `skills/`
-directory. `littlebaby plugins install clawhub:...` records a normal managed
-plugin install plus ClawHub source metadata for updates.
+directory. `littlebaby plugins install littlebabyhub:...` records a normal managed
+plugin install plus LittleBabyHub source metadata for updates.
 
-Anonymous ClawHub plugin installs also fail closed for private packages.
+Anonymous LittleBabyHub plugin installs also fail closed for private packages.
 Community or other non-official channels can still install, but LittleBaby warns
 so operators can review source and verification before enabling them.
 
-The separate `clawhub` CLI also installs skills into `./skills` under your
-current working directory. If an LittleBaby workspace is configured, `clawhub`
+The separate `littlebabyhub` CLI also installs skills into `./skills` under your
+current working directory. If an LittleBaby workspace is configured, `littlebabyhub`
 falls back to that workspace unless you override `--workdir` (or
-`CLAWHUB_WORKDIR`). LittleBaby loads workspace skills from `<workspace>/skills`
+`LITTLEBABYHUB_WORKDIR`). LittleBaby loads workspace skills from `<workspace>/skills`
 and will pick them up in the **next** session. If you already use
 `~/.littlebaby/skills` or bundled skills, workspace skills take precedence.
 
@@ -136,7 +136,7 @@ A typical skill includes:
 - Optional configs, scripts, or supporting files used by the skill.
 - Metadata such as tags, summary, and install requirements.
 
-ClawHub uses metadata to power discovery and safely expose skill capabilities.
+LittleBabyHub uses metadata to power discovery and safely expose skill capabilities.
 The registry also tracks usage signals (such as stars and downloads) to improve
 ranking and visibility.
 
@@ -152,7 +152,7 @@ ranking and visibility.
 
 ## Security and moderation
 
-ClawHub is open by default. Anyone can upload skills, but a GitHub account must
+LittleBabyHub is open by default. Anyone can upload skills, but a GitHub account must
 be at least one week old to publish. This helps slow down abuse without blocking
 legitimate contributors.
 
@@ -181,9 +181,9 @@ Global options (apply to all commands):
 
 Auth:
 
-- `clawhub login` (browser flow) or `clawhub login --token <token>`
-- `clawhub logout`
-- `clawhub whoami`
+- `littlebabyhub login` (browser flow) or `littlebabyhub login --token <token>`
+- `littlebabyhub logout`
+- `littlebabyhub whoami`
 
 Options:
 
@@ -193,29 +193,29 @@ Options:
 
 Search:
 
-- `clawhub search "query"`
+- `littlebabyhub search "query"`
 - `--limit <n>`: Max results.
 
 Install:
 
-- `clawhub install <slug>`
+- `littlebabyhub install <slug>`
 - `--version <version>`: Install a specific version.
 - `--force`: Overwrite if the folder already exists.
 
 Update:
 
-- `clawhub update <slug>`
-- `clawhub update --all`
+- `littlebabyhub update <slug>`
+- `littlebabyhub update --all`
 - `--version <version>`: Update to a specific version (single slug only).
 - `--force`: Overwrite when local files do not match any published version.
 
 List:
 
-- `clawhub list` (reads `.clawhub/lock.json`)
+- `littlebabyhub list` (reads `.littlebabyhub/lock.json`)
 
 Publish skills:
 
-- `clawhub skill publish <path>`
+- `littlebabyhub skill publish <path>`
 - `--slug <slug>`: Skill slug.
 - `--name <name>`: Display name.
 - `--version <version>`: Semver version.
@@ -224,7 +224,7 @@ Publish skills:
 
 Publish plugins:
 
-- `clawhub package publish <source>`
+- `littlebabyhub package publish <source>`
 - `<source>` can be a local folder, `owner/repo`, `owner/repo@ref`, or a GitHub URL.
 - `--dry-run`: Build the exact publish plan without uploading anything.
 - `--json`: Emit machine-readable output for CI.
@@ -232,12 +232,12 @@ Publish plugins:
 
 Delete/undelete (owner/admin only):
 
-- `clawhub delete <slug> --yes`
-- `clawhub undelete <slug> --yes`
+- `littlebabyhub delete <slug> --yes`
+- `littlebabyhub undelete <slug> --yes`
 
 Sync (scan local skills + publish new/updated):
 
-- `clawhub sync`
+- `littlebabyhub sync`
 - `--root <dir...>`: Extra scan roots.
 - `--all`: Upload everything without prompts.
 - `--dry-run`: Show what would be uploaded.
@@ -251,19 +251,19 @@ Sync (scan local skills + publish new/updated):
 ### Search for skills
 
 ```bash
-clawhub search "postgres backups"
+littlebabyhub search "postgres backups"
 ```
 
 ### Download new skills
 
 ```bash
-clawhub install my-skill-pack
+littlebabyhub install my-skill-pack
 ```
 
 ### Update installed skills
 
 ```bash
-clawhub update --all
+littlebabyhub update --all
 ```
 
 ### Back up your skills (publish or sync)
@@ -271,22 +271,22 @@ clawhub update --all
 For a single skill folder:
 
 ```bash
-clawhub skill publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest
+littlebabyhub skill publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest
 ```
 
 To scan and back up many skills at once:
 
 ```bash
-clawhub sync --all
+littlebabyhub sync --all
 ```
 
 ### Publish a plugin from GitHub
 
 ```bash
-clawhub package publish your-org/your-plugin --dry-run
-clawhub package publish your-org/your-plugin
-clawhub package publish your-org/your-plugin@v1.0.0
-clawhub package publish https://github.com/your-org/your-plugin
+littlebabyhub package publish your-org/your-plugin --dry-run
+littlebabyhub package publish your-org/your-plugin
+littlebabyhub package publish your-org/your-plugin@v1.0.0
+littlebabyhub package publish https://github.com/your-org/your-plugin
 ```
 
 Code plugins must include the required LittleBaby metadata in `package.json`:
@@ -324,25 +324,25 @@ Updates compare the local skill contents to registry versions using a content ha
 
 ### Sync scanning and fallback roots
 
-`clawhub sync` scans your current workdir first. If no skills are found, it falls back to known legacy locations (for example `~/littlebaby/skills` and `~/.littlebaby/skills`). This is designed to find older skill installs without extra flags.
+`littlebabyhub sync` scans your current workdir first. If no skills are found, it falls back to known legacy locations (for example `~/littlebaby/skills` and `~/.littlebaby/skills`). This is designed to find older skill installs without extra flags.
 
 ### Storage and lockfile
 
-- Installed skills are recorded in `.clawhub/lock.json` under your workdir.
-- Auth tokens are stored in the ClawHub CLI config file (override via `CLAWHUB_CONFIG_PATH`).
+- Installed skills are recorded in `.littlebabyhub/lock.json` under your workdir.
+- Auth tokens are stored in the LittleBabyHub CLI config file (override via `LITTLEBABYHUB_CONFIG_PATH`).
 
 ### Telemetry (install counts)
 
-When you run `clawhub sync` while logged in, the CLI sends a minimal snapshot to compute install counts. You can disable this entirely:
+When you run `littlebabyhub sync` while logged in, the CLI sends a minimal snapshot to compute install counts. You can disable this entirely:
 
 ```bash
-export CLAWHUB_DISABLE_TELEMETRY=1
+export LITTLEBABYHUB_DISABLE_TELEMETRY=1
 ```
 
 ## Environment variables
 
-- `CLAWHUB_SITE`: Override the site URL.
-- `CLAWHUB_REGISTRY`: Override the registry API URL.
-- `CLAWHUB_CONFIG_PATH`: Override where the CLI stores the token/config.
-- `CLAWHUB_WORKDIR`: Override the default workdir.
-- `CLAWHUB_DISABLE_TELEMETRY=1`: Disable telemetry on `sync`.
+- `LITTLEBABYHUB_SITE`: Override the site URL.
+- `LITTLEBABYHUB_REGISTRY`: Override the registry API URL.
+- `LITTLEBABYHUB_CONFIG_PATH`: Override where the CLI stores the token/config.
+- `LITTLEBABYHUB_WORKDIR`: Override the default workdir.
+- `LITTLEBABYHUB_DISABLE_TELEMETRY=1`: Disable telemetry on `sync`.

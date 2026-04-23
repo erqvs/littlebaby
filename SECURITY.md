@@ -10,7 +10,7 @@ Report vulnerabilities directly to the repository where the issue lives:
 - **macOS desktop app** — [littlebaby/littlebaby](https://github.com/littlebaby/littlebaby) (apps/macos)
 - **iOS app** — [littlebaby/littlebaby](https://github.com/littlebaby/littlebaby) (apps/ios)
 - **Android app** — [littlebaby/littlebaby](https://github.com/littlebaby/littlebaby) (apps/android)
-- **ClawHub** — [littlebaby/clawhub](https://github.com/littlebaby/clawhub)
+- **LittleBabyHub** — [littlebaby/littlebabyhub](https://github.com/littlebaby/littlebabyhub)
 - **Trust and threat model** — [littlebaby/trust](https://github.com/littlebaby/trust)
 
 For issues that don't fit a specific repo, or if you're unsure, email **[security@littlebaby.ai](mailto:security@littlebaby.ai)** and we'll route it.

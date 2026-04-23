@@ -2,13 +2,13 @@
 
 import { pathToFileURL } from "node:url";
 import {
-  collectPluginClawHubReleasePlan,
+  collectPluginLittleBabyHubReleasePlan,
   parsePluginReleaseArgs,
-} from "./lib/plugin-clawhub-release.ts";
+} from "./lib/plugin-littlebabyhub-release.ts";
 
-export async function collectPluginReleasePlanForClawHub(argv: string[]) {
+export async function collectPluginReleasePlanForLittleBabyHub(argv: string[]) {
   const { selection, selectionMode, baseRef, headRef } = parsePluginReleaseArgs(argv);
-  return await collectPluginClawHubReleasePlan({
+  return await collectPluginLittleBabyHubReleasePlan({
     selection,
     selectionMode,
     gitRange: baseRef && headRef ? { baseRef, headRef } : undefined,
@@ -16,6 +16,6 @@ export async function collectPluginReleasePlanForClawHub(argv: string[]) {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
-  const plan = await collectPluginReleasePlanForClawHub(process.argv.slice(2));
+  const plan = await collectPluginReleasePlanForLittleBabyHub(process.argv.slice(2));
   console.log(JSON.stringify(plan, null, 2));
 }

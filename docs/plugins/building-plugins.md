@@ -16,8 +16,8 @@ generation, video generation, web fetch, web search, agent tools, or any
 combination.
 
 You do not need to add your plugin to the LittleBaby repository. Publish to
-[ClawHub](/tools/clawhub) or npm and users install with
-`littlebaby plugins install <package-name>`. LittleBaby tries ClawHub first and
+[LittleBabyHub](/tools/littlebabyhub) or npm and users install with
+`littlebaby plugins install <package-name>`. LittleBaby tries LittleBabyHub first and
 falls back to npm automatically.
 
 ## Prerequisites
@@ -87,7 +87,7 @@ and provider plugins have dedicated guides linked above.
     </CodeGroup>
 
     Every plugin needs a manifest, even with no config. See
-    [Manifest](/plugins/manifest) for the full schema. The canonical ClawHub
+    [Manifest](/plugins/manifest) for the full schema. The canonical LittleBabyHub
     publish snippets live in `docs/snippets/plugin-publish/`.
 
   </Step>
@@ -124,15 +124,15 @@ and provider plugins have dedicated guides linked above.
 
   <Step title="Test and publish">
 
-    **External plugins:** validate and publish with ClawHub, then install:
+    **External plugins:** validate and publish with LittleBabyHub, then install:
 
     ```bash
-    clawhub package publish your-org/your-plugin --dry-run
-    clawhub package publish your-org/your-plugin
-    littlebaby plugins install clawhub:@myorg/littlebaby-my-plugin
+    littlebabyhub package publish your-org/your-plugin --dry-run
+    littlebabyhub package publish your-org/your-plugin
+    littlebaby plugins install littlebabyhub:@myorg/littlebaby-my-plugin
     ```
 
-    LittleBaby also checks ClawHub before npm for bare package specs like
+    LittleBaby also checks LittleBabyHub before npm for bare package specs like
     `@myorg/littlebaby-my-plugin`.
 
     **In-repo plugins:** place under the bundled plugin workspace tree — automatically discovered.

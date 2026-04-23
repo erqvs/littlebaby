@@ -1,77 +1,77 @@
 ---
-name: clawhub
-description: Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.
+name: littlebabyhub
+description: Use the LittleBabyHub CLI to search, install, update, and publish agent skills from littlebabyhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed littlebabyhub CLI.
 metadata:
   {
     "littlebaby":
       {
-        "requires": { "bins": ["clawhub"] },
+        "requires": { "bins": ["littlebabyhub"] },
         "install":
           [
             {
               "id": "node",
               "kind": "node",
-              "package": "clawhub",
-              "bins": ["clawhub"],
-              "label": "Install ClawHub CLI (npm)",
+              "package": "littlebabyhub",
+              "bins": ["littlebabyhub"],
+              "label": "Install LittleBabyHub CLI (npm)",
             },
           ],
       },
   }
 ---
 
-# ClawHub CLI
+# LittleBabyHub CLI
 
 Install
 
 ```bash
-npm i -g clawhub
+npm i -g littlebabyhub
 ```
 
 Auth (publish)
 
 ```bash
-clawhub login
-clawhub whoami
+littlebabyhub login
+littlebabyhub whoami
 ```
 
 Search
 
 ```bash
-clawhub search "postgres backups"
+littlebabyhub search "postgres backups"
 ```
 
 Install
 
 ```bash
-clawhub install my-skill
-clawhub install my-skill --version 1.2.3
+littlebabyhub install my-skill
+littlebabyhub install my-skill --version 1.2.3
 ```
 
 Update (hash-based match + upgrade)
 
 ```bash
-clawhub update my-skill
-clawhub update my-skill --version 1.2.3
-clawhub update --all
-clawhub update my-skill --force
-clawhub update --all --no-input --force
+littlebabyhub update my-skill
+littlebabyhub update my-skill --version 1.2.3
+littlebabyhub update --all
+littlebabyhub update my-skill --force
+littlebabyhub update --all --no-input --force
 ```
 
 List
 
 ```bash
-clawhub list
+littlebabyhub list
 ```
 
 Publish
 
 ```bash
-clawhub publish ./my-skill --slug my-skill --name "My Skill" --version 1.2.0 --changelog "Fixes + docs"
+littlebabyhub publish ./my-skill --slug my-skill --name "My Skill" --version 1.2.0 --changelog "Fixes + docs"
 ```
 
 Notes
 
-- Default registry: https://clawhub.com (override with CLAWHUB_REGISTRY or --registry)
-- Default workdir: cwd (falls back to LittleBaby workspace); install dir: ./skills (override with --workdir / --dir / CLAWHUB_WORKDIR)
+- Default registry: https://littlebabyhub.com (override with LITTLEBABYHUB_REGISTRY or --registry)
+- Default workdir: cwd (falls back to LittleBaby workspace); install dir: ./skills (override with --workdir / --dir / LITTLEBABYHUB_WORKDIR)
 - Update command hashes local files, resolves matching version, and upgrades to latest unless --version is set
