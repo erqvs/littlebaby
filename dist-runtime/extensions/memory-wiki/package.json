@@ -7,9 +7,9 @@
   "dependencies": {
     "yaml": "^2.8.3"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

@@ -13,10 +13,10 @@
   },
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*",
-    "littlebaby": "workspace:*"
+    "openclaw": "workspace:*"
   },
   "peerDependencies": {
-    "littlebaby": ">=2026.4.20"
+    "openclaw": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
@@ -26,7 +26,7 @@
   "optionalDependencies": {
     "@discordjs/opus": "^0.10.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],

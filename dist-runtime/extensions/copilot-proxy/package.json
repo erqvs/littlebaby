@@ -4,9 +4,9 @@
   "private": true,
   "description": "OpenClaw Copilot Proxy provider plugin",
   "type": "module",
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ]
   }
 }

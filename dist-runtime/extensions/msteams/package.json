@@ -12,11 +12,11 @@
     "jsonwebtoken": "^9.0.3",
     "jwks-rsa": "^4.0.1"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "msteams",
       "label": "Microsoft Teams",

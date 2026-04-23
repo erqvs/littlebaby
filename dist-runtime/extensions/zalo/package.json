@@ -6,11 +6,11 @@
   "dependencies": {
     "undici": "8.1.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "channel": {
       "id": "zalo",
       "label": "Zalo",

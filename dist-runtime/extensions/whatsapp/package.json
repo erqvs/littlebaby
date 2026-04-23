@@ -8,11 +8,11 @@
     "jimp": "^1.6.1",
     "qrcode-terminal": "^0.12.0"
   },
-  "littlebaby": {
+  "openclaw": {
     "extensions": [
-      "./index.ts"
+      "./index.js"
     ],
-    "setupEntry": "./setup-entry.ts",
+    "setupEntry": "./setup-entry.js",
     "setupFeatures": {
       "legacyStateMigrations": true,
       "legacySessionSurfaces": true
