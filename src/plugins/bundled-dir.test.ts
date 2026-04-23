@@ -15,7 +15,7 @@ function makeRepoRoot(prefix: string): string {
   return makeTrackedTempDir(prefix, tempDirs);
 }
 
-function createOpenClawRoot(params: {
+function createLittleBabyRoot(params: {
   prefix: string;
   hasExtensions?: boolean;
   hasSrc?: boolean;
@@ -52,11 +52,11 @@ function seedBundledPluginTree(rootDir: string, relativeDir: string, pluginId = 
   fs.mkdirSync(pluginDir, { recursive: true });
   fs.writeFileSync(
     path.join(pluginDir, "package.json"),
-    `${JSON.stringify({ name: `@openclaw/${pluginId}` }, null, 2)}\n`,
+    `${JSON.stringify({ name: `@littlebaby/${pluginId}` }, null, 2)}\n`,
     "utf8",
   );
   fs.writeFileSync(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "littlebaby.plugin.json"),
     `${JSON.stringify({ id: pluginId }, null, 2)}\n`,
     "utf8",
   );
@@ -169,7 +169,7 @@ describe("resolveBundledPluginsDir", () => {
     [
       "prefers the staged runtime bundled plugin tree from the package root",
       {
-        prefix: "openclaw-bundled-dir-runtime-",
+        prefix: "littlebaby-bundled-dir-runtime-",
         hasDistRuntimeExtensions: true,
         hasDistExtensions: true,
       },
@@ -180,7 +180,7 @@ describe("resolveBundledPluginsDir", () => {
     [
       "falls back to built dist/extensions in installed package roots",
       {
-        prefix: "openclaw-bundled-dir-dist-",
+        prefix: "littlebaby-bundled-dir-dist-",
         hasDistExtensions: true,
       },
       {
@@ -190,7 +190,7 @@ describe("resolveBundledPluginsDir", () => {
     [
       "prefers built dist/extensions in a git checkout outside vitest",
       {
-        prefix: "openclaw-bundled-dir-git-built-",
+        prefix: "littlebaby-bundled-dir-git-built-",
         hasExtensions: true,
         hasSrc: true,
         hasDistRuntimeExtensions: true,
@@ -204,7 +204,7 @@ describe("resolveBundledPluginsDir", () => {
     [
       "prefers source extensions under vitest to avoid stale staged plugins",
       {
-        prefix: "openclaw-bundled-dir-vitest-",
+        prefix: "littlebaby-bundled-dir-vitest-",
         hasExtensions: true,
         hasDistRuntimeExtensions: true,
         hasDistExtensions: true,
@@ -217,7 +217,7 @@ describe("resolveBundledPluginsDir", () => {
     [
       "prefers source extensions during tsx-driven source execution",
       {
-        prefix: "openclaw-bundled-dir-tsx-",
+        prefix: "littlebaby-bundled-dir-tsx-",
         hasExtensions: true,
         hasSrc: true,
         hasDistRuntimeExtensions: true,
@@ -232,7 +232,7 @@ describe("resolveBundledPluginsDir", () => {
     [
       "falls back to source extensions in a git checkout when built trees are missing",
       {
-        prefix: "openclaw-bundled-dir-git-",
+        prefix: "littlebaby-bundled-dir-git-",
         hasExtensions: true,
         hasSrc: true,
         hasGitCheckout: true,
@@ -242,7 +242,7 @@ describe("resolveBundledPluginsDir", () => {
       },
     ],
   ] as const)("%s", (_name, layout, expectation) => {
-    const repoRoot = createOpenClawRoot(layout);
+    const repoRoot = createLittleBabyRoot(layout);
     if (expectation.expectedRelativeDir === path.join("dist-runtime", "extensions")) {
       seedBundledPluginTree(repoRoot, path.join("dist", "extensions"));
       seedBundledPluginTree(repoRoot, path.join("dist-runtime", "extensions"));
@@ -258,8 +258,8 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("falls back to source extensions when dist trees exist but do not contain real plugin manifests", () => {
-    const repoRoot = createOpenClawRoot({
-      prefix: "openclaw-bundled-dir-incomplete-built-",
+    const repoRoot = createLittleBabyRoot({
+      prefix: "littlebaby-bundled-dir-incomplete-built-",
       hasExtensions: true,
       hasSrc: true,
       hasDistRuntimeExtensions: true,
@@ -278,8 +278,8 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("returns a stable empty bundled plugin directory when bundled plugins are disabled", () => {
-    const repoRoot = createOpenClawRoot({
-      prefix: "openclaw-bundled-dir-disabled-",
+    const repoRoot = createLittleBabyRoot({
+      prefix: "littlebaby-bundled-dir-disabled-",
       hasExtensions: true,
       hasSrc: true,
       hasGitCheckout: true,
@@ -300,13 +300,13 @@ describe("resolveBundledPluginsDir", () => {
     {
       name: "prefers the running CLI package root over an unrelated cwd checkout",
       createScenario: () => {
-        const installedRoot = createOpenClawRoot({
-          prefix: "openclaw-bundled-dir-installed-",
+        const installedRoot = createLittleBabyRoot({
+          prefix: "littlebaby-bundled-dir-installed-",
           hasDistExtensions: true,
         });
         seedBundledPluginTree(installedRoot, path.join("dist", "extensions"));
-        const cwdRepoRoot = createOpenClawRoot({
-          prefix: "openclaw-bundled-dir-cwd-",
+        const cwdRepoRoot = createLittleBabyRoot({
+          prefix: "littlebaby-bundled-dir-cwd-",
           hasExtensions: true,
           hasSrc: true,
           hasGitCheckout: true,
@@ -321,8 +321,8 @@ describe("resolveBundledPluginsDir", () => {
     {
       name: "falls back to the running installed package when the override path is stale",
       createScenario: () => {
-        const installedRoot = createOpenClawRoot({
-          prefix: "openclaw-bundled-dir-override-",
+        const installedRoot = createLittleBabyRoot({
+          prefix: "littlebaby-bundled-dir-override-",
           hasDistExtensions: true,
         });
         seedBundledPluginTree(installedRoot, path.join("dist", "extensions"));

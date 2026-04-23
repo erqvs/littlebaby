@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/media-understanding-core",
+  "name": "@littlebaby/media-understanding-core",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw media understanding runtime package",
+  "description": "LittleBaby media understanding runtime package",
   "type": "module"
 }

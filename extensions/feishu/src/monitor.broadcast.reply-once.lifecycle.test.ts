@@ -135,7 +135,7 @@ describe("Feishu broadcast reply-once lifecycle", () => {
     vi.clearAllMocks();
     handlersByAccount = new Map();
     runtimesByAccount = new Map();
-    setFeishuLifecycleStateDir("openclaw-feishu-broadcast");
+    setFeishuLifecycleStateDir("littlebaby-feishu-broadcast");
 
     createFeishuReplyDispatcherMock.mockReturnValue(createFeishuLifecycleReplyDispatcher());
 

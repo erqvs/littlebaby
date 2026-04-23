@@ -1,9 +1,9 @@
 import type { AnyMessageContent, proto, WAMessage, WASocket } from "@whiskeysockets/baileys";
-import { createInboundDebouncer, formatLocationText } from "openclaw/plugin-sdk/channel-inbound";
-import { recordChannelActivity } from "openclaw/plugin-sdk/infra-runtime";
-import { defaultRuntime } from "openclaw/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { getChildLogger } from "openclaw/plugin-sdk/text-runtime";
+import { createInboundDebouncer, formatLocationText } from "littlebaby/plugin-sdk/channel-inbound";
+import { recordChannelActivity } from "littlebaby/plugin-sdk/infra-runtime";
+import { defaultRuntime } from "littlebaby/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "littlebaby/plugin-sdk/runtime-env";
+import { getChildLogger } from "littlebaby/plugin-sdk/text-runtime";
 import { readWebSelfIdentityForDecision, WhatsAppAuthUnstableError } from "../auth-store.js";
 import { getPrimaryIdentityId, resolveComparableIdentity } from "../identity.js";
 import { DEFAULT_RECONNECT_POLICY, computeBackoff, sleepWithAbort } from "../reconnect.js";

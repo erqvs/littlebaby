@@ -222,7 +222,7 @@ export function renderAgentChannels(params: {
                           ? html`
                               <div>
                                 <a
-                                  href="https://docs.openclaw.ai/channels"
+                                  href="https://docs.littlebaby.ai/channels"
                                   target="_blank"
                                   rel="noopener"
                                   style="color: var(--accent); font-size: 12px"

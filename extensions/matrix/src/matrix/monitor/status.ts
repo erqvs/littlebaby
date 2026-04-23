@@ -1,5 +1,5 @@
-import type { ChannelAccountSnapshot } from "openclaw/plugin-sdk/channel-contract";
-import { createConnectedChannelStatusPatch } from "openclaw/plugin-sdk/gateway-runtime";
+import type { ChannelAccountSnapshot } from "littlebaby/plugin-sdk/channel-contract";
+import { createConnectedChannelStatusPatch } from "littlebaby/plugin-sdk/gateway-runtime";
 import { formatMatrixErrorMessage } from "../errors.js";
 import {
   isMatrixDisconnectedSyncState,

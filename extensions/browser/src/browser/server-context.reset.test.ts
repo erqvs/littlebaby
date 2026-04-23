@@ -23,7 +23,7 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-function localOpenClawProfile(): Parameters<typeof createProfileResetOps>[0]["profile"] {
+function localLittleBabyProfile(): Parameters<typeof createProfileResetOps>[0]["profile"] {
   return {
     name: "littlebaby",
     cdpUrl: "http://127.0.0.1:18800",
@@ -36,10 +36,10 @@ function localOpenClawProfile(): Parameters<typeof createProfileResetOps>[0]["pr
   };
 }
 
-function createLocalOpenClawResetOps(
+function createLocalLittleBabyResetOps(
   params: Omit<Parameters<typeof createProfileResetOps>[0], "profile">,
 ) {
-  return createProfileResetOps({ profile: localOpenClawProfile(), ...params });
+  return createProfileResetOps({ profile: localLittleBabyProfile(), ...params });
 }
 
 function createStatelessResetOps(profile: Parameters<typeof createProfileResetOps>[0]["profile"]) {
@@ -48,14 +48,14 @@ function createStatelessResetOps(profile: Parameters<typeof createProfileResetOp
     getProfileState: () => ({ profile: {} as never, running: null }),
     stopRunningBrowser: vi.fn(async () => ({ stopped: false })),
     isHttpReachable: vi.fn(async () => false),
-    resolveOpenClawUserDataDir: (name: string) => `/tmp/${name}`,
+    resolveLittleBabyUserDataDir: (name: string) => `/tmp/${name}`,
   });
 }
 
 describe("createProfileResetOps", () => {
   it("rejects remote non-extension profiles", async () => {
     const ops = createStatelessResetOps({
-      ...localOpenClawProfile(),
+      ...localLittleBabyProfile(),
       name: "remote",
       cdpUrl: "https://browserless.example/chrome",
       cdpHost: "browserless.example",
@@ -68,7 +68,7 @@ describe("createProfileResetOps", () => {
   });
 
   it("stops local browser, closes playwright connection, and trashes profile dir", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-reset-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-reset-"));
     const profileDir = path.join(tempRoot, "littlebaby");
     fs.mkdirSync(profileDir, { recursive: true });
 
@@ -79,11 +79,11 @@ describe("createProfileResetOps", () => {
       running: { pid: 1 } as never,
     }));
 
-    const ops = createLocalOpenClawResetOps({
+    const ops = createLocalLittleBabyResetOps({
       getProfileState,
       stopRunningBrowser,
       isHttpReachable,
-      resolveOpenClawUserDataDir: () => profileDir,
+      resolveLittleBabyUserDataDir: () => profileDir,
     });
 
     const result = await ops.resetProfile();
@@ -101,16 +101,16 @@ describe("createProfileResetOps", () => {
   });
 
   it("forces playwright disconnect when loopback cdp is occupied by non-owned process", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-reset-no-own-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-reset-no-own-"));
     const profileDir = path.join(tempRoot, "littlebaby");
     fs.mkdirSync(profileDir, { recursive: true });
 
     const stopRunningBrowser = vi.fn(async () => ({ stopped: false }));
-    const ops = createLocalOpenClawResetOps({
+    const ops = createLocalLittleBabyResetOps({
       getProfileState: () => ({ profile: {} as never, running: null }),
       stopRunningBrowser,
       isHttpReachable: vi.fn(async () => true),
-      resolveOpenClawUserDataDir: () => profileDir,
+      resolveLittleBabyUserDataDir: () => profileDir,
     });
 
     await ops.resetProfile();

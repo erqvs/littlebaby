@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Logger as TsLogger } from "tslog";
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import {
   POSIX_LITTLEBABY_TMP_DIR,
-  resolvePreferredOpenClawTmpDir,
-} from "../infra/tmp-openclaw-dir.js";
+  resolvePreferredLittleBabyTmpDir,
+} from "../infra/tmp-littlebaby-dir.js";
 import { readLoggingConfig, shouldSkipMutatingLoggingConfigRead } from "./config.js";
 import { resolveEnvLogLevelOverride } from "./env-log-level.js";
 import { type LogLevel, levelToMinLevel, normalizeLogLevel } from "./levels.js";
@@ -32,13 +32,13 @@ function canUseNodeFs(): boolean {
 }
 
 function resolveDefaultLogDir(): string {
-  return canUseNodeFs() ? resolvePreferredOpenClawTmpDir() : POSIX_LITTLEBABY_TMP_DIR;
+  return canUseNodeFs() ? resolvePreferredLittleBabyTmpDir() : POSIX_LITTLEBABY_TMP_DIR;
 }
 
 function resolveDefaultLogFile(defaultLogDir: string): string {
   return canUseNodeFs()
-    ? path.join(defaultLogDir, "openclaw.log")
-    : `${POSIX_LITTLEBABY_TMP_DIR}/openclaw.log`;
+    ? path.join(defaultLogDir, "littlebaby.log")
+    : `${POSIX_LITTLEBABY_TMP_DIR}/littlebaby.log`;
 }
 
 export const DEFAULT_LOG_DIR = resolveDefaultLogDir();
@@ -106,13 +106,13 @@ function resolveSettings(): ResolvedSettings {
     };
   }
 
-  let cfg: OpenClawConfig["logging"] | undefined =
+  let cfg: LittleBabyConfig["logging"] | undefined =
     (loggingState.overrideSettings as LoggerSettings | null) ?? readLoggingConfig();
   if (!cfg && !shouldSkipMutatingLoggingConfigRead()) {
     try {
       const loaded = requireConfig?.("../config/config.js") as
         | {
-            loadConfig?: () => OpenClawConfig;
+            loadConfig?: () => LittleBabyConfig;
           }
         | undefined;
       cfg = loaded?.loadConfig?.().logging;
@@ -191,7 +191,7 @@ function buildLogger(settings: ResolvedSettings): TsLogger<LogObj> {
           });
           appendLogLine(settings.file, `${warningLine}\n`);
           process.stderr.write(
-            `[openclaw] log file size cap reached; suppressing writes file=${settings.file} maxFileBytes=${settings.maxFileBytes}\n`,
+            `[littlebaby] log file size cap reached; suppressing writes file=${settings.file} maxFileBytes=${settings.maxFileBytes}\n`,
           );
         }
         return;

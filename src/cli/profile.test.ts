@@ -101,10 +101,10 @@ describe("applyCliProfileEnv", () => {
       env,
       homedir: () => "/home/peter",
     });
-    const expectedStateDir = path.join(path.resolve("/home/peter"), ".openclaw-dev");
+    const expectedStateDir = path.join(path.resolve("/home/peter"), ".littlebaby-dev");
     expect(env.LITTLEBABY_PROFILE).toBe("dev");
     expect(env.LITTLEBABY_STATE_DIR).toBe(expectedStateDir);
-    expect(env.LITTLEBABY_CONFIG_PATH).toBe(path.join(expectedStateDir, "openclaw.json"));
+    expect(env.LITTLEBABY_CONFIG_PATH).toBe(path.join(expectedStateDir, "littlebaby.json"));
     expect(env.LITTLEBABY_GATEWAY_PORT).toBe("19001");
   });
 
@@ -120,12 +120,12 @@ describe("applyCliProfileEnv", () => {
     });
     expect(env.LITTLEBABY_STATE_DIR).toBe("/custom");
     expect(env.LITTLEBABY_GATEWAY_PORT).toBe("19099");
-    expect(env.LITTLEBABY_CONFIG_PATH).toBe(path.join("/custom", "openclaw.json"));
+    expect(env.LITTLEBABY_CONFIG_PATH).toBe(path.join("/custom", "littlebaby.json"));
   });
 
   it("uses LITTLEBABY_HOME when deriving profile state dir", () => {
     const env: Record<string, string | undefined> = {
-      LITTLEBABY_HOME: "/srv/openclaw-home",
+      LITTLEBABY_HOME: "/srv/littlebaby-home",
       HOME: "/home/other",
     };
     applyCliProfileEnv({
@@ -134,10 +134,10 @@ describe("applyCliProfileEnv", () => {
       homedir: () => "/home/fallback",
     });
 
-    const resolvedHome = path.resolve("/srv/openclaw-home");
-    expect(env.LITTLEBABY_STATE_DIR).toBe(path.join(resolvedHome, ".openclaw-work"));
+    const resolvedHome = path.resolve("/srv/littlebaby-home");
+    expect(env.LITTLEBABY_STATE_DIR).toBe(path.join(resolvedHome, ".littlebaby-work"));
     expect(env.LITTLEBABY_CONFIG_PATH).toBe(
-      path.join(resolvedHome, ".openclaw-work", "openclaw.json"),
+      path.join(resolvedHome, ".littlebaby-work", "littlebaby.json"),
     );
   });
 });
@@ -146,97 +146,97 @@ describe("formatCliCommand", () => {
   it.each([
     {
       name: "no profile is set",
-      cmd: "openclaw doctor --fix",
+      cmd: "littlebaby doctor --fix",
       env: {},
-      expected: "openclaw doctor --fix",
+      expected: "littlebaby doctor --fix",
     },
     {
       name: "profile is default",
-      cmd: "openclaw doctor --fix",
+      cmd: "littlebaby doctor --fix",
       env: { LITTLEBABY_PROFILE: "default" },
-      expected: "openclaw doctor --fix",
+      expected: "littlebaby doctor --fix",
     },
     {
       name: "profile is Default (case-insensitive)",
-      cmd: "openclaw doctor --fix",
+      cmd: "littlebaby doctor --fix",
       env: { LITTLEBABY_PROFILE: "Default" },
-      expected: "openclaw doctor --fix",
+      expected: "littlebaby doctor --fix",
     },
     {
       name: "profile is invalid",
-      cmd: "openclaw doctor --fix",
+      cmd: "littlebaby doctor --fix",
       env: { LITTLEBABY_PROFILE: "bad profile" },
-      expected: "openclaw doctor --fix",
+      expected: "littlebaby doctor --fix",
     },
     {
       name: "--profile is already present",
-      cmd: "openclaw --profile work doctor --fix",
+      cmd: "littlebaby --profile work doctor --fix",
       env: { LITTLEBABY_PROFILE: "work" },
-      expected: "openclaw --profile work doctor --fix",
+      expected: "littlebaby --profile work doctor --fix",
     },
     {
       name: "--dev is already present",
-      cmd: "openclaw --dev doctor",
+      cmd: "littlebaby --dev doctor",
       env: { LITTLEBABY_PROFILE: "dev" },
-      expected: "openclaw --dev doctor",
+      expected: "littlebaby --dev doctor",
     },
   ])("returns command unchanged when $name", ({ cmd, env, expected }) => {
     expect(formatCliCommand(cmd, env)).toBe(expected);
   });
 
   it("inserts --profile flag when profile is set", () => {
-    expect(formatCliCommand("openclaw doctor --fix", { LITTLEBABY_PROFILE: "work" })).toBe(
-      "openclaw --profile work doctor --fix",
+    expect(formatCliCommand("littlebaby doctor --fix", { LITTLEBABY_PROFILE: "work" })).toBe(
+      "littlebaby --profile work doctor --fix",
     );
   });
 
   it("trims whitespace from profile", () => {
-    expect(formatCliCommand("openclaw doctor --fix", { LITTLEBABY_PROFILE: "  jbopenclaw  " })).toBe(
-      "openclaw --profile jbopenclaw doctor --fix",
+    expect(formatCliCommand("littlebaby doctor --fix", { LITTLEBABY_PROFILE: "  jblittlebaby  " })).toBe(
+      "littlebaby --profile jblittlebaby doctor --fix",
     );
   });
 
-  it("handles command with no args after openclaw", () => {
+  it("handles command with no args after littlebaby", () => {
     expect(formatCliCommand("littlebaby", { LITTLEBABY_PROFILE: "test" })).toBe(
-      "openclaw --profile test",
+      "littlebaby --profile test",
     );
   });
 
   it("handles pnpm wrapper", () => {
-    expect(formatCliCommand("pnpm openclaw doctor", { LITTLEBABY_PROFILE: "work" })).toBe(
-      "pnpm openclaw --profile work doctor",
+    expect(formatCliCommand("pnpm littlebaby doctor", { LITTLEBABY_PROFILE: "work" })).toBe(
+      "pnpm littlebaby --profile work doctor",
     );
   });
 
   it("inserts --container when a container hint is set", () => {
     expect(
-      formatCliCommand("openclaw gateway status --deep", { LITTLEBABY_CONTAINER_HINT: "demo" }),
-    ).toBe("openclaw --container demo gateway status --deep");
+      formatCliCommand("littlebaby gateway status --deep", { LITTLEBABY_CONTAINER_HINT: "demo" }),
+    ).toBe("littlebaby --container demo gateway status --deep");
   });
 
   it("ignores unsafe container hints", () => {
     expect(
-      formatCliCommand("openclaw gateway status --deep", {
+      formatCliCommand("littlebaby gateway status --deep", {
         LITTLEBABY_CONTAINER_HINT: "demo; rm -rf /",
       }),
-    ).toBe("openclaw gateway status --deep");
+    ).toBe("littlebaby gateway status --deep");
   });
 
   it("preserves both --container and --profile hints", () => {
     expect(
-      formatCliCommand("openclaw doctor", {
+      formatCliCommand("littlebaby doctor", {
         LITTLEBABY_CONTAINER_HINT: "demo",
         LITTLEBABY_PROFILE: "work",
       }),
-    ).toBe("openclaw --container demo doctor");
+    ).toBe("littlebaby --container demo doctor");
   });
 
   it("does not prepend --container for update commands", () => {
-    expect(formatCliCommand("openclaw update", { LITTLEBABY_CONTAINER_HINT: "demo" })).toBe(
-      "openclaw update",
+    expect(formatCliCommand("littlebaby update", { LITTLEBABY_CONTAINER_HINT: "demo" })).toBe(
+      "littlebaby update",
     );
     expect(
-      formatCliCommand("pnpm openclaw update --channel beta", { LITTLEBABY_CONTAINER_HINT: "demo" }),
-    ).toBe("pnpm openclaw update --channel beta");
+      formatCliCommand("pnpm littlebaby update --channel beta", { LITTLEBABY_CONTAINER_HINT: "demo" }),
+    ).toBe("pnpm littlebaby update --channel beta");
   });
 });

@@ -96,7 +96,7 @@ function buildCriticalBlockReason(params: {
 }
 
 function buildScanFailureBlockReason(params: { error: string; targetLabel: string }) {
-  return `${params.targetLabel} blocked: code safety scan failed (${params.error}). Run "openclaw security audit --deep" for details.`;
+  return `${params.targetLabel} blocked: code safety scan failed (${params.error}). Run "littlebaby security audit --deep" for details.`;
 }
 
 function buildBlockedDependencyManifestLabel(params: {
@@ -672,7 +672,7 @@ export async function scanBundleInstallSourceRuntime(
   const builtinScan = await scanDirectoryTarget({
     logger: params.logger,
     path: params.sourceDir,
-    suspiciousMessage: `Bundle "{target}" has {count} suspicious code pattern(s). Run "openclaw security audit --deep" for details.`,
+    suspiciousMessage: `Bundle "{target}" has {count} suspicious code pattern(s). Run "littlebaby security audit --deep" for details.`,
     targetName: params.pluginId,
     warningMessage: `WARNING: Bundle "${params.pluginId}" contains dangerous code patterns`,
   });
@@ -749,7 +749,7 @@ export async function scanPackageInstallSourceRuntime(
     includeFiles: forcedScanEntries,
     logger: params.logger,
     path: params.packageDir,
-    suspiciousMessage: `Plugin "{target}" has {count} suspicious code pattern(s). Run "openclaw security audit --deep" for details.`,
+    suspiciousMessage: `Plugin "{target}" has {count} suspicious code pattern(s). Run "littlebaby security audit --deep" for details.`,
     targetName: params.pluginId,
     warningMessage: `WARNING: Plugin "${params.pluginId}" contains dangerous code patterns`,
   });
@@ -808,7 +808,7 @@ export async function scanFileInstallSourceRuntime(
   const builtinScan = await scanFileTarget({
     logger: params.logger,
     path: params.filePath,
-    suspiciousMessage: `Plugin file "{target}" has {count} suspicious code pattern(s). Run "openclaw security audit --deep" for details.`,
+    suspiciousMessage: `Plugin file "{target}" has {count} suspicious code pattern(s). Run "littlebaby security audit --deep" for details.`,
     targetName: params.pluginId,
     warningMessage: `WARNING: Plugin file "${params.pluginId}" contains dangerous code patterns`,
   });
@@ -867,7 +867,7 @@ export async function scanSkillInstallSourceRuntime(params: {
     logger: params.logger,
     path: params.sourceDir,
     suspiciousMessage:
-      'Skill "{target}" has {count} suspicious code pattern(s). Run "openclaw security audit --deep" for details.',
+      'Skill "{target}" has {count} suspicious code pattern(s). Run "littlebaby security audit --deep" for details.',
     targetName: params.skillName,
     warningMessage: `WARNING: Skill "${params.skillName}" contains dangerous code patterns`,
   });

@@ -14,7 +14,7 @@ Use these when a task is clearly tied to a script; otherwise prefer the CLI.
 ## Conventions
 
 - Scripts are **optional** unless referenced in docs or release checklists.
-- Prefer CLI surfaces when they exist (example: auth monitoring uses `openclaw models status --check`).
+- Prefer CLI surfaces when they exist (example: auth monitoring uses `littlebaby models status --check`).
 - Assume scripts are host‑specific; read them before running on a new machine.
 
 ## Auth monitoring scripts
@@ -44,8 +44,8 @@ Repo resolution order:
 Examples:
 
 - `scripts/gh-read pr view 123`
-- `scripts/gh-read run list -R openclaw/openclaw`
-- `scripts/gh-read api repos/openclaw/openclaw/pulls/123`
+- `scripts/gh-read run list -R littlebaby/littlebaby`
+- `scripts/gh-read api repos/littlebaby/littlebaby/pulls/123`
 
 ## When adding scripts
 

@@ -19,7 +19,7 @@ const memoryWikiCommandAliasRegistry: PluginManifestRegistry = {
       origin: "bundled",
       rootDir: "/tmp/memory-wiki",
       source: "bundled",
-      manifestPath: "/tmp/memory-wiki/openclaw.plugin.json",
+      manifestPath: "/tmp/memory-wiki/littlebaby.plugin.json",
       commandAliases: [{ name: "wiki" }],
     },
   ],
@@ -131,7 +131,7 @@ describe("resolveMissingPluginCommandMessage", () => {
     expect(message).toContain("runtime slash command");
     expect(message).toContain("/dreaming");
     expect(message).toContain("memory-core");
-    expect(message).toContain("openclaw memory");
+    expect(message).toContain("littlebaby memory");
   });
 
   it("returns the runtime command message even when plugins.allow is set", () => {

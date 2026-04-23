@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { describe, expect, it } from "vitest";
 import {
   collectDiscordNumericIdWarnings,
@@ -131,7 +131,7 @@ describe("discord doctor", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
 
     const hits = scanDiscordNumericIdEntries(cfg);
     expect(hits.map((hit) => hit.path)).toEqual([
@@ -154,9 +154,9 @@ describe("discord doctor", () => {
           guilds: { main: { users: [111], roles: [222] } },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
 
-    const result = maybeRepairDiscordNumericIds(cfg, "openclaw doctor --fix");
+    const result = maybeRepairDiscordNumericIds(cfg, "littlebaby doctor --fix");
     expect(result.config.channels?.discord?.allowFrom).toEqual(["123"]);
     expect(result.config.channels?.discord?.dm?.allowFrom).toEqual(["99"]);
     expect(result.config.channels?.discord?.guilds?.main?.users).toEqual(["111"]);
@@ -168,10 +168,10 @@ describe("discord doctor", () => {
   it("formats repair guidance for unsafe numeric ids", () => {
     const warnings = collectDiscordNumericIdWarnings({
       hits: [{ path: "channels.discord.allowFrom[0]", entry: 106232522769186816, safe: false }],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings[0]).toContain("cannot be auto-repaired");
-    expect(warnings[1]).toContain("openclaw doctor --fix");
+    expect(warnings[1]).toContain("littlebaby doctor --fix");
   });
 });

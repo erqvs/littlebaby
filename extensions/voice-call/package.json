@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/voice-call",
+  "name": "@littlebaby/voice-call",
   "version": "2026.4.20",
-  "description": "OpenClaw voice-call plugin",
+  "description": "LittleBaby voice-call plugin",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.49",
@@ -9,18 +9,18 @@
     "ws": "^8.20.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*",
+    "littlebaby": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.20"
+    "littlebaby": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],
@@ -31,7 +31,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

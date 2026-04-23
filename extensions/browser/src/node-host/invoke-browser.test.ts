@@ -26,11 +26,11 @@ const browserConfigMocks = vi.hoisted(() => ({
   })),
 }));
 
-vi.mock("openclaw/plugin-sdk/browser-config-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/browser-config-runtime", () => ({
   loadConfig: configMocks.loadConfig,
 }));
 
-vi.mock("openclaw/plugin-sdk/browser-node-runtime", () => ({
+vi.mock("littlebaby/plugin-sdk/browser-node-runtime", () => ({
   withTimeout: vi.fn(
     async (
       run: (signal: AbortSignal | undefined) => Promise<unknown>,
@@ -65,7 +65,7 @@ vi.mock("openclaw/plugin-sdk/browser-node-runtime", () => ({
   ),
 }));
 
-vi.mock("openclaw/plugin-sdk/browser-setup-tools", () => ({
+vi.mock("littlebaby/plugin-sdk/browser-setup-tools", () => ({
   detectMime: vi.fn(async () => "image/png"),
 }));
 
@@ -194,7 +194,7 @@ describe("runBrowserProxyCommand", () => {
         }),
       ),
     ).rejects.toThrow(
-      /browser proxy timed out for GET \/snapshot after 5ms; ws-backed browser action; profile=openclaw; status\(running=true, cdpHttp=true, cdpReady=false, cdpUrl=http:\/\/127\.0\.0\.1:18792\)/,
+      /browser proxy timed out for GET \/snapshot after 5ms; ws-backed browser action; profile=littlebaby; status\(running=true, cdpHttp=true, cdpReady=false, cdpUrl=http:\/\/127\.0\.0\.1:18792\)/,
     );
     await vi.advanceTimersByTimeAsync(10);
     await result;

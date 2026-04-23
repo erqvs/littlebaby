@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import { logVerbose } from "../globals.js";
 import type {
   PluginWebFetchProviderEntry,
@@ -17,14 +17,14 @@ import {
   resolveWebProviderDefinition,
 } from "../web/provider-runtime-shared.js";
 
-type WebFetchConfig = NonNullable<OpenClawConfig["tools"]>["web"] extends infer Web
+type WebFetchConfig = NonNullable<LittleBabyConfig["tools"]>["web"] extends infer Web
   ? Web extends { fetch?: infer Fetch }
     ? Fetch
     : undefined
   : undefined;
 
 export type ResolveWebFetchDefinitionParams = {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   sandboxed?: boolean;
   runtimeWebFetch?: RuntimeWebFetchMetadata;
   providerId?: string;
@@ -41,7 +41,7 @@ export function resolveWebFetchEnabled(params: {
   return true;
 }
 
-function resolveFetchConfig(config: OpenClawConfig | undefined): WebFetchConfig | undefined {
+function resolveFetchConfig(config: LittleBabyConfig | undefined): WebFetchConfig | undefined {
   return resolveWebProviderConfig(config, "fetch") as NonNullable<WebFetchConfig> | undefined;
 }
 
@@ -50,7 +50,7 @@ function hasEntryCredential(
     PluginWebFetchProviderEntry,
     "envVars" | "getConfiguredCredentialValue" | "getCredentialValue" | "requiresCredential"
   >,
-  config: OpenClawConfig | undefined,
+  config: LittleBabyConfig | undefined,
   fetch: WebFetchConfig | undefined,
 ): boolean {
   return hasWebProviderEntryCredential({
@@ -70,13 +70,13 @@ export function isWebFetchProviderConfigured(params: {
     PluginWebFetchProviderEntry,
     "envVars" | "getConfiguredCredentialValue" | "getCredentialValue" | "requiresCredential"
   >;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
 }): boolean {
   return hasEntryCredential(params.provider, params.config, resolveFetchConfig(params.config));
 }
 
 export function listWebFetchProviders(params?: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
 }): PluginWebFetchProviderEntry[] {
   return resolvePluginWebFetchProviders({
     config: params?.config,
@@ -86,7 +86,7 @@ export function listWebFetchProviders(params?: {
 }
 
 export function listConfiguredWebFetchProviders(params?: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
 }): PluginWebFetchProviderEntry[] {
   return resolvePluginWebFetchProviders({
     config: params?.config,
@@ -96,7 +96,7 @@ export function listConfiguredWebFetchProviders(params?: {
 
 export function resolveWebFetchProviderId(params: {
   fetch?: WebFetchConfig;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   providers?: PluginWebFetchProviderEntry[];
 }): string {
   const providers = sortWebFetchProvidersForAutoDetect(

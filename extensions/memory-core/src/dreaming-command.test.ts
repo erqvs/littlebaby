@@ -1,8 +1,8 @@
 import type {
-  OpenClawPluginCommandDefinition,
+  LittleBabyPluginCommandDefinition,
   PluginCommandContext,
-} from "openclaw/plugin-sdk/core";
-import type { OpenClawConfig, OpenClawPluginApi } from "openclaw/plugin-sdk/memory-core";
+} from "littlebaby/plugin-sdk/core";
+import type { LittleBabyConfig, LittleBabyPluginApi } from "littlebaby/plugin-sdk/memory-core";
 import { describe, expect, it, vi } from "vitest";
 import { registerDreamingCommand } from "./dreaming-command.js";
 
@@ -13,31 +13,31 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value as Record<string, unknown>;
 }
 
-function resolveStoredDreaming(config: OpenClawConfig): Record<string, unknown> {
+function resolveStoredDreaming(config: LittleBabyConfig): Record<string, unknown> {
   const entry = asRecord(config.plugins?.entries?.["memory-core"]);
   const pluginConfig = asRecord(entry?.config);
   return asRecord(pluginConfig?.dreaming) ?? {};
 }
 
-function createHarness(initialConfig: OpenClawConfig = {}) {
-  const registered: { command?: OpenClawPluginCommandDefinition } = {};
-  let runtimeConfig: OpenClawConfig = initialConfig;
+function createHarness(initialConfig: LittleBabyConfig = {}) {
+  const registered: { command?: LittleBabyPluginCommandDefinition } = {};
+  let runtimeConfig: LittleBabyConfig = initialConfig;
 
   const runtime = {
     config: {
       loadConfig: vi.fn(() => runtimeConfig),
-      writeConfigFile: vi.fn(async (nextConfig: OpenClawConfig) => {
+      writeConfigFile: vi.fn(async (nextConfig: LittleBabyConfig) => {
         runtimeConfig = nextConfig;
       }),
     },
-  } as unknown as OpenClawPluginApi["runtime"];
+  } as unknown as LittleBabyPluginApi["runtime"];
 
   const api = {
     runtime,
-    registerCommand: vi.fn((definition: OpenClawPluginCommandDefinition) => {
+    registerCommand: vi.fn((definition: LittleBabyPluginCommandDefinition) => {
       registered.command = definition;
     }),
-  } as unknown as OpenClawPluginApi;
+  } as unknown as LittleBabyPluginApi;
 
   registerDreamingCommand(api);
 

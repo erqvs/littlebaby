@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { type ClaimableDedupe, createClaimableDedupe } from "openclaw/plugin-sdk/persistent-dedupe";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { type ClaimableDedupe, createClaimableDedupe } from "littlebaby/plugin-sdk/persistent-dedupe";
+import { resolveStateDir } from "littlebaby/plugin-sdk/state-paths";
+import { resolvePreferredLittleBabyTmpDir } from "littlebaby/plugin-sdk/temp-path";
 import type { NormalizedWebhookMessage } from "./monitor-normalize.js";
 
 // BlueBubbles has no sequence/ack in its webhook protocol, and its
@@ -25,12 +25,12 @@ function resolveStateDirFromEnv(env: NodeJS.ProcessEnv = process.env): string {
   if (env.VITEST || env.NODE_ENV === "test") {
     // Isolate tests from real ~/.littlebaby state without sharing across tests.
     // Stable-per-pid so the scoped dedupe test can observe persistence.
-    const name = "openclaw-vitest-" + process.pid;
-    return path.join(resolvePreferredOpenClawTmpDir(), name);
+    const name = "littlebaby-vitest-" + process.pid;
+    return path.join(resolvePreferredLittleBabyTmpDir(), name);
   }
-  // Canonical OpenClaw state dir: honors LITTLEBABY_STATE_DIR (with `~` expansion
+  // Canonical LittleBaby state dir: honors LITTLEBABY_STATE_DIR (with `~` expansion
   // via resolveUserPath), plus legacy/new fallback. Using the shared helper
-  // keeps this plugin's persistence aligned with the rest of OpenClaw state.
+  // keeps this plugin's persistence aligned with the rest of LittleBaby state.
   return resolveStateDir(env);
 }
 

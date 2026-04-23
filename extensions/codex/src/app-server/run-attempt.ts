@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import {
   buildEmbeddedAttemptToolRunContext,
   clearActiveEmbeddedRun,
-  createOpenClawCodingTools,
+  createLittleBabyCodingTools,
   embeddedAgentLog,
   isSubagentSessionKey,
   normalizeProviderToolSchemas,
   resolveAttemptSpawnWorkspaceDir,
   resolveModelAuthMode,
-  resolveOpenClawAgentDir,
+  resolveLittleBabyAgentDir,
   resolveSandboxContext,
   resolveSessionAgentIds,
   resolveUserPath,
@@ -16,7 +16,7 @@ import {
   supportsModelTools,
   type EmbeddedRunAttemptParams,
   type EmbeddedRunAttemptResult,
-} from "openclaw/plugin-sdk/agent-harness";
+} from "littlebaby/plugin-sdk/agent-harness";
 import { handleCodexAppServerApprovalRequest } from "./approval-bridge.js";
 import { isCodexAppServerApprovalRequest, type CodexAppServerClient } from "./client.js";
 import { resolveCodexAppServerRuntimeOptions, type CodexAppServerStartOptions } from "./config.js";
@@ -298,8 +298,8 @@ async function buildDynamicTools(input: DynamicToolBuildParams) {
     return [];
   }
   const modelHasVision = params.model.input?.includes("image") ?? false;
-  const agentDir = params.agentDir ?? resolveOpenClawAgentDir();
-  const allTools = createOpenClawCodingTools({
+  const agentDir = params.agentDir ?? resolveLittleBabyAgentDir();
+  const allTools = createLittleBabyCodingTools({
     agentId: input.sessionAgentId,
     ...buildEmbeddedAttemptToolRunContext(params),
     exec: {

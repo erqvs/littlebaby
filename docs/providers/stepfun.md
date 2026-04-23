@@ -1,14 +1,14 @@
 ---
-summary: "Use StepFun models with OpenClaw"
+summary: "Use StepFun models with LittleBaby"
 read_when:
-  - You want StepFun models in OpenClaw
+  - You want StepFun models in LittleBaby
   - You need StepFun setup guidance
 title: "StepFun"
 ---
 
 # StepFun
 
-OpenClaw includes a bundled StepFun provider plugin with two provider ids:
+LittleBaby includes a bundled StepFun provider plugin with two provider ids:
 
 - `stepfun` for the standard endpoint
 - `stepfun-plan` for the Step Plan endpoint
@@ -58,24 +58,24 @@ Choose your provider surface and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice stepfun-standard-api-key-intl
+        littlebaby onboard --auth-choice stepfun-standard-api-key-intl
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice stepfun-standard-api-key-cn
+        littlebaby onboard --auth-choice stepfun-standard-api-key-cn
         ```
       </Step>
       <Step title="Non-interactive alternative">
         ```bash
-        openclaw onboard --auth-choice stepfun-standard-api-key-intl \
+        littlebaby onboard --auth-choice stepfun-standard-api-key-intl \
           --stepfun-api-key "$STEPFUN_API_KEY"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider stepfun
+        littlebaby models list --provider stepfun
         ```
       </Step>
     </Steps>
@@ -98,24 +98,24 @@ Choose your provider surface and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice stepfun-plan-api-key-intl
+        littlebaby onboard --auth-choice stepfun-plan-api-key-intl
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice stepfun-plan-api-key-cn
+        littlebaby onboard --auth-choice stepfun-plan-api-key-cn
         ```
       </Step>
       <Step title="Non-interactive alternative">
         ```bash
-        openclaw onboard --auth-choice stepfun-plan-api-key-intl \
+        littlebaby onboard --auth-choice stepfun-plan-api-key-intl \
           --stepfun-api-key "$STEPFUN_API_KEY"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider stepfun-plan
+        littlebaby models list --provider stepfun-plan
         ```
       </Step>
     </Steps>
@@ -201,10 +201,10 @@ Choose your provider surface and follow the setup steps.
   </Accordion>
 
   <Accordion title="Notes">
-    - The provider is bundled with OpenClaw, so there is no separate plugin install step.
+    - The provider is bundled with LittleBaby, so there is no separate plugin install step.
     - `step-3.5-flash-2603` is currently exposed only on `stepfun-plan`.
     - A single auth flow writes region-matched profiles for both `stepfun` and `stepfun-plan`, so both surfaces can be discovered together.
-    - Use `openclaw models list` and `openclaw models set <provider/model>` to inspect or switch models.
+    - Use `littlebaby models list` and `littlebaby models set <provider/model>` to inspect or switch models.
   </Accordion>
 </AccordionGroup>
 

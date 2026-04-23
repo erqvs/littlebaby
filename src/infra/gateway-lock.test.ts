@@ -20,7 +20,7 @@ function resolveTestLockDir() {
 
 async function makeEnv() {
   const dir = await fixtureRootTracker.make("case");
-  const configPath = path.join(dir, "openclaw.json");
+  const configPath = path.join(dir, "littlebaby.json");
   await fs.writeFile(configPath, "{}", "utf8");
   return {
     ...process.env,
@@ -276,7 +276,7 @@ describe("gateway lock", () => {
         staleMs: 10_000,
         platform: "darwin",
         port: 18789,
-        readProcessCmdline: () => ["/usr/local/bin/openclaw", "gateway", "run"],
+        readProcessCmdline: () => ["/usr/local/bin/littlebaby", "gateway", "run"],
       });
       await expect(pending).rejects.toBeInstanceOf(GatewayLockError);
     } finally {
@@ -349,7 +349,7 @@ describe("gateway lock", () => {
       platform: "win32",
       port: 18789,
       readProcessCmdline: () => [
-        "C:\\Users\\me\\AppData\\Roaming\\npm\\openclaw.cmd",
+        "C:\\Users\\me\\AppData\\Roaming\\npm\\littlebaby.cmd",
         "gateway",
         "run",
       ],
@@ -413,7 +413,7 @@ describe("gateway lock", () => {
       staleMs: 10_000,
       platform: "darwin",
       port: 18789,
-      readProcessCmdline: () => ["/usr/local/bin/openclaw", "gateway", "run", "--port", "18789"],
+      readProcessCmdline: () => ["/usr/local/bin/littlebaby", "gateway", "run", "--port", "18789"],
     });
     await expect(pending).rejects.toBeInstanceOf(GatewayLockError);
 

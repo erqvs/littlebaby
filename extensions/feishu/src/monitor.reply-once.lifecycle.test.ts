@@ -84,7 +84,7 @@ describe("Feishu reply-once lifecycle", () => {
     vi.clearAllMocks();
     _handlers = {};
     lastRuntime = null;
-    setFeishuLifecycleStateDir("openclaw-feishu-lifecycle");
+    setFeishuLifecycleStateDir("littlebaby-feishu-lifecycle");
 
     createFeishuReplyDispatcherMock.mockReturnValue(createFeishuLifecycleReplyDispatcher());
 

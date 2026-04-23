@@ -1,7 +1,7 @@
 ---
-summary: "Shared Docker VM runtime steps for long-lived OpenClaw Gateway hosts"
+summary: "Shared Docker VM runtime steps for long-lived LittleBaby Gateway hosts"
 read_when:
-  - You are deploying OpenClaw on a cloud VM with Docker
+  - You are deploying LittleBaby on a cloud VM with Docker
   - You need the shared binary bake, persistence, and update flow
 title: "Docker VM Runtime"
 ---
@@ -115,12 +115,12 @@ Expected output:
 
 ## What persists where
 
-OpenClaw runs in Docker, but Docker is not the source of truth.
+LittleBaby runs in Docker, but Docker is not the source of truth.
 All long-lived state must survive restarts, rebuilds, and reboots.
 
 | Component           | Location                          | Persistence mechanism  | Notes                                                         |
 | ------------------- | --------------------------------- | ---------------------- | ------------------------------------------------------------- |
-| Gateway config      | `/home/node/.littlebaby/`           | Host volume mount      | Includes `openclaw.json`, `.env`                              |
+| Gateway config      | `/home/node/.littlebaby/`           | Host volume mount      | Includes `littlebaby.json`, `.env`                              |
 | Model auth profiles | `/home/node/.littlebaby/agents/`    | Host volume mount      | `agents/<agentId>/agent/auth-profiles.json` (OAuth, API keys) |
 | Skill configs       | `/home/node/.littlebaby/skills/`    | Host volume mount      | Skill-level state                                             |
 | Agent workspace     | `/home/node/.littlebaby/workspace/` | Host volume mount      | Code and agent artifacts                                      |
@@ -133,7 +133,7 @@ All long-lived state must survive restarts, rebuilds, and reboots.
 
 ## Updates
 
-To update OpenClaw on the VM:
+To update LittleBaby on the VM:
 
 ```bash
 git pull

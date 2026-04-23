@@ -1,8 +1,8 @@
 import Foundation
 import Network
-import OpenClawKit
+import LittleBabyKit
 import Testing
-@testable import OpenClaw
+@testable import LittleBaby
 
 @Suite(.serialized) struct GatewayConnectionSecurityTests {
     @MainActor
@@ -17,7 +17,7 @@ import Testing
         gatewayPort: Int?,
         fingerprint: String?) -> GatewayDiscoveryModel.DiscoveredGateway
     {
-        let endpoint: NWEndpoint = .service(name: "Test", type: "_openclaw-gw._tcp", domain: "local.", interface: nil)
+        let endpoint: NWEndpoint = .service(name: "Test", type: "_littlebaby-gw._tcp", domain: "local.", interface: nil)
         return GatewayDiscoveryModel.DiscoveredGateway(
             name: "Test",
             endpoint: endpoint,
@@ -107,7 +107,7 @@ import Testing
         let controller = makeController()
 
         #expect(controller._test_resolveManualUseTLS(host: "gateway.example.com", useTLS: false) == true)
-        #expect(controller._test_resolveManualUseTLS(host: "openclaw.local", useTLS: false) == true)
+        #expect(controller._test_resolveManualUseTLS(host: "littlebaby.local", useTLS: false) == true)
         #expect(controller._test_resolveManualUseTLS(host: "127.attacker.example", useTLS: false) == true)
 
         #expect(controller._test_resolveManualUseTLS(host: "localhost", useTLS: false) == false)

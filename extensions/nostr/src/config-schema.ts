@@ -3,9 +3,9 @@ import {
   buildChannelConfigSchema,
   DmPolicySchema,
   MarkdownConfigSchema,
-} from "openclaw/plugin-sdk/channel-config-primitives";
-import { buildSecretInputSchema } from "openclaw/plugin-sdk/secret-input";
-import { z } from "openclaw/plugin-sdk/zod";
+} from "littlebaby/plugin-sdk/channel-config-primitives";
+import { buildSecretInputSchema } from "littlebaby/plugin-sdk/secret-input";
+import { z } from "littlebaby/plugin-sdk/zod";
 
 /**
  * Validates https:// URLs only (no javascript:, data:, file:, etc.)

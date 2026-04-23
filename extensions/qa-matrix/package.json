@@ -1,23 +1,23 @@
 {
-  "name": "@openclaw/qa-matrix",
+  "name": "@littlebaby/qa-matrix",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Matrix QA runner plugin",
+  "description": "LittleBaby Matrix QA runner plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/matrix": "workspace:*",
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@littlebaby/matrix": "workspace:*",
+    "@littlebaby/plugin-sdk": "workspace:*",
+    "littlebaby": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.20"
+    "littlebaby": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],

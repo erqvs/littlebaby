@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { loadPluginManifestRegistry } from "../plugins/manifest-registry.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
 import {
@@ -9,7 +9,7 @@ import type { PluginOrigin } from "../plugins/plugin-origin.types.js";
 import { normalizeProviderId } from "./provider-id.js";
 
 export type ProviderAuthAliasLookupParams = {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   includeUntrustedWorkspacePlugins?: boolean;
@@ -36,7 +36,7 @@ function resolveProviderAuthAliasOriginPriority(origin: PluginOrigin | undefined
 
 function isWorkspacePluginTrustedForAuthAliases(
   plugin: PluginManifestRecord,
-  config: OpenClawConfig | undefined,
+  config: LittleBabyConfig | undefined,
 ): boolean {
   return isWorkspacePluginAllowedByConfig({
     config,

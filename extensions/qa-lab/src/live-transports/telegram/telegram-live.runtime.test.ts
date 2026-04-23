@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   LIVE_TRANSPORT_BASELINE_STANDARD_SCENARIO_IDS,
@@ -16,9 +16,9 @@ const fetchWithSsrFGuardMock = vi.hoisted(() =>
   })),
 );
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/ssrf-runtime")>(
-    "openclaw/plugin-sdk/ssrf-runtime",
+vi.mock("littlebaby/plugin-sdk/ssrf-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/ssrf-runtime")>(
+    "littlebaby/plugin-sdk/ssrf-runtime",
   );
   return {
     ...actual,
@@ -91,7 +91,7 @@ describe("telegram live qa runtime", () => {
   });
 
   it("injects a temporary Telegram account into the QA gateway config", () => {
-    const baseCfg: OpenClawConfig = {
+    const baseCfg: LittleBabyConfig = {
       plugins: {
         allow: ["memory-core", "qa-channel"],
         entries: {
@@ -104,7 +104,7 @@ describe("telegram live qa runtime", () => {
           enabled: true,
           baseUrl: "http://127.0.0.1:43123",
           botUserId: "littlebaby",
-          botDisplayName: "OpenClaw QA",
+          botDisplayName: "LittleBaby QA",
           allowFrom: ["*"],
         },
       },

@@ -18,8 +18,8 @@ import {
   formatChromeCdpDiagnostic,
   isChromeCdpReady,
   isChromeReachable,
-  launchOpenClawChrome,
-  stopOpenClawChrome,
+  launchLittleBabyChrome,
+  stopLittleBabyChrome,
 } from "./chrome.js";
 import type { ResolvedBrowserProfile } from "./config.js";
 import { BrowserProfileUnavailableError } from "./errors.js";
@@ -134,7 +134,7 @@ export function createProfileAvailability({
 
     const previousProfile = reconcile.previousProfile;
     if (profileState.running) {
-      await stopOpenClawChrome(profileState.running).catch(() => {});
+      await stopLittleBabyChrome(profileState.running).catch(() => {});
       setProfileRunning(null);
     }
     if (getBrowserProfileCapabilities(previousProfile).usesChromeMcp) {
@@ -147,7 +147,7 @@ export function createProfileAvailability({
   };
 
   const waitForCdpReadyAfterLaunch = async (): Promise<void> => {
-    // launchOpenClawChrome() can return before Chrome is fully ready to serve /json/version + CDP WS.
+    // launchLittleBabyChrome() can return before Chrome is fully ready to serve /json/version + CDP WS.
     // If a follow-up call races ahead, we can hit PortInUseError trying to launch again on the same port.
     const deadlineMs = Date.now() + CDP_READY_AFTER_LAUNCH_WINDOW_MS;
     while (Date.now() < deadlineMs) {
@@ -213,7 +213,7 @@ export function createProfileAvailability({
           return;
         }
       }
-      // Browser control service can restart while a loopback OpenClaw browser is still
+      // Browser control service can restart while a loopback LittleBaby browser is still
       // alive. Give that pre-existing browser one longer probe window before falling
       // back to local executable resolution.
       if (!attachOnly && !remoteCdp && profile.cdpIsLoopback && !profileState.running) {
@@ -231,12 +231,12 @@ export function createProfileAvailability({
             : `Browser attachOnly is enabled and profile "${profile.name}" is not running.`,
         );
       }
-      const launched = await launchOpenClawChrome(current.resolved, profile);
+      const launched = await launchLittleBabyChrome(current.resolved, profile);
       attachRunning(launched);
       try {
         await waitForCdpReadyAfterLaunch();
       } catch (err) {
-        await stopOpenClawChrome(launched).catch(() => {});
+        await stopLittleBabyChrome(launched).catch(() => {});
         setProfileRunning(null);
         throw err;
       }
@@ -272,15 +272,15 @@ export function createProfileAvailability({
     if (!profileState.running) {
       const detail = await describeCdpFailure(PROFILE_ATTACH_RETRY_TIMEOUT_MS);
       throw new BrowserProfileUnavailableError(
-        `Port ${profile.cdpPort} is in use for profile "${profile.name}" but not by openclaw. ` +
+        `Port ${profile.cdpPort} is in use for profile "${profile.name}" but not by littlebaby. ` +
           `Run action=reset-profile profile=${profile.name} to kill the process. ${detail}`,
       );
     }
 
-    await stopOpenClawChrome(profileState.running);
+    await stopLittleBabyChrome(profileState.running);
     setProfileRunning(null);
 
-    const relaunched = await launchOpenClawChrome(current.resolved, profile);
+    const relaunched = await launchLittleBabyChrome(current.resolved, profile);
     attachRunning(relaunched);
 
     if (!(await isReachable(PROFILE_POST_RESTART_WS_TIMEOUT_MS))) {
@@ -308,7 +308,7 @@ export function createProfileAvailability({
       }
       return { stopped: idleStop.stopped };
     }
-    await stopOpenClawChrome(profileState.running);
+    await stopLittleBabyChrome(profileState.running);
     setProfileRunning(null);
     return { stopped: true };
   };

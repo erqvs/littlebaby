@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/tavily-plugin",
+  "name": "@littlebaby/tavily-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Tavily plugin",
+  "description": "LittleBaby Tavily plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

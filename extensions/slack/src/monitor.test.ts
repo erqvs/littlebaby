@@ -131,13 +131,13 @@ describe("buildSlackSlashCommandMatcher", () => {
     const matcher = buildSlackSlashCommandMatcher("littlebaby");
 
     expect(matcher.test("littlebaby")).toBe(true);
-    expect(matcher.test("/openclaw")).toBe(true);
+    expect(matcher.test("/littlebaby")).toBe(true);
   });
 
   it("does not match similar names", () => {
     const matcher = buildSlackSlashCommandMatcher("littlebaby");
 
-    expect(matcher.test("/openclaw-bot")).toBe(false);
-    expect(matcher.test("openclaw-bot")).toBe(false);
+    expect(matcher.test("/littlebaby-bot")).toBe(false);
+    expect(matcher.test("littlebaby-bot")).toBe(false);
   });
 });

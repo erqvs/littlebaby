@@ -1,9 +1,9 @@
-import { resolveApprovalOverGateway } from "openclaw/plugin-sdk/approval-gateway-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { ExecApprovalReplyDecision } from "openclaw/plugin-sdk/infra-runtime";
+import { resolveApprovalOverGateway } from "littlebaby/plugin-sdk/approval-gateway-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { ExecApprovalReplyDecision } from "littlebaby/plugin-sdk/infra-runtime";
 
 export type ResolveTelegramExecApprovalParams = {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   approvalId: string;
   decision: ExecApprovalReplyDecision;
   senderId?: string | null;

@@ -27,7 +27,7 @@ const LEGACY_STATE_DIRS: string[] = [];
 
 function resolveDefaultDbPath(): string {
   const home = homedir();
-  const preferred = join(home, ".openclaw", "memory", "lancedb");
+  const preferred = join(home, ".littlebaby", "memory", "lancedb");
   try {
     if (fs.existsSync(preferred)) {
       return preferred;

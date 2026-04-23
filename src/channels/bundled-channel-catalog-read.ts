@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveOpenClawPackageRootSync } from "../infra/openclaw-root.js";
+import { resolveLittleBabyPackageRootSync } from "../infra/littlebaby-root.js";
 import { resolveBundledPluginsDir } from "../plugins/bundled-dir.js";
 import type { PluginPackageChannel } from "../plugins/manifest.js";
 import { normalizeOptionalLowercaseString } from "../shared/string-coerce.js";
 
 type ChannelCatalogEntryLike = {
-  openclaw?: {
+  littlebaby?: {
     channel?: PluginPackageChannel;
   };
 };
@@ -22,8 +22,8 @@ const OFFICIAL_CHANNEL_CATALOG_RELATIVE_PATH = path.join("dist", "channel-catalo
 
 function listPackageRoots(): string[] {
   return [
-    resolveOpenClawPackageRootSync({ cwd: process.cwd() }),
-    resolveOpenClawPackageRootSync({ moduleUrl: import.meta.url }),
+    resolveLittleBabyPackageRootSync({ cwd: process.cwd() }),
+    resolveLittleBabyPackageRootSync({ moduleUrl: import.meta.url }),
   ].filter((entry, index, all): entry is string => Boolean(entry) && all.indexOf(entry) === index);
 }
 
@@ -85,7 +85,7 @@ function readOfficialCatalogFileSync(): ChannelCatalogEntryLike[] {
 }
 
 function toBundledChannelEntry(entry: ChannelCatalogEntryLike): BundledChannelCatalogEntry | null {
-  const channel = entry.openclaw?.channel;
+  const channel = entry.littlebaby?.channel;
   const id = normalizeOptionalLowercaseString(channel?.id);
   if (!id || !channel) {
     return null;

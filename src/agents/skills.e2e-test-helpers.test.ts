@@ -10,7 +10,7 @@ async function withTempSkillDir(
   name: string,
   run: (params: { root: string; skillDir: string }) => Promise<void>,
 ) {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-skill-helper-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-skill-helper-"));
   tempDirs.push(root);
   const skillDir = path.join(root, name);
   await run({ root, skillDir });

@@ -217,12 +217,12 @@ describe("browser server-context listKnownProfileNames", () => {
     const resolved = resolveBrowserConfig({
       defaultProfile: "littlebaby",
       profiles: {
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        littlebaby: { cdpPort: 18800, color: "#FF4500" },
       },
     });
-    const openclaw = resolveProfile(resolved, "littlebaby");
-    if (!openclaw) {
-      throw new Error("expected openclaw profile");
+    const littlebaby = resolveProfile(resolved, "littlebaby");
+    if (!littlebaby) {
+      throw new Error("expected littlebaby profile");
     }
 
     const state: BrowserServerState = {
@@ -233,7 +233,7 @@ describe("browser server-context listKnownProfileNames", () => {
         [
           "stale-removed",
           {
-            profile: { ...openclaw, name: "stale-removed" },
+            profile: { ...littlebaby, name: "stale-removed" },
             running: null,
           },
         ],

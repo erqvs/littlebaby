@@ -39,7 +39,7 @@ import {
   type SessionStoreTarget,
   type SessionScope,
 } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { openBoundaryFileSync } from "../infra/boundary-file-read.js";
 import {
   DEFAULT_AGENT_ID,
@@ -83,7 +83,7 @@ import type {
 export {
   archiveFileOnDisk,
   archiveSessionTranscripts,
-  attachOpenClawTranscriptMeta,
+  attachLittleBabyTranscriptMeta,
   capArrayByJsonBytes,
   readFirstUserMessageFromTranscript,
   readLastMessagePreviewFromTranscript,
@@ -115,7 +115,7 @@ function tryResolveExistingPath(value: string): string | null {
 }
 
 function resolveIdentityAvatarUrl(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   agentId: string,
   avatar: string | undefined,
 ): string | undefined {
@@ -240,7 +240,7 @@ function resolveLatestCompactionCheckpoint(
 }
 
 function resolveEstimatedSessionCostUsd(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   provider?: string;
   model?: string;
   entry?: Pick<
@@ -331,7 +331,7 @@ function resolveChildSessionKeys(
 }
 
 function resolveTranscriptUsageFallback(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   key: string;
   entry?: SessionEntry;
   storePath: string;
@@ -399,7 +399,7 @@ function resolveTranscriptUsageFallback(params: {
  * keys, or when the owning agent still exists (#65524).
  */
 export function resolveDeletedAgentIdFromSessionKey(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   sessionKey: string,
 ): string | null {
   const parsed = parseAgentSessionKey(sessionKey);
@@ -537,7 +537,7 @@ export function pruneLegacyStoreKeys(params: {
 }
 
 export function migrateAndPruneGatewaySessionStoreKey(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   key: string;
   store: Record<string, SessionEntry>;
 }) {
@@ -615,7 +615,7 @@ function listExistingAgentIdsFromDisk(): string[] {
   }
 }
 
-function listConfiguredAgentIds(cfg: OpenClawConfig): string[] {
+function listConfiguredAgentIds(cfg: LittleBabyConfig): string[] {
   const ids = new Set<string>();
   const defaultId = normalizeAgentId(resolveDefaultAgentId(cfg));
   ids.add(defaultId);
@@ -656,7 +656,7 @@ function normalizeFallbackList(values: readonly string[]): string[] {
 }
 
 function resolveGatewayAgentModel(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   agentId: string,
 ): GatewayAgentRow["model"] | undefined {
   const primary = resolveAgentEffectiveModelPrimary(cfg, agentId)?.trim();
@@ -672,7 +672,7 @@ function resolveGatewayAgentModel(
   };
 }
 
-export function listAgentsForGateway(cfg: OpenClawConfig): {
+export function listAgentsForGateway(cfg: LittleBabyConfig): {
   defaultId: string;
   mainKey: string;
   scope: SessionScope;
@@ -736,7 +736,7 @@ export function listAgentsForGateway(cfg: OpenClawConfig): {
 }
 
 function buildGatewaySessionStoreScanTargets(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   key: string;
   canonicalKey: string;
   agentId: string;
@@ -759,7 +759,7 @@ function buildGatewaySessionStoreScanTargets(params: {
 }
 
 function resolveGatewaySessionStoreCandidates(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   agentId: string,
 ): SessionStoreTarget[] {
   const storeConfig = cfg.session?.store;
@@ -781,7 +781,7 @@ function resolveGatewaySessionStoreCandidates(
 }
 
 function resolveGatewaySessionStoreLookup(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   key: string;
   canonicalKey: string;
   agentId: string;
@@ -831,7 +831,7 @@ function resolveGatewaySessionStoreLookup(params: {
 }
 
 function resolveExplicitDeletedLegacyMainStoreTarget(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   key: string;
   scanLegacyKeys?: boolean;
 }): {
@@ -908,7 +908,7 @@ function resolveExplicitDeletedLegacyMainStoreTarget(params: {
 }
 
 export function resolveGatewaySessionStoreTarget(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   key: string;
   scanLegacyKeys?: boolean;
   store?: Record<string, SessionEntry>;
@@ -976,7 +976,7 @@ export function resolveGatewaySessionStoreTarget(params: {
 
 // Merge with existing entry based on latest timestamp to ensure data consistency and avoid overwriting with less complete data.
 function mergeSessionEntryIntoCombined(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   combined: Record<string, SessionEntry>;
   entry: SessionEntry;
   agentId: string;
@@ -1004,7 +1004,7 @@ function mergeSessionEntryIntoCombined(params: {
   }
 }
 
-export function loadCombinedSessionStoreForGateway(cfg: OpenClawConfig): {
+export function loadCombinedSessionStoreForGateway(cfg: LittleBabyConfig): {
   storePath: string;
   store: Record<string, SessionEntry>;
 } {
@@ -1058,7 +1058,7 @@ export function loadCombinedSessionStoreForGateway(cfg: OpenClawConfig): {
   return { storePath, store: combined };
 }
 
-export function getSessionDefaults(cfg: OpenClawConfig): GatewaySessionsDefaults {
+export function getSessionDefaults(cfg: LittleBabyConfig): GatewaySessionsDefaults {
   const resolved = resolveConfiguredModelRef({
     cfg,
     defaultProvider: DEFAULT_PROVIDER,
@@ -1076,7 +1076,7 @@ export function getSessionDefaults(cfg: OpenClawConfig): GatewaySessionsDefaults
 }
 
 export function resolveSessionModelRef(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   entry?:
     | SessionEntry
     | Pick<SessionEntry, "model" | "modelProvider" | "modelOverride" | "providerOverride">,
@@ -1180,7 +1180,7 @@ export async function resolveGatewayModelSupportsImages(params: {
 }
 
 export function resolveSessionModelIdentityRef(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   entry?:
     | SessionEntry
     | Pick<SessionEntry, "model" | "modelProvider" | "modelOverride" | "providerOverride">,
@@ -1229,7 +1229,7 @@ export function resolveSessionModelIdentityRef(
 }
 
 export function buildGatewaySessionRow(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   storePath: string;
   store: Record<string, SessionEntry>;
   key: string;
@@ -1445,7 +1445,7 @@ export function loadGatewaySessionRow(
 }
 
 export function listSessionsFromStore(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   storePath: string;
   store: Record<string, SessionEntry>;
   opts: import("./protocol/index.js").SessionsListParams;

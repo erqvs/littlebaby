@@ -1,7 +1,7 @@
 import {
   createDefaultModelPresetAppliers,
-  type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+  type LittleBabyConfig,
+} from "littlebaby/plugin-sdk/provider-onboard";
 import {
   buildMistralModelDefinition,
   MISTRAL_BASE_URL,
@@ -12,7 +12,7 @@ export const MISTRAL_DEFAULT_MODEL_REF = `mistral/${MISTRAL_DEFAULT_MODEL_ID}`;
 
 const mistralPresetAppliers = createDefaultModelPresetAppliers({
   primaryModelRef: MISTRAL_DEFAULT_MODEL_REF,
-  resolveParams: (_cfg: OpenClawConfig) => ({
+  resolveParams: (_cfg: LittleBabyConfig) => ({
     providerId: "mistral",
     api: "openai-completions",
     baseUrl: MISTRAL_BASE_URL,
@@ -22,10 +22,10 @@ const mistralPresetAppliers = createDefaultModelPresetAppliers({
   }),
 });
 
-export function applyMistralProviderConfig(cfg: OpenClawConfig): OpenClawConfig {
+export function applyMistralProviderConfig(cfg: LittleBabyConfig): LittleBabyConfig {
   return mistralPresetAppliers.applyProviderConfig(cfg);
 }
 
-export function applyMistralConfig(cfg: OpenClawConfig): OpenClawConfig {
+export function applyMistralConfig(cfg: LittleBabyConfig): LittleBabyConfig {
   return mistralPresetAppliers.applyConfig(cfg);
 }

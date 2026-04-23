@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 
 const listPotentialConfiguredChannelIds = vi.hoisted(() => vi.fn());
 const hasPotentialConfiguredChannels = vi.hoisted(() => vi.fn());
@@ -142,8 +142,8 @@ function createManifestRegistryFixture() {
 }
 
 function expectStartupPluginIds(params: {
-  config: OpenClawConfig;
-  activationSourceConfig?: OpenClawConfig;
+  config: LittleBabyConfig;
+  activationSourceConfig?: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   expected: readonly string[];
 }) {
@@ -161,8 +161,8 @@ function expectStartupPluginIds(params: {
 }
 
 function expectStartupPluginIdsCase(params: {
-  config: OpenClawConfig;
-  activationSourceConfig?: OpenClawConfig;
+  config: LittleBabyConfig;
+  activationSourceConfig?: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   expected: readonly string[];
 }) {
@@ -281,18 +281,18 @@ function createStartupConfig(params: {
             },
           }
         : {}),
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 describe("resolveGatewayStartupPluginIds", () => {
   beforeEach(() => {
-    listPotentialConfiguredChannelIds.mockReset().mockImplementation((config: OpenClawConfig) => {
+    listPotentialConfiguredChannelIds.mockReset().mockImplementation((config: LittleBabyConfig) => {
       if (Object.prototype.hasOwnProperty.call(config, "channels")) {
         return Object.keys(config.channels ?? {});
       }
       return ["demo-channel"];
     });
-    hasPotentialConfiguredChannels.mockReset().mockImplementation((config: OpenClawConfig) => {
+    hasPotentialConfiguredChannels.mockReset().mockImplementation((config: LittleBabyConfig) => {
       if (Object.prototype.hasOwnProperty.call(config, "channels")) {
         return Object.keys(config.channels ?? {}).length > 0;
       }
@@ -312,7 +312,7 @@ describe("resolveGatewayStartupPluginIds", () => {
     ],
     [
       "keeps bundled startup sidecars with enabledByDefault at idle startup",
-      {} as OpenClawConfig,
+      {} as LittleBabyConfig,
       ["demo-channel", "browser"],
     ],
     [
@@ -365,7 +365,7 @@ describe("resolveGatewayStartupPluginIds", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     expectStartupPluginIdsCase({
       config: effectiveConfig,
@@ -451,7 +451,7 @@ describe("resolveGatewayStartupPluginIds", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       expected: ["demo-channel", "browser"],
     });
   });
@@ -459,13 +459,13 @@ describe("resolveGatewayStartupPluginIds", () => {
 
 describe("resolveConfiguredChannelPluginIds", () => {
   beforeEach(() => {
-    listPotentialConfiguredChannelIds.mockReset().mockImplementation((config: OpenClawConfig) => {
+    listPotentialConfiguredChannelIds.mockReset().mockImplementation((config: LittleBabyConfig) => {
       if (Object.prototype.hasOwnProperty.call(config, "channels")) {
         return Object.keys(config.channels ?? {});
       }
       return [];
     });
-    hasPotentialConfiguredChannels.mockReset().mockImplementation((config: OpenClawConfig) => {
+    hasPotentialConfiguredChannels.mockReset().mockImplementation((config: LittleBabyConfig) => {
       if (Object.prototype.hasOwnProperty.call(config, "channels")) {
         return Object.keys(config.channels ?? {}).length > 0;
       }
@@ -509,7 +509,7 @@ describe("resolveConfiguredChannelPluginIds", () => {
           plugins: {
             deny: ["activation-only-channel-plugin"],
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
         workspaceDir: "/tmp",
         env: process.env,
       }),
@@ -526,7 +526,7 @@ describe("resolveConfiguredChannelPluginIds", () => {
           plugins: {
             enabled: false,
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
         workspaceDir: "/tmp",
         env: process.env,
       }),
@@ -600,7 +600,7 @@ describe("resolveConfiguredChannelPluginIds", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as LittleBabyConfig,
         workspaceDir: "/tmp",
         env: process.env,
       }),

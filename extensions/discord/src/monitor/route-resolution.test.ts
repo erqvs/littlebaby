@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { ResolvedAgentRoute } from "littlebaby/plugin-sdk/routing";
 import { describe, expect, it } from "vitest";
 import {
   buildDiscordRoutePeer,
@@ -11,7 +11,7 @@ import {
 function buildWorkerBindingConfig(peer: {
   kind: "channel" | "direct";
   id: string;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   return {
     agents: {
       list: [{ id: "worker" }],

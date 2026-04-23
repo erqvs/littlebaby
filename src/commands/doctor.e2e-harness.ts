@@ -52,7 +52,7 @@ function createCommandWithTimeoutResult() {
 
 function createLegacyConfigSnapshot() {
   return {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/littlebaby.json",
     exists: false,
     raw: null,
     parsed: {},
@@ -68,7 +68,7 @@ export const confirm = vi.fn().mockResolvedValue(true) as unknown as MockFn;
 export const select = vi.fn().mockResolvedValue("node") as unknown as MockFn;
 export const note = vi.fn() as unknown as MockFn;
 export const writeConfigFile = vi.fn().mockResolvedValue(undefined) as unknown as MockFn;
-export const resolveOpenClawPackageRoot = vi.fn().mockResolvedValue(null) as unknown as MockFn;
+export const resolveLittleBabyPackageRoot = vi.fn().mockResolvedValue(null) as unknown as MockFn;
 export const runGatewayUpdate = vi
   .fn()
   .mockResolvedValue(createGatewayUpdateResult()) as unknown as MockFn;
@@ -227,7 +227,7 @@ export const runLegacyStateMigrations = vi.fn().mockResolvedValue({
 }) as unknown as MockFn;
 
 const DEFAULT_CONFIG_SNAPSHOT = {
-  path: "/tmp/openclaw.json",
+  path: "/tmp/littlebaby.json",
   exists: true,
   raw: "{}",
   parsed: {},
@@ -251,7 +251,7 @@ vi.mock("../agents/skills-status.js", () => ({
 
 vi.mock("../plugins/loader.js", () => ({
   isPluginRegistryLoadInFlight: () => false,
-  loadOpenClawPlugins: () => createEmptyPluginRegistry(),
+  loadLittleBabyPlugins: () => createEmptyPluginRegistry(),
   resolveRuntimePluginRegistry: () => null,
 }));
 
@@ -259,7 +259,7 @@ vi.mock("../config/config.js", async () => {
   const actual = await vi.importActual<typeof import("../config/config.js")>("../config/config.js");
   return {
     ...actual,
-    CONFIG_PATH: "/tmp/openclaw.json",
+    CONFIG_PATH: "/tmp/littlebaby.json",
     createConfigIO,
     readConfigFileSnapshot,
     writeConfigFile,
@@ -320,22 +320,22 @@ vi.mock("../process/exec.js", () => ({
   runCommandWithTimeout,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth", () => ({
+vi.mock("littlebaby/plugin-sdk/provider-auth", () => ({
   isNonSecretApiKeyMarker: () => false,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-model-shared", () => ({
+vi.mock("littlebaby/plugin-sdk/provider-model-shared", () => ({
   DEFAULT_CONTEXT_TOKENS: 32768,
   normalizeProviderId: (value: string) => normalizeLowercaseStringOrEmpty(value),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-stream-shared", () => ({
+vi.mock("littlebaby/plugin-sdk/provider-stream-shared", () => ({
   createMoonshotThinkingWrapper: () => undefined,
   resolveMoonshotThinkingType: () => undefined,
   streamWithPayloadPatch: () => undefined,
 }));
 
-vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
+vi.mock("littlebaby/plugin-sdk/runtime-env", () => ({
   createSubsystemLogger: () => ({
     debug: () => {},
     info: () => {},
@@ -344,9 +344,9 @@ vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
   }),
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
-  resolveOpenClawPackageRoot,
-  resolveOpenClawPackageRootSync: vi.fn(() => "/tmp/openclaw"),
+vi.mock("../infra/littlebaby-root.js", () => ({
+  resolveLittleBabyPackageRoot,
+  resolveLittleBabyPackageRootSync: vi.fn(() => "/tmp/littlebaby"),
 }));
 
 vi.mock("../infra/update-runner.js", () => ({
@@ -527,7 +527,7 @@ beforeEach(() => {
 
   readConfigFileSnapshot.mockReset();
   writeConfigFile.mockReset().mockResolvedValue(undefined);
-  resolveOpenClawPackageRoot.mockReset().mockResolvedValue(null);
+  resolveLittleBabyPackageRoot.mockReset().mockResolvedValue(null);
   runGatewayUpdate.mockReset().mockResolvedValue(createGatewayUpdateResult());
   listPluginDoctorLegacyConfigRules.mockReset().mockReturnValue([]);
   runDoctorHealthContributions.mockReset().mockImplementation(defaultRunDoctorHealthContributions);
@@ -573,7 +573,7 @@ beforeEach(() => {
   originalStateDir = process.env.LITTLEBABY_STATE_DIR;
   originalUpdateInProgress = process.env.LITTLEBABY_UPDATE_IN_PROGRESS;
   process.env.LITTLEBABY_UPDATE_IN_PROGRESS = "1";
-  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-state-"));
+  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-doctor-state-"));
   process.env.LITTLEBABY_STATE_DIR = tempStateDir;
   fs.mkdirSync(path.join(tempStateDir, "agents", "main", "sessions"), {
     recursive: true,

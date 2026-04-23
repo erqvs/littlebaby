@@ -78,7 +78,7 @@ type DotEnvFixture = {
 };
 
 async function withDotEnvFixture(run: (fixture: DotEnvFixture) => Promise<void>) {
-  const base = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dotenv-test-"));
+  const base = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-dotenv-test-"));
   const cwdDir = path.join(base, "cwd");
   const stateDir = path.join(base, "state");
   process.env.LITTLEBABY_STATE_DIR = stateDir;
@@ -141,7 +141,7 @@ describe("loadDotEnv", () => {
     await withIsolatedEnvAndCwd(async () => {
       await withDotEnvFixture(async ({ base, cwdDir }) => {
         process.env.HOME = base;
-        const defaultStateDir = path.join(base, ".openclaw");
+        const defaultStateDir = path.join(base, ".littlebaby");
         process.env.LITTLEBABY_STATE_DIR = defaultStateDir;
         await writeEnvFile(path.join(defaultStateDir, ".env"), "FOO=from-global\n");
         await writeEnvFile(
@@ -473,7 +473,7 @@ describe("loadCliDotEnv", () => {
     await withIsolatedEnvAndCwd(async () => {
       await withDotEnvFixture(async ({ base, cwdDir }) => {
         process.env.HOME = base;
-        const defaultStateDir = path.join(base, ".openclaw");
+        const defaultStateDir = path.join(base, ".littlebaby");
         process.env.LITTLEBABY_STATE_DIR = defaultStateDir;
         await writeEnvFile(path.join(defaultStateDir, ".env"), "FOO=from-global\n");
         await writeEnvFile(
@@ -518,7 +518,7 @@ describe("loadCliDotEnv", () => {
 
   it("keeps the legacy state-dir fallback for CLI dotenv loading", async () => {
     await withIsolatedEnvAndCwd(async () => {
-      const base = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dotenv-legacy-"));
+      const base = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-dotenv-legacy-"));
       const cwdDir = path.join(base, "cwd");
       const legacyStateDir = path.join(base, ".clawdbot");
       process.env.HOME = base;
@@ -656,7 +656,7 @@ describe("workspace .env blocklist completeness", () => {
       await withDotEnvFixture(async ({ cwdDir }) => {
         await writeEnvFile(
           path.join(cwdDir, ".env"),
-          "MY_APP_KEY=user-value\nAPP_GITHUB_REPO=openclaw/openclaw\nDATABASE_URL_CUSTOM=pg://localhost\n",
+          "MY_APP_KEY=user-value\nAPP_GITHUB_REPO=littlebaby/littlebaby\nDATABASE_URL_CUSTOM=pg://localhost\n",
         );
 
         delete process.env.MY_APP_KEY;
@@ -666,7 +666,7 @@ describe("workspace .env blocklist completeness", () => {
         loadWorkspaceDotEnvFile(path.join(cwdDir, ".env"), { quiet: true });
 
         expect(process.env.MY_APP_KEY).toBe("user-value");
-        expect(process.env.APP_GITHUB_REPO).toBe("openclaw/openclaw");
+        expect(process.env.APP_GITHUB_REPO).toBe("littlebaby/littlebaby");
         expect(process.env.DATABASE_URL_CUSTOM).toBe("pg://localhost");
       });
     });

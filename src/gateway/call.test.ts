@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import type { DeviceIdentity } from "../infra/device-identity.js";
 import { captureEnv } from "../test-utils/env.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
@@ -137,9 +137,9 @@ function resetGatewayCallMocks() {
   closeCode = 1006;
   closeReason = "";
   helloMethods = ["health", "secrets.resolve"];
-  const loadConfigForTests = loadConfig as unknown as () => OpenClawConfig;
+  const loadConfigForTests = loadConfig as unknown as () => LittleBabyConfig;
   const resolveGatewayPortForTests = resolveGatewayPort as unknown as (
-    cfg?: OpenClawConfig,
+    cfg?: LittleBabyConfig,
     env?: NodeJS.ProcessEnv,
   ) => number;
   __testing.setDepsForTests({
@@ -376,7 +376,7 @@ describe("callGateway url resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
     resolveGatewayPort.mockReturnValue(18789);
     pickPrimaryTailnetIPv4.mockReturnValue(undefined);
     process.env.LITTLEBABY_GATEWAY_URL = "wss://gateway-in-container.internal:9443/ws";
@@ -516,10 +516,10 @@ describe("callGateway url resolution", () => {
           },
           stop() {},
         }) as never,
-      loadConfig: loadConfig as unknown as () => OpenClawConfig,
+      loadConfig: loadConfig as unknown as () => LittleBabyConfig,
       loadOrCreateDeviceIdentity: () => deviceIdentityState.value,
       resolveGatewayPort: resolveGatewayPort as unknown as (
-        cfg?: OpenClawConfig,
+        cfg?: LittleBabyConfig,
         env?: NodeJS.ProcessEnv,
       ) => number,
     });
@@ -681,7 +681,7 @@ describe("buildGatewayConnectionDetails", () => {
     expect((thrown as Error).message).toContain("plaintext ws://");
     expect((thrown as Error).message).toContain("wss://");
     expect((thrown as Error).message).toContain("Tailscale Serve/Funnel");
-    expect((thrown as Error).message).toContain("openclaw doctor --fix");
+    expect((thrown as Error).message).toContain("littlebaby doctor --fix");
   });
 
   it("allows ws:// private remote URLs only when LITTLEBABY_ALLOW_INSECURE_PRIVATE_WS=1", () => {
@@ -992,7 +992,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1015,7 +1015,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1038,7 +1038,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1061,7 +1061,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1088,7 +1088,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await expect(callGateway({ method: "health" })).rejects.toThrow("gateway.auth.token");
   });
@@ -1110,7 +1110,7 @@ describe("callGateway password resolution", () => {
             default: { source: "env" },
           },
         },
-      } as unknown as OpenClawConfig);
+      } as unknown as LittleBabyConfig);
 
       await callGateway({ method: "health" });
 
@@ -1138,7 +1138,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1162,7 +1162,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1186,7 +1186,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1210,7 +1210,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1236,7 +1236,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1261,7 +1261,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1286,7 +1286,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as LittleBabyConfig);
 
     await callGateway({ method: "health" });
 
@@ -1313,7 +1313,7 @@ describe("callGateway password resolution", () => {
             default: { source: "env" },
           },
         },
-      } as unknown as OpenClawConfig);
+      } as unknown as LittleBabyConfig);
 
       await callGateway({ method: "health" });
 

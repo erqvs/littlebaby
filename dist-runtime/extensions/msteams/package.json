@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/msteams",
+  "name": "@littlebaby/msteams",
   "version": "2026.4.20",
-  "description": "OpenClaw Microsoft Teams channel plugin",
+  "description": "LittleBaby Microsoft Teams channel plugin",
   "type": "module",
   "dependencies": {
     "@azure/identity": "^4.13.1",
@@ -12,7 +12,7 @@
     "jsonwebtoken": "^9.0.3",
     "jwks-rsa": "^4.0.1"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -30,7 +30,7 @@
       "order": 60
     },
     "install": {
-      "npmSpec": "@openclaw/msteams",
+      "npmSpec": "@littlebaby/msteams",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -38,7 +38,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

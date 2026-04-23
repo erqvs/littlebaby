@@ -1,14 +1,14 @@
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../../config/types.littlebaby.js";
 
 export type DoctorConfigMutationState = {
-  cfg: OpenClawConfig;
-  candidate: OpenClawConfig;
+  cfg: LittleBabyConfig;
+  candidate: LittleBabyConfig;
   pendingChanges: boolean;
   fixHints: string[];
 };
 
 export type DoctorConfigMutationResult = {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   changes: string[];
 };
 

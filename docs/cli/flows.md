@@ -1,18 +1,18 @@
 ---
-summary: "Redirect: flow commands live under `openclaw tasks flow`"
+summary: "Redirect: flow commands live under `littlebaby tasks flow`"
 read_when:
-  - You encounter openclaw flows in older docs or release notes
+  - You encounter littlebaby flows in older docs or release notes
 title: "flows (redirect)"
 ---
 
-# `openclaw tasks flow`
+# `littlebaby tasks flow`
 
-Flow commands are subcommands of `openclaw tasks`, not a standalone `flows` command.
+Flow commands are subcommands of `littlebaby tasks`, not a standalone `flows` command.
 
 ```bash
-openclaw tasks flow list [--json]
-openclaw tasks flow show <lookup>
-openclaw tasks flow cancel <lookup>
+littlebaby tasks flow list [--json]
+littlebaby tasks flow show <lookup>
+littlebaby tasks flow cancel <lookup>
 ```
 
 For full documentation see [Task Flow](/automation/taskflow) and the [tasks CLI reference](/cli/index#tasks).

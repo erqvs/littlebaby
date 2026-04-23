@@ -23,7 +23,7 @@ function createRuntime(): RuntimeEnv {
 }
 
 async function withTaskCommandStateDir(run: () => Promise<void>): Promise<void> {
-  await withTempDir({ prefix: "openclaw-tasks-command-" }, async (root) => {
+  await withTempDir({ prefix: "littlebaby-tasks-command-" }, async (root) => {
     process.env.LITTLEBABY_STATE_DIR = root;
     resetTaskRegistryDeliveryRuntimeForTests();
     resetTaskRegistryForTests({ persist: false });

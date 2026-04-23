@@ -6,7 +6,7 @@ import {
   clearPluginManifestRegistryCache,
   loadPluginManifestRegistry,
 } from "./manifest-registry.js";
-import type { OpenClawPackageManifest } from "./manifest.js";
+import type { LittleBabyPackageManifest } from "./manifest.js";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
 vi.unmock("../version.js");
@@ -26,11 +26,11 @@ function mkdirSafe(dir: string) {
 }
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-manifest-registry", tempDirs);
+  return makeTrackedTempDir("littlebaby-manifest-registry", tempDirs);
 }
 
 function writeManifest(dir: string, manifest: Record<string, unknown>) {
-  fs.writeFileSync(path.join(dir, "openclaw.plugin.json"), JSON.stringify(manifest), "utf-8");
+  fs.writeFileSync(path.join(dir, "littlebaby.plugin.json"), JSON.stringify(manifest), "utf-8");
 }
 
 function writeTextFile(rootDir: string, relativePath: string, value: string) {
@@ -63,7 +63,7 @@ function createPluginCandidate(params: {
   origin: "bundled" | "global" | "workspace" | "config";
   format?: "littlebaby" | "bundle";
   bundleFormat?: "codex" | "claude" | "cursor";
-  packageManifest?: OpenClawPackageManifest;
+  packageManifest?: LittleBabyPackageManifest;
   packageDir?: string;
   bundledManifest?: PluginCandidate["bundledManifest"];
   bundledManifestPath?: string;
@@ -127,8 +127,8 @@ function prepareLinkedManifestFixture(params: { id: string; mode: "symlink" | "h
 } {
   const rootDir = makeTempDir();
   const outsideDir = makeTempDir();
-  const outsideManifest = path.join(outsideDir, "openclaw.plugin.json");
-  const linkedManifest = path.join(rootDir, "openclaw.plugin.json");
+  const outsideManifest = path.join(outsideDir, "littlebaby.plugin.json");
+  const linkedManifest = path.join(rootDir, "littlebaby.plugin.json");
   fs.writeFileSync(path.join(rootDir, "index.ts"), "export default function () {}", "utf-8");
   fs.writeFileSync(
     outsideManifest,
@@ -184,7 +184,7 @@ function loadRegistryForMinHostVersionCase(params: {
         origin: "global",
         packageManifest: {
           install: {
-            npmSpec: "@openclaw/synology-chat",
+            npmSpec: "@littlebaby/synology-chat",
             minHostVersion: params.minHostVersion,
           },
         },
@@ -605,7 +605,7 @@ describe("loadPluginManifestRegistry", () => {
         idHint: "telegram",
         rootDir: dir,
         origin: "bundled",
-        bundledManifestPath: path.join(dir, "openclaw.plugin.json"),
+        bundledManifestPath: path.join(dir, "littlebaby.plugin.json"),
         bundledManifest: {
           id: "telegram",
           configSchema: { type: "object" },
@@ -732,13 +732,13 @@ describe("loadPluginManifestRegistry", () => {
       name: "skips plugins whose minHostVersion is newer than the current host",
       minHostVersion: ">=2026.3.22",
       env: { LITTLEBABY_VERSION: "2026.3.21" } as NodeJS.ProcessEnv,
-      expectedMessage: "plugin requires OpenClaw >=2026.3.22, but this host is 2026.3.21",
+      expectedMessage: "plugin requires LittleBaby >=2026.3.22, but this host is 2026.3.21",
       expectWarn: false,
     },
     {
       name: "rejects invalid minHostVersion metadata",
       minHostVersion: "2026.3.22",
-      expectedMessage: "plugin manifest invalid | openclaw.install.minHostVersion must use",
+      expectedMessage: "plugin manifest invalid | littlebaby.install.minHostVersion must use",
       expectWarn: false,
     },
     {
@@ -1138,7 +1138,7 @@ describe("loadPluginManifestRegistry", () => {
         origin: "global",
         packageManifest: {
           install: {
-            npmSpec: "@openclaw/synology-chat",
+            npmSpec: "@littlebaby/synology-chat",
             minHostVersion: ">=2026.3.22",
           },
         },

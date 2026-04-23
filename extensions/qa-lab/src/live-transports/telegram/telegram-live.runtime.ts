@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { fetchWithSsrFGuard } from "littlebaby/plugin-sdk/ssrf-runtime";
 import { z } from "zod";
 import { startQaGatewayChild } from "../../gateway-child.js";
 import { DEFAULT_QA_LIVE_PROVIDER_MODE } from "../../providers/index.js";
@@ -374,14 +374,14 @@ export function normalizeTelegramObservedMessage(
 }
 
 function buildTelegramQaConfig(
-  baseCfg: OpenClawConfig,
+  baseCfg: LittleBabyConfig,
   params: {
     groupId: string;
     sutToken: string;
     driverBotId: number;
     sutAccountId: string;
   },
-): OpenClawConfig {
+): LittleBabyConfig {
   const pluginAllow = [...new Set([...(baseCfg.plugins?.allow ?? []), "telegram"])];
   const pluginEntries = {
     ...baseCfg.plugins?.entries,

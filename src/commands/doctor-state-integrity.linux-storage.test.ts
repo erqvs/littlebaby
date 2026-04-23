@@ -72,14 +72,14 @@ describe("detectLinuxSdBackedStateDir", () => {
       "30 24 179:5 / /mnt/slow rw,relatime - ext4 /dev/mmcblk1p1 rw",
     ].join("\n");
 
-    const result = detectLinuxSdBackedStateDir("/tmp/openclaw-state", {
+    const result = detectLinuxSdBackedStateDir("/tmp/littlebaby-state", {
       platform: "linux",
       mountInfo,
-      resolveRealPath: () => "/mnt/slow/openclaw/.littlebaby",
+      resolveRealPath: () => "/mnt/slow/littlebaby/.littlebaby",
     });
 
     expect(result).toEqual({
-      path: "/mnt/slow/openclaw/.littlebaby",
+      path: "/mnt/slow/littlebaby/.littlebaby",
       mountPoint: "/mnt/slow",
       fsType: "ext4",
       source: "/dev/mmcblk1p1",
@@ -89,7 +89,7 @@ describe("detectLinuxSdBackedStateDir", () => {
   it("returns null outside linux", () => {
     const mountInfo = "24 19 179:2 / / rw,relatime - ext4 /dev/mmcblk0p2 rw";
 
-    const result = detectLinuxSdBackedStateDir(path.join("/Users", "tester", ".openclaw"), {
+    const result = detectLinuxSdBackedStateDir(path.join("/Users", "tester", ".littlebaby"), {
       platform: "darwin",
       mountInfo,
     });

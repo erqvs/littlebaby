@@ -2,12 +2,12 @@ import {
   createAccountListHelpers,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
-  type OpenClawConfig,
+  type LittleBabyConfig,
   resolveAccountEntry,
   resolveMergedAccountConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import { safeParseJsonWithSchema, safeParseWithSchema } from "openclaw/plugin-sdk/extension-shared";
-import { isSecretRef } from "openclaw/plugin-sdk/secret-input";
+} from "littlebaby/plugin-sdk/account-resolution";
+import { safeParseJsonWithSchema, safeParseWithSchema } from "littlebaby/plugin-sdk/extension-shared";
+import { isSecretRef } from "littlebaby/plugin-sdk/secret-input";
 import { z } from "zod";
 import type { GoogleChatAccountConfig } from "./types.config.js";
 
@@ -42,7 +42,7 @@ const {
 export { listGoogleChatAccountIds, resolveDefaultGoogleChatAccountId };
 
 function mergeGoogleChatAccountConfig(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId: string,
 ): GoogleChatAccountConfig {
   const raw = cfg.channels?.["googlechat"] ?? {};
@@ -132,7 +132,7 @@ function resolveCredentialsFromConfig(params: {
 }
 
 export function resolveGoogleChatAccount(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
 }): ResolvedGoogleChatAccount {
   const accountId = normalizeAccountId(
@@ -155,7 +155,7 @@ export function resolveGoogleChatAccount(params: {
   };
 }
 
-export function listEnabledGoogleChatAccounts(cfg: OpenClawConfig): ResolvedGoogleChatAccount[] {
+export function listEnabledGoogleChatAccounts(cfg: LittleBabyConfig): ResolvedGoogleChatAccount[] {
   return listGoogleChatAccountIds(cfg)
     .map((accountId) => resolveGoogleChatAccount({ cfg, accountId }))
     .filter((account) => account.enabled);

@@ -3,16 +3,16 @@ import {
   createStatusReactionController,
   logAckFailure,
   type StatusReactionAdapter,
-} from "openclaw/plugin-sdk/channel-feedback";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/channel-feedback";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
 import { createDiscordRuntimeAccountContext } from "../client.js";
 import { reactMessageDiscord, removeReactionDiscord } from "../send.js";
 import type { DiscordReactionRuntimeContext } from "../send.types.js";
 
 export function createDiscordAckReactionContext(params: {
   rest: RequestClient;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
 }): DiscordReactionRuntimeContext {
   return {

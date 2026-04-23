@@ -9,16 +9,16 @@ describe("shared/assistant-identity-values", () => {
   });
 
   it("trims values and preserves strings within the limit", () => {
-    expect(coerceIdentityValue("  OpenClaw  ", 20)).toBe("OpenClaw");
-    expect(coerceIdentityValue("  OpenClaw  ", 8)).toBe("OpenClaw");
+    expect(coerceIdentityValue("  LittleBaby  ", 20)).toBe("LittleBaby");
+    expect(coerceIdentityValue("  LittleBaby  ", 8)).toBe("LittleBaby");
   });
 
   it("truncates overlong trimmed values at the exact limit", () => {
-    expect(coerceIdentityValue("  OpenClaw Assistant  ", 8)).toBe("OpenClaw");
+    expect(coerceIdentityValue("  LittleBaby Assistant  ", 8)).toBe("LittleBaby");
   });
 
   it("returns an empty string when truncating to a zero-length limit", () => {
-    expect(coerceIdentityValue("  OpenClaw  ", 0)).toBe("");
-    expect(coerceIdentityValue("  OpenClaw  ", -1)).toBe("OpenCla");
+    expect(coerceIdentityValue("  LittleBaby  ", 0)).toBe("");
+    expect(coerceIdentityValue("  LittleBaby  ", -1)).toBe("OpenCla");
   });
 });

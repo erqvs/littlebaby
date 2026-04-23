@@ -141,7 +141,7 @@ describe("subagent registry persistence resume", () => {
   });
 
   it("persists runs to disk and resumes after restart", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-subagent-"));
     process.env.LITTLEBABY_STATE_DIR = tempStateDir;
     const registryPath = path.join(tempStateDir, "subagents", "runs.json");
     hoisted.registryPath = registryPath;

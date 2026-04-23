@@ -1,4 +1,4 @@
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
 
 /** Structured reminder payload emitted by the model. */
 export interface CronReminderPayload {

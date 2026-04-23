@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/alibaba-provider",
+  "name": "@littlebaby/alibaba-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Alibaba Model Studio video provider plugin",
+  "description": "LittleBaby Alibaba Model Studio video provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

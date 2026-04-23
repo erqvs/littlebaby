@@ -42,7 +42,7 @@ describe("noteDevicePairingHealth", () => {
   });
 
   it("warns about pending scope upgrades from local pairing state when the gateway is down", async () => {
-    await withTempDir("openclaw-doctor-device-pairing-", async (stateDir) => {
+    await withTempDir("littlebaby-doctor-device-pairing-", async (stateDir) => {
       await withEnvAsync(
         {
           LITTLEBABY_STATE_DIR: stateDir,
@@ -83,7 +83,7 @@ describe("noteDevicePairingHealth", () => {
           expect(noteMock.mock.calls[0]?.[1]).toBe("Device pairing");
           expect(message).toContain("Pending scope upgrade");
           expect(message).toContain("operator.admin");
-          expect(message).toContain("openclaw devices approve");
+          expect(message).toContain("littlebaby devices approve");
           expect(callGatewayMock).not.toHaveBeenCalled();
         },
       );
@@ -91,7 +91,7 @@ describe("noteDevicePairingHealth", () => {
   });
 
   it("warns when the local cached device token predates the gateway rotation", async () => {
-    await withTempDir("openclaw-doctor-device-pairing-", async (stateDir) => {
+    await withTempDir("littlebaby-doctor-device-pairing-", async (stateDir) => {
       await withEnvAsync(
         {
           LITTLEBABY_STATE_DIR: stateDir,
@@ -145,7 +145,7 @@ describe("noteDevicePairingHealth", () => {
           expect(noteMock).toHaveBeenCalledTimes(1);
           const message = String(noteMock.mock.calls[0]?.[0] ?? "");
           expect(message).toContain("stale device-token pattern");
-          expect(message).toContain("openclaw devices rotate");
+          expect(message).toContain("littlebaby devices rotate");
         },
       );
     });
@@ -257,14 +257,14 @@ describe("noteDevicePairingHealth", () => {
     });
 
     const message = String(noteMock.mock.calls[0]?.[0] ?? "");
-    expect(message).toContain("openclaw devices remove 'device; echo pwn'");
+    expect(message).toContain("littlebaby devices remove 'device; echo pwn'");
     expect(message).toContain(
-      "openclaw devices rotate --device 'device; echo pwn' --role 'operator; touch /tmp/pwn'",
+      "littlebaby devices rotate --device 'device; echo pwn' --role 'operator; touch /tmp/pwn'",
     );
   });
 
   it("does not duplicate missing-token warnings when local cache exists for an approved role", async () => {
-    await withTempDir("openclaw-doctor-device-pairing-", async (stateDir) => {
+    await withTempDir("littlebaby-doctor-device-pairing-", async (stateDir) => {
       await withEnvAsync(
         {
           LITTLEBABY_STATE_DIR: stateDir,

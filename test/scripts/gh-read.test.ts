@@ -8,16 +8,16 @@ import {
 
 describe("gh-read helpers", () => {
   it("finds repo from gh args", () => {
-    expect(parseRepoArg(["pr", "view", "42", "-R", "openclaw/openclaw"])).toBe("openclaw/openclaw");
-    expect(parseRepoArg(["run", "list", "--repo=openclaw/docs"])).toBe("openclaw/docs");
+    expect(parseRepoArg(["pr", "view", "42", "-R", "littlebaby/littlebaby"])).toBe("littlebaby/littlebaby");
+    expect(parseRepoArg(["run", "list", "--repo=littlebaby/docs"])).toBe("littlebaby/docs");
     expect(parseRepoArg(["pr", "view", "42"])).toBeNull();
   });
 
   it("normalizes repo strings from common git formats", () => {
-    expect(normalizeRepo("openclaw/openclaw")).toBe("openclaw/openclaw");
-    expect(normalizeRepo("github.com/openclaw/openclaw")).toBe("openclaw/openclaw");
-    expect(normalizeRepo("https://github.com/openclaw/openclaw.git")).toBe("openclaw/openclaw");
-    expect(normalizeRepo("git@github.com:openclaw/openclaw.git")).toBe("openclaw/openclaw");
+    expect(normalizeRepo("littlebaby/littlebaby")).toBe("littlebaby/littlebaby");
+    expect(normalizeRepo("github.com/littlebaby/littlebaby")).toBe("littlebaby/littlebaby");
+    expect(normalizeRepo("https://github.com/littlebaby/littlebaby.git")).toBe("littlebaby/littlebaby");
+    expect(normalizeRepo("git@github.com:littlebaby/littlebaby.git")).toBe("littlebaby/littlebaby");
     expect(normalizeRepo("invalid")).toBeNull();
   });
 

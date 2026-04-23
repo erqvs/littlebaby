@@ -1,7 +1,7 @@
 ---
 summary: "Configuration overview: common tasks, quick setup, and links to the full reference"
 read_when:
-  - Setting up OpenClaw for the first time
+  - Setting up LittleBaby for the first time
   - Looking for common configuration patterns
   - Navigating to specific config sections
 title: "Configuration"
@@ -9,9 +9,9 @@ title: "Configuration"
 
 # Configuration
 
-OpenClaw reads an optional <Tooltip tip="JSON5 supports comments and trailing commas">**JSON5**</Tooltip> config from `~/.littlebaby/openclaw.json`.
+LittleBaby reads an optional <Tooltip tip="JSON5 supports comments and trailing commas">**JSON5**</Tooltip> config from `~/.littlebaby/littlebaby.json`.
 
-If the file is missing, OpenClaw uses safe defaults. Common reasons to add a config:
+If the file is missing, LittleBaby uses safe defaults. Common reasons to add a config:
 
 - Connect channels and control who can message the bot
 - Set models, tools, sandboxing, or automation (cron, hooks)
@@ -20,13 +20,13 @@ If the file is missing, OpenClaw uses safe defaults. Common reasons to add a con
 See the [full reference](/gateway/configuration-reference) for every available field.
 
 <Tip>
-**New to configuration?** Start with `openclaw onboard` for interactive setup, or check out the [Configuration Examples](/gateway/configuration-examples) guide for complete copy-paste configs.
+**New to configuration?** Start with `littlebaby onboard` for interactive setup, or check out the [Configuration Examples](/gateway/configuration-examples) guide for complete copy-paste configs.
 </Tip>
 
 ## Minimal config
 
 ```json5
-// ~/.littlebaby/openclaw.json
+// ~/.littlebaby/littlebaby.json
 {
   agents: { defaults: { workspace: "~/.littlebaby/workspace" } },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
@@ -38,15 +38,15 @@ See the [full reference](/gateway/configuration-reference) for every available f
 <Tabs>
   <Tab title="Interactive wizard">
     ```bash
-    openclaw onboard       # full onboarding flow
-    openclaw configure     # config wizard
+    littlebaby onboard       # full onboarding flow
+    littlebaby configure     # config wizard
     ```
   </Tab>
   <Tab title="CLI (one-liners)">
     ```bash
-    openclaw config get agents.defaults.workspace
-    openclaw config set agents.defaults.heartbeat.every "2h"
-    openclaw config unset plugins.entries.brave.config.webSearch.apiKey
+    littlebaby config get agents.defaults.workspace
+    littlebaby config set agents.defaults.heartbeat.every "2h"
+    littlebaby config unset plugins.entries.brave.config.webSearch.apiKey
     ```
   </Tab>
   <Tab title="Control UI">
@@ -58,22 +58,22 @@ See the [full reference](/gateway/configuration-reference) for every available f
     fetch one path-scoped schema node plus immediate child summaries.
   </Tab>
   <Tab title="Direct edit">
-    Edit `~/.littlebaby/openclaw.json` directly. The Gateway watches the file and applies changes automatically (see [hot reload](#config-hot-reload)).
+    Edit `~/.littlebaby/littlebaby.json` directly. The Gateway watches the file and applies changes automatically (see [hot reload](#config-hot-reload)).
   </Tab>
 </Tabs>
 
 ## Strict validation
 
 <Warning>
-OpenClaw only accepts configurations that fully match the schema. Unknown keys, malformed types, or invalid values cause the Gateway to **refuse to start**. The only root-level exception is `$schema` (string), so editors can attach JSON Schema metadata.
+LittleBaby only accepts configurations that fully match the schema. Unknown keys, malformed types, or invalid values cause the Gateway to **refuse to start**. The only root-level exception is `$schema` (string), so editors can attach JSON Schema metadata.
 </Warning>
 
 Schema tooling notes:
 
-- `openclaw config schema` prints the same JSON Schema family used by Control UI
+- `littlebaby config schema` prints the same JSON Schema family used by Control UI
   and config validation.
 - Treat that schema output as the canonical machine-readable contract for
-  `openclaw.json`; this overview and the configuration reference summarize it.
+  `littlebaby.json`; this overview and the configuration reference summarize it.
 - Field `title` and `description` values are carried into the schema output for
   editor and form tooling.
 - Nested object, wildcard (`*`), and array-item (`[]`) entries inherit the same
@@ -92,18 +92,18 @@ Schema tooling notes:
 When validation fails:
 
 - The Gateway does not boot
-- Only diagnostic commands work (`openclaw doctor`, `openclaw logs`, `openclaw health`, `openclaw status`)
-- Run `openclaw doctor` to see exact issues
-- Run `openclaw doctor --fix` (or `--yes`) to apply repairs
+- Only diagnostic commands work (`littlebaby doctor`, `littlebaby logs`, `littlebaby health`, `littlebaby status`)
+- Run `littlebaby doctor` to see exact issues
+- Run `littlebaby doctor --fix` (or `--yes`) to apply repairs
 
 The Gateway also keeps a trusted last-known-good copy after a successful startup. If
-`openclaw.json` is later changed outside OpenClaw and no longer validates, startup
+`littlebaby.json` is later changed outside LittleBaby and no longer validates, startup
 and hot reload preserve the broken file as a timestamped `.clobbered.*` snapshot,
 restore the last-known-good copy, and log a loud warning with the recovery reason.
 The next main-agent turn also receives a system-event warning telling it that the
 config was restored and must not be blindly rewritten. Last-known-good promotion
 is updated after validated startup and after accepted hot reloads, including
-OpenClaw-owned config writes whose persisted file hash still matches the accepted
+LittleBaby-owned config writes whose persisted file hash still matches the accepted
 write. Promotion is skipped when the candidate contains redacted secret
 placeholders such as `***` or shortened token values.
 
@@ -193,7 +193,7 @@ placeholders such as `***` or shortened token values.
           {
             id: "main",
             groupChat: {
-              mentionPatterns: ["@openclaw", "littlebaby"],
+              mentionPatterns: ["@littlebaby", "littlebaby"],
             },
           },
         ],
@@ -320,7 +320,7 @@ placeholders such as `***` or shortened token values.
   </Accordion>
 
   <Accordion title="Enable relay-backed push for official iOS builds">
-    Relay-backed push is configured in `openclaw.json`.
+    Relay-backed push is configured in `littlebaby.json`.
 
     Set this in gateway config:
 
@@ -343,7 +343,7 @@ placeholders such as `***` or shortened token values.
     CLI equivalent:
 
     ```bash
-    openclaw config set gateway.push.apns.relay.baseUrl https://relay.example.com
+    littlebaby config set gateway.push.apns.relay.baseUrl https://relay.example.com
     ```
 
     What this does:
@@ -445,7 +445,7 @@ placeholders such as `***` or shortened token values.
     Security note:
     - Treat all hook/webhook payload content as untrusted input.
     - Use a dedicated `hooks.token`; do not reuse the shared Gateway token.
-    - Hook auth is header-only (`Authorization: Bearer ...` or `x-openclaw-token`); query-string tokens are rejected.
+    - Hook auth is header-only (`Authorization: Bearer ...` or `x-littlebaby-token`); query-string tokens are rejected.
     - `hooks.path` cannot be `/`; keep webhook ingress on a dedicated subpath such as `/hooks`.
     - Keep unsafe-content bypass flags disabled (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`) unless doing tightly scoped debugging.
     - If you enable `hooks.allowRequestSessionKey`, also set `hooks.allowedSessionKeyPrefixes` to bound caller-selected session keys.
@@ -481,7 +481,7 @@ placeholders such as `***` or shortened token values.
     Use `$include` to organize large configs:
 
     ```json5
-    // ~/.littlebaby/openclaw.json
+    // ~/.littlebaby/littlebaby.json
     {
       gateway: { port: 18789 },
       agents: { $include: "./agents.json5" },
@@ -503,19 +503,19 @@ placeholders such as `***` or shortened token values.
 
 ## Config hot reload
 
-The Gateway watches `~/.littlebaby/openclaw.json` and applies changes automatically — no manual restart needed for most settings.
+The Gateway watches `~/.littlebaby/littlebaby.json` and applies changes automatically — no manual restart needed for most settings.
 
 Direct file edits are treated as untrusted until they validate. The watcher waits
 for editor temp-write/rename churn to settle, reads the final file, and rejects
-invalid external edits by restoring the last-known-good config. OpenClaw-owned
+invalid external edits by restoring the last-known-good config. LittleBaby-owned
 config writes use the same schema gate before writing; destructive clobbers such
 as dropping `gateway.mode` or shrinking the file by more than half are rejected
 and saved as `.rejected.*` for inspection.
 
 If you see `Config auto-restored from last-known-good` or
 `config reload restored last-known-good config` in logs, inspect the matching
-`.clobbered.*` file next to `openclaw.json`, fix the rejected payload, then run
-`openclaw config validate`. See [Gateway troubleshooting](/gateway/troubleshooting#gateway-restored-last-known-good-config)
+`.clobbered.*` file next to `littlebaby.json`, fix the rejected payload, then run
+`littlebaby config validate`. See [Gateway troubleshooting](/gateway/troubleshooting#gateway-restored-last-known-good-config)
 for the recovery checklist.
 
 ### Reload modes
@@ -577,7 +577,7 @@ then `config.patch`.
     Validates + writes the full config and restarts the Gateway in one step.
 
     <Warning>
-    `config.apply` replaces the **entire config**. Use `config.patch` for partial updates, or `openclaw config set` for single keys.
+    `config.apply` replaces the **entire config**. Use `config.patch` for partial updates, or `littlebaby config set` for single keys.
     </Warning>
 
     Params:
@@ -591,8 +591,8 @@ then `config.patch`.
     Restart requests are coalesced while one is already pending/in-flight, and a 30-second cooldown applies between restart cycles.
 
     ```bash
-    openclaw gateway call config.get --params '{}'  # capture payload.hash
-    openclaw gateway call config.apply --params '{
+    littlebaby gateway call config.get --params '{}'  # capture payload.hash
+    littlebaby gateway call config.apply --params '{
       "raw": "{ agents: { defaults: { workspace: \"~/.littlebaby/workspace\" } } }",
       "baseHash": "<hash>",
       "sessionKey": "agent:main:whatsapp:direct:+15555550123"
@@ -617,7 +617,7 @@ then `config.patch`.
     Restart behavior matches `config.apply`: coalesced pending restarts plus a 30-second cooldown between restart cycles.
 
     ```bash
-    openclaw gateway call config.patch --params '{
+    littlebaby gateway call config.patch --params '{
       "raw": "{ channels: { telegram: { groups: { \"*\": { requireMention: false } } } } }",
       "baseHash": "<hash>"
     }'
@@ -628,7 +628,7 @@ then `config.patch`.
 
 ## Environment variables
 
-OpenClaw reads env vars from the parent process plus:
+LittleBaby reads env vars from the parent process plus:
 
 - `.env` from the current working directory (if present)
 - `~/.littlebaby/.env` (global fallback)
@@ -645,7 +645,7 @@ Neither file overrides existing env vars. You can also set inline env vars in co
 ```
 
 <Accordion title="Shell env import (optional)">
-  If enabled and expected keys aren't set, OpenClaw runs your login shell and imports only the missing keys:
+  If enabled and expected keys aren't set, LittleBaby runs your login shell and imports only the missing keys:
 
 ```json5
 {

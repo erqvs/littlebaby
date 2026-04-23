@@ -1,5 +1,5 @@
 ---
-summary: "Optional Docker-based setup and onboarding for OpenClaw"
+summary: "Optional Docker-based setup and onboarding for LittleBaby"
 read_when:
   - You want a containerized gateway instead of local installs
   - You are validating the Docker flow
@@ -12,7 +12,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
 
 ## Is Docker right for me?
 
-- **Yes**: you want an isolated, throwaway gateway environment or to run OpenClaw on a host without local installs.
+- **Yes**: you want an isolated, throwaway gateway environment or to run LittleBaby on a host without local installs.
 - **No**: you are running on your own machine and just want the fastest dev loop. Use the normal install flow instead.
 - **Sandboxing note**: agent sandboxing uses Docker too, but it does **not** require the full gateway to run in Docker. See [Sandboxing](/gateway/sandboxing).
 
@@ -38,12 +38,12 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
     This builds the gateway image locally. To use a pre-built image instead:
 
     ```bash
-    export LITTLEBABY_IMAGE="ghcr.io/openclaw/openclaw:latest"
+    export LITTLEBABY_IMAGE="ghcr.io/littlebaby/littlebaby:latest"
     ./scripts/docker/setup.sh
     ```
 
     Pre-built images are published at the
-    [GitHub Container Registry](https://github.com/openclaw/openclaw/pkgs/container/openclaw).
+    [GitHub Container Registry](https://github.com/littlebaby/littlebaby/pkgs/container/littlebaby).
     Common tags: `main`, `latest`, `<version>` (e.g. `2026.2.26`).
 
   </Step>
@@ -56,7 +56,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
     - start the gateway via Docker Compose
 
     During setup, pre-start onboarding and config writes run through
-    `littlebaby-gateway` directly. `openclaw-cli` is for commands you run after
+    `littlebaby-gateway` directly. `littlebaby-cli` is for commands you run after
     the gateway container already exists.
 
   </Step>
@@ -70,7 +70,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
     Need the URL again?
 
     ```bash
-    docker compose run --rm openclaw-cli dashboard --no-open
+    docker compose run --rm littlebaby-cli dashboard --no-open
     ```
 
   </Step>
@@ -80,13 +80,13 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
 
     ```bash
     # WhatsApp (QR)
-    docker compose run --rm openclaw-cli channels login
+    docker compose run --rm littlebaby-cli channels login
 
     # Telegram
-    docker compose run --rm openclaw-cli channels add --channel telegram --token "<token>"
+    docker compose run --rm littlebaby-cli channels add --channel telegram --token "<token>"
 
     # Discord
-    docker compose run --rm openclaw-cli channels add --channel discord --token "<token>"
+    docker compose run --rm littlebaby-cli channels add --channel discord --token "<token>"
     ```
 
     Docs: [WhatsApp](/channels/whatsapp), [Telegram](/channels/telegram), [Discord](/channels/discord)
@@ -99,7 +99,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
 If you prefer to run each step yourself instead of using the setup script:
 
 ```bash
-docker build -t openclaw:local -f Dockerfile .
+docker build -t littlebaby:local -f Dockerfile .
 docker compose run --rm --no-deps --entrypoint node littlebaby-gateway \
   dist/index.js onboard --mode local --no-install-daemon
 docker compose run --rm --no-deps --entrypoint node littlebaby-gateway \
@@ -114,7 +114,7 @@ include it with `-f docker-compose.yml -f docker-compose.extra.yml`.
 </Note>
 
 <Note>
-Because `openclaw-cli` shares `littlebaby-gateway`'s network namespace, it is a
+Because `littlebaby-cli` shares `littlebaby-gateway`'s network namespace, it is a
 post-start tool. Before `docker compose up -d littlebaby-gateway`, run onboarding
 and setup-time config writes through `littlebaby-gateway` with
 `--no-deps --entrypoint node`.
@@ -173,9 +173,9 @@ Docker Compose bind-mounts `LITTLEBABY_CONFIG_DIR` to `/home/node/.littlebaby` a
 `LITTLEBABY_WORKSPACE_DIR` to `/home/node/.littlebaby/workspace`, so those paths
 survive container replacement.
 
-That mounted config directory is where OpenClaw keeps:
+That mounted config directory is where LittleBaby keeps:
 
-- `openclaw.json` for behavior config
+- `littlebaby.json` for behavior config
 - `agents/<agentId>/agent/auth-profiles.json` for stored provider OAuth/API-key auth
 - `.env` for env-backed runtime secrets such as `LITTLEBABY_GATEWAY_TOKEN`
 
@@ -183,14 +183,14 @@ For full persistence details on VM deployments, see
 [Docker VM Runtime - What persists where](/install/docker-vm-runtime#what-persists-where).
 
 **Disk growth hotspots:** watch `media/`, session JSONL files, `cron/runs/*.jsonl`,
-and rolling file logs under `/tmp/openclaw/`.
+and rolling file logs under `/tmp/littlebaby/`.
 
 ### Shell helpers (optional)
 
 For easier day-to-day Docker management, install `ClawDock`:
 
 ```bash
-mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
+mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/littlebaby/littlebaby/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
@@ -225,17 +225,17 @@ See [ClawDock](/install/clawdock) for the full helper guide.
     Disable Compose pseudo-TTY allocation with `-T`:
 
     ```bash
-    docker compose run -T --rm openclaw-cli gateway probe
-    docker compose run -T --rm openclaw-cli devices list --json
+    docker compose run -T --rm littlebaby-cli gateway probe
+    docker compose run -T --rm littlebaby-cli devices list --json
     ```
 
   </Accordion>
 
   <Accordion title="Shared-network security note">
-    `openclaw-cli` uses `network_mode: "service:littlebaby-gateway"` so CLI
+    `littlebaby-cli` uses `network_mode: "service:littlebaby-gateway"` so CLI
     commands can reach the gateway over `127.0.0.1`. Treat this as a shared
     trust boundary. The compose config drops `NET_RAW`/`NET_ADMIN` and enables
-    `no-new-privileges` on `openclaw-cli`.
+    `no-new-privileges` on `littlebaby-cli`.
   </Accordion>
 
   <Accordion title="Permissions and EACCES">
@@ -243,7 +243,7 @@ See [ClawDock](/install/clawdock) for the full helper guide.
     `/home/node/.littlebaby`, make sure your host bind mounts are owned by uid 1000:
 
     ```bash
-    sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
+    sudo chown -R 1000:1000 /path/to/littlebaby-config /path/to/littlebaby-workspace
     ```
 
   </Accordion>
@@ -276,11 +276,11 @@ See [ClawDock](/install/clawdock) for the full helper guide.
     The default image is security-first and runs as non-root `node`. For a more
     full-featured container:
 
-    1. **Persist `/home/node`**: `export LITTLEBABY_HOME_VOLUME="openclaw_home"`
+    1. **Persist `/home/node`**: `export LITTLEBABY_HOME_VOLUME="littlebaby_home"`
     2. **Bake system deps**: `export LITTLEBABY_DOCKER_APT_PACKAGES="git curl jq"`
     3. **Install Playwright browsers**:
        ```bash
-       docker compose run --rm openclaw-cli \
+       docker compose run --rm littlebaby-cli \
          node /app/node_modules/playwright-core/cli.js install chromium
        ```
     4. **Persist browser downloads**: set
@@ -353,7 +353,7 @@ scripts/sandbox-setup.sh
 <AccordionGroup>
   <Accordion title="Image missing or sandbox container not starting">
     Build the sandbox image with
-    [`scripts/sandbox-setup.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/sandbox-setup.sh)
+    [`scripts/sandbox-setup.sh`](https://github.com/littlebaby/littlebaby/blob/main/scripts/sandbox-setup.sh)
     or set `agents.defaults.sandbox.docker.image` to your custom image.
     Containers are auto-created per session on demand.
   </Accordion>
@@ -364,7 +364,7 @@ scripts/sandbox-setup.sh
   </Accordion>
 
   <Accordion title="Custom tools not found in sandbox">
-    OpenClaw runs commands with `sh -lc` (login shell), which sources
+    LittleBaby runs commands with `sh -lc` (login shell), which sources
     `/etc/profile` and may reset PATH. Set `docker.env.PATH` to prepend your
     custom tool paths, or add a script under `/etc/profile.d/` in your Dockerfile.
   </Accordion>
@@ -377,9 +377,9 @@ scripts/sandbox-setup.sh
     Fetch a fresh dashboard link and approve the browser device:
 
     ```bash
-    docker compose run --rm openclaw-cli dashboard --no-open
-    docker compose run --rm openclaw-cli devices list
-    docker compose run --rm openclaw-cli devices approve <requestId>
+    docker compose run --rm littlebaby-cli dashboard --no-open
+    docker compose run --rm littlebaby-cli devices list
+    docker compose run --rm littlebaby-cli devices approve <requestId>
     ```
 
     More detail: [Dashboard](/web/dashboard), [Devices](/cli/devices).
@@ -390,8 +390,8 @@ scripts/sandbox-setup.sh
     Reset gateway mode and bind:
 
     ```bash
-    docker compose run --rm openclaw-cli config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"}]'
-    docker compose run --rm openclaw-cli devices list --url ws://127.0.0.1:18789
+    docker compose run --rm littlebaby-cli config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"}]'
+    docker compose run --rm littlebaby-cli devices list --url ws://127.0.0.1:18789
     ```
 
   </Accordion>
@@ -402,5 +402,5 @@ scripts/sandbox-setup.sh
 - [Install Overview](/install) — all installation methods
 - [Podman](/install/podman) — Podman alternative to Docker
 - [ClawDock](/install/clawdock) — Docker Compose community setup
-- [Updating](/install/updating) — keeping OpenClaw up to date
+- [Updating](/install/updating) — keeping LittleBaby up to date
 - [Configuration](/gateway/configuration) — gateway configuration after install

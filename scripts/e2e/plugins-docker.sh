@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-logs.sh"
-IMAGE_NAME="openclaw-plugins-e2e"
+IMAGE_NAME="littlebaby-plugins-e2e"
 
 echo "Building Docker image..."
 run_logged plugins-build docker build -t "$IMAGE_NAME" -f "$ROOT_DIR/scripts/e2e/Dockerfile" "$ROOT_DIR"
@@ -17,7 +17,7 @@ if [[ -n "${OPENAI_BASE_URL:-}" && "${OPENAI_BASE_URL:-}" != "undefined" && "${O
 fi
 
 echo "Running plugins Docker E2E..."
-RUN_LOG="$(mktemp "${TMPDIR:-/tmp}/openclaw-plugins-run.XXXXXX.log")"
+RUN_LOG="$(mktemp "${TMPDIR:-/tmp}/littlebaby-plugins-run.XXXXXX.log")"
 if ! docker run --rm "${DOCKER_ENV_ARGS[@]}" -i "$IMAGE_NAME" bash -s >"$RUN_LOG" 2>&1 <<'EOF'
 set -euo pipefail
 
@@ -50,7 +50,7 @@ if [[ -z "$OPENAI_BASE_URL" ]]; then
   unset OPENAI_BASE_URL || true
 fi
 
-home_dir=$(mktemp -d "/tmp/openclaw-plugins-e2e.XXXXXX")
+home_dir=$(mktemp -d "/tmp/littlebaby-plugins-e2e.XXXXXX")
 export HOME="$home_dir"
 BUNDLED_PLUGIN_ROOT_DIR="extensions"
 LITTLEBABY_PLUGIN_HOME="$HOME/.littlebaby/$BUNDLED_PLUGIN_ROOT_DIR"
@@ -68,7 +68,7 @@ const path = require("node:path");
 const pluginId = process.argv[2];
 const pluginRoot = process.argv[3];
 const enabled = process.argv[4] === "1";
-const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+const configPath = path.join(process.env.HOME, ".littlebaby", "littlebaby.json");
 const config = fs.existsSync(configPath)
   ? JSON.parse(fs.readFileSync(configPath, "utf8"))
   : {};
@@ -91,7 +91,7 @@ NODE
 run_logged() {
   local label="$1"
   shift
-  local log_file="/tmp/openclaw-plugins-e2e-${label}.log"
+  local log_file="/tmp/littlebaby-plugins-e2e-${label}.log"
   if ! "$@" >"$log_file" 2>&1; then
     cat "$log_file"
     exit 1
@@ -107,7 +107,7 @@ const path = require("node:path");
 
 const openaiApiKey = process.argv[2];
 const openaiBaseUrl = process.argv[3];
-const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+const configPath = path.join(process.env.HOME, ".littlebaby", "littlebaby.json");
 const config = fs.existsSync(configPath)
   ? JSON.parse(fs.readFileSync(configPath, "utf8"))
   : {};
@@ -380,7 +380,7 @@ write_fixture_plugin() {
   mkdir -p "$dir"
   cat > "$dir/package.json" <<JSON
 {
-  "name": "@openclaw/$id",
+  "name": "@littlebaby/$id",
   "version": "$version",
   "littlebaby": { "extensions": ["./index.js"] }
 }
@@ -394,7 +394,7 @@ module.exports = {
   },
 };
 JS
-  cat > "$dir/openclaw.plugin.json" <<'JSON'
+  cat > "$dir/littlebaby.plugin.json" <<'JSON'
 {
   "id": "placeholder",
   "configSchema": {
@@ -403,7 +403,7 @@ JS
   }
 }
 JSON
-  node - <<'NODE' "$dir/openclaw.plugin.json" "$id"
+  node - <<'NODE' "$dir/littlebaby.plugin.json" "$id"
 const fs = require("node:fs");
 const file = process.argv[2];
 const id = process.argv[3];
@@ -430,7 +430,7 @@ module.exports = {
   },
 };
 JS
-cat > "$demo_plugin_root/openclaw.plugin.json" <<'JSON'
+cat > "$demo_plugin_root/littlebaby.plugin.json" <<'JSON'
 {
   "id": "demo-plugin",
   "configSchema": {
@@ -478,11 +478,11 @@ console.log("ok");
 NODE
 
 echo "Testing tgz install flow..."
-pack_dir="$(mktemp -d "/tmp/openclaw-plugin-pack.XXXXXX")"
+pack_dir="$(mktemp -d "/tmp/littlebaby-plugin-pack.XXXXXX")"
 mkdir -p "$pack_dir/package"
 cat > "$pack_dir/package/package.json" <<'JSON'
 {
-  "name": "@openclaw/demo-plugin-tgz",
+  "name": "@littlebaby/demo-plugin-tgz",
   "version": "0.0.1",
   "littlebaby": { "extensions": ["./index.js"] }
 }
@@ -496,7 +496,7 @@ module.exports = {
   },
 };
 JS
-cat > "$pack_dir/package/openclaw.plugin.json" <<'JSON'
+cat > "$pack_dir/package/littlebaby.plugin.json" <<'JSON'
 {
   "id": "demo-plugin-tgz",
   "configSchema": {
@@ -528,10 +528,10 @@ console.log("ok");
 NODE
 
 echo "Testing install from local folder (plugins.load.paths)..."
-dir_plugin="$(mktemp -d "/tmp/openclaw-plugin-dir.XXXXXX")"
+dir_plugin="$(mktemp -d "/tmp/littlebaby-plugin-dir.XXXXXX")"
 cat > "$dir_plugin/package.json" <<'JSON'
 {
-  "name": "@openclaw/demo-plugin-dir",
+  "name": "@littlebaby/demo-plugin-dir",
   "version": "0.0.1",
   "littlebaby": { "extensions": ["./index.js"] }
 }
@@ -545,7 +545,7 @@ module.exports = {
   },
 };
 JS
-cat > "$dir_plugin/openclaw.plugin.json" <<'JSON'
+cat > "$dir_plugin/littlebaby.plugin.json" <<'JSON'
 {
   "id": "demo-plugin-dir",
   "configSchema": {
@@ -576,11 +576,11 @@ console.log("ok");
 NODE
 
 echo "Testing install from npm spec (file:)..."
-file_pack_dir="$(mktemp -d "/tmp/openclaw-plugin-filepack.XXXXXX")"
+file_pack_dir="$(mktemp -d "/tmp/littlebaby-plugin-filepack.XXXXXX")"
 mkdir -p "$file_pack_dir/package"
 cat > "$file_pack_dir/package/package.json" <<'JSON'
 {
-  "name": "@openclaw/demo-plugin-file",
+  "name": "@littlebaby/demo-plugin-file",
   "version": "0.0.1",
   "littlebaby": { "extensions": ["./index.js"] }
 }
@@ -594,7 +594,7 @@ module.exports = {
   },
 };
 JS
-cat > "$file_pack_dir/package/openclaw.plugin.json" <<'JSON'
+cat > "$file_pack_dir/package/littlebaby.plugin.json" <<'JSON'
 {
   "id": "demo-plugin-file",
   "configSchema": {
@@ -648,7 +648,7 @@ node - <<'NODE'
 const fs = require("node:fs");
 const path = require("node:path");
 
-const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+const configPath = path.join(process.env.HOME, ".littlebaby", "littlebaby.json");
 const config = fs.existsSync(configPath)
   ? JSON.parse(fs.readFileSync(configPath, "utf8"))
   : {};
@@ -695,7 +695,7 @@ MD
 cat > "$workspace_dir/USER.md" <<'MD'
 # User
 
-- Name: OpenClaw test harness
+- Name: LittleBaby test harness
 - Timezone: UTC
 MD
 cat > "$workspace_dir/.littlebaby/workspace-state.json" <<'JSON'
@@ -705,15 +705,15 @@ cat > "$workspace_dir/.littlebaby/workspace-state.json" <<'JSON'
 }
 JSON
 
-gateway_log="/tmp/openclaw-plugin-command-e2e.log"
+gateway_log="/tmp/littlebaby-plugin-command-e2e.log"
 start_gateway "$gateway_log"
 wait_for_gateway_health
 
 echo "Testing /plugin install with auto-restart..."
-slash_install_dir="$(mktemp -d "/tmp/openclaw-plugin-slash-install.XXXXXX")"
+slash_install_dir="$(mktemp -d "/tmp/littlebaby-plugin-slash-install.XXXXXX")"
 cat > "$slash_install_dir/package.json" <<'JSON'
 {
-  "name": "@openclaw/slash-install-plugin",
+  "name": "@littlebaby/slash-install-plugin",
   "version": "0.0.1",
   "littlebaby": { "extensions": ["./index.js"] }
 }
@@ -727,7 +727,7 @@ module.exports = {
   },
 };
 JS
-cat > "$slash_install_dir/openclaw.plugin.json" <<'JSON'
+cat > "$slash_install_dir/littlebaby.plugin.json" <<'JSON'
 {
   "id": "slash-install-plugin",
   "configSchema": {
@@ -890,7 +890,7 @@ cat > "$HOME/.claude/plugins/known_marketplaces.json" <<JSON
     "installLocation": "$marketplace_root",
     "source": {
       "type": "github",
-      "repo": "openclaw/fixture-marketplace"
+      "repo": "littlebaby/fixture-marketplace"
     }
   }
 }
@@ -958,7 +958,7 @@ node - <<'NODE'
 const fs = require("node:fs");
 const path = require("node:path");
 
-const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+const configPath = path.join(process.env.HOME, ".littlebaby", "littlebaby.json");
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 for (const id of ["marketplace-shortcut", "marketplace-direct"]) {
   const record = config.plugins?.installs?.[id];

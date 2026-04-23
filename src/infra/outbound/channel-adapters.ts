@@ -3,14 +3,14 @@ import type {
   ChannelId,
   ChannelStructuredComponents,
 } from "../../channels/plugins/types.public.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 
 export type CrossContextComponentsBuilder = (message: string) => ChannelStructuredComponents;
 
 export type CrossContextComponentsFactory = (params: {
   originLabel: string;
   message: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
 }) => ChannelStructuredComponents;
 

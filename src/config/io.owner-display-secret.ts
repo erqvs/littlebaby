@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { LittleBabyConfig } from "./types.littlebaby.js";
 
 export type OwnerDisplaySecretPersistState = {
   pendingByPath: Map<string, string>;
@@ -7,16 +7,16 @@ export type OwnerDisplaySecretPersistState = {
 };
 
 export function persistGeneratedOwnerDisplaySecret(params: {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   configPath: string;
   generatedSecret?: string;
   logger: Pick<typeof console, "warn">;
   state: OwnerDisplaySecretPersistState;
   persistConfig: (
-    config: OpenClawConfig,
+    config: LittleBabyConfig,
     options: { expectedConfigPath: string },
   ) => Promise<unknown>;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   const { config, configPath, generatedSecret, logger, state, persistConfig } = params;
   if (!generatedSecret) {
     state.pendingByPath.delete(configPath);

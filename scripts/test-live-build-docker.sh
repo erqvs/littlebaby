@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-logs.sh"
-IMAGE_NAME="${LITTLEBABY_IMAGE:-openclaw:local}"
+IMAGE_NAME="${LITTLEBABY_IMAGE:-littlebaby:local}"
 LIVE_IMAGE_NAME="${LITTLEBABY_LIVE_IMAGE:-${IMAGE_NAME}-live}"
 DOCKER_BUILD_EXTENSIONS="${LITTLEBABY_DOCKER_BUILD_EXTENSIONS:-${LITTLEBABY_EXTENSIONS:-}}"
 

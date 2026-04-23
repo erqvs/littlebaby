@@ -12,7 +12,7 @@ export function collectDeepProbeFindings(params: {
       severity: "warn",
       title: "Gateway probe failed (deep)",
       detail: params.deep.gateway.error ?? "gateway unreachable",
-      remediation: `Run "${formatCliCommand("openclaw status --all")}" to debug connectivity/auth, then re-run "${formatCliCommand("openclaw security audit --deep")}".`,
+      remediation: `Run "${formatCliCommand("littlebaby status --all")}" to debug connectivity/auth, then re-run "${formatCliCommand("littlebaby security audit --deep")}".`,
     });
   }
   if (params.authWarning) {
@@ -21,7 +21,7 @@ export function collectDeepProbeFindings(params: {
       severity: "warn",
       title: "Gateway probe auth SecretRef is unavailable",
       detail: params.authWarning,
-      remediation: `Set LITTLEBABY_GATEWAY_TOKEN/LITTLEBABY_GATEWAY_PASSWORD in this shell or resolve the external secret provider, then re-run "${formatCliCommand("openclaw security audit --deep")}".`,
+      remediation: `Set LITTLEBABY_GATEWAY_TOKEN/LITTLEBABY_GATEWAY_PASSWORD in this shell or resolve the external secret provider, then re-run "${formatCliCommand("littlebaby security audit --deep")}".`,
     });
   }
   return findings;

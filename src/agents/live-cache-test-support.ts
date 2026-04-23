@@ -1,12 +1,12 @@
 import { completeSimple, type Api, type AssistantMessage, type Model } from "@mariozechner/pi-ai";
 import { loadConfig } from "../config/config.js";
 import { isTruthyEnvValue } from "../infra/env.js";
-import { resolveOpenClawAgentDir } from "./agent-paths.js";
+import { resolveLittleBabyAgentDir } from "./agent-paths.js";
 import { collectProviderApiKeys } from "./live-auth-keys.js";
 import { isLiveTestEnabled } from "./live-test-helpers.js";
 import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
 import { normalizeProviderId, parseModelRef } from "./model-selection.js";
-import { ensureOpenClawModelsJson } from "./models-config.js";
+import { ensureLittleBabyModelsJson } from "./models-config.js";
 import { discoverAuthStorage, discoverModels } from "./pi-model-discovery.js";
 import { buildAssistantMessageWithZeroUsage } from "./stream-message-shared.js";
 
@@ -162,8 +162,8 @@ export async function resolveLiveDirectModel(params: {
   preferredModelIds: readonly string[];
 }): Promise<LiveResolvedModel> {
   const cfg = loadConfig();
-  await ensureOpenClawModelsJson(cfg);
-  const agentDir = resolveOpenClawAgentDir();
+  await ensureLittleBabyModelsJson(cfg);
+  const agentDir = resolveLittleBabyAgentDir();
   const authStorage = discoverAuthStorage(agentDir);
   const models = discoverModels(authStorage, agentDir).getAll();
 

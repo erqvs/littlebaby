@@ -1,4 +1,4 @@
-# fastlane setup (OpenClaw iOS)
+# fastlane setup (LittleBaby iOS)
 
 Install:
 
@@ -25,7 +25,7 @@ This writes these auth variables in `apps/ios/fastlane/.env`:
 ```bash
 ASC_KEY_ID=YOUR_KEY_ID
 ASC_ISSUER_ID=YOUR_ISSUER_ID
-ASC_KEYCHAIN_SERVICE=openclaw-asc-key
+ASC_KEYCHAIN_SERVICE=littlebaby-asc-key
 ASC_KEYCHAIN_ACCOUNT=YOUR_MAC_USERNAME
 ```
 
@@ -34,7 +34,7 @@ Important: `apps/ios/fastlane/.env` is only for Fastlane/App Store Connect auth 
 Optional app targeting variables (helpful if Fastlane cannot auto-resolve app by bundle):
 
 ```bash
-ASC_APP_IDENTIFIER=ai.openclaw.client
+ASC_APP_IDENTIFIER=ai.littlebaby.client
 # or
 ASC_APP_ID=YOUR_APP_STORE_CONNECT_APP_ID
 ```
@@ -53,7 +53,7 @@ Code signing variable (optional in `.env`):
 IOS_DEVELOPMENT_TEAM=YOUR_TEAM_ID
 ```
 
-Tip: run `scripts/ios-team-id.sh` from repo root to print a Team ID for `.env`. The helper prefers the canonical OpenClaw team (`Y5PE65HELJ`) when present locally; otherwise it prefers the first non-personal team from your Xcode account (then personal team if needed). Fastlane uses this helper automatically if `IOS_DEVELOPMENT_TEAM` is missing.
+Tip: run `scripts/ios-team-id.sh` from repo root to print a Team ID for `.env`. The helper prefers the canonical LittleBaby team (`Y5PE65HELJ`) when present locally; otherwise it prefers the first non-personal team from your Xcode account (then personal team if needed). Fastlane uses this helper automatically if `IOS_DEVELOPMENT_TEAM` is missing.
 
 For local/manual iOS builds that stay on direct APNs, configure the gateway host separately with `LITTLEBABY_APNS_TEAM_ID`, `LITTLEBABY_APNS_KEY_ID`, and either `LITTLEBABY_APNS_PRIVATE_KEY_P8` or `LITTLEBABY_APNS_PRIVATE_KEY_PATH`. Those gateway runtime env vars are separate from Fastlane's `.env`.
 
@@ -98,7 +98,7 @@ Maintainer recovery path for a fresh clone on the same Mac:
 ```bash
 ASC_KEY_ID=YOUR_KEY_ID
 ASC_ISSUER_ID=YOUR_ISSUER_ID
-ASC_KEYCHAIN_SERVICE=openclaw-asc-key
+ASC_KEYCHAIN_SERVICE=littlebaby-asc-key
 ASC_KEYCHAIN_ACCOUNT=YOUR_MAC_USERNAME
 ```
 
@@ -129,7 +129,7 @@ pnpm ios:beta
 
 Quick verification after upload:
 
-- confirm `apps/ios/build/beta/OpenClaw-<version>.ipa` exists
+- confirm `apps/ios/build/beta/LittleBaby-<version>.ipa` exists
 - confirm Fastlane prints `Uploaded iOS beta: version=<version> short=<short> build=<build>`
 - remember that TestFlight processing can take a few minutes after the upload succeeds
 
@@ -144,6 +144,6 @@ Versioning rules:
 - Fastlane resolves `CFBundleVersion` as the next integer TestFlight build number for that short version
 - Run `pnpm ios:version:sync` after changing `apps/ios/version.json` or `apps/ios/CHANGELOG.md`
 - `pnpm ios:version:check` validates that checked-in iOS version artifacts are in sync
-- The beta flow regenerates `apps/ios/OpenClaw.xcodeproj` from `apps/ios/project.yml` before archiving
+- The beta flow regenerates `apps/ios/LittleBaby.xcodeproj` from `apps/ios/project.yml` before archiving
 - Local beta signing uses a temporary generated xcconfig and leaves local development signing overrides untouched
 - See `apps/ios/VERSIONING.md` for the detailed workflow

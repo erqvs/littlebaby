@@ -9,7 +9,7 @@ describe("identity avatar validation", () => {
       const workspace = path.join(home, "littlebaby");
       const res = validateConfigObject({
         agents: {
-          list: [{ id: "main", workspace, identity: { avatar: "avatars/openclaw.png" } }],
+          list: [{ id: "main", workspace, identity: { avatar: "avatars/littlebaby.png" } }],
         },
       });
       expect(res.ok).toBe(true);

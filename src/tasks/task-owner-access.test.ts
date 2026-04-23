@@ -20,7 +20,7 @@ afterEach(() => {
 });
 
 async function withTaskRegistryTempDir<T>(run: () => Promise<T> | T): Promise<T> {
-  return await withTempDir({ prefix: "openclaw-task-owner-access-" }, async (root) => {
+  return await withTempDir({ prefix: "littlebaby-task-owner-access-" }, async (root) => {
     const previousStateDir = process.env.LITTLEBABY_STATE_DIR;
     process.env.LITTLEBABY_STATE_DIR = root;
     resetTaskRegistryForTests({ persist: false });

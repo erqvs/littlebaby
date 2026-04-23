@@ -10,8 +10,8 @@
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
-import { resolveRuntimeServiceVersion } from "openclaw/plugin-sdk/cli-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { resolveRuntimeServiceVersion } from "littlebaby/plugin-sdk/cli-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import type { QQBotAccountConfig } from "./types.js";
 import { debugLog } from "./utils/debug-log.js";
 import { getHomeDir, getQQBotDataDir, isWindows } from "./utils/platform.js";
@@ -39,8 +39,8 @@ function readPluginVersion(): string {
 // Read the package version from package.json.
 const PLUGIN_VERSION = readPluginVersion();
 
-const QQBOT_PLUGIN_GITHUB_URL = "https://github.com/openclaw/openclaw/tree/main/extensions/qqbot";
-const QQBOT_UPGRADE_GUIDE_URL = "https://q.qq.com/qqbot/openclaw/upgrade.html";
+const QQBOT_PLUGIN_GITHUB_URL = "https://github.com/littlebaby/littlebaby/tree/main/extensions/qqbot";
+const QQBOT_UPGRADE_GUIDE_URL = "https://q.qq.com/qqbot/littlebaby/upgrade.html";
 
 // ============ Types ============
 
@@ -182,15 +182,15 @@ export function getFrameworkCommands(): QQBotFrameworkCommand[] {
 // ============ Built-in commands ============
 
 /**
- * /bot-ping — test current network latency between OpenClaw and QQ.
+ * /bot-ping — test current network latency between LittleBaby and QQ.
  */
 registerCommand({
   name: "bot-ping",
-  description: "测试 OpenClaw 与 QQ 之间的网络延迟",
+  description: "测试 LittleBaby 与 QQ 之间的网络延迟",
   usage: [
     `/bot-ping`,
     ``,
-    `测试当前 OpenClaw 宿主机与 QQ 服务器之间的网络延迟。`,
+    `测试当前 LittleBaby 宿主机与 QQ 服务器之间的网络延迟。`,
     `返回网络传输耗时和插件处理耗时。`,
   ].join("\n"),
   handler: (ctx) => {
@@ -214,15 +214,15 @@ registerCommand({
 });
 
 /**
- * /bot-version — show the OpenClaw framework version.
+ * /bot-version — show the LittleBaby framework version.
  */
 registerCommand({
   name: "bot-version",
-  description: "查看 OpenClaw 框架版本",
-  usage: [`/bot-version`, ``, `查看当前 OpenClaw 框架版本。`].join("\n"),
+  description: "查看 LittleBaby 框架版本",
+  usage: [`/bot-version`, ``, `查看当前 LittleBaby 框架版本。`].join("\n"),
   handler: async () => {
     const frameworkVersion = resolveRuntimeServiceVersion();
-    const lines = [`🦞 OpenClaw 版本：${frameworkVersion}`];
+    const lines = [`🦞 LittleBaby 版本：${frameworkVersion}`];
     lines.push(`🌟 官方 GitHub 仓库：[点击前往](${QQBOT_PLUGIN_GITHUB_URL})`);
     return lines.join("\n");
   },
@@ -315,12 +315,12 @@ function collectCandidateLogDirs(): string[] {
     if (!value) {
       continue;
     }
-    if (/STATE_DIR$/i.test(key) && /(OPENCLAW|CLAWDBOT|MOLTBOT)/i.test(key)) {
+    if (/STATE_DIR$/i.test(key) && /(LITTLEBABY|CLAWDBOT|MOLTBOT)/i.test(key)) {
       pushStateDir(value);
     }
   }
 
-  for (const name of [".openclaw", ".clawdbot", ".moltbot", "littlebaby", "clawdbot", "moltbot"]) {
+  for (const name of [".littlebaby", ".clawdbot", ".moltbot", "littlebaby", "clawdbot", "moltbot"]) {
     pushDir(path.join(homeDir, name));
     pushDir(path.join(homeDir, name, "logs"));
   }
@@ -340,7 +340,7 @@ function collectCandidateLogDirs(): string[] {
         if (!entry.isDirectory()) {
           continue;
         }
-        if (!/(openclaw|clawdbot|moltbot)/i.test(entry.name)) {
+        if (!/(littlebaby|clawdbot|moltbot)/i.test(entry.name)) {
           continue;
         }
         const base = path.join(root, entry.name);
@@ -420,7 +420,7 @@ function collectRecentLogFiles(logDirs: string[]): LogCandidate[] {
   for (const dir of logDirs) {
     pushFile(path.join(dir, "gateway.log"), dir);
     pushFile(path.join(dir, "gateway.err.log"), dir);
-    pushFile(path.join(dir, "openclaw.log"), dir);
+    pushFile(path.join(dir, "littlebaby.log"), dir);
     pushFile(path.join(dir, "clawdbot.log"), dir);
     pushFile(path.join(dir, "moltbot.log"), dir);
 
@@ -433,7 +433,7 @@ function collectRecentLogFiles(logDirs: string[]): LogCandidate[] {
         if (!/\.(log|txt)$/i.test(entry.name)) {
           continue;
         }
-        if (!/(gateway|openclaw|clawdbot|moltbot)/i.test(entry.name)) {
+        if (!/(gateway|littlebaby|clawdbot|moltbot)/i.test(entry.name)) {
           continue;
         }
         pushFile(path.join(dir, entry.name), dir);
@@ -602,7 +602,7 @@ registerCommand({
   usage: [
     `/bot-logs`,
     ``,
-    `导出最近的 OpenClaw 日志文件（最多 4 个文件）。`,
+    `导出最近的 LittleBaby 日志文件（最多 4 个文件）。`,
     `每个文件只保留最后 1000 行，并作为附件返回。`,
   ].join("\n"),
   handler: (ctx) => {

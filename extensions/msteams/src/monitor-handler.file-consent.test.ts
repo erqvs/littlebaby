@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig, PluginRuntime, RuntimeEnv } from "../runtime-api.js";
+import type { LittleBabyConfig, PluginRuntime, RuntimeEnv } from "../runtime-api.js";
 import {
   type MSTeamsActivityHandler,
   type MSTeamsMessageHandlerDeps,
@@ -48,7 +48,7 @@ function createRuntimeStub(stateDir?: string): PluginRuntime {
         if (override) {
           return override;
         }
-        return stateDir ?? path.join(os.homedir(), ".openclaw");
+        return stateDir ?? path.join(os.homedir(), ".littlebaby");
       },
     },
   } as unknown as PluginRuntime;
@@ -58,7 +58,7 @@ const runtimeStub: PluginRuntime = createRuntimeStub();
 
 function createDeps(): MSTeamsMessageHandlerDeps {
   return createMSTeamsMessageHandlerDeps({
-    cfg: {} as OpenClawConfig,
+    cfg: {} as LittleBabyConfig,
     runtime: {
       error: vi.fn(),
     } as unknown as RuntimeEnv,
@@ -318,7 +318,7 @@ describe("msteams file consent invoke FS fallback", () => {
 
   beforeEach(async () => {
     originalStateDir = process.env.LITTLEBABY_STATE_DIR;
-    tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "openclaw-msteams-invoke-"));
+    tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "littlebaby-msteams-invoke-"));
     process.env.LITTLEBABY_STATE_DIR = tmpDir;
     setMSTeamsRuntime(createRuntimeStub(tmpDir));
     clearPendingUploads();

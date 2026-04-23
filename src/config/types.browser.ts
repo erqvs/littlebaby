@@ -5,7 +5,7 @@ export type BrowserProfileConfig = {
   cdpUrl?: string;
   /** Explicit user data directory for existing-session Chrome MCP attachment. */
   userDataDir?: string;
-  /** Profile driver (default: openclaw). */
+  /** Profile driver (default: littlebaby). */
   driver?: "littlebaby" | "clawd" | "existing-session";
   /** If true, never launch a browser for this profile; only attach. Falls back to browser.attachOnly. */
   attachOnly?: boolean;
@@ -40,7 +40,7 @@ export type BrowserConfig = {
   remoteCdpTimeoutMs?: number;
   /** Remote CDP WebSocket handshake timeout (ms). Default: max(remoteCdpTimeoutMs * 2, 2000). */
   remoteCdpHandshakeTimeoutMs?: number;
-  /** Accent color for the openclaw browser profile (hex). Default: #FF4500 */
+  /** Accent color for the littlebaby browser profile (hex). Default: #FF4500 */
   color?: string;
   /** Override the browser executable path (all platforms). */
   executablePath?: string;

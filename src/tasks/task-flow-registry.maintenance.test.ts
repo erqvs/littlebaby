@@ -22,7 +22,7 @@ const ORIGINAL_STATE_DIR = process.env.LITTLEBABY_STATE_DIR;
 async function withTaskFlowMaintenanceStateDir(
   run: (root: string) => Promise<void>,
 ): Promise<void> {
-  await withTempDir({ prefix: "openclaw-task-flow-maintenance-" }, async (root) => {
+  await withTempDir({ prefix: "littlebaby-task-flow-maintenance-" }, async (root) => {
     process.env.LITTLEBABY_STATE_DIR = root;
     resetTaskRegistryDeliveryRuntimeForTests();
     resetTaskRegistryForTests();

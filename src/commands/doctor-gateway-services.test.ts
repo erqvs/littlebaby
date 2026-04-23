@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { createDoctorPrompter } from "./doctor-prompter.js";
 import {
@@ -126,12 +126,12 @@ function makeDoctorPrompts() {
   };
 }
 
-async function runRepair(cfg: OpenClawConfig) {
+async function runRepair(cfg: LittleBabyConfig) {
   await maybeRepairGatewayServiceConfig(cfg, "local", makeDoctorIo(), makeDoctorPrompts());
 }
 
 async function runNonInteractiveRepair(params: {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   updateInProgress?: boolean;
 }) {
   Object.defineProperty(process.stdin, "isTTY", {
@@ -159,7 +159,7 @@ async function runNonInteractiveRepair(params: {
 
 const gatewayProgramArguments = [
   "/usr/bin/node",
-  "/usr/local/bin/openclaw",
+  "/usr/local/bin/littlebaby",
   "gateway",
   "--port",
   "18789",
@@ -226,7 +226,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fsMocks.realpath.mockImplementation(async (value: string) => value);
-    mocks.resolveGatewayAuthTokenForService.mockImplementation(async (cfg: OpenClawConfig, env) => {
+    mocks.resolveGatewayAuthTokenForService.mockImplementation(async (cfg: LittleBabyConfig, env) => {
       const configToken =
         typeof cfg.gateway?.auth?.token === "string" ? cfg.gateway.auth.token.trim() : undefined;
       const envToken = env.LITTLEBABY_GATEWAY_TOKEN?.trim() || undefined;
@@ -249,7 +249,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
   it("treats gateway.auth.token as source of truth for service token repairs", async () => {
     setupGatewayTokenRepairScenario();
 
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       gateway: {
         auth: {
           mode: "token",
@@ -285,7 +285,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     await withEnvAsync({ LITTLEBABY_GATEWAY_TOKEN: "env-token" }, async () => {
       setupGatewayTokenRepairScenario();
 
-      const cfg: OpenClawConfig = {
+      const cfg: LittleBabyConfig = {
         gateway: {},
       };
 
@@ -323,14 +323,14 @@ describe("maybeRepairGatewayServiceConfig", () => {
 
   it("does not flag entrypoint mismatch when symlink and realpath match", async () => {
     setupGatewayEntrypointRepairScenario({
-      currentEntrypoint: "/Users/test/Library/pnpm/global/5/node_modules/openclaw/dist/index.js",
+      currentEntrypoint: "/Users/test/Library/pnpm/global/5/node_modules/littlebaby/dist/index.js",
       installEntrypoint:
-        "/Users/test/Library/pnpm/global/5/node_modules/.pnpm/openclaw@2026.3.12/node_modules/openclaw/dist/index.js",
+        "/Users/test/Library/pnpm/global/5/node_modules/.pnpm/littlebaby@2026.3.12/node_modules/littlebaby/dist/index.js",
       realpath: async (value: string) => {
-        if (value.includes("/global/5/node_modules/openclaw/")) {
+        if (value.includes("/global/5/node_modules/littlebaby/")) {
           return value.replace(
-            "/global/5/node_modules/openclaw/",
-            "/global/5/node_modules/.pnpm/openclaw@2026.3.12/node_modules/openclaw/",
+            "/global/5/node_modules/littlebaby/",
+            "/global/5/node_modules/.pnpm/littlebaby@2026.3.12/node_modules/littlebaby/",
           );
         }
         return value;
@@ -349,8 +349,8 @@ describe("maybeRepairGatewayServiceConfig", () => {
 
   it("does not flag entrypoint mismatch when realpath fails but normalized absolute paths match", async () => {
     setupGatewayEntrypointRepairScenario({
-      currentEntrypoint: "/opt/openclaw/../openclaw/dist/index.js",
-      installEntrypoint: "/opt/openclaw/dist/index.js",
+      currentEntrypoint: "/opt/littlebaby/../littlebaby/dist/index.js",
+      installEntrypoint: "/opt/littlebaby/dist/index.js",
       realpathError: new Error("no realpath"),
     });
 
@@ -367,8 +367,8 @@ describe("maybeRepairGatewayServiceConfig", () => {
   it("still flags entrypoint mismatch when canonicalized paths differ", async () => {
     setupGatewayEntrypointRepairScenario({
       currentEntrypoint:
-        "/Users/test/.nvm/versions/node/v22.0.0/lib/node_modules/openclaw/dist/index.js",
-      installEntrypoint: "/Users/test/Library/pnpm/global/5/node_modules/openclaw/dist/index.js",
+        "/Users/test/.nvm/versions/node/v22.0.0/lib/node_modules/littlebaby/dist/index.js",
+      installEntrypoint: "/Users/test/Library/pnpm/global/5/node_modules/littlebaby/dist/index.js",
     });
 
     await runRepair({ gateway: {} });
@@ -383,8 +383,8 @@ describe("maybeRepairGatewayServiceConfig", () => {
 
   it("repairs entrypoint mismatch in non-interactive fix mode", async () => {
     setupGatewayEntrypointRepairScenario({
-      currentEntrypoint: "/Users/test/Library/npm/node_modules/openclaw/dist/entry.js",
-      installEntrypoint: "/Users/test/Library/npm/node_modules/openclaw/dist/index.js",
+      currentEntrypoint: "/Users/test/Library/npm/node_modules/littlebaby/dist/entry.js",
+      installEntrypoint: "/Users/test/Library/npm/node_modules/littlebaby/dist/index.js",
       installWorkingDirectory: "/tmp",
     });
 
@@ -403,8 +403,8 @@ describe("maybeRepairGatewayServiceConfig", () => {
 
   it("stages service config repairs during non-interactive update repairs", async () => {
     setupGatewayEntrypointRepairScenario({
-      currentEntrypoint: "/Users/test/Library/npm/node_modules/openclaw/dist/entry.js",
-      installEntrypoint: "/Users/test/Library/npm/node_modules/openclaw/dist/index.js",
+      currentEntrypoint: "/Users/test/Library/npm/node_modules/littlebaby/dist/entry.js",
+      installEntrypoint: "/Users/test/Library/npm/node_modules/littlebaby/dist/index.js",
       installWorkingDirectory: "/tmp",
     });
 
@@ -439,7 +439,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     });
     mocks.install.mockResolvedValue(undefined);
 
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       gateway: {
         auth: {
           mode: "token",
@@ -476,7 +476,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
       async () => {
         setupGatewayTokenRepairScenario();
 
-        const cfg: OpenClawConfig = {
+        const cfg: LittleBabyConfig = {
           gateway: {},
         };
 
@@ -527,7 +527,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
       async () => {
         setupGatewayTokenRepairScenario();
 
-        const cfg: OpenClawConfig = {
+        const cfg: LittleBabyConfig = {
           gateway: {},
         };
 
@@ -577,7 +577,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
         });
         mocks.install.mockResolvedValue(undefined);
 
-        const cfg: OpenClawConfig = {
+        const cfg: LittleBabyConfig = {
           gateway: {},
         };
 
@@ -652,7 +652,7 @@ describe("maybeScanExtraGatewayServices", () => {
       "Legacy gateway removed",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "Legacy gateway services removed. Installing OpenClaw gateway next.",
+      "Legacy gateway services removed. Installing LittleBaby gateway next.",
     );
   });
 });

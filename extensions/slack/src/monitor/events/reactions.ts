@@ -1,7 +1,7 @@
 import type { SlackEventMiddlewareArgs } from "@slack/bolt";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/infra-runtime";
-import { danger } from "openclaw/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { enqueueSystemEvent } from "littlebaby/plugin-sdk/infra-runtime";
+import { danger } from "littlebaby/plugin-sdk/runtime-env";
 import type { SlackMonitorContext } from "../context.js";
 import type { SlackReactionEvent } from "../types.js";
 import { authorizeAndResolveSlackSystemEventContext } from "./system-event-context.js";

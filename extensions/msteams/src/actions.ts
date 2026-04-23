@@ -1,11 +1,11 @@
 import { Type } from "@sinclair/typebox";
-import { createMessageToolCardSchema } from "openclaw/plugin-sdk/channel-actions";
+import { createMessageToolCardSchema } from "littlebaby/plugin-sdk/channel-actions";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageToolDiscovery,
-} from "openclaw/plugin-sdk/channel-contract";
-import { createLazyRuntimeNamedExport } from "openclaw/plugin-sdk/lazy-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/channel-contract";
+import { createLazyRuntimeNamedExport } from "littlebaby/plugin-sdk/lazy-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import type { ChannelMessageActionName, ChannelPlugin } from "./channel-api.js";
 import { resolveMSTeamsCredentials } from "./token.js";
 

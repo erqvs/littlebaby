@@ -11,16 +11,16 @@ LITTLEBABY_DOCKER_LIVE_AUTH_FILES_ALL=(
   .gemini/settings.json
 )
 
-openclaw_live_trim() {
+littlebaby_live_trim() {
   local value="${1:-}"
   value="${value#"${value%%[![:space:]]*}"}"
   value="${value%"${value##*[![:space:]]}"}"
   printf '%s' "$value"
 }
 
-openclaw_live_validate_relative_home_path() {
+littlebaby_live_validate_relative_home_path() {
   local value
-  value="$(openclaw_live_trim "${1:-}")"
+  value="$(littlebaby_live_trim "${1:-}")"
   [[ -n "$value" ]] || {
     echo "ERROR: empty auth path." >&2
     return 1
@@ -34,20 +34,20 @@ openclaw_live_validate_relative_home_path() {
   printf '%s' "$value"
 }
 
-openclaw_live_normalize_auth_dir() {
+littlebaby_live_normalize_auth_dir() {
   local value
-  value="$(openclaw_live_trim "${1:-}")"
+  value="$(littlebaby_live_trim "${1:-}")"
   [[ -n "$value" ]] || return 1
   if [[ "$value" != .* ]]; then
     value=".$value"
   fi
-  value="$(openclaw_live_validate_relative_home_path "$value")" || return 1
+  value="$(littlebaby_live_validate_relative_home_path "$value")" || return 1
   printf '%s' "$value"
 }
 
-openclaw_live_should_include_auth_dir_for_provider() {
+littlebaby_live_should_include_auth_dir_for_provider() {
   local provider
-  provider="$(openclaw_live_trim "${1:-}")"
+  provider="$(littlebaby_live_trim "${1:-}")"
   case "$provider" in
     gemini | gemini-cli | google-gemini-cli)
       printf '%s\n' ".gemini"
@@ -58,9 +58,9 @@ openclaw_live_should_include_auth_dir_for_provider() {
   esac
 }
 
-openclaw_live_should_include_auth_file_for_provider() {
+littlebaby_live_should_include_auth_file_for_provider() {
   local provider
-  provider="$(openclaw_live_trim "${1:-}")"
+  provider="$(littlebaby_live_trim "${1:-}")"
   case "$provider" in
     codex-cli | openai-codex)
       printf '%s\n' ".codex/auth.json"
@@ -75,21 +75,21 @@ openclaw_live_should_include_auth_file_for_provider() {
   esac
 }
 
-openclaw_live_collect_auth_dirs_from_csv() {
+littlebaby_live_collect_auth_dirs_from_csv() {
   local raw="${1:-}"
   local token normalized
-  [[ -n "$(openclaw_live_trim "$raw")" ]] || return 0
+  [[ -n "$(littlebaby_live_trim "$raw")" ]] || return 0
   IFS=',' read -r -a tokens <<<"$raw"
   for token in "${tokens[@]}"; do
     while IFS= read -r normalized; do
       printf '%s\n' "$normalized"
-    done < <(openclaw_live_should_include_auth_dir_for_provider "$token")
+    done < <(littlebaby_live_should_include_auth_dir_for_provider "$token")
   done | awk 'NF && !seen[$0]++'
 }
 
-openclaw_live_collect_auth_dirs_from_override() {
+littlebaby_live_collect_auth_dirs_from_override() {
   local raw token normalized
-  raw="$(openclaw_live_trim "${LITTLEBABY_DOCKER_AUTH_DIRS:-}")"
+  raw="$(littlebaby_live_trim "${LITTLEBABY_DOCKER_AUTH_DIRS:-}")"
   [[ -n "$raw" ]] || return 1
   case "$raw" in
     all)
@@ -102,34 +102,34 @@ openclaw_live_collect_auth_dirs_from_override() {
   esac
   IFS=',' read -r -a tokens <<<"$raw"
   for token in "${tokens[@]}"; do
-    normalized="$(openclaw_live_normalize_auth_dir "$token")" || continue
+    normalized="$(littlebaby_live_normalize_auth_dir "$token")" || continue
     printf '%s\n' "$normalized"
   done | awk '!seen[$0]++'
   return 0
 }
 
-openclaw_live_collect_auth_dirs() {
-  if openclaw_live_collect_auth_dirs_from_override; then
+littlebaby_live_collect_auth_dirs() {
+  if littlebaby_live_collect_auth_dirs_from_override; then
     return 0
   fi
   printf '%s\n' "${LITTLEBABY_DOCKER_LIVE_AUTH_ALL[@]}"
 }
 
-openclaw_live_collect_auth_files_from_csv() {
+littlebaby_live_collect_auth_files_from_csv() {
   local raw="${1:-}"
   local token normalized
-  [[ -n "$(openclaw_live_trim "$raw")" ]] || return 0
+  [[ -n "$(littlebaby_live_trim "$raw")" ]] || return 0
   IFS=',' read -r -a tokens <<<"$raw"
   for token in "${tokens[@]}"; do
     while IFS= read -r normalized; do
       printf '%s\n' "$normalized"
-    done < <(openclaw_live_should_include_auth_file_for_provider "$token")
+    done < <(littlebaby_live_should_include_auth_file_for_provider "$token")
   done | awk 'NF && !seen[$0]++'
 }
 
-openclaw_live_collect_auth_files_from_override() {
+littlebaby_live_collect_auth_files_from_override() {
   local raw
-  raw="$(openclaw_live_trim "${LITTLEBABY_DOCKER_AUTH_DIRS:-}")"
+  raw="$(littlebaby_live_trim "${LITTLEBABY_DOCKER_AUTH_DIRS:-}")"
   [[ -n "$raw" ]] || return 1
   case "$raw" in
     all)
@@ -143,14 +143,14 @@ openclaw_live_collect_auth_files_from_override() {
   return 0
 }
 
-openclaw_live_collect_auth_files() {
-  if openclaw_live_collect_auth_files_from_override; then
+littlebaby_live_collect_auth_files() {
+  if littlebaby_live_collect_auth_files_from_override; then
     return 0
   fi
   printf '%s\n' "${LITTLEBABY_DOCKER_LIVE_AUTH_FILES_ALL[@]}"
 }
 
-openclaw_live_join_csv() {
+littlebaby_live_join_csv() {
   local first=1 value
   for value in "$@"; do
     [[ -n "$value" ]] || continue
@@ -163,7 +163,7 @@ openclaw_live_join_csv() {
   done
 }
 
-openclaw_live_stage_auth_into_home() {
+littlebaby_live_stage_auth_into_home() {
   local dest_home="${1:?destination home directory required}"
   shift
 
@@ -182,7 +182,7 @@ openclaw_live_stage_auth_into_home() {
         ;;
     esac
 
-    relative_path="$(openclaw_live_validate_relative_home_path "$1")" || return 1
+    relative_path="$(littlebaby_live_validate_relative_home_path "$1")" || return 1
     source_path="$HOME/$relative_path"
     dest_path="$dest_home/$relative_path"
 

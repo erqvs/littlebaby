@@ -12,7 +12,7 @@ import {
 describe("schtasks runtime parsing", () => {
   it.each(["Ready", "Running"])("parses %s status", (status) => {
     const output = [
-      "TaskName: \\OpenClaw Gateway",
+      "TaskName: \\LittleBaby Gateway",
       `Status: ${status}`,
       "Last Run Time: 1/8/2026 1:23:45 AM",
       "Last Run Result: 0x0",
@@ -26,7 +26,7 @@ describe("schtasks runtime parsing", () => {
 
   it("parses 'Last Result' key variant (without 'Run') (#47726)", () => {
     const output = [
-      "TaskName: \\OpenClaw Gateway",
+      "TaskName: \\LittleBaby Gateway",
       "Status: Running",
       "Last Run Time: 2026/3/16 8:34:15",
       "Last Result: 267009",
@@ -128,26 +128,26 @@ describe("resolveTaskScriptPath", () => {
     {
       name: "uses default path when LITTLEBABY_PROFILE is unset",
       env: { USERPROFILE: "C:\\Users\\test" },
-      expected: path.join("C:\\Users\\test", ".openclaw", "gateway.cmd"),
+      expected: path.join("C:\\Users\\test", ".littlebaby", "gateway.cmd"),
     },
     {
       name: "uses profile-specific path when LITTLEBABY_PROFILE is set to a custom value",
       env: { USERPROFILE: "C:\\Users\\test", LITTLEBABY_PROFILE: "jbphoenix" },
-      expected: path.join("C:\\Users\\test", ".openclaw-jbphoenix", "gateway.cmd"),
+      expected: path.join("C:\\Users\\test", ".littlebaby-jbphoenix", "gateway.cmd"),
     },
     {
       name: "prefers LITTLEBABY_STATE_DIR over profile-derived defaults",
       env: {
         USERPROFILE: "C:\\Users\\test",
         LITTLEBABY_PROFILE: "rescue",
-        LITTLEBABY_STATE_DIR: "C:\\State\\openclaw",
+        LITTLEBABY_STATE_DIR: "C:\\State\\littlebaby",
       },
-      expected: path.join("C:\\State\\openclaw", "gateway.cmd"),
+      expected: path.join("C:\\State\\littlebaby", "gateway.cmd"),
     },
     {
       name: "falls back to HOME when USERPROFILE is not set",
       env: { HOME: "/home/test", LITTLEBABY_PROFILE: "default" },
-      expected: path.join("/home/test", ".openclaw", "gateway.cmd"),
+      expected: path.join("/home/test", ".littlebaby", "gateway.cmd"),
     },
   ])("$name", ({ env, expected }) => {
     expect(resolveTaskScriptPath(env)).toBe(expected);
@@ -164,7 +164,7 @@ describe("readScheduledTaskCommand", () => {
     },
     run: (env: Record<string, string | undefined>) => Promise<void>,
   ) {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-schtasks-test-"));
     try {
       const extraEnv = typeof options.env === "function" ? options.env(tmpDir) : options.env;
       const env = {
@@ -221,8 +221,8 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          "rem OpenClaw Gateway",
-          "cd /d C:\\Projects\\openclaw",
+          "rem LittleBaby Gateway",
+          "cd /d C:\\Projects\\littlebaby",
           "set NODE_ENV=production",
           "set LITTLEBABY_PORT=18789",
           "node gateway.js --verbose",
@@ -232,7 +232,7 @@ describe("readScheduledTaskCommand", () => {
         const result = await readScheduledTaskCommand(env);
         expect(result).toEqual({
           programArguments: ["node", "gateway.js", "--verbose"],
-          workingDirectory: "C:\\Projects\\openclaw",
+          workingDirectory: "C:\\Projects\\littlebaby",
           environment: {
             NODE_ENV: "production",
             LITTLEBABY_PORT: "18789",
@@ -248,7 +248,7 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          '"C:\\Program Files\\nodejs\\node.exe" C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js gateway --port 18789',
+          '"C:\\Program Files\\nodejs\\node.exe" C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\littlebaby\\dist\\index.js gateway --port 18789',
         ],
       },
       async (env) => {
@@ -256,7 +256,7 @@ describe("readScheduledTaskCommand", () => {
         expect(result).toEqual({
           programArguments: [
             "C:\\Program Files\\nodejs\\node.exe",
-            "C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js",
+            "C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\littlebaby\\dist\\index.js",
             "gateway",
             "--port",
             "18789",
@@ -272,15 +272,15 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          '"\\\\fileserver\\OpenClaw Share\\node.exe" "\\\\fileserver\\OpenClaw Share\\dist\\index.js" gateway --port 18789',
+          '"\\\\fileserver\\LittleBaby Share\\node.exe" "\\\\fileserver\\LittleBaby Share\\dist\\index.js" gateway --port 18789',
         ],
       },
       async (env) => {
         const result = await readScheduledTaskCommand(env);
         expect(result).toEqual({
           programArguments: [
-            "\\\\fileserver\\OpenClaw Share\\node.exe",
-            "\\\\fileserver\\OpenClaw Share\\dist\\index.js",
+            "\\\\fileserver\\LittleBaby Share\\node.exe",
+            "\\\\fileserver\\LittleBaby Share\\dist\\index.js",
             "gateway",
             "--port",
             "18789",

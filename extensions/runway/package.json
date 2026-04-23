@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/runway-provider",
+  "name": "@littlebaby/runway-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Runway video provider plugin",
+  "description": "LittleBaby Runway video provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

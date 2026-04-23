@@ -1,10 +1,10 @@
 # LittleBaby
 
-A personalized AI assistant for Feishu group chat, powered by [OpenClaw](https://github.com/openclaw/openclaw).
+A personalized AI assistant for Feishu group chat, powered by [LittleBaby](https://github.com/littlebaby/littlebaby).
 
 ## What is this
 
-LittleBaby is a fork of [OpenClaw](https://github.com/openclaw/openclaw) (v2026.4.20), customized as a Feishu group chat AI companion named "小橘" (Xiao Ju).
+LittleBaby is a fork of [LittleBaby](https://github.com/littlebaby/littlebaby) (v2026.4.20), customized as a Feishu group chat AI companion named "小橘" (Xiao Ju).
 
 ### Key customizations
 
@@ -18,7 +18,7 @@ LittleBaby is a fork of [OpenClaw](https://github.com/openclaw/openclaw) (v2026.
 ```
 /var/www/projects/littlebaby/          # Source code (this repo)
 /var/www/projects/littlebaby/dist/     # Compiled output (pnpm build)
-/home/openclaw-custom/.littlebaby/     # Runtime data (config, sessions, memory)
+/home/littlebaby-custom/.littlebaby/     # Runtime data (config, sessions, memory)
 ```
 
 ## Development
@@ -50,7 +50,7 @@ systemctl restart littlebaby
 ```
 # /etc/systemd/system/littlebaby.service
 ExecStart=/usr/bin/node /var/www/projects/littlebaby/littlebaby.mjs gateway --allow-unconfigured --bind loopback --port 28789
-Environment=OPENCLAW_STATE_DIR=/home/openclaw-custom/.littlebaby
+Environment=LITTLEBABY_STATE_DIR=/home/littlebaby-custom/.littlebaby
 ```
 
 ### Useful commands
@@ -68,11 +68,11 @@ journalctl -u littlebaby | grep "ws client ready"
 
 ## Configuration
 
-- Main config: `~/.littlebaby/openclaw.json`
+- Main config: `~/.littlebaby/littlebaby.json`
 - Agent workspace: `~/.littlebaby/workspace/`
 - Session data: `~/.littlebaby/agents/main/sessions/`
 - Memory: `~/.littlebaby/memory/`
 
 ## License
 
-MIT (inherited from OpenClaw)
+MIT (inherited from LittleBaby)

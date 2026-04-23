@@ -14,7 +14,7 @@ import type {
   CaptureProtocol,
 } from "./types.js";
 
-const DEBUG_PROXY_FETCH_PATCH_KEY = Symbol.for("openclaw.debugProxy.fetchPatch");
+const DEBUG_PROXY_FETCH_PATCH_KEY = Symbol.for("littlebaby.debugProxy.fetchPatch");
 
 type GlobalFetchPatchedState = {
   originalFetch: typeof globalThis.fetch;

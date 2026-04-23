@@ -1,8 +1,8 @@
-import { resolveAckReaction } from "openclaw/plugin-sdk/agent-runtime";
+import { resolveAckReaction } from "littlebaby/plugin-sdk/agent-runtime";
 import {
   shouldAckReaction as shouldAckReactionGate,
   type AckReactionScope,
-} from "openclaw/plugin-sdk/channel-feedback";
+} from "littlebaby/plugin-sdk/channel-feedback";
 import {
   buildMentionRegexes,
   formatInboundEnvelope,
@@ -11,25 +11,25 @@ import {
   matchesMentionWithExplicit,
   resolveEnvelopeFormatOptions,
   resolveInboundMentionDecision,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { resolveControlCommandGate } from "openclaw/plugin-sdk/command-auth";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-auth";
-import { shouldHandleTextCommands } from "openclaw/plugin-sdk/command-auth";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/infra-runtime";
+} from "littlebaby/plugin-sdk/channel-inbound";
+import { resolveControlCommandGate } from "littlebaby/plugin-sdk/command-auth";
+import { hasControlCommand } from "littlebaby/plugin-sdk/command-auth";
+import { shouldHandleTextCommands } from "littlebaby/plugin-sdk/command-auth";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { enqueueSystemEvent } from "littlebaby/plugin-sdk/infra-runtime";
 import {
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
-} from "openclaw/plugin-sdk/reply-history";
-import type { FinalizedMsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { resolveThreadSessionKeys } from "openclaw/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "openclaw/plugin-sdk/security-runtime";
+} from "littlebaby/plugin-sdk/reply-history";
+import type { FinalizedMsgContext } from "littlebaby/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "littlebaby/plugin-sdk/routing";
+import { resolveThreadSessionKeys } from "littlebaby/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "littlebaby/plugin-sdk/security-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import { resolveSlackReplyToMode, type ResolvedSlackAccount } from "../../accounts.js";
 import { reactSlackMessage } from "../../actions.js";
 import { hasSlackThreadParticipation } from "../../sent-thread-cache.js";

@@ -1,7 +1,7 @@
 import {
   createPatchedAccountSetupAdapter,
   createSetupInputPresenceValidator,
-} from "openclaw/plugin-sdk/setup-runtime";
+} from "littlebaby/plugin-sdk/setup-runtime";
 
 const channel = "googlechat" as const;
 

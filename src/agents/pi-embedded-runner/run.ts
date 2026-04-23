@@ -12,7 +12,7 @@ import { normalizeOptionalString } from "../../shared/string-coerce.js";
 import { sanitizeForLog } from "../../terminal/ansi.js";
 import { resolveUserPath } from "../../utils.js";
 import { isMarkdownCapableMessageChannel } from "../../utils/message-channel.js";
-import { resolveOpenClawAgentDir } from "../agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../agent-paths.js";
 import {
   hasConfiguredModelFallbacks,
   resolveAgentExecutionContract,
@@ -49,7 +49,7 @@ import {
   shouldPreferExplicitConfigApiKeyAuth,
 } from "../model-auth.js";
 import { normalizeProviderId } from "../model-selection.js";
-import { ensureOpenClawModelsJson } from "../models-config.js";
+import { ensureLittleBabyModelsJson } from "../models-config.js";
 import { disposeSessionMcpRuntime } from "../pi-bundle-mcp-tools.js";
 import {
   classifyFailoverReason,
@@ -166,7 +166,7 @@ function buildTraceToolSummary(params: {
  * The return value is normalized: whitespace-only inputs collapse to undefined, and
  * successful resolution returns a trimmed session key. This is a read-only lookup
  * with no side effects.
- * See: https://github.com/openclaw/openclaw/issues/60552
+ * See: https://github.com/littlebaby/littlebaby/issues/60552
  */
 function backfillSessionKey(params: {
   config: RunEmbeddedPiAgentParams["config"];
@@ -281,14 +281,14 @@ export async function runEmbeddedPiAgent(
 
       let provider = (params.provider ?? DEFAULT_PROVIDER).trim() || DEFAULT_PROVIDER;
       let modelId = (params.model ?? DEFAULT_MODEL).trim() || DEFAULT_MODEL;
-      const agentDir = params.agentDir ?? resolveOpenClawAgentDir();
+      const agentDir = params.agentDir ?? resolveLittleBabyAgentDir();
       const normalizedSessionKey = params.sessionKey?.trim();
       const fallbackConfigured = hasConfiguredModelFallbacks({
         cfg: params.config,
         agentId: params.agentId,
         sessionKey: normalizedSessionKey,
       });
-      await ensureOpenClawModelsJson(params.config, agentDir);
+      await ensureLittleBabyModelsJson(params.config, agentDir);
       const resolvedSessionKey = normalizedSessionKey;
       const hookRunner = getGlobalHookRunner();
       const hookCtx = {

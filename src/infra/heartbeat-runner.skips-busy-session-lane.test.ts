@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { getActivePluginRegistry, setActivePluginRegistry } from "../plugins/runtime.js";
 import { createOutboundTestPlugin, createTestRegistry } from "../test-utils/channel-plugins.js";
 import { type HeartbeatDeps, runHeartbeatOnce } from "./heartbeat-runner.js";
@@ -35,7 +35,7 @@ beforeEach(() => {
   resetSystemEventsForTest();
 });
 
-function createHeartbeatTelegramConfig(): OpenClawConfig {
+function createHeartbeatTelegramConfig(): LittleBabyConfig {
   return {
     agents: {
       defaults: {
@@ -50,10 +50,10 @@ function createHeartbeatTelegramConfig(): OpenClawConfig {
         allowFrom: ["123"],
       },
     },
-  } as unknown as OpenClawConfig;
+  } as unknown as LittleBabyConfig;
 }
 
-async function seedHeartbeatTelegramSession(storePath: string, cfg: OpenClawConfig) {
+async function seedHeartbeatTelegramSession(storePath: string, cfg: LittleBabyConfig) {
   return seedMainSessionStore(storePath, cfg, {
     lastChannel: "telegram",
     lastProvider: "telegram",

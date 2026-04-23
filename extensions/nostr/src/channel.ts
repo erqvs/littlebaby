@@ -1,14 +1,14 @@
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
+import { describeAccountSnapshot } from "littlebaby/plugin-sdk/account-helpers";
 import {
   createScopedDmSecurityResolver,
   createTopLevelChannelConfigAdapter,
-} from "openclaw/plugin-sdk/channel-config-helpers";
-import { createChatChannelPlugin } from "openclaw/plugin-sdk/channel-core";
+} from "littlebaby/plugin-sdk/channel-config-helpers";
+import { createChatChannelPlugin } from "littlebaby/plugin-sdk/channel-core";
 import {
   buildPassiveChannelStatusSummary,
   buildTrafficStatusSummary,
-} from "openclaw/plugin-sdk/extension-shared";
-import { createComputedAccountStatusAdapter } from "openclaw/plugin-sdk/status-helpers";
+} from "littlebaby/plugin-sdk/extension-shared";
+import { createComputedAccountStatusAdapter } from "littlebaby/plugin-sdk/status-helpers";
 import {
   buildChannelConfigSchema,
   collectStatusIssuesFromLastError,

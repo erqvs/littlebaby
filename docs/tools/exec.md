@@ -43,7 +43,7 @@ Notes:
   then falls back to Windows PowerShell 5.1.
 - Host execution (`gateway`/`node`) rejects `env.PATH` and loader overrides (`LD_*`/`DYLD_*`) to
   prevent binary hijacking or injected code.
-- OpenClaw sets `LITTLEBABY_SHELL=exec` in the spawned command environment (including PTY and sandbox execution) so shell/profile rules can detect exec-tool context.
+- LittleBaby sets `LITTLEBABY_SHELL=exec` in the spawned command environment (including PTY and sandbox execution) so shell/profile rules can detect exec-tool context.
 - Important: sandboxing is **off by default**. If sandboxing is off, implicit `host=auto`
   resolves to `gateway`. Explicit `host=sandbox` still fails closed instead of silently
   running on the gateway host. Enable sandboxing or use `host=gateway` with approvals.
@@ -93,7 +93,7 @@ Example:
   - macOS: `/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
   - Linux: `/usr/local/bin`, `/usr/bin`, `/bin`
 - `host=sandbox`: runs `sh -lc` (login shell) inside the container, so `/etc/profile` may reset `PATH`.
-  OpenClaw prepends `env.PATH` after profile sourcing via an internal env var (no shell interpolation);
+  LittleBaby prepends `env.PATH` after profile sourcing via an internal env var (no shell interpolation);
   `tools.exec.pathPrepend` applies here too.
 - `host=node`: only non-blocked env overrides you pass are sent to the node. `env.PATH` overrides are
   rejected for host execution and ignored by node hosts. If you need additional PATH entries on a node,
@@ -102,8 +102,8 @@ Example:
 Per-agent node binding (use the agent list index in config):
 
 ```bash
-openclaw config get agents.list
-openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
+littlebaby config get agents.list
+littlebaby config set agents.list[0].tools.exec.node "node-id-or-name"
 ```
 
 Control UI: the Nodes tab includes a small “Exec node binding” panel for the same settings.
@@ -161,8 +161,8 @@ Use the two controls for different jobs:
 - allowlist: explicit trust for executable paths.
 
 Do not treat `safeBins` as a generic allowlist, and do not add interpreter/runtime binaries (for example `python3`, `node`, `ruby`, `bash`). If you need those, use explicit allowlist entries and keep approval prompts enabled.
-`openclaw security audit` warns when interpreter/runtime `safeBins` entries are missing explicit profiles, and `openclaw doctor --fix` can scaffold missing custom `safeBinProfiles` entries.
-`openclaw security audit` and `openclaw doctor` also warn when you explicitly add broad-behavior bins such as `jq` back into `safeBins`.
+`littlebaby security audit` warns when interpreter/runtime `safeBins` entries are missing explicit profiles, and `littlebaby doctor --fix` can scaffold missing custom `safeBinProfiles` entries.
+`littlebaby security audit` and `littlebaby doctor` also warn when you explicitly add broad-behavior bins such as `jq` back into `safeBins`.
 If you explicitly allowlist interpreters, enable `tools.exec.strictInlineEval` so inline code-eval forms still require a fresh approval.
 
 For full policy details and examples, see [Exec approvals](/tools/exec-approvals#safe-bins-stdin-only) and [Safe bins versus allowlist](/tools/exec-approvals#safe-bins-versus-allowlist).

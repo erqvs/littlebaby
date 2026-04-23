@@ -169,13 +169,13 @@ export function createTempHomeHarness(options: { prefix: string; beforeEachCase?
 
   async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     const home = path.join(fixtureRoot, `case-${++caseId}`);
-    await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+    await fs.mkdir(path.join(home, ".littlebaby", "agents", "main", "sessions"), { recursive: true });
     const envSnapshot = snapshotHomeEnv();
     process.env.HOME = home;
     process.env.USERPROFILE = home;
-    process.env.LITTLEBABY_STATE_DIR = path.join(home, ".openclaw");
-    process.env.LITTLEBABY_AGENT_DIR = path.join(home, ".openclaw", "agent");
-    process.env.PI_CODING_AGENT_DIR = path.join(home, ".openclaw", "agent");
+    process.env.LITTLEBABY_STATE_DIR = path.join(home, ".littlebaby");
+    process.env.LITTLEBABY_AGENT_DIR = path.join(home, ".littlebaby", "agent");
+    process.env.PI_CODING_AGENT_DIR = path.join(home, ".littlebaby", "agent");
 
     if (process.platform === "win32") {
       const match = home.match(/^([A-Za-z]:)(.*)$/);

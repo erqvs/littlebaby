@@ -1,16 +1,16 @@
 {
-  "name": "@openclaw/openai-provider",
+  "name": "@littlebaby/openai-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw OpenAI provider plugins",
+  "description": "LittleBaby OpenAI provider plugins",
   "type": "module",
   "dependencies": {
     "ws": "^8.20.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

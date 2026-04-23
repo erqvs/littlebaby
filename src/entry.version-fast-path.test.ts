@@ -116,7 +116,7 @@ describe("entry root version fast path", () => {
 
     await importEntry("commit-tagged");
     await flushEntrySideEffects();
-    expect(logSpy).toHaveBeenCalledWith("OpenClaw 9.9.9-test (abc1234)");
+    expect(logSpy).toHaveBeenCalledWith("LittleBaby 9.9.9-test (abc1234)");
     expect(exitSpy).toHaveBeenCalledWith(0);
 
     logSpy.mockRestore();
@@ -128,7 +128,7 @@ describe("entry root version fast path", () => {
 
     await importEntry("plain-version");
     await flushEntrySideEffects();
-    expect(logSpy).toHaveBeenCalledWith("OpenClaw 9.9.9-test");
+    expect(logSpy).toHaveBeenCalledWith("LittleBaby 9.9.9-test");
     expect(exitSpy).toHaveBeenCalledWith(0);
 
     logSpy.mockRestore();

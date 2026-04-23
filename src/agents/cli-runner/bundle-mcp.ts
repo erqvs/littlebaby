@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { applyMergePatch } from "../../config/merge-patch.js";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import {
   extractMcpServerMap,
   loadEnabledBundleMcpConfig,
@@ -221,7 +221,7 @@ async function writeGeminiSystemSettings(
   mergedConfig: BundleMcpConfig,
   inheritedEnv: Record<string, string> | undefined,
 ): Promise<{ env: Record<string, string>; cleanup: () => Promise<void> }> {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gemini-mcp-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-gemini-mcp-"));
   const settingsPath = path.join(tempDir, "settings.json");
   const existingSettingsPath =
     inheritedEnv?.GEMINI_CLI_SYSTEM_SETTINGS_PATH ?? process.env.GEMINI_CLI_SYSTEM_SETTINGS_PATH;
@@ -289,7 +289,7 @@ async function prepareModeSpecificBundleMcpConfig(params: {
     };
   }
 
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-mcp-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-cli-mcp-"));
   const mcpConfigPath = path.join(tempDir, "mcp.json");
   await fs.writeFile(mcpConfigPath, serializedConfig, "utf-8");
   return {
@@ -314,7 +314,7 @@ export async function prepareCliBundleMcpConfig(params: {
   mode?: CliBundleMcpMode;
   backend: CliBackendConfig;
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   additionalConfig?: BundleMcpConfig;
   env?: Record<string, string>;
   warn?: (message: string) => void;

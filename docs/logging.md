@@ -9,7 +9,7 @@ title: "Logging Overview"
 
 # Logging
 
-OpenClaw has two main log surfaces:
+LittleBaby has two main log surfaces:
 
 - **File logs** (JSON lines) written by the Gateway.
 - **Console output** shown in terminals and the Gateway Debug UI.
@@ -21,16 +21,16 @@ logs live, how to read them, and how to configure log levels and formats.
 
 By default, the Gateway writes a rolling log file under:
 
-`/tmp/openclaw/openclaw-YYYY-MM-DD.log`
+`/tmp/littlebaby/littlebaby-YYYY-MM-DD.log`
 
 The date uses the gateway host's local timezone.
 
-You can override this in `~/.littlebaby/openclaw.json`:
+You can override this in `~/.littlebaby/littlebaby.json`:
 
 ```json
 {
   "logging": {
-    "file": "/path/to/openclaw.log"
+    "file": "/path/to/littlebaby.log"
   }
 }
 ```
@@ -42,7 +42,7 @@ You can override this in `~/.littlebaby/openclaw.json`:
 Use the CLI to tail the gateway log file via RPC:
 
 ```bash
-openclaw logs --follow
+littlebaby logs --follow
 ```
 
 Useful current options:
@@ -70,14 +70,14 @@ In JSON mode, the CLI emits `type`-tagged objects:
 - `notice`: truncation / rotation hints
 - `raw`: unparsed log line
 
-If the local loopback Gateway asks for pairing, `openclaw logs` falls back to
+If the local loopback Gateway asks for pairing, `littlebaby logs` falls back to
 the configured local log file automatically. Explicit `--url` targets do not
 use this fallback.
 
 If the Gateway is unreachable, the CLI prints a short hint to run:
 
 ```bash
-openclaw doctor
+littlebaby doctor
 ```
 
 ### Control UI (web)
@@ -90,7 +90,7 @@ See [/web/control-ui](/web/control-ui) for how to open it.
 To filter channel activity (WhatsApp/Telegram/etc), use:
 
 ```bash
-openclaw channels logs --channel whatsapp
+littlebaby channels logs --channel whatsapp
 ```
 
 ## Log formats
@@ -112,7 +112,7 @@ Console formatting is controlled by `logging.consoleStyle`.
 
 ### Gateway WebSocket logs
 
-`openclaw gateway` also has WebSocket protocol logging for RPC traffic:
+`littlebaby gateway` also has WebSocket protocol logging for RPC traffic:
 
 - normal mode: only interesting results (errors, parse errors, slow calls)
 - `--verbose`: all request/response traffic
@@ -122,20 +122,20 @@ Console formatting is controlled by `logging.consoleStyle`.
 Examples:
 
 ```bash
-openclaw gateway
-openclaw gateway --verbose --ws-log compact
-openclaw gateway --verbose --ws-log full
+littlebaby gateway
+littlebaby gateway --verbose --ws-log compact
+littlebaby gateway --verbose --ws-log full
 ```
 
 ## Configuring logging
 
-All logging configuration lives under `logging` in `~/.littlebaby/openclaw.json`.
+All logging configuration lives under `logging` in `~/.littlebaby/littlebaby.json`.
 
 ```json
 {
   "logging": {
     "level": "info",
-    "file": "/tmp/openclaw/openclaw-YYYY-MM-DD.log",
+    "file": "/tmp/littlebaby/littlebaby-YYYY-MM-DD.log",
     "consoleLevel": "info",
     "consoleStyle": "pretty",
     "redactSensitive": "tools",
@@ -149,7 +149,7 @@ All logging configuration lives under `logging` in `~/.littlebaby/openclaw.json`
 - `logging.level`: **file logs** (JSONL) level.
 - `logging.consoleLevel`: **console** verbosity level.
 
-You can override both via the **`LITTLEBABY_LOG_LEVEL`** environment variable (e.g. `LITTLEBABY_LOG_LEVEL=debug`). The env var takes precedence over the config file, so you can raise verbosity for a single run without editing `openclaw.json`. You can also pass the global CLI option **`--log-level <level>`** (for example, `openclaw --log-level debug gateway run`), which overrides the environment variable for that command.
+You can override both via the **`LITTLEBABY_LOG_LEVEL`** environment variable (e.g. `LITTLEBABY_LOG_LEVEL=debug`). The env var takes precedence over the config file, so you can raise verbosity for a single run without editing `littlebaby.json`. You can also pass the global CLI option **`--log-level <level>`** (for example, `littlebaby --log-level debug gateway run`), which overrides the environment variable for that command.
 
 `--verbose` only affects console output and WS log verbosity; it does not change
 file log levels.
@@ -184,7 +184,7 @@ diagnostics + the exporter plugin are enabled.
 
 - **OpenTelemetry (OTel)**: the data model + SDKs for traces, metrics, and logs.
 - **OTLP**: the wire protocol used to export OTel data to a collector/backend.
-- OpenClaw exports via **OTLP/HTTP (protobuf)** today.
+- LittleBaby exports via **OTLP/HTTP (protobuf)** today.
 
 ### Signals exported
 
@@ -287,7 +287,7 @@ works with any OpenTelemetry collector/backend that accepts OTLP/HTTP.
 
 Notes:
 
-- You can also enable the plugin with `openclaw plugins enable diagnostics-otel`.
+- You can also enable the plugin with `littlebaby plugins enable diagnostics-otel`.
 - `protocol` currently supports `http/protobuf` only. `grpc` is ignored.
 - Metrics include token usage, cost, context size, run duration, and message-flow
   counters/histograms (webhooks, queueing, session state, queue depth/wait).
@@ -301,60 +301,60 @@ Notes:
 
 Model usage:
 
-- `openclaw.tokens` (counter, attrs: `openclaw.token`, `openclaw.channel`,
-  `openclaw.provider`, `openclaw.model`)
-- `openclaw.cost.usd` (counter, attrs: `openclaw.channel`, `openclaw.provider`,
-  `openclaw.model`)
-- `openclaw.run.duration_ms` (histogram, attrs: `openclaw.channel`,
-  `openclaw.provider`, `openclaw.model`)
-- `openclaw.context.tokens` (histogram, attrs: `openclaw.context`,
-  `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `littlebaby.tokens` (counter, attrs: `littlebaby.token`, `littlebaby.channel`,
+  `littlebaby.provider`, `littlebaby.model`)
+- `littlebaby.cost.usd` (counter, attrs: `littlebaby.channel`, `littlebaby.provider`,
+  `littlebaby.model`)
+- `littlebaby.run.duration_ms` (histogram, attrs: `littlebaby.channel`,
+  `littlebaby.provider`, `littlebaby.model`)
+- `littlebaby.context.tokens` (histogram, attrs: `littlebaby.context`,
+  `littlebaby.channel`, `littlebaby.provider`, `littlebaby.model`)
 
 Message flow:
 
-- `openclaw.webhook.received` (counter, attrs: `openclaw.channel`,
-  `openclaw.webhook`)
-- `openclaw.webhook.error` (counter, attrs: `openclaw.channel`,
-  `openclaw.webhook`)
-- `openclaw.webhook.duration_ms` (histogram, attrs: `openclaw.channel`,
-  `openclaw.webhook`)
-- `openclaw.message.queued` (counter, attrs: `openclaw.channel`,
-  `openclaw.source`)
-- `openclaw.message.processed` (counter, attrs: `openclaw.channel`,
-  `openclaw.outcome`)
-- `openclaw.message.duration_ms` (histogram, attrs: `openclaw.channel`,
-  `openclaw.outcome`)
+- `littlebaby.webhook.received` (counter, attrs: `littlebaby.channel`,
+  `littlebaby.webhook`)
+- `littlebaby.webhook.error` (counter, attrs: `littlebaby.channel`,
+  `littlebaby.webhook`)
+- `littlebaby.webhook.duration_ms` (histogram, attrs: `littlebaby.channel`,
+  `littlebaby.webhook`)
+- `littlebaby.message.queued` (counter, attrs: `littlebaby.channel`,
+  `littlebaby.source`)
+- `littlebaby.message.processed` (counter, attrs: `littlebaby.channel`,
+  `littlebaby.outcome`)
+- `littlebaby.message.duration_ms` (histogram, attrs: `littlebaby.channel`,
+  `littlebaby.outcome`)
 
 Queues + sessions:
 
-- `openclaw.queue.lane.enqueue` (counter, attrs: `openclaw.lane`)
-- `openclaw.queue.lane.dequeue` (counter, attrs: `openclaw.lane`)
-- `openclaw.queue.depth` (histogram, attrs: `openclaw.lane` or
-  `openclaw.channel=heartbeat`)
-- `openclaw.queue.wait_ms` (histogram, attrs: `openclaw.lane`)
-- `openclaw.session.state` (counter, attrs: `openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (counter, attrs: `openclaw.state`)
-- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`)
-- `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
+- `littlebaby.queue.lane.enqueue` (counter, attrs: `littlebaby.lane`)
+- `littlebaby.queue.lane.dequeue` (counter, attrs: `littlebaby.lane`)
+- `littlebaby.queue.depth` (histogram, attrs: `littlebaby.lane` or
+  `littlebaby.channel=heartbeat`)
+- `littlebaby.queue.wait_ms` (histogram, attrs: `littlebaby.lane`)
+- `littlebaby.session.state` (counter, attrs: `littlebaby.state`, `littlebaby.reason`)
+- `littlebaby.session.stuck` (counter, attrs: `littlebaby.state`)
+- `littlebaby.session.stuck_age_ms` (histogram, attrs: `littlebaby.state`)
+- `littlebaby.run.attempt` (counter, attrs: `littlebaby.attempt`)
 
 ### Exported spans (names + key attributes)
 
-- `openclaw.model.usage`
-  - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
-  - `openclaw.sessionKey`, `openclaw.sessionId`
-  - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
-- `openclaw.webhook.processed`
-  - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`
-- `openclaw.webhook.error`
-  - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`,
-    `openclaw.error`
-- `openclaw.message.processed`
-  - `openclaw.channel`, `openclaw.outcome`, `openclaw.chatId`,
-    `openclaw.messageId`, `openclaw.sessionKey`, `openclaw.sessionId`,
-    `openclaw.reason`
-- `openclaw.session.stuck`
-  - `openclaw.state`, `openclaw.ageMs`, `openclaw.queueDepth`,
-    `openclaw.sessionKey`, `openclaw.sessionId`
+- `littlebaby.model.usage`
+  - `littlebaby.channel`, `littlebaby.provider`, `littlebaby.model`
+  - `littlebaby.sessionKey`, `littlebaby.sessionId`
+  - `littlebaby.tokens.*` (input/output/cache_read/cache_write/total)
+- `littlebaby.webhook.processed`
+  - `littlebaby.channel`, `littlebaby.webhook`, `littlebaby.chatId`
+- `littlebaby.webhook.error`
+  - `littlebaby.channel`, `littlebaby.webhook`, `littlebaby.chatId`,
+    `littlebaby.error`
+- `littlebaby.message.processed`
+  - `littlebaby.channel`, `littlebaby.outcome`, `littlebaby.chatId`,
+    `littlebaby.messageId`, `littlebaby.sessionKey`, `littlebaby.sessionId`,
+    `littlebaby.reason`
+- `littlebaby.session.stuck`
+  - `littlebaby.state`, `littlebaby.ageMs`, `littlebaby.queueDepth`,
+    `littlebaby.sessionKey`, `littlebaby.sessionId`
 
 ### Sampling + flushing
 
@@ -378,7 +378,7 @@ Queues + sessions:
 
 ## Troubleshooting tips
 
-- **Gateway not reachable?** Run `openclaw doctor` first.
+- **Gateway not reachable?** Run `littlebaby doctor` first.
 - **Logs empty?** Check that the Gateway is running and writing to the file path
   in `logging.file`.
 - **Need more detail?** Set `logging.level` to `debug` or `trace` and retry.

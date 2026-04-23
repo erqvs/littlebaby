@@ -420,7 +420,7 @@ function packageClusterMeta(relativePackagePath) {
   if (relativePackagePath === "ui/package.json") {
     return {
       cluster: "ui",
-      packageName: "openclaw-control-ui",
+      packageName: "littlebaby-control-ui",
       packagePath: relativePackagePath,
       reachability: "workspace-ui",
     };
@@ -523,7 +523,7 @@ async function buildMissingPackages(params = {}) {
       decisionReason: classification.reason,
       packageName: pkg.name ?? meta.packageName,
       packagePath: relativePackagePath,
-      npmSpec: redactNpmSpec(pkg.openclaw?.install?.npmSpec),
+      npmSpec: redactNpmSpec(pkg.littlebaby?.install?.npmSpec),
       private: pkg.private === true,
       pluginSdkReachability:
         pluginSdkEntries.length > 0 ? { staticEntryPoints: pluginSdkEntries } : undefined,

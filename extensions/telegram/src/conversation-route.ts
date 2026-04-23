@@ -1,23 +1,23 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import {
   resolveConfiguredBindingRoute,
   type ConfiguredBindingRouteResult,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { getSessionBindingService } from "openclaw/plugin-sdk/conversation-runtime";
-import { isPluginOwnedSessionBindingRecord } from "openclaw/plugin-sdk/conversation-runtime";
+} from "littlebaby/plugin-sdk/conversation-runtime";
+import { getSessionBindingService } from "littlebaby/plugin-sdk/conversation-runtime";
+import { isPluginOwnedSessionBindingRecord } from "littlebaby/plugin-sdk/conversation-runtime";
 import {
   buildAgentSessionKey,
   deriveLastRoutePolicy,
   resolveAgentRoute,
-} from "openclaw/plugin-sdk/routing";
+} from "littlebaby/plugin-sdk/routing";
 import {
   buildAgentMainSessionKey,
   DEFAULT_ACCOUNT_ID,
   resolveAgentIdFromSessionKey,
   sanitizeAgentId,
-} from "openclaw/plugin-sdk/routing";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/routing";
+import { logVerbose } from "littlebaby/plugin-sdk/runtime-env";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import {
   buildTelegramGroupPeerId,
   buildTelegramParentPeer,
@@ -25,7 +25,7 @@ import {
 } from "./bot/helpers.js";
 
 export function resolveTelegramConversationRoute(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   chatId: number | string;
   isGroup: boolean;
@@ -154,7 +154,7 @@ export function resolveTelegramConversationRoute(params: {
 }
 
 export function resolveTelegramConversationBaseSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   route: Pick<
     ReturnType<typeof resolveTelegramConversationRoute>["route"],
     "agentId" | "accountId" | "matchedBy" | "sessionKey"

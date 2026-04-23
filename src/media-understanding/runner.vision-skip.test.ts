@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import {
   withBundledPluginAllowlistCompat,
   withBundledPluginEnablementCompat,
@@ -59,7 +59,7 @@ let runCapability: typeof import("./runner.js").runCapability;
 
 function setCompatibleActiveMediaUnderstandingRegistry(
   pluginRegistry: ReturnType<typeof createEmptyPluginRegistry>,
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
 ) {
   const pluginIds = loadPluginManifestRegistry({
     config: cfg,
@@ -115,7 +115,7 @@ describe("runCapability image skip", () => {
     const ctx: MsgContext = { MediaPath: "/tmp/image.png", MediaType: "image/png" };
     const media = normalizeMediaAttachments(ctx);
     const cache = createMediaAttachmentCache(media);
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as LittleBabyConfig;
 
     try {
       const result = await runCapability({
@@ -143,7 +143,7 @@ describe("runCapability image skip", () => {
 
   it("uses active OpenRouter image models for auto image resolution", async () => {
     vi.stubEnv("OPENROUTER_API_KEY", "test-openrouter-key");
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as LittleBabyConfig;
     const pluginRegistry = createEmptyPluginRegistry();
     pluginRegistry.mediaUnderstandingProviders.push({
       pluginId: "openrouter",
@@ -176,7 +176,7 @@ describe("runCapability image skip", () => {
     let seenModel: string | undefined;
     await withMediaFixture(
       {
-        filePrefix: "openclaw-image-openrouter",
+        filePrefix: "littlebaby-image-openrouter",
         extension: "png",
         mediaType: "image/png",
         fileContents: Buffer.from("image"),
@@ -191,7 +191,7 @@ describe("runCapability image skip", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig;
+        } as unknown as LittleBabyConfig;
 
         const result = await runCapability({
           capability: "image",
@@ -227,7 +227,7 @@ describe("runCapability image skip", () => {
   it("skips configured image providers without an auto-resolvable model", async () => {
     await withMediaFixture(
       {
-        filePrefix: "openclaw-image-custom-skip",
+        filePrefix: "littlebaby-image-custom-skip",
         extension: "png",
         mediaType: "image/png",
         fileContents: Buffer.from("image"),
@@ -242,7 +242,7 @@ describe("runCapability image skip", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig;
+        } as unknown as LittleBabyConfig;
 
         const result = await runCapability({
           capability: "image",

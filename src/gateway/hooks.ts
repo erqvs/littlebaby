@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
 import { listAgentIds, resolveDefaultAgentId } from "../agents/agent-scope-config.js";
 import { listChannelPlugins } from "../channels/plugins/index.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { readJsonBodyWithLimit, requestBodyErrorToText } from "../infra/http-body.js";
 import { normalizeAgentId, parseAgentSessionKey } from "../routing/session-key.js";
 import type { HookExternalContentSource } from "../security/external-content.js";
@@ -40,7 +40,7 @@ export type HookSessionPolicyResolved = {
   allowedSessionKeyPrefixes?: string[];
 };
 
-export function resolveHooksConfig(cfg: OpenClawConfig): HooksConfigResolved | null {
+export function resolveHooksConfig(cfg: LittleBabyConfig): HooksConfigResolved | null {
   if (cfg.hooks?.enabled !== true) {
     return null;
   }
@@ -100,7 +100,7 @@ export function resolveHooksConfig(cfg: OpenClawConfig): HooksConfigResolved | n
   };
 }
 
-function resolveKnownAgentIds(cfg: OpenClawConfig, defaultAgentId: string): Set<string> {
+function resolveKnownAgentIds(cfg: LittleBabyConfig, defaultAgentId: string): Set<string> {
   const known = new Set(listAgentIds(cfg));
   known.add(defaultAgentId);
   return known;
@@ -146,7 +146,7 @@ export function extractHookToken(req: IncomingMessage): string | undefined {
       return token;
     }
   }
-  const headerToken = normalizeOptionalString(req.headers["x-openclaw-token"]) ?? "";
+  const headerToken = normalizeOptionalString(req.headers["x-littlebaby-token"]) ?? "";
   if (headerToken) {
     return headerToken;
   }
@@ -262,7 +262,7 @@ export function resolveHookIdempotencyKey(params: {
 }): string | undefined {
   return (
     resolveOptionalHookIdempotencyKey(params.headers?.["idempotency-key"]) ||
-    resolveOptionalHookIdempotencyKey(params.headers?.["x-openclaw-idempotency-key"]) ||
+    resolveOptionalHookIdempotencyKey(params.headers?.["x-littlebaby-idempotency-key"]) ||
     resolveOptionalHookIdempotencyKey(params.payload.idempotencyKey)
   );
 }

@@ -8,7 +8,7 @@ title: "OpenResponses API"
 
 # OpenResponses API (HTTP)
 
-OpenClaw’s Gateway can serve an OpenResponses-compatible `POST /v1/responses` endpoint.
+LittleBaby’s Gateway can serve an OpenResponses-compatible `POST /v1/responses` endpoint.
 
 This endpoint is **disabled by default**. Enable it in config first.
 
@@ -16,7 +16,7 @@ This endpoint is **disabled by default**. Enable it in config first.
 - Same port as the Gateway (WS + HTTP multiplex): `http://<gateway-host>:<port>/v1/responses`
 
 Under the hood, requests are executed as a normal Gateway agent run (same codepath as
-`openclaw agent`), so routing/permissions/config match your Gateway.
+`littlebaby agent`), so routing/permissions/config match your Gateway.
 
 ## Authentication, security, and routing
 
@@ -27,24 +27,24 @@ Operational behavior matches [OpenAI Chat Completions](/gateway/openai-http-api)
   - trusted-proxy auth (`gateway.auth.mode="trusted-proxy"`): identity-aware proxy headers from a configured non-loopback trusted proxy source
   - private-ingress open auth (`gateway.auth.mode="none"`): no auth header
 - treat the endpoint as full operator access for the gateway instance
-- for shared-secret auth modes (`token` and `password`), ignore narrower bearer-declared `x-openclaw-scopes` values and restore the normal full operator defaults
-- for trusted identity-bearing HTTP modes (for example trusted proxy auth or `gateway.auth.mode="none"`), honor `x-openclaw-scopes` when present and otherwise fall back to the normal operator default scope set
-- select agents with `model: "littlebaby"`, `model: "openclaw/default"`, `model: "openclaw/<agentId>"`, or `x-openclaw-agent-id`
-- use `x-openclaw-model` when you want to override the selected agent's backend model
-- use `x-openclaw-session-key` for explicit session routing
-- use `x-openclaw-message-channel` when you want a non-default synthetic ingress channel context
+- for shared-secret auth modes (`token` and `password`), ignore narrower bearer-declared `x-littlebaby-scopes` values and restore the normal full operator defaults
+- for trusted identity-bearing HTTP modes (for example trusted proxy auth or `gateway.auth.mode="none"`), honor `x-littlebaby-scopes` when present and otherwise fall back to the normal operator default scope set
+- select agents with `model: "littlebaby"`, `model: "littlebaby/default"`, `model: "littlebaby/<agentId>"`, or `x-littlebaby-agent-id`
+- use `x-littlebaby-model` when you want to override the selected agent's backend model
+- use `x-littlebaby-session-key` for explicit session routing
+- use `x-littlebaby-message-channel` when you want a non-default synthetic ingress channel context
 
 Auth matrix:
 
 - `gateway.auth.mode="token"` or `"password"` + `Authorization: Bearer ...`
   - proves possession of the shared gateway operator secret
-  - ignores narrower `x-openclaw-scopes`
+  - ignores narrower `x-littlebaby-scopes`
   - restores the full default operator scope set:
     `operator.admin`, `operator.approvals`, `operator.pairing`,
     `operator.read`, `operator.talk.secrets`, `operator.write`
   - treats chat turns on this endpoint as owner-sender turns
 - trusted identity-bearing HTTP modes (for example trusted proxy auth, or `gateway.auth.mode="none"` on private ingress)
-  - honor `x-openclaw-scopes` when the header is present
+  - honor `x-littlebaby-scopes` when the header is present
   - fall back to the normal operator default scope set when the header is absent
   - only lose owner semantics when the caller explicitly narrows scopes and omits `operator.admin`
 
@@ -57,7 +57,7 @@ The same compatibility surface also includes:
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-For the canonical explanation of how agent-target models, `openclaw/default`, embeddings pass-through, and backend model overrides fit together, see [OpenAI Chat Completions](/gateway/openai-http-api#agent-first-model-contract) and [Model list and agent routing](/gateway/openai-http-api#model-list-and-agent-routing).
+For the canonical explanation of how agent-target models, `littlebaby/default`, embeddings pass-through, and backend model overrides fit together, see [OpenAI Chat Completions](/gateway/openai-http-api#agent-first-model-contract) and [Model list and agent routing](/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Session behavior
 
@@ -88,7 +88,7 @@ Accepted but **currently ignored**:
 
 Supported:
 
-- `previous_response_id`: OpenClaw reuses the earlier response session when the request stays within the same agent/user/requested-session scope.
+- `previous_response_id`: LittleBaby reuses the earlier response session when the request stays within the same agent/user/requested-session scope.
 
 ## Items (input)
 
@@ -292,7 +292,7 @@ Event types currently emitted:
 ## Usage
 
 `usage` is populated when the underlying provider reports token counts.
-OpenClaw normalizes common OpenAI-style aliases before those counters reach
+LittleBaby normalizes common OpenAI-style aliases before those counters reach
 downstream status/session surfaces, including `input_tokens` / `output_tokens`
 and `prompt_tokens` / `completion_tokens`.
 
@@ -318,7 +318,7 @@ Non-streaming:
 curl -sS http://127.0.0.1:18789/v1/responses \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-openclaw-agent-id: main' \
+  -H 'x-littlebaby-agent-id: main' \
   -d '{
     "model": "littlebaby",
     "input": "hi"
@@ -331,7 +331,7 @@ Streaming:
 curl -N http://127.0.0.1:18789/v1/responses \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-openclaw-agent-id: main' \
+  -H 'x-littlebaby-agent-id: main' \
   -d '{
     "model": "littlebaby",
     "stream": true,

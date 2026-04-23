@@ -2,7 +2,7 @@ export {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   normalizeOptionalAccountId,
-} from "openclaw/plugin-sdk/account-id";
+} from "littlebaby/plugin-sdk/account-id";
 export {
   createActionGate,
   jsonResult,
@@ -11,9 +11,9 @@ export {
   readStringArrayParam,
   readStringParam,
   ToolAuthorizationError,
-} from "openclaw/plugin-sdk/channel-actions";
-export { buildChannelConfigSchema } from "openclaw/plugin-sdk/channel-config-primitives";
-export type { ChannelPlugin } from "openclaw/plugin-sdk/channel-core";
+} from "littlebaby/plugin-sdk/channel-actions";
+export { buildChannelConfigSchema } from "littlebaby/plugin-sdk/channel-config-primitives";
+export type { ChannelPlugin } from "littlebaby/plugin-sdk/channel-core";
 export type {
   BaseProbeResult,
   ChannelDirectoryEntry,
@@ -26,30 +26,30 @@ export type {
   ChannelResolveKind,
   ChannelResolveResult,
   ChannelToolSend,
-} from "openclaw/plugin-sdk/channel-contract";
+} from "littlebaby/plugin-sdk/channel-contract";
 export {
   formatLocationText,
   toLocationContext,
   type NormalizedLocation,
-} from "openclaw/plugin-sdk/channel-location";
-export { logInboundDrop, logTypingFailure } from "openclaw/plugin-sdk/channel-logging";
-export { resolveAckReaction } from "openclaw/plugin-sdk/channel-feedback";
-export type { ChannelSetupInput } from "openclaw/plugin-sdk/setup";
+} from "littlebaby/plugin-sdk/channel-location";
+export { logInboundDrop, logTypingFailure } from "littlebaby/plugin-sdk/channel-logging";
+export { resolveAckReaction } from "littlebaby/plugin-sdk/channel-feedback";
+export type { ChannelSetupInput } from "littlebaby/plugin-sdk/setup";
 export type {
-  OpenClawConfig,
+  LittleBabyConfig,
   ContextVisibilityMode,
   DmPolicy,
   GroupPolicy,
-} from "openclaw/plugin-sdk/config-runtime";
-export type { GroupToolPolicyConfig } from "openclaw/plugin-sdk/config-runtime";
-export type { WizardPrompter } from "openclaw/plugin-sdk/matrix-runtime-shared";
-export type { SecretInput } from "openclaw/plugin-sdk/secret-input";
+} from "littlebaby/plugin-sdk/config-runtime";
+export type { GroupToolPolicyConfig } from "littlebaby/plugin-sdk/config-runtime";
+export type { WizardPrompter } from "littlebaby/plugin-sdk/matrix-runtime-shared";
+export type { SecretInput } from "littlebaby/plugin-sdk/secret-input";
 export {
   GROUP_POLICY_BLOCKED_LABEL,
   resolveAllowlistProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "openclaw/plugin-sdk/config-runtime";
+} from "littlebaby/plugin-sdk/config-runtime";
 export {
   addWildcardAllowFrom,
   formatDocsLink,
@@ -59,8 +59,8 @@ export {
   promptAccountId,
   promptChannelAccessConfig,
   splitSetupEntries,
-} from "openclaw/plugin-sdk/setup";
-export type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
+} from "littlebaby/plugin-sdk/setup";
+export type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime";
 export {
   assertHttpUrlTargetsPrivateNetwork,
   closeDispatcher,
@@ -71,43 +71,43 @@ export {
   ssrfPolicyFromAllowPrivateNetwork,
   type LookupFn,
   type SsrFPolicy,
-} from "openclaw/plugin-sdk/ssrf-runtime";
-export { dispatchReplyFromConfigWithSettledDispatcher } from "openclaw/plugin-sdk/inbound-reply-dispatch";
+} from "littlebaby/plugin-sdk/ssrf-runtime";
+export { dispatchReplyFromConfigWithSettledDispatcher } from "littlebaby/plugin-sdk/inbound-reply-dispatch";
 export {
   ensureConfiguredAcpBindingReady,
   resolveConfiguredAcpBindingRecord,
-} from "openclaw/plugin-sdk/acp-binding-runtime";
+} from "littlebaby/plugin-sdk/acp-binding-runtime";
 export {
   buildProbeChannelStatusSummary,
   collectStatusIssuesFromLastError,
   PAIRING_APPROVED_MESSAGE,
-} from "openclaw/plugin-sdk/channel-status";
+} from "littlebaby/plugin-sdk/channel-status";
 export {
   getSessionBindingService,
   resolveThreadBindingIdleTimeoutMsForChannel,
   resolveThreadBindingMaxAgeMsForChannel,
-} from "openclaw/plugin-sdk/conversation-runtime";
-export { resolveOutboundSendDep } from "openclaw/plugin-sdk/outbound-runtime";
-export { resolveAgentIdFromSessionKey } from "openclaw/plugin-sdk/routing";
-export { chunkTextForOutbound } from "openclaw/plugin-sdk/text-chunking";
-export { createChannelReplyPipeline } from "openclaw/plugin-sdk/channel-reply-pipeline";
-export { loadOutboundMediaFromUrl } from "openclaw/plugin-sdk/outbound-media";
-export { normalizePollInput, type PollInput } from "openclaw/plugin-sdk/poll-runtime";
-export { writeJsonFileAtomically } from "openclaw/plugin-sdk/json-store";
+} from "littlebaby/plugin-sdk/conversation-runtime";
+export { resolveOutboundSendDep } from "littlebaby/plugin-sdk/outbound-runtime";
+export { resolveAgentIdFromSessionKey } from "littlebaby/plugin-sdk/routing";
+export { chunkTextForOutbound } from "littlebaby/plugin-sdk/text-chunking";
+export { createChannelReplyPipeline } from "littlebaby/plugin-sdk/channel-reply-pipeline";
+export { loadOutboundMediaFromUrl } from "littlebaby/plugin-sdk/outbound-media";
+export { normalizePollInput, type PollInput } from "littlebaby/plugin-sdk/poll-runtime";
+export { writeJsonFileAtomically } from "littlebaby/plugin-sdk/json-store";
 export {
   buildChannelKeyCandidates,
   resolveChannelEntryMatch,
-} from "openclaw/plugin-sdk/channel-targets";
+} from "littlebaby/plugin-sdk/channel-targets";
 export {
   evaluateGroupRouteAccessForPolicy,
   resolveSenderScopedGroupPolicy,
-} from "openclaw/plugin-sdk/channel-policy";
+} from "littlebaby/plugin-sdk/channel-policy";
 export {
   formatZonedTimestamp,
   type PluginRuntime,
   type RuntimeLogger,
-} from "openclaw/plugin-sdk/matrix-runtime-shared";
-export type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+} from "littlebaby/plugin-sdk/matrix-runtime-shared";
+export type { ReplyPayload } from "littlebaby/plugin-sdk/reply-runtime";
 // resolveMatrixAccountStringValues already comes from plugin-sdk/matrix.
 // Re-exporting auth-precedence here makes Jiti try to define the same export twice.
 

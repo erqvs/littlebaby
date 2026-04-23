@@ -197,7 +197,7 @@ Mode behavior summary:
 
 ## Plugin defaults
 
-Set plugin-wide defaults in `~/.littlebaby/openclaw.json`:
+Set plugin-wide defaults in `~/.littlebaby/littlebaby.json`:
 
 ```json5
 {
@@ -263,7 +263,7 @@ Example:
       diffs: {
         enabled: true,
         config: {
-          viewerBaseUrl: "https://gateway.example.com/openclaw",
+          viewerBaseUrl: "https://gateway.example.com/littlebaby",
         },
       },
     },
@@ -298,7 +298,7 @@ Example:
 
 ## Artifact lifecycle and storage
 
-- Artifacts are stored under the temp subfolder: `$TMPDIR/openclaw-diffs`.
+- Artifacts are stored under the temp subfolder: `$TMPDIR/littlebaby-diffs`.
 - Viewer artifact metadata contains:
   - random artifact ID (20 hex chars)
   - random token (48 hex chars)
@@ -362,7 +362,7 @@ File rendering hardening:
 
 Resolution order:
 
-1. `browser.executablePath` in OpenClaw config.
+1. `browser.executablePath` in LittleBaby config.
 2. Environment variables:
    - `LITTLEBABY_BROWSER_EXECUTABLE_PATH`
    - `BROWSER_EXECUTABLE_PATH`

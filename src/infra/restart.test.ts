@@ -58,7 +58,7 @@ afterEach(() => {
 });
 
 describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => {
-  it("parses lsof output and filters non-openclaw/current processes", () => {
+  it("parses lsof output and filters non-littlebaby/current processes", () => {
     const gatewayPidA = process.pid + 1000;
     const gatewayPidB = process.pid + 2000;
     const foreignPid = process.pid + 3000;
@@ -67,13 +67,13 @@ describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => 
       status: 0,
       stdout: [
         `p${process.pid}`,
-        "copenclaw",
+        "clittlebaby",
         `p${gatewayPidA}`,
         "clittlebaby-gateway",
         `p${foreignPid}`,
         "cnode",
         `p${gatewayPidB}`,
-        "cOpenClaw",
+        "cLittleBaby",
       ].join("\n"),
     });
 
@@ -107,7 +107,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
       .mockReturnValueOnce({
         error: undefined,
         status: 0,
-        stdout: [`p${stalePidA}`, "copenclaw", `p${stalePidB}`, "clittlebaby-gateway"].join("\n"),
+        stdout: [`p${stalePidA}`, "clittlebaby", `p${stalePidB}`, "clittlebaby-gateway"].join("\n"),
       })
       .mockReturnValue({
         error: undefined,
@@ -132,7 +132,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
       .mockReturnValueOnce({
         error: undefined,
         status: 0,
-        stdout: [`p${stalePid}`, "copenclaw"].join("\n"),
+        stdout: [`p${stalePid}`, "clittlebaby"].join("\n"),
       })
       .mockReturnValue({
         error: undefined,

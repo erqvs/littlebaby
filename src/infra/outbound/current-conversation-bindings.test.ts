@@ -38,7 +38,7 @@ describe("generic current-conversation bindings", () => {
 
   beforeEach(async () => {
     previousStateDir = process.env.LITTLEBABY_STATE_DIR;
-    testStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-current-bindings-"));
+    testStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-current-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = testStateDir;
     setMinimalCurrentConversationRegistry();
     __testing.resetCurrentConversationBindingsForTests({

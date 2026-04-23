@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/minimax-provider",
+  "name": "@littlebaby/minimax-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw MiniMax provider and OAuth plugin",
+  "description": "LittleBaby MiniMax provider and OAuth plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

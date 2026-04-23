@@ -9,7 +9,7 @@ title: "MiniMax Search"
 
 # MiniMax Search
 
-OpenClaw supports MiniMax as a `web_search` provider through the MiniMax
+LittleBaby supports MiniMax as a `web_search` provider through the MiniMax
 Coding Plan search API. It returns structured search results with titles, URLs,
 snippets, and related queries.
 
@@ -24,13 +24,13 @@ snippets, and related queries.
     Set `MINIMAX_CODE_PLAN_KEY` in the Gateway environment, or configure via:
 
     ```bash
-    openclaw configure --section web
+    littlebaby configure --section web
     ```
 
   </Step>
 </Steps>
 
-OpenClaw also accepts `MINIMAX_CODING_API_KEY` as an env alias. `MINIMAX_API_KEY`
+LittleBaby also accepts `MINIMAX_CODING_API_KEY` as an env alias. `MINIMAX_API_KEY`
 is still read as a compatibility fallback when it already points at a coding-plan token.
 
 ## Config
@@ -69,7 +69,7 @@ MiniMax Search uses these endpoints:
 - Global: `https://api.minimax.io/v1/coding_plan/search`
 - CN: `https://api.minimaxi.com/v1/coding_plan/search`
 
-If `plugins.entries.minimax.config.webSearch.region` is unset, OpenClaw resolves
+If `plugins.entries.minimax.config.webSearch.region` is unset, LittleBaby resolves
 the region in this order:
 
 1. `tools.web.search.minimax.region` / plugin-owned `webSearch.region`
@@ -89,7 +89,7 @@ is only used as a region hint for CN/global host selection.
 MiniMax Search supports:
 
 - `query`
-- `count` (OpenClaw trims the returned result list to the requested count)
+- `count` (LittleBaby trims the returned result list to the requested count)
 
 Provider-specific filters are not currently supported.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-openclaw_live_stage_source_tree() {
+littlebaby_live_stage_source_tree() {
   local dest_dir="${1:?destination directory required}"
 
   set +e
@@ -16,7 +16,7 @@ openclaw_live_stage_source_tree() {
     --exclude=.tmp \
     --exclude=.tmp-precommit-venv \
     --exclude=.worktrees \
-    --exclude=__openclaw_vitest__ \
+    --exclude=__littlebaby_vitest__ \
     --exclude=relay.sock \
     --exclude='*.sock' \
     --exclude='*/*.sock' \
@@ -33,7 +33,7 @@ openclaw_live_stage_source_tree() {
   fi
 }
 
-openclaw_live_link_runtime_tree() {
+littlebaby_live_link_runtime_tree() {
   local dest_dir="${1:?destination directory required}"
 
   ln -s /app/node_modules "$dest_dir/node_modules"
@@ -45,7 +45,7 @@ openclaw_live_link_runtime_tree() {
   fi
 }
 
-openclaw_live_stage_state_dir() {
+littlebaby_live_stage_state_dir() {
   local dest_dir="${1:?destination directory required}"
   local source_dir="${HOME}/.littlebaby"
 
@@ -76,10 +76,10 @@ openclaw_live_stage_state_dir() {
   fi
 
   export LITTLEBABY_STATE_DIR="$dest_dir"
-  export LITTLEBABY_CONFIG_PATH="$dest_dir/openclaw.json"
+  export LITTLEBABY_CONFIG_PATH="$dest_dir/littlebaby.json"
 }
 
-openclaw_live_prepare_staged_config() {
+littlebaby_live_prepare_staged_config() {
   if [ ! -f "${LITTLEBABY_CONFIG_PATH:-}" ]; then
     return 0
   fi

@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/mistral-provider",
+  "name": "@littlebaby/mistral-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Mistral provider plugin",
+  "description": "LittleBaby Mistral provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

@@ -1,8 +1,8 @@
-import { readNumberParam, readStringParam } from "openclaw/plugin-sdk/param-readers";
+import { readNumberParam, readStringParam } from "littlebaby/plugin-sdk/param-readers";
 import {
   createWebSearchProviderContractFields,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search-contract";
+} from "littlebaby/plugin-sdk/provider-web-search-contract";
 
 type DuckDuckGoClientModule = typeof import("./ddg-client.js");
 
@@ -44,7 +44,7 @@ export function createDuckDuckGoWebSearchProvider(): WebSearchProviderPlugin {
     envVars: [],
     placeholder: "(no key needed)",
     signupUrl: "https://duckduckgo.com/",
-    docsUrl: "https://docs.openclaw.ai/tools/web",
+    docsUrl: "https://docs.littlebaby.ai/tools/web",
     autoDetectOrder: 100,
     credentialPath: "",
     ...createWebSearchProviderContractFields({

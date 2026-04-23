@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import type {
   GatewayAuthConfig,
   GatewayTailscaleConfig,
-  OpenClawConfig,
+  LittleBabyConfig,
 } from "../config/config.js";
 import { replaceConfigFile } from "../config/config.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
@@ -69,7 +69,7 @@ export function mergeGatewayTailscaleConfig(
 }
 
 function resolveGatewayAuthFromConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
   authOverride?: GatewayAuthConfig;
   tailscaleOverride?: GatewayTailscaleConfig;
@@ -104,7 +104,7 @@ function shouldPersistGeneratedToken(params: {
 }
 
 function hasGatewayTokenCandidate(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
   authOverride?: GatewayAuthConfig;
 }): boolean {
@@ -141,14 +141,14 @@ function hasGatewayPasswordOverrideCandidate(params: {
 }
 
 export async function ensureGatewayStartupAuth(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   authOverride?: GatewayAuthConfig;
   tailscaleOverride?: GatewayTailscaleConfig;
   persist?: boolean;
   baseHash?: string;
 }): Promise<{
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   auth: ReturnType<typeof resolveGatewayAuth>;
   generatedToken?: string;
   persistedGeneratedToken: boolean;
@@ -205,7 +205,7 @@ export async function ensureGatewayStartupAuth(params: {
   }
 
   const generatedToken = crypto.randomBytes(24).toString("hex");
-  const nextCfg: OpenClawConfig = {
+  const nextCfg: LittleBabyConfig = {
     ...params.cfg,
     gateway: {
       ...params.cfg.gateway,
@@ -248,7 +248,7 @@ export async function ensureGatewayStartupAuth(params: {
 }
 
 export function assertHooksTokenSeparateFromGatewayAuth(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   auth: ResolvedGatewayAuth;
 }): void {
   if (params.cfg.hooks?.enabled !== true) {

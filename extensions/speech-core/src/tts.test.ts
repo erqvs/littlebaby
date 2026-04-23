@@ -1,8 +1,8 @@
 import { rmSync } from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-payload";
-import type { SpeechProviderPlugin, SpeechSynthesisRequest } from "openclaw/plugin-sdk/speech-core";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import type { ReplyPayload } from "littlebaby/plugin-sdk/reply-payload";
+import type { SpeechProviderPlugin, SpeechSynthesisRequest } from "littlebaby/plugin-sdk/speech-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 type MockSpeechSynthesisResult = Awaited<ReturnType<SpeechProviderPlugin["synthesize"]>>;
@@ -21,7 +21,7 @@ const synthesizeMock = vi.hoisted(() =>
 const listSpeechProvidersMock = vi.hoisted(() => vi.fn());
 const getSpeechProviderMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/channel-targets", () => ({
+vi.mock("littlebaby/plugin-sdk/channel-targets", () => ({
   normalizeChannelId: (channel: string | undefined) => channel?.trim().toLowerCase() ?? null,
 }));
 
@@ -54,7 +54,7 @@ const { _test, maybeApplyTtsToPayload } = await import("./tts.js");
 
 const nativeVoiceNoteChannels = ["discord", "feishu", "matrix", "telegram", "whatsapp"] as const;
 
-function createTtsConfig(prefsName: string): OpenClawConfig {
+function createTtsConfig(prefsName: string): LittleBabyConfig {
   return {
     messages: {
       tts: {
@@ -81,7 +81,7 @@ describe("speech-core native voice-note routing", () => {
   });
 
   it("marks Discord auto TTS replies as native voice messages", async () => {
-    const cfg = createTtsConfig("openclaw-speech-core-tts-test");
+    const cfg = createTtsConfig("littlebaby-speech-core-tts-test");
     const payload: ReplyPayload = {
       text: "This Discord reply should be delivered as a native voice note.",
     };
@@ -110,7 +110,7 @@ describe("speech-core native voice-note routing", () => {
   });
 
   it("keeps non-native voice-note channels as regular audio files", async () => {
-    const cfg = createTtsConfig("openclaw-speech-core-tts-slack-test");
+    const cfg = createTtsConfig("littlebaby-speech-core-tts-slack-test");
     const payload: ReplyPayload = {
       text: "Slack replies should be delivered as regular audio attachments.",
     };

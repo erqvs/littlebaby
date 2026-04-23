@@ -16,7 +16,7 @@ export function resolveTaskStateDir(env: NodeJS.ProcessEnv = process.env): strin
       : isMainThread
         ? String(process.pid)
         : `${process.pid}-${threadId}`;
-    return path.join(os.tmpdir(), "openclaw-test-state", shardSuffix);
+    return path.join(os.tmpdir(), "littlebaby-test-state", shardSuffix);
   }
   return resolveStateDir(env);
 }

@@ -3,12 +3,12 @@ import path from "node:path";
 import type {
   CliBackendPreparedExecution,
   CliBackendPrepareExecutionContext,
-} from "openclaw/plugin-sdk/cli-backend";
+} from "littlebaby/plugin-sdk/cli-backend";
 import {
   ensureAuthProfileStoreForLocalUpdate,
   type OAuthCredential,
-} from "openclaw/plugin-sdk/provider-auth";
-import { writePrivateSecretFileAtomic } from "openclaw/plugin-sdk/secret-file-runtime";
+} from "littlebaby/plugin-sdk/provider-auth";
+import { writePrivateSecretFileAtomic } from "littlebaby/plugin-sdk/secret-file-runtime";
 
 const OPENAI_CODEX_PROVIDER_ID = "openai-codex";
 const CODEX_AUTH_ENV_CLEAR_KEYS = ["OPENAI_API_KEY"] as const;

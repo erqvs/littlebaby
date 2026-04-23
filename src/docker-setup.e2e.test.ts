@@ -62,14 +62,14 @@ async function createDockerSetupSandbox(): Promise<DockerSetupSandbox> {
   await writeFile(dockerfilePath, "FROM scratch\n");
   await writeFile(
     composePath,
-    "services:\n  littlebaby-gateway:\n    image: noop\n  openclaw-cli:\n    image: noop\n",
+    "services:\n  littlebaby-gateway:\n    image: noop\n  littlebaby-cli:\n    image: noop\n",
   );
   await writeDockerStub(binDir, logPath);
 
   return { rootDir, scriptPath, logPath, binDir };
 }
 
-const sandboxRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-docker-setup-" });
+const sandboxRootTracker = createSuiteTempRootTracker({ prefix: "littlebaby-docker-setup-" });
 
 function createEnv(
   sandbox: DockerSetupSandbox,
@@ -215,20 +215,20 @@ describe("scripts/docker/setup.sh", () => {
     const result = runDockerSetup(activeSandbox, {
       LITTLEBABY_DOCKER_APT_PACKAGES: "ffmpeg build-essential",
       LITTLEBABY_EXTRA_MOUNTS: undefined,
-      LITTLEBABY_HOME_VOLUME: "openclaw-home",
+      LITTLEBABY_HOME_VOLUME: "littlebaby-home",
     });
     expect(result.status).toBe(0);
     const envFile = await readFile(join(activeSandbox.rootDir, ".env"), "utf8");
     expect(envFile).toContain("LITTLEBABY_DOCKER_APT_PACKAGES=ffmpeg build-essential");
     expect(envFile).toContain("LITTLEBABY_EXTRA_MOUNTS=");
-    expect(envFile).toContain("LITTLEBABY_HOME_VOLUME=openclaw-home"); // pragma: allowlist secret
+    expect(envFile).toContain("LITTLEBABY_HOME_VOLUME=littlebaby-home"); // pragma: allowlist secret
     const extraCompose = await readFile(
       join(activeSandbox.rootDir, "docker-compose.extra.yml"),
       "utf8",
     );
-    expect(extraCompose).toContain("openclaw-home:/home/node");
+    expect(extraCompose).toContain("littlebaby-home:/home/node");
     expect(extraCompose).toContain("volumes:");
-    expect(extraCompose).toContain("openclaw-home:");
+    expect(extraCompose).toContain("littlebaby-home:");
     const log = await readDockerLog(activeSandbox);
     expect(log).toContain("--build-arg LITTLEBABY_DOCKER_APT_PACKAGES=ffmpeg build-essential");
     expect(log).toContain(
@@ -237,10 +237,10 @@ describe("scripts/docker/setup.sh", () => {
     expect(log).toContain(
       'run --rm --no-deps --entrypoint node littlebaby-gateway dist/index.js config set --batch-json [{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["http://localhost:18789","http://127.0.0.1:18789"]}]',
     );
-    expect(log).not.toContain("run --rm openclaw-cli onboard --mode local --no-install-daemon");
+    expect(log).not.toContain("run --rm littlebaby-cli onboard --mode local --no-install-daemon");
   });
 
-  it("avoids shared-network openclaw-cli before the gateway is started", async () => {
+  it("avoids shared-network littlebaby-cli before the gateway is started", async () => {
     const activeSandbox = requireSandbox(sandbox);
 
     await resetDockerLog(activeSandbox);
@@ -252,7 +252,7 @@ describe("scripts/docker/setup.sh", () => {
     expect(gatewayStartIdx).toBeGreaterThanOrEqual(0);
 
     const prestartLines = lines.slice(0, gatewayStartIdx);
-    expect(prestartLines.some((line) => /\bcompose\b.*\brun\b.*\bopenclaw-cli\b/.test(line))).toBe(
+    expect(prestartLines.some((line) => /\bcompose\b.*\brun\b.*\blittlebaby-cli\b/.test(line))).toBe(
       false,
     );
   });
@@ -333,7 +333,7 @@ describe("scripts/docker/setup.sh", () => {
       "token-reuse",
       async (configDir) => {
         await writeFile(
-          join(configDir, "openclaw.json"),
+          join(configDir, "littlebaby.json"),
           JSON.stringify({ gateway: { auth: { mode: "token", token: "config-token-123" } } }),
         );
       },
@@ -440,7 +440,7 @@ describe("scripts/docker/setup.sh", () => {
       );
       expect(gatewayStarts).toHaveLength(2);
       expect(log).toContain(
-        "run --rm --no-deps openclaw-cli config set agents.defaults.sandbox.mode non-main",
+        "run --rm --no-deps littlebaby-cli config set agents.defaults.sandbox.mode non-main",
       );
       expect(log).toContain("config set agents.defaults.sandbox.mode off");
       const forceRecreateLine = log

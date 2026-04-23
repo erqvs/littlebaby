@@ -1,5 +1,5 @@
-import { createScopedDmSecurityResolver } from "openclaw/plugin-sdk/channel-config-helpers";
-import type { OpenClawConfig } from "../runtime-api.js";
+import { createScopedDmSecurityResolver } from "littlebaby/plugin-sdk/channel-config-helpers";
+import type { LittleBabyConfig } from "../runtime-api.js";
 import {
   listZalouserAccountIds,
   resolveDefaultZalouserAccountId,
@@ -23,7 +23,7 @@ export const zalouserSetupPlugin = {
   config: {
     listAccountIds: (cfg: unknown) => listZalouserAccountIds(cfg as never),
     defaultAccountId: (cfg: unknown) => resolveDefaultZalouserAccountId(cfg as never),
-    resolveAccount: (cfg: OpenClawConfig, accountId?: string | null) =>
+    resolveAccount: (cfg: LittleBabyConfig, accountId?: string | null) =>
       resolveZalouserAccountSync({ cfg, accountId }),
   },
   security: {

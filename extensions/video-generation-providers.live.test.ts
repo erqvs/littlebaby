@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveOpenClawAgentDir } from "../src/agents/agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../src/agents/agent-paths.js";
 import { collectProviderApiKeys } from "../src/agents/live-auth-keys.js";
 import { isModelNotFoundErrorMessage } from "../src/agents/live-model-errors.js";
 import { isLiveProfileKeyModeEnabled, isLiveTestEnabled } from "../src/agents/live-test-helpers.js";
@@ -11,7 +11,7 @@ import {
   isServerErrorMessage,
   isTimeoutErrorMessage,
 } from "../src/agents/pi-embedded-helpers/failover-matches.js";
-import { loadConfig, type OpenClawConfig } from "../src/config/config.js";
+import { loadConfig, type LittleBabyConfig } from "../src/config/config.js";
 import { isTruthyEnvValue } from "../src/infra/env.js";
 import { getShellEnvAppliedKeys, loadShellEnvFallback } from "../src/infra/shell-env.js";
 import { encodePngRgba, fillPixel } from "../src/media/png-encode.js";
@@ -133,7 +133,7 @@ function readPositiveIntegerEnv(raw: string | undefined, fallback: number): numb
   return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
-function withPluginsEnabled(cfg: OpenClawConfig): OpenClawConfig {
+function withPluginsEnabled(cfg: LittleBabyConfig): LittleBabyConfig {
   return {
     ...cfg,
     plugins: {
@@ -339,7 +339,7 @@ function resolveLiveSmokeDurationSeconds(params: {
 async function runLiveVideoProviderCase(testCase: LiveProviderCase): Promise<void> {
   const cfg = withPluginsEnabled(loadConfig());
   const configuredModels = resolveConfiguredLiveVideoModels(cfg);
-  const agentDir = resolveOpenClawAgentDir();
+  const agentDir = resolveLittleBabyAgentDir();
   const attempted: string[] = [];
   const skipped: string[] = [];
   const failures: string[] = [];

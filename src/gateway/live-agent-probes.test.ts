@@ -44,7 +44,7 @@ describe("live-agent-probes", () => {
         attempt: 1,
         exactReply: spec.name,
       }),
-    ).toContain("previous OpenClaw cron MCP tool call was cancelled");
+    ).toContain("previous LittleBaby cron MCP tool call was cancelled");
   });
 
   it("validates cron cli job shape for the shared live probe", () => {

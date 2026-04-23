@@ -2,7 +2,7 @@
 summary: "Scheduled jobs, webhooks, and Gmail PubSub triggers for the Gateway scheduler"
 read_when:
   - Scheduling background jobs or wakeups
-  - Wiring external triggers (webhooks, Gmail) into OpenClaw
+  - Wiring external triggers (webhooks, Gmail) into LittleBaby
   - Deciding between heartbeat and cron for scheduled tasks
 title: "Scheduled Tasks"
 ---
@@ -15,7 +15,7 @@ Cron is the Gateway's built-in scheduler. It persists jobs, wakes the agent at t
 
 ```bash
 # Add a one-shot reminder
-openclaw cron add \
+littlebaby cron add \
   --name "Reminder" \
   --at "2026-02-01T16:00:00Z" \
   --session main \
@@ -24,10 +24,10 @@ openclaw cron add \
   --delete-after-run
 
 # Check your jobs
-openclaw cron list
+littlebaby cron list
 
 # See run history
-openclaw cron runs --id <job-id>
+littlebaby cron runs --id <job-id>
 ```
 
 ## How cron works
@@ -40,7 +40,7 @@ openclaw cron runs --id <job-id>
 - Isolated cron runs also guard against stale acknowledgement replies. If the
   first result is just an interim status update (`on it`, `pulling everything
 together`, and similar hints) and no descendant subagent run is still
-  responsible for the final answer, OpenClaw re-prompts once for the actual
+  responsible for the final answer, LittleBaby re-prompts once for the actual
   result before delivery.
 
 <a id="maintenance"></a>
@@ -72,7 +72,7 @@ Cron expressions are parsed by [croner](https://github.com/Hexagon/croner). When
 0 9 15 * 1
 ```
 
-This fires ~5–6 times per month instead of 0–1 times per month. OpenClaw uses Croner's default OR behavior here. To require both conditions, use Croner's `+` day-of-week modifier (`0 9 15 * +1`) or schedule on one field and guard the other in your job's prompt or command.
+This fires ~5–6 times per month instead of 0–1 times per month. LittleBaby uses Croner's default OR behavior here. To require both conditions, use Croner's `+` day-of-week modifier (`0 9 15 * +1`) or schedule on one field and guard the other in your job's prompt or command.
 
 ## Execution styles
 
@@ -89,7 +89,7 @@ For isolated jobs, runtime teardown now includes best-effort browser cleanup for
 
 When isolated cron runs orchestrate subagents, delivery also prefers the final
 descendant output over stale parent interim text. If descendants are still
-running, OpenClaw suppresses that partial parent update instead of announcing it.
+running, LittleBaby suppresses that partial parent update instead of announcing it.
 
 ### Payload options for isolated jobs
 
@@ -152,7 +152,7 @@ Failure notifications follow a separate destination path:
 One-shot reminder (main session):
 
 ```bash
-openclaw cron add \
+littlebaby cron add \
   --name "Calendar check" \
   --at "20m" \
   --session main \
@@ -163,7 +163,7 @@ openclaw cron add \
 Recurring isolated job with delivery:
 
 ```bash
-openclaw cron add \
+littlebaby cron add \
   --name "Morning brief" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
@@ -177,7 +177,7 @@ openclaw cron add \
 Isolated job with model and thinking override:
 
 ```bash
-openclaw cron add \
+littlebaby cron add \
   --name "Deep analysis" \
   --cron "0 6 * * 1" \
   --tz "America/Los_Angeles" \
@@ -207,7 +207,7 @@ Gateway can expose HTTP webhook endpoints for external triggers. Enable in confi
 Every request must include the hook token via header:
 
 - `Authorization: Bearer <token>` (recommended)
-- `x-openclaw-token: <token>`
+- `x-littlebaby-token: <token>`
 
 Query-string tokens are rejected.
 
@@ -254,14 +254,14 @@ Custom hook names are resolved via `hooks.mappings` in config. Mappings can tran
 
 ## Gmail PubSub integration
 
-Wire Gmail inbox triggers to OpenClaw via Google PubSub.
+Wire Gmail inbox triggers to LittleBaby via Google PubSub.
 
-**Prerequisites**: `gcloud` CLI, `gog` (gogcli), OpenClaw hooks enabled, Tailscale for the public HTTPS endpoint.
+**Prerequisites**: `gcloud` CLI, `gog` (gogcli), LittleBaby hooks enabled, Tailscale for the public HTTPS endpoint.
 
 ### Wizard setup (recommended)
 
 ```bash
-openclaw webhooks gmail setup --account openclaw@gmail.com
+littlebaby webhooks gmail setup --account littlebaby@gmail.com
 ```
 
 This writes `hooks.gmail` config, enables the Gmail preset, and uses Tailscale Funnel for the push endpoint.
@@ -293,7 +293,7 @@ gcloud pubsub topics add-iam-policy-binding gog-gmail-watch \
 
 ```bash
 gog gmail watch start \
-  --account openclaw@gmail.com \
+  --account littlebaby@gmail.com \
   --label INBOX \
   --topic projects/<project-id>/topics/gog-gmail-watch
 ```
@@ -315,31 +315,31 @@ gog gmail watch start \
 
 ```bash
 # List all jobs
-openclaw cron list
+littlebaby cron list
 
 # Edit a job
-openclaw cron edit <jobId> --message "Updated prompt" --model "opus"
+littlebaby cron edit <jobId> --message "Updated prompt" --model "opus"
 
 # Force run a job now
-openclaw cron run <jobId>
+littlebaby cron run <jobId>
 
 # Run only if due
-openclaw cron run <jobId> --due
+littlebaby cron run <jobId> --due
 
 # View run history
-openclaw cron runs --id <jobId> --limit 50
+littlebaby cron runs --id <jobId> --limit 50
 
 # Delete a job
-openclaw cron remove <jobId>
+littlebaby cron remove <jobId>
 
 # Agent selection (multi-agent setups)
-openclaw cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
-openclaw cron edit <jobId> --clear-agent
+littlebaby cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
+littlebaby cron edit <jobId> --clear-agent
 ```
 
 Model override note:
 
-- `openclaw cron add|edit --model ...` changes the job's selected model.
+- `littlebaby cron add|edit --model ...` changes the job's selected model.
 - If the model is allowed, that exact provider/model reaches the isolated agent
   run.
 - If it is not allowed, cron warns and falls back to the job's agent/default
@@ -381,14 +381,14 @@ Disable cron: `cron.enabled: false` or `LITTLEBABY_SKIP_CRON=1`.
 ### Command ladder
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw cron status
-openclaw cron list
-openclaw cron runs --id <jobId> --limit 20
-openclaw system heartbeat last
-openclaw logs --follow
-openclaw doctor
+littlebaby status
+littlebaby gateway status
+littlebaby cron status
+littlebaby cron list
+littlebaby cron runs --id <jobId> --limit 20
+littlebaby system heartbeat last
+littlebaby logs --follow
+littlebaby doctor
 ```
 
 ### Cron not firing
@@ -396,7 +396,7 @@ openclaw doctor
 - Check `cron.enabled` and `LITTLEBABY_SKIP_CRON` env var.
 - Confirm the Gateway is running continuously.
 - For `cron` schedules, verify timezone (`--tz`) vs the host timezone.
-- `reason: not-due` in run output means manual run was checked with `openclaw cron run <jobId> --due` and the job was not due yet.
+- `reason: not-due` in run output means manual run was checked with `littlebaby cron run <jobId> --due` and the job was not due yet.
 
 ### Cron fired but no delivery
 
@@ -404,7 +404,7 @@ openclaw doctor
 - Delivery target missing/invalid (`channel`/`to`) means outbound was skipped.
 - Channel auth errors (`unauthorized`, `Forbidden`) mean delivery was blocked by credentials.
 - If the isolated run returns only the silent token (`NO_REPLY` / `no_reply`),
-  OpenClaw suppresses direct outbound delivery and also suppresses the fallback
+  LittleBaby suppresses direct outbound delivery and also suppresses the fallback
   queued summary path, so nothing is posted back to chat.
 - For cron-owned isolated jobs, do not expect the agent to use the message tool
   as a fallback. The runner owns final delivery; `--no-deliver` keeps it

@@ -1,5 +1,5 @@
 // Manual facade. Keep loader boundary explicit.
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { loadBundledPluginPublicSurfaceModuleSync } from "./facade-loader.js";
 
 export type MatrixScopedEnvVarNames = {
@@ -25,12 +25,12 @@ export type MatrixLegacyFlatStoragePaths = {
 
 type FacadeModule = {
   findMatrixAccountEntry: (
-    cfg: OpenClawConfig,
+    cfg: LittleBabyConfig,
     accountId: string,
   ) => Record<string, unknown> | null;
   getMatrixScopedEnvVarNames: (accountId: string) => MatrixScopedEnvVarNames;
-  requiresExplicitMatrixDefaultAccount: (cfg: OpenClawConfig, env?: NodeJS.ProcessEnv) => boolean;
-  resolveConfiguredMatrixAccountIds: (cfg: OpenClawConfig, env?: NodeJS.ProcessEnv) => string[];
+  requiresExplicitMatrixDefaultAccount: (cfg: LittleBabyConfig, env?: NodeJS.ProcessEnv) => boolean;
+  resolveConfiguredMatrixAccountIds: (cfg: LittleBabyConfig, env?: NodeJS.ProcessEnv) => string[];
   resolveMatrixAccountStorageRoot: (params: {
     stateDir: string;
     homeserver: string;
@@ -38,10 +38,10 @@ type FacadeModule = {
     accessToken: string;
     accountId?: string | null;
   }) => MatrixAccountStorageRoot;
-  resolveMatrixChannelConfig: (cfg: OpenClawConfig) => Record<string, unknown> | null;
+  resolveMatrixChannelConfig: (cfg: LittleBabyConfig) => Record<string, unknown> | null;
   resolveMatrixCredentialsDir: (stateDir: string) => string;
   resolveMatrixCredentialsPath: (params: { stateDir: string; accountId?: string | null }) => string;
-  resolveMatrixDefaultOrOnlyAccountId: (cfg: OpenClawConfig, env?: NodeJS.ProcessEnv) => string;
+  resolveMatrixDefaultOrOnlyAccountId: (cfg: LittleBabyConfig, env?: NodeJS.ProcessEnv) => string;
   resolveMatrixLegacyFlatStoragePaths: (stateDir: string) => MatrixLegacyFlatStoragePaths;
 };
 

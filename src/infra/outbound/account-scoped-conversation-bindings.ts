@@ -3,7 +3,7 @@ import {
   resolveThreadBindingIdleTimeoutMsForChannel,
   resolveThreadBindingMaxAgeMsForChannel,
 } from "../../channels/thread-bindings-policy.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { normalizeAccountId, resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
 import {
   registerSessionBindingAdapter,
@@ -117,7 +117,7 @@ function toSessionBindingRecord<TKind extends string>(params: {
 
 export function createAccountScopedConversationBindingManager<TKind extends string>(params: {
   channel: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   stateKey: symbol;
   accountId?: string | null;
   toStoredTargetKind: (raw: BindingTargetKind) => TKind;

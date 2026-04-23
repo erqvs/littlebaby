@@ -15,14 +15,14 @@ function createQaChannelTransportParams(baseUrl = "http://127.0.0.1:43124") {
           enabled: true,
           baseUrl,
           botUserId: "littlebaby",
-          botDisplayName: "OpenClaw QA",
+          botDisplayName: "LittleBaby QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["\\b@?openclaw\\b"],
+          mentionPatterns: ["\\b@?littlebaby\\b"],
         },
       },
     } satisfies QaTransportGatewayConfig,
@@ -68,7 +68,7 @@ describe("buildQaGatewayConfig", () => {
       baseUrl: "http://127.0.0.1:43124",
       pollTimeoutMs: 250,
     });
-    expect(cfg.messages?.groupChat?.mentionPatterns).toEqual(["\\b@?openclaw\\b"]);
+    expect(cfg.messages?.groupChat?.mentionPatterns).toEqual(["\\b@?littlebaby\\b"]);
   });
 
   it("maps provider-qualified openai and anthropic refs through the mock provider lane", () => {
@@ -291,12 +291,12 @@ describe("buildQaGatewayConfig", () => {
       gatewayPort: 18789,
       gatewayToken: "token",
       workspaceDir: "/tmp/qa-workspace",
-      controlUiRoot: "/tmp/openclaw/dist/control-ui",
+      controlUiRoot: "/tmp/littlebaby/dist/control-ui",
       ...createQaChannelTransportParams(),
     });
 
     expect(cfg.gateway?.controlUi?.enabled).toBe(true);
-    expect(cfg.gateway?.controlUi?.root).toBe("/tmp/openclaw/dist/control-ui");
+    expect(cfg.gateway?.controlUi?.root).toBe("/tmp/littlebaby/dist/control-ui");
   });
 
   it("merges dynamic qa-lab origins without dropping the built control ui root", () => {
@@ -310,12 +310,12 @@ describe("buildQaGatewayConfig", () => {
       gatewayPort: 18789,
       gatewayToken: "token",
       workspaceDir: "/tmp/qa-workspace",
-      controlUiRoot: "/tmp/openclaw/dist/control-ui",
+      controlUiRoot: "/tmp/littlebaby/dist/control-ui",
       controlUiAllowedOrigins: ["http://127.0.0.1:60196"],
       ...createQaChannelTransportParams(),
     });
 
-    expect(cfg.gateway?.controlUi?.root).toBe("/tmp/openclaw/dist/control-ui");
+    expect(cfg.gateway?.controlUi?.root).toBe("/tmp/littlebaby/dist/control-ui");
     expect(cfg.gateway?.controlUi?.allowedOrigins).toEqual([
       ...DEFAULT_QA_CONTROL_UI_ALLOWED_ORIGINS,
       "http://127.0.0.1:60196",

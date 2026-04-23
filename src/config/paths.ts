@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { resolveHomeRelativePath, resolveRequiredHomeDir } from "../infra/home-dir.js";
-import type { OpenClawConfig } from "./types.js";
+import type { LittleBabyConfig } from "./types.js";
 
 /**
  * Nix mode detection: When LITTLEBABY_NIX_MODE=1, the gateway is running under Nix.
@@ -19,8 +19,8 @@ export const isNixMode = resolveIsNixMode();
 
 // Support the remaining legacy pre-rebrand state dir.
 const LEGACY_STATE_DIRNAMES = [".clawdbot"] as const;
-const NEW_STATE_DIRNAME = ".openclaw";
-const CONFIG_FILENAME = "openclaw.json";
+const NEW_STATE_DIRNAME = ".littlebaby";
+const CONFIG_FILENAME = "littlebaby.json";
 const LEGACY_CONFIG_FILENAMES = ["clawdbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
@@ -101,7 +101,7 @@ export const STATE_DIR = resolveStateDir();
 /**
  * Config file path (JSON or JSON5).
  * Can be overridden via LITTLEBABY_CONFIG_PATH.
- * Default: ~/.littlebaby/openclaw.json (or $LITTLEBABY_STATE_DIR/openclaw.json)
+ * Default: ~/.littlebaby/littlebaby.json (or $LITTLEBABY_STATE_DIR/littlebaby.json)
  */
 export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
@@ -196,9 +196,9 @@ export function resolveDefaultConfigCandidates(
   }
 
   const candidates: string[] = [];
-  const openclawStateDir = env.LITTLEBABY_STATE_DIR?.trim();
-  if (openclawStateDir) {
-    const resolved = resolveUserPath(openclawStateDir, env, effectiveHomedir);
+  const littlebabyStateDir = env.LITTLEBABY_STATE_DIR?.trim();
+  if (littlebabyStateDir) {
+    const resolved = resolveUserPath(littlebabyStateDir, env, effectiveHomedir);
     candidates.push(path.join(resolved, CONFIG_FILENAME));
     candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(resolved, name)));
   }
@@ -215,12 +215,12 @@ export const DEFAULT_GATEWAY_PORT = 18789;
 
 /**
  * Gateway lock directory (ephemeral).
- * Default: os.tmpdir()/openclaw-<uid> (uid suffix when available).
+ * Default: os.tmpdir()/littlebaby-<uid> (uid suffix when available).
  */
 export function resolveGatewayLockDir(tmpdir: () => string = os.tmpdir): string {
   const base = tmpdir();
   const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
-  const suffix = uid != null ? `openclaw-${uid}` : "littlebaby";
+  const suffix = uid != null ? `littlebaby-${uid}` : "littlebaby";
   return path.join(base, suffix);
 }
 
@@ -283,7 +283,7 @@ function parseGatewayPortEnvValue(raw: string | undefined): number | null {
 }
 
 export function resolveGatewayPort(
-  cfg?: OpenClawConfig,
+  cfg?: LittleBabyConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): number {
   const envRaw = env.LITTLEBABY_GATEWAY_PORT?.trim();

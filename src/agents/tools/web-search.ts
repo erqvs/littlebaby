@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { resolveManifestContractOwnerPluginId } from "../../plugins/manifest-registry.js";
 import type { RuntimeWebSearchMetadata } from "../../secrets/runtime-web-tools.types.js";
 import {
@@ -11,7 +11,7 @@ import { jsonResult } from "./common.js";
 import { SEARCH_CACHE } from "./web-search-provider-common.js";
 
 export function createWebSearchTool(options?: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   sandboxed?: boolean;
   runtimeWebSearch?: RuntimeWebSearchMetadata;
 }): AnyAgentTool | null {

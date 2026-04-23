@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/brave-plugin",
+  "name": "@littlebaby/brave-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Brave plugin",
+  "description": "LittleBaby Brave plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

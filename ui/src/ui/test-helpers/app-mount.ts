@@ -3,7 +3,7 @@ import { i18n } from "../../i18n/index.ts";
 import { getSafeLocalStorage, getSafeSessionStorage } from "../../local-storage.ts";
 import { createStorageMock } from "../../test-helpers/storage.ts";
 import "../app.ts";
-import type { OpenClawApp } from "../app.ts";
+import type { LittleBabyApp } from "../app.ts";
 
 class MockWebSocket {
   static CONNECTING = 0;
@@ -43,7 +43,7 @@ function createMatchMediaMock(width: number) {
 }
 export function mountApp(pathname: string) {
   window.history.replaceState({}, "", pathname);
-  const app = document.createElement("openclaw-app") as OpenClawApp;
+  const app = document.createElement("littlebaby-app") as LittleBabyApp;
   document.body.append(app);
   app.connected = true;
   app.requestUpdate();

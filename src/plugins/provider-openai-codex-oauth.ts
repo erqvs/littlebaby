@@ -193,7 +193,7 @@ export async function loginOpenAICodexOAuth(params: {
     spin.stop("OpenAI OAuth failed");
     const rewrittenError = rewriteOpenAICodexOAuthError(err);
     runtime.error(String(rewrittenError));
-    await prompter.note("Trouble with OAuth? See https://docs.openclaw.ai/start/faq", "OAuth help");
+    await prompter.note("Trouble with OAuth? See https://docs.littlebaby.ai/start/faq", "OAuth help");
     throw rewrittenError;
   } finally {
     markLoginSettled();

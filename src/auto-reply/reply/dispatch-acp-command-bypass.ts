@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import {
   isCommandEnabled,
   maybeResolveTextAlias,
@@ -29,7 +29,7 @@ function isResetCommandCandidate(text: string): boolean {
 
 export function shouldBypassAcpDispatchForCommand(
   ctx: FinalizedMsgContext,
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
 ): boolean {
   const candidate = resolveCommandCandidateText(ctx);
   if (!candidate) {

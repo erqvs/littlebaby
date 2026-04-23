@@ -9,7 +9,7 @@ fi
 # shellcheck source=../install-sh-common/version-parse.sh
 source "$VERIFY_HELPER_PATH"
 
-INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://openclaw.bot/install.sh}"
+INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://littlebaby.bot/install.sh}"
 MODELS_MODE="${LITTLEBABY_E2E_MODELS:-both}" # both|openai|anthropic
 INSTALL_TAG="${LITTLEBABY_INSTALL_TAG:-latest}"
 E2E_PREVIOUS_VERSION="${LITTLEBABY_INSTALL_E2E_PREVIOUS:-}"
@@ -47,15 +47,15 @@ elif [[ "$MODELS_MODE" == "anthropic" && -z "$ANTHROPIC_API_TOKEN" && -z "$ANTHR
 fi
 
 echo "==> Resolve npm versions"
-EXPECTED_VERSION="$(quiet_npm view "openclaw@${INSTALL_TAG}" version)"
+EXPECTED_VERSION="$(quiet_npm view "littlebaby@${INSTALL_TAG}" version)"
 if [[ -z "$EXPECTED_VERSION" || "$EXPECTED_VERSION" == "undefined" || "$EXPECTED_VERSION" == "null" ]]; then
-  echo "ERROR: unable to resolve openclaw@${INSTALL_TAG} version" >&2
+  echo "ERROR: unable to resolve littlebaby@${INSTALL_TAG} version" >&2
   exit 2
 fi
 if [[ -n "$E2E_PREVIOUS_VERSION" ]]; then
   PREVIOUS_VERSION="$E2E_PREVIOUS_VERSION"
 else
-  PREVIOUS_VERSION="$(VERSIONS_JSON="$(quiet_npm view openclaw versions --json)" node - <<'NODE'
+  PREVIOUS_VERSION="$(VERSIONS_JSON="$(quiet_npm view littlebaby versions --json)" node - <<'NODE'
 const versions = JSON.parse(process.env.VERSIONS_JSON || "[]");
 if (!Array.isArray(versions) || versions.length === 0) process.exit(1);
 process.stdout.write(versions.length >= 2 ? versions[versions.length - 2] : versions[0]);
@@ -68,7 +68,7 @@ if [[ "$SKIP_PREVIOUS" == "1" ]]; then
   echo "==> Skip preinstall previous (LITTLEBABY_INSTALL_E2E_SKIP_PREVIOUS=1)"
 else
   echo "==> Preinstall previous (forces installer upgrade path; avoids read() prompt)"
-  quiet_npm install -g "openclaw@${PREVIOUS_VERSION}"
+  quiet_npm install -g "littlebaby@${PREVIOUS_VERSION}"
 fi
 
 echo "==> Run official installer one-liner"
@@ -81,11 +81,11 @@ else
 fi
 
 echo "==> Verify installed version"
-INSTALLED_VERSION="$(openclaw --version 2>/dev/null | head -n 1 | tr -d '\r')"
-INSTALLED_VERSION="$(extract_openclaw_semver "$INSTALLED_VERSION")"
+INSTALLED_VERSION="$(littlebaby --version 2>/dev/null | head -n 1 | tr -d '\r')"
+INSTALLED_VERSION="$(extract_littlebaby_semver "$INSTALLED_VERSION")"
 echo "installed=$INSTALLED_VERSION expected=$EXPECTED_VERSION"
 if [[ "$INSTALLED_VERSION" != "$EXPECTED_VERSION" ]]; then
-  echo "ERROR: expected openclaw@$EXPECTED_VERSION, got openclaw@$INSTALLED_VERSION" >&2
+  echo "ERROR: expected littlebaby@$EXPECTED_VERSION, got littlebaby@$INSTALLED_VERSION" >&2
   exit 1
 fi
 
@@ -94,7 +94,7 @@ set_image_model() {
   shift
   local candidate
   for candidate in "$@"; do
-    if openclaw --profile "$profile" models set-image "$candidate" >/dev/null 2>&1; then
+    if littlebaby --profile "$profile" models set-image "$candidate" >/dev/null 2>&1; then
       echo "$candidate"
       return 0
     fi
@@ -108,7 +108,7 @@ set_agent_model() {
   local candidate
   shift
   for candidate in "$@"; do
-    if openclaw --profile "$profile" models set "$candidate" >/dev/null 2>&1; then
+    if littlebaby --profile "$profile" models set "$candidate" >/dev/null 2>&1; then
       echo "$candidate"
       return 0
     fi
@@ -194,7 +194,7 @@ run_agent_turn() {
   # Installer E2E validates install + onboard + embedded agent tooling. It does
   # not need a paired Gateway control-plane hop, which is flaky/non-deterministic
   # in the isolated container and already covered by gateway-specific lanes.
-  openclaw --profile "$profile" agent \
+  littlebaby --profile "$profile" agent \
     --local \
     --session-id "$session_id" \
     --message "$prompt" \
@@ -388,7 +388,7 @@ run_profile() {
 
 	  echo "==> Onboard ($profile)"
 	  if [[ "$agent_model_provider" == "openai" ]]; then
-	    openclaw --profile "$profile" onboard \
+	    littlebaby --profile "$profile" onboard \
 	      --non-interactive \
 	      --accept-risk \
 	      --flow quickstart \
@@ -400,7 +400,7 @@ run_profile() {
       --workspace "$workspace" \
       --skip-health
 	  elif [[ -n "$ANTHROPIC_API_KEY" ]]; then
-	    openclaw --profile "$profile" onboard \
+	    littlebaby --profile "$profile" onboard \
 	      --non-interactive \
 	      --accept-risk \
 	      --flow quickstart \
@@ -412,7 +412,7 @@ run_profile() {
       --workspace "$workspace" \
       --skip-health
 	  elif [[ -n "$ANTHROPIC_API_TOKEN" ]]; then
-	    openclaw --profile "$profile" onboard \
+	    littlebaby --profile "$profile" onboard \
 	      --non-interactive \
 	      --accept-risk \
 	      --flow quickstart \
@@ -425,7 +425,7 @@ run_profile() {
       --workspace "$workspace" \
       --skip-health
 	  else
-	    openclaw --profile "$profile" onboard \
+	    littlebaby --profile "$profile" onboard \
 	      --non-interactive \
 	      --accept-risk \
 	      --flow quickstart \
@@ -483,7 +483,7 @@ run_profile() {
 
   echo "==> Start gateway ($profile)"
   GATEWAY_LOG="$workspace/gateway.log"
-  openclaw --profile "$profile" gateway --port "$port" --bind loopback >"$GATEWAY_LOG" 2>&1 &
+  littlebaby --profile "$profile" gateway --port "$port" --bind loopback >"$GATEWAY_LOG" 2>&1 &
   GATEWAY_PID="$!"
   cleanup_profile() {
     if kill -0 "$GATEWAY_PID" 2>/dev/null; then
@@ -495,12 +495,12 @@ run_profile() {
 
   echo "==> Wait for health ($profile)"
   for _ in $(seq 1 240); do
-    if openclaw --profile "$profile" health --timeout 5000 --json >/dev/null 2>&1; then
+    if littlebaby --profile "$profile" health --timeout 5000 --json >/dev/null 2>&1; then
       break
     fi
     sleep 0.25
   done
-  openclaw --profile "$profile" health --timeout 60000 --json >/dev/null
+  littlebaby --profile "$profile" health --timeout 60000 --json >/dev/null
 
   echo "==> Agent turns ($profile)"
   TURN1_JSON="/tmp/agent-${profile}-1.json"
@@ -597,11 +597,11 @@ run_profile() {
 }
 
 if [[ "$MODELS_MODE" == "openai" || "$MODELS_MODE" == "both" ]]; then
-  run_profile "e2e-openai" "18789" "/tmp/openclaw-e2e-openai" "openai"
+  run_profile "e2e-openai" "18789" "/tmp/littlebaby-e2e-openai" "openai"
 fi
 
 if [[ "$MODELS_MODE" == "anthropic" || "$MODELS_MODE" == "both" ]]; then
-  run_profile "e2e-anthropic" "18799" "/tmp/openclaw-e2e-anthropic" "anthropic"
+  run_profile "e2e-anthropic" "18799" "/tmp/littlebaby-e2e-anthropic" "anthropic"
 fi
 
 echo "OK"

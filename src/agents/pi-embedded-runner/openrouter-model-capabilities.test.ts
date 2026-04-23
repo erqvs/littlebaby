@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { importFreshModule } from "../../../test/helpers/import-fresh.js";
 
 async function withOpenRouterStateDir(run: (stateDir: string) => Promise<void>) {
-  const stateDir = mkdtempSync(join(tmpdir(), "openclaw-openrouter-capabilities-"));
+  const stateDir = mkdtempSync(join(tmpdir(), "littlebaby-openrouter-capabilities-"));
   process.env.LITTLEBABY_STATE_DIR = stateDir;
   for (const key of [
     "ALL_PROXY",

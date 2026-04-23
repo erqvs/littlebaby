@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/stepfun-provider",
+  "name": "@littlebaby/stepfun-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw StepFun provider plugin",
+  "description": "LittleBaby StepFun provider plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

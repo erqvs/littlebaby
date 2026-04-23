@@ -1,8 +1,8 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import { streamSimple } from "@mariozechner/pi-ai";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { streamWithPayloadPatch } from "openclaw/plugin-sdk/provider-stream-shared";
+import type { ProviderWrapStreamFnContext } from "littlebaby/plugin-sdk/plugin-entry";
+import { normalizeProviderId } from "littlebaby/plugin-sdk/provider-model-shared";
+import { streamWithPayloadPatch } from "littlebaby/plugin-sdk/provider-stream-shared";
 import { isFireworksKimiModelId } from "./model-id.js";
 
 function isFireworksProviderId(providerId: string): boolean {

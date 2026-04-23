@@ -64,10 +64,10 @@ function buildConfig(enableNoVnc: boolean): SandboxConfig {
     backend: "docker",
     scope: "session",
     workspaceAccess: "none",
-    workspaceRoot: "/tmp/openclaw-sandboxes",
+    workspaceRoot: "/tmp/littlebaby-sandboxes",
     docker: {
-      image: "openclaw-sandbox:bookworm-slim",
-      containerPrefix: "openclaw-sbx-",
+      image: "littlebaby-sandbox:bookworm-slim",
+      containerPrefix: "littlebaby-sbx-",
       workdir: "/workspace",
       readOnlyRoot: true,
       tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -77,15 +77,15 @@ function buildConfig(enableNoVnc: boolean): SandboxConfig {
     },
     ssh: {
       command: "ssh",
-      workspaceRoot: "/tmp/openclaw-sandboxes",
+      workspaceRoot: "/tmp/littlebaby-sandboxes",
       strictHostKeyChecking: true,
       updateHostKeys: true,
     },
     browser: {
       enabled: true,
-      image: "openclaw-sandbox-browser:bookworm-slim",
-      containerPrefix: "openclaw-sbx-browser-",
-      network: "openclaw-sandbox-browser",
+      image: "littlebaby-sandbox-browser:bookworm-slim",
+      containerPrefix: "littlebaby-sbx-browser-",
+      network: "littlebaby-sandbox-browser",
       cdpPort: 9222,
       vncPort: 5900,
       noVncPort: 6080,
@@ -255,7 +255,7 @@ describe("ensureSandboxBrowser create args", () => {
 
     const createArgs = findDockerArgsCall(dockerMocks.execDocker.mock.calls, "create");
     const labels = collectDockerFlagValues(createArgs ?? [], "--label");
-    expect(labels).toContain(`openclaw.mountFormatVersion=${SANDBOX_MOUNT_FORMAT_VERSION}`);
+    expect(labels).toContain(`littlebaby.mountFormatVersion=${SANDBOX_MOUNT_FORMAT_VERSION}`);
   });
 
   it("force-removes the browser container when CDP never becomes reachable", async () => {
@@ -288,7 +288,7 @@ describe("ensureSandboxBrowser create args", () => {
     ).rejects.toThrow("hung container has been forcefully removed");
 
     expect(dockerMocks.execDocker).toHaveBeenCalledWith(
-      ["rm", "-f", expect.stringMatching(/^openclaw-sbx-browser-session-test-/)],
+      ["rm", "-f", expect.stringMatching(/^littlebaby-sbx-browser-session-test-/)],
       { allowFailure: true },
     );
   });

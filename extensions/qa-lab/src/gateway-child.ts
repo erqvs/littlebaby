@@ -6,11 +6,11 @@ import net from "node:net";
 import os from "node:os";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import type { ModelProviderConfig } from "littlebaby/plugin-sdk/provider-model-shared";
+import { fetchWithSsrFGuard } from "littlebaby/plugin-sdk/ssrf-runtime";
+import { resolvePreferredLittleBabyTmpDir } from "littlebaby/plugin-sdk/temp-path";
 import {
   createQaBundledPluginsDir,
   resolveQaBundledPluginSourceDir,
@@ -441,10 +441,10 @@ export async function startQaGatewayChild(params: {
   controlUiEnabled?: boolean;
   enabledPluginIds?: string[];
   forwardHostHome?: boolean;
-  mutateConfig?: (cfg: OpenClawConfig) => OpenClawConfig;
+  mutateConfig?: (cfg: LittleBabyConfig) => LittleBabyConfig;
 }) {
   const tempRoot = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-qa-suite-"),
+    path.join(resolvePreferredLittleBabyTmpDir(), "littlebaby-qa-suite-"),
   );
   const runtimeCwd = tempRoot;
   const distEntryPath = path.join(params.repoRoot, "dist", "index.js");
@@ -454,7 +454,7 @@ export async function startQaGatewayChild(params: {
   const xdgConfigHome = path.join(tempRoot, "xdg-config");
   const xdgDataHome = path.join(tempRoot, "xdg-data");
   const xdgCacheHome = path.join(tempRoot, "xdg-cache");
-  const configPath = path.join(tempRoot, "openclaw.json");
+  const configPath = path.join(tempRoot, "littlebaby.json");
   const gatewayToken = `qa-suite-${randomUUID()}`;
   await seedQaAgentWorkspace({
     workspaceDir,

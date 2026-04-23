@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/zalo",
+  "name": "@littlebaby/zalo",
   "version": "2026.4.20",
-  "description": "OpenClaw Zalo channel plugin",
+  "description": "LittleBaby Zalo channel plugin",
   "type": "module",
   "dependencies": {
     "undici": "8.1.0"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
@@ -25,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/zalo",
+      "npmSpec": "@littlebaby/zalo",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -33,7 +33,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

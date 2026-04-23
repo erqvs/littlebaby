@@ -19,7 +19,7 @@ vi.mock("./node-require.js", () => ({
 }));
 
 let originalTestFileLog: string | undefined;
-let originalOpenClawLogLevel: string | undefined;
+let originalLittleBabyLogLevel: string | undefined;
 let logging: typeof import("../logging.js");
 
 beforeAll(async () => {
@@ -28,7 +28,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   originalTestFileLog = process.env.LITTLEBABY_TEST_FILE_LOG;
-  originalOpenClawLogLevel = process.env.LITTLEBABY_LOG_LEVEL;
+  originalLittleBabyLogLevel = process.env.LITTLEBABY_LOG_LEVEL;
   delete process.env.LITTLEBABY_TEST_FILE_LOG;
   delete process.env.LITTLEBABY_LOG_LEVEL;
   readLoggingConfigMock.mockClear();
@@ -45,10 +45,10 @@ afterEach(() => {
   } else {
     process.env.LITTLEBABY_TEST_FILE_LOG = originalTestFileLog;
   }
-  if (originalOpenClawLogLevel === undefined) {
+  if (originalLittleBabyLogLevel === undefined) {
     delete process.env.LITTLEBABY_LOG_LEVEL;
   } else {
-    process.env.LITTLEBABY_LOG_LEVEL = originalOpenClawLogLevel;
+    process.env.LITTLEBABY_LOG_LEVEL = originalLittleBabyLogLevel;
   }
   logging.resetLogger();
   logging.setLoggerOverride(null);

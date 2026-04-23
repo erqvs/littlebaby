@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://openclaw.bot/install.sh}"
+INSTALL_URL="${LITTLEBABY_INSTALL_URL:-https://littlebaby.bot/install.sh}"
 SMOKE_MODE="${LITTLEBABY_INSTALL_SMOKE_MODE:-install}"
 SMOKE_PREVIOUS_VERSION="${LITTLEBABY_INSTALL_SMOKE_PREVIOUS:-}"
 SKIP_PREVIOUS="${LITTLEBABY_INSTALL_SMOKE_SKIP_PREVIOUS:-0}"
@@ -226,16 +226,16 @@ run_update_smoke() {
   print_install_audit "baseline install"
   verify_installed_cli "$PACKAGE_NAME" "$UPDATE_BASELINE_VERSION"
 
-  echo "==> Run openclaw update from host-served tgz"
+  echo "==> Run littlebaby update from host-served tgz"
   local update_status
   local update_stderr_file
   local update_stderr
   update_stderr_file="$(mktemp)"
   set +e
   UPDATE_JSON="$(
-    run_with_heartbeat "openclaw update" \
+    run_with_heartbeat "littlebaby update" \
       env npm_config_omit=optional NPM_CONFIG_OMIT=optional \
-      openclaw update --tag "$UPDATE_TAG_URL" --yes --json 2>"$update_stderr_file"
+      littlebaby update --tag "$UPDATE_TAG_URL" --yes --json 2>"$update_stderr_file"
   )"
   update_status=$?
   set -e
@@ -246,7 +246,7 @@ run_update_smoke() {
     printf "%s\n" "$update_stderr" >&2
   fi
   if [[ "$update_status" -ne 0 ]]; then
-    echo "ERROR: openclaw update failed with exit code $update_status" >&2
+    echo "ERROR: littlebaby update failed with exit code $update_status" >&2
     return "$update_status"
   fi
 

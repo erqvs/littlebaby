@@ -124,7 +124,7 @@ async function persistTestSessionConfig(): Promise<void> {
     configPaths.add(process.env.LITTLEBABY_CONFIG_PATH);
   }
   if (process.env.LITTLEBABY_STATE_DIR) {
-    configPaths.add(path.join(process.env.LITTLEBABY_STATE_DIR, "openclaw.json"));
+    configPaths.add(path.join(process.env.LITTLEBABY_STATE_DIR, "littlebaby.json"));
   }
   const parsedConfigs = new Map<string, Record<string, unknown>>();
   let preservedTemplateStore: string | undefined;
@@ -223,7 +223,7 @@ async function setupGatewayTestHome() {
   tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-gateway-home-"));
   process.env.HOME = tempHome;
   process.env.USERPROFILE = tempHome;
-  process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".openclaw");
+  process.env.LITTLEBABY_STATE_DIR = path.join(tempHome, ".littlebaby");
   delete process.env.LITTLEBABY_CONFIG_PATH;
 }
 
@@ -236,8 +236,8 @@ function applyGatewaySkipEnv() {
   process.env.LITTLEBABY_SKIP_CRON = "1";
   process.env.LITTLEBABY_TEST_MINIMAL_GATEWAY = "1";
   process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR = tempHome
-    ? path.join(tempHome, "openclaw-test-no-bundled-extensions")
-    : "openclaw-test-no-bundled-extensions";
+    ? path.join(tempHome, "littlebaby-test-no-bundled-extensions")
+    : "littlebaby-test-no-bundled-extensions";
 }
 
 async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
@@ -260,7 +260,7 @@ async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
     await fs.mkdir(stateDir, { recursive: true });
   }
   if (options.uniqueConfigRoot) {
-    const suiteRoot = path.join(tempHome, ".openclaw-test-suite");
+    const suiteRoot = path.join(tempHome, ".littlebaby-test-suite");
     await fs.mkdir(suiteRoot, { recursive: true });
     tempConfigRoot = path.join(suiteRoot, `case-${suiteConfigRootSeq++}`);
     await fs.rm(tempConfigRoot, {
@@ -271,7 +271,7 @@ async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
     });
     await fs.mkdir(tempConfigRoot, { recursive: true });
   } else {
-    tempConfigRoot = path.join(tempHome, ".openclaw-test");
+    tempConfigRoot = path.join(tempHome, ".littlebaby-test");
     await fs.rm(tempConfigRoot, {
       recursive: true,
       force: true,
@@ -281,7 +281,7 @@ async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
     await fs.mkdir(tempConfigRoot, { recursive: true });
   }
   setTestConfigRoot(tempConfigRoot);
-  tempControlUiRoot = path.join(tempHome, ".openclaw-test-control-ui");
+  tempControlUiRoot = path.join(tempHome, ".littlebaby-test-control-ui");
   await fs.rm(tempControlUiRoot, {
     recursive: true,
     force: true,
@@ -291,7 +291,7 @@ async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
   await fs.mkdir(tempControlUiRoot, { recursive: true });
   await fs.writeFile(
     path.join(tempControlUiRoot, "index.html"),
-    "<!doctype html><title>openclaw-test-control-ui</title>\n",
+    "<!doctype html><title>littlebaby-test-control-ui</title>\n",
     "utf-8",
   );
   setTestConfigRoot(tempConfigRoot);
@@ -515,8 +515,8 @@ type GatewayTestMessage = {
   [key: string]: unknown;
 };
 
-const CONNECT_CHALLENGE_NONCE_KEY = "__openclawTestConnectChallengeNonce";
-const CONNECT_CHALLENGE_TRACKED_KEY = "__openclawTestConnectChallengeTracked";
+const CONNECT_CHALLENGE_NONCE_KEY = "__littlebabyTestConnectChallengeNonce";
+const CONNECT_CHALLENGE_TRACKED_KEY = "__littlebabyTestConnectChallengeTracked";
 type TrackedWs = WebSocket & Record<string, unknown>;
 
 export function getTrackedConnectChallengeNonce(ws: WebSocket): string | undefined {

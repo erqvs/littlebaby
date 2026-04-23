@@ -49,7 +49,7 @@ function describeExecFailure(error) {
 }
 
 export function runInstalledWorkspaceBootstrapSmoke(params) {
-  const tempRoot = mkdtempSync(join(tmpdir(), "openclaw-workspace-bootstrap-smoke-"));
+  const tempRoot = mkdtempSync(join(tmpdir(), "littlebaby-workspace-bootstrap-smoke-"));
   const homeDir = join(tempRoot, "home");
   const cwd = join(tempRoot, "cwd");
   mkdirSync(homeDir, { recursive: true });
@@ -95,7 +95,7 @@ export function runInstalledWorkspaceBootstrapSmoke(params) {
       );
     }
 
-    const workspaceDir = join(homeDir, ".openclaw", "workspace");
+    const workspaceDir = join(homeDir, ".littlebaby", "workspace");
     const missingFiles = collectMissingBootstrapWorkspaceFiles(workspaceDir);
     if (missingFiles.length > 0) {
       throw new Error(

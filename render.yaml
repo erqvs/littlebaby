@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: openclaw
+    name: littlebaby
     runtime: docker
     plan: starter
     healthCheckPath: /health
@@ -14,6 +14,6 @@ services:
       - key: LITTLEBABY_GATEWAY_TOKEN
         generateValue: true
     disk:
-      name: openclaw-data
+      name: littlebaby-data
       mountPath: /data
       sizeGB: 1

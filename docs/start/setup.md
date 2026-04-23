@@ -1,5 +1,5 @@
 ---
-summary: "Advanced setup and development workflows for OpenClaw"
+summary: "Advanced setup and development workflows for LittleBaby"
 read_when:
   - Setting up a new machine
   - You want “latest + greatest” without breaking your personal setup
@@ -15,7 +15,7 @@ For onboarding details, see [Onboarding (CLI)](/start/wizard).
 
 ## TL;DR
 
-- **Tailoring lives outside the repo:** `~/.littlebaby/workspace` (workspace) + `~/.littlebaby/openclaw.json` (config).
+- **Tailoring lives outside the repo:** `~/.littlebaby/workspace` (workspace) + `~/.littlebaby/littlebaby.json` (config).
 - **Stable workflow:** install the macOS app; let it run the bundled Gateway.
 - **Bleeding edge workflow:** run the Gateway yourself via `pnpm gateway:watch`, then let the macOS app attach in Local mode.
 
@@ -29,22 +29,22 @@ For onboarding details, see [Onboarding (CLI)](/start/wizard).
 
 If you want “100% tailored to me” _and_ easy updates, keep your customization in:
 
-- **Config:** `~/.littlebaby/openclaw.json` (JSON/JSON5-ish)
+- **Config:** `~/.littlebaby/littlebaby.json` (JSON/JSON5-ish)
 - **Workspace:** `~/.littlebaby/workspace` (skills, prompts, memories; make it a private git repo)
 
 Bootstrap once:
 
 ```bash
-openclaw setup
+littlebaby setup
 ```
 
 From inside this repo, use the local CLI entry:
 
 ```bash
-openclaw setup
+littlebaby setup
 ```
 
-If you don’t have a global install yet, run it via `pnpm openclaw setup` (or `bun run openclaw setup` if you are using the Bun workflow).
+If you don’t have a global install yet, run it via `pnpm littlebaby setup` (or `bun run littlebaby setup` if you are using the Bun workflow).
 
 ## Run the Gateway from this repo
 
@@ -56,24 +56,24 @@ node littlebaby.mjs gateway --port 18789 --verbose
 
 ## Stable workflow (macOS app first)
 
-1. Install + launch **OpenClaw.app** (menu bar).
+1. Install + launch **LittleBaby.app** (menu bar).
 2. Complete the onboarding/permissions checklist (TCC prompts).
 3. Ensure Gateway is **Local** and running (the app manages it).
 4. Link surfaces (example: WhatsApp):
 
 ```bash
-openclaw channels login
+littlebaby channels login
 ```
 
 5. Sanity check:
 
 ```bash
-openclaw health
+littlebaby health
 ```
 
 If onboarding is not available in your build:
 
-- Run `openclaw setup`, then `openclaw channels login`, then start the Gateway manually (`openclaw gateway`).
+- Run `littlebaby setup`, then `littlebaby channels login`, then start the Gateway manually (`littlebaby gateway`).
 
 ## Bleeding edge workflow (Gateway in a terminal)
 
@@ -91,28 +91,28 @@ If you also want the macOS app on the bleeding edge:
 
 ```bash
 pnpm install
-# First run only (or after resetting local OpenClaw config/workspace)
-pnpm openclaw setup
+# First run only (or after resetting local LittleBaby config/workspace)
+pnpm littlebaby setup
 pnpm gateway:watch
 ```
 
 `gateway:watch` runs the gateway in watch mode and reloads on relevant source,
 config, and bundled-plugin metadata changes.
-`pnpm openclaw setup` is the one-time local config/workspace initialization step for a fresh checkout.
+`pnpm littlebaby setup` is the one-time local config/workspace initialization step for a fresh checkout.
 `pnpm gateway:watch` does not rebuild `dist/control-ui`, so rerun `pnpm ui:build` after `ui/` changes or use `pnpm ui:dev` while developing the Control UI.
 
 If you are intentionally using the Bun workflow, the equivalent commands are:
 
 ```bash
 bun install
-# First run only (or after resetting local OpenClaw config/workspace)
-bun run openclaw setup
+# First run only (or after resetting local LittleBaby config/workspace)
+bun run littlebaby setup
 bun run gateway:watch
 ```
 
 ### 2) Point the macOS app at your running Gateway
 
-In **OpenClaw.app**:
+In **LittleBaby.app**:
 
 - Connection Mode: **Local**
   The app will attach to the running gateway on the configured port.
@@ -123,7 +123,7 @@ In **OpenClaw.app**:
 - Or via CLI:
 
 ```bash
-openclaw health
+littlebaby health
 ```
 
 ### Common footguns
@@ -133,7 +133,7 @@ openclaw health
   - Channel/provider state: `~/.littlebaby/credentials/`
   - Model auth profiles: `~/.littlebaby/agents/<agentId>/agent/auth-profiles.json`
   - Sessions: `~/.littlebaby/agents/<agentId>/sessions/`
-  - Logs: `/tmp/openclaw/`
+  - Logs: `/tmp/littlebaby/`
 
 ## Credential storage map
 
@@ -153,7 +153,7 @@ Use this when debugging auth or deciding what to back up:
 
 ## Updating (without wrecking your setup)
 
-- Keep `~/.littlebaby/workspace` and `~/.littlebaby/` as “your stuff”; don’t put personal prompts/config into the `openclaw` repo.
+- Keep `~/.littlebaby/workspace` and `~/.littlebaby/` as “your stuff”; don’t put personal prompts/config into the `littlebaby` repo.
 - Updating source: `git pull` + your chosen package-manager install step (`pnpm install` by default; `bun install` for Bun workflow) + keep using the matching `gateway:watch` command.
 
 ## Linux (systemd user service)
@@ -174,5 +174,5 @@ user service (no lingering needed). See [Gateway runbook](/gateway) for the syst
 - [Gateway runbook](/gateway) (flags, supervision, ports)
 - [Gateway configuration](/gateway/configuration) (config schema + examples)
 - [Discord](/channels/discord) and [Telegram](/channels/telegram) (reply tags + replyToMode settings)
-- [OpenClaw assistant setup](/start/openclaw)
+- [LittleBaby assistant setup](/start/littlebaby)
 - [macOS app](/platforms/macos) (gateway lifecycle)

@@ -12,7 +12,7 @@ import {
   testState,
 } from "./test-helpers.js";
 
-const { createOpenClawTools } = await import("../agents/openclaw-tools.js");
+const { createLittleBabyTools } = await import("../agents/littlebaby-tools.js");
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -21,7 +21,7 @@ let gatewayPort: number;
 const gatewayToken = "test-gateway-token-1234567890";
 let envSnapshot: ReturnType<typeof captureEnv>;
 
-type SessionSendTool = ReturnType<typeof createOpenClawTools>[number];
+type SessionSendTool = ReturnType<typeof createLittleBabyTools>[number];
 const SESSION_SEND_E2E_TIMEOUT_MS = 10_000;
 let cachedSessionsSendTool: SessionSendTool | null = null;
 
@@ -29,7 +29,7 @@ function getSessionsSendTool(): SessionSendTool {
   if (cachedSessionsSendTool) {
     return cachedSessionsSendTool;
   }
-  const tool = createOpenClawTools().find((candidate) => candidate.name === "sessions_send");
+  const tool = createLittleBabyTools().find((candidate) => candidate.name === "sessions_send");
   if (!tool) {
     throw new Error("missing sessions_send tool");
   }
@@ -85,7 +85,7 @@ beforeAll(async () => {
   const pending = await requestDevicePairing({
     deviceId: identity.deviceId,
     publicKey: publicKeyRawBase64UrlFromPem(identity.publicKeyPem),
-    clientId: "openclaw-cli",
+    clientId: "littlebaby-cli",
     clientMode: "cli",
     role: "operator",
     scopes: ["operator.admin", "operator.read", "operator.write", "operator.approvals"],
@@ -192,7 +192,7 @@ describe("sessions_send label lookup", () => {
         timeoutMs: 5000,
       });
 
-      const tool = createOpenClawTools({
+      const tool = createLittleBabyTools({
         config: {
           tools: {
             sessions: {

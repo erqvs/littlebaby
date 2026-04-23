@@ -1,12 +1,12 @@
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/routing";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import { DEFAULT_ACCOUNT_ID } from "littlebaby/plugin-sdk/routing";
+import type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime-env";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createQueuedWizardPrompter } from "../../../test/helpers/plugins/setup-wizard.js";
 import { whatsappApprovalAuth } from "./approval-auth.js";
 import { WHATSAPP_AUTH_UNSTABLE_CODE } from "./auth-store.js";
 import { whatsappPlugin } from "./channel.js";
 import { checkWhatsAppHeartbeatReady } from "./heartbeat.js";
-import type { OpenClawConfig } from "./runtime-api.js";
+import type { LittleBabyConfig } from "./runtime-api.js";
 import { finalizeWhatsAppSetup } from "./setup-finalize.js";
 import {
   createWhatsAppAllowlistModeInput,
@@ -35,7 +35,7 @@ const hoisted = vi.hoisted(() => ({
     }),
   ),
   resolveWhatsAppAuthDir: vi.fn(() => ({
-    authDir: "/tmp/openclaw-whatsapp-test",
+    authDir: "/tmp/littlebaby-whatsapp-test",
   })),
 }));
 
@@ -43,9 +43,9 @@ vi.mock("./login.js", () => ({
   loginWeb: hoisted.loginWeb,
 }));
 
-vi.mock("openclaw/plugin-sdk/setup", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/setup")>(
-    "openclaw/plugin-sdk/setup",
+vi.mock("littlebaby/plugin-sdk/setup", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/setup")>(
+    "littlebaby/plugin-sdk/setup",
   );
   const normalizeE164 = (value?: string | null) => {
     const raw = (value ?? "").trim();
@@ -69,12 +69,12 @@ vi.mock("openclaw/plugin-sdk/setup", async () => {
         .split(",")
         .map((entry) => entry.trim())
         .filter(Boolean),
-    setSetupChannelEnabled: (cfg: OpenClawConfig, channel: string, enabled: boolean) => ({
+    setSetupChannelEnabled: (cfg: LittleBabyConfig, channel: string, enabled: boolean) => ({
       ...cfg,
       channels: {
         ...cfg.channels,
         [channel]: {
-          ...(cfg.channels?.[channel as keyof NonNullable<OpenClawConfig["channels"]>] as object),
+          ...(cfg.channels?.[channel as keyof NonNullable<LittleBabyConfig["channels"]>] as object),
           enabled,
         },
       },
@@ -107,12 +107,12 @@ function createRuntime(): RuntimeEnv {
 
 async function runConfigureWithHarness(params: {
   harness: ReturnType<typeof createQueuedWizardPrompter>;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   runtime?: RuntimeEnv;
   forceAllowFrom?: boolean;
 }) {
   const result = await finalizeWhatsAppSetup({
-    cfg: params.cfg ?? ({} as OpenClawConfig),
+    cfg: params.cfg ?? ({} as LittleBabyConfig),
     accountId: DEFAULT_ACCOUNT_ID,
     forceAllowFrom: params.forceAllowFrom ?? false,
     prompter: params.harness.prompter,
@@ -157,7 +157,7 @@ describe("whatsapp setup wizard", () => {
       exists: false,
     });
     hoisted.resolveWhatsAppAuthDir.mockReset();
-    hoisted.resolveWhatsAppAuthDir.mockReturnValue({ authDir: "/tmp/openclaw-whatsapp-test" });
+    hoisted.resolveWhatsAppAuthDir.mockReturnValue({ authDir: "/tmp/littlebaby-whatsapp-test" });
   });
 
   it("exposes approval auth through approvalCapability only", () => {
@@ -238,7 +238,7 @@ describe("whatsapp setup wizard", () => {
 
     const result = await runConfigureWithHarness({
       harness,
-      cfg: createWhatsAppRootAllowFromConfig() as OpenClawConfig,
+      cfg: createWhatsAppRootAllowFromConfig() as LittleBabyConfig,
     });
 
     expectWhatsAppOpenPolicySetup(result.cfg, harness);
@@ -259,7 +259,7 @@ describe("whatsapp setup wizard", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       accountId: "work",
       account: {
         accountId: "work",
@@ -291,7 +291,7 @@ describe("whatsapp setup wizard", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       accountId: "work",
       account: {
         accountId: "work",
@@ -326,7 +326,7 @@ describe("whatsapp setup wizard", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
     });
 
     expect(result.cfg.channels?.whatsapp?.dmPolicy).toBeUndefined();
@@ -357,7 +357,7 @@ describe("whatsapp setup wizard", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
     });
 
     expect(result.cfg.channels?.whatsapp?.accounts?.Default?.authDir).toBe("/tmp/default-auth");
@@ -419,7 +419,7 @@ describe("whatsapp setup wizard", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       deps: {
         readWebAuthExistsForDecision: async () => ({
           outcome: "stable" as const,
@@ -444,7 +444,7 @@ describe("whatsapp setup wizard", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as LittleBabyConfig,
       deps: {
         readWebAuthExistsForDecision: async () => ({ outcome: "unstable" as const }),
         hasActiveWebListener: () => true,

@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/browser-plugin",
+  "name": "@littlebaby/browser-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw browser tool plugin",
+  "description": "LittleBaby browser tool plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

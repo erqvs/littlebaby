@@ -1,10 +1,10 @@
-import { createOpencodeCatalogApiKeyAuthMethod } from "openclaw/plugin-sdk/opencode";
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+import { createOpencodeCatalogApiKeyAuthMethod } from "littlebaby/plugin-sdk/opencode";
+import { definePluginEntry } from "littlebaby/plugin-sdk/plugin-entry";
 import {
   matchesExactOrPrefix,
   PASSTHROUGH_GEMINI_REPLAY_HOOKS,
-} from "openclaw/plugin-sdk/provider-model-shared";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/provider-model-shared";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { applyOpencodeZenConfig, OPENCODE_ZEN_DEFAULT_MODEL } from "./api.js";
 
 const PROVIDER_ID = "opencode";

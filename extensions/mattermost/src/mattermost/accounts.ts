@@ -1,12 +1,12 @@
-import { createAccountListHelpers } from "openclaw/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import { resolveMergedAccountConfig } from "openclaw/plugin-sdk/account-resolution";
+import { createAccountListHelpers } from "littlebaby/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "littlebaby/plugin-sdk/account-id";
+import { resolveMergedAccountConfig } from "littlebaby/plugin-sdk/account-resolution";
 import {
   resolveChannelStreamingBlockCoalesce,
   resolveChannelStreamingBlockEnabled,
   resolveChannelStreamingChunkMode,
-} from "openclaw/plugin-sdk/channel-streaming";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/channel-streaming";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { normalizeResolvedSecretInputString, normalizeSecretInputString } from "../secret-input.js";
 import type {
   MattermostAccountConfig,
@@ -15,7 +15,7 @@ import type {
   MattermostReplyToMode,
 } from "../types.js";
 import { normalizeMattermostBaseUrl } from "./client.js";
-import type { OpenClawConfig } from "./runtime-api.js";
+import type { LittleBabyConfig } from "./runtime-api.js";
 
 export type MattermostTokenSource = "env" | "config" | "none";
 export type MattermostBaseUrlSource = "env" | "config" | "none";
@@ -40,16 +40,16 @@ export type ResolvedMattermostAccount = {
 
 const mattermostAccountHelpers = createAccountListHelpers("mattermost");
 
-export function listMattermostAccountIds(cfg: OpenClawConfig): string[] {
+export function listMattermostAccountIds(cfg: LittleBabyConfig): string[] {
   return mattermostAccountHelpers.listAccountIds(cfg);
 }
 
-export function resolveDefaultMattermostAccountId(cfg: OpenClawConfig): string {
+export function resolveDefaultMattermostAccountId(cfg: LittleBabyConfig): string {
   return mattermostAccountHelpers.resolveDefaultAccountId(cfg);
 }
 
 function mergeMattermostAccountConfig(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId: string,
 ): MattermostAccountConfig {
   return resolveMergedAccountConfig<MattermostAccountConfig>({
@@ -77,7 +77,7 @@ function resolveMattermostRequireMention(config: MattermostAccountConfig): boole
 }
 
 export function resolveMattermostAccount(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   accountId?: string | null;
   allowUnresolvedSecretRef?: boolean;
 }): ResolvedMattermostAccount {
@@ -140,7 +140,7 @@ export function resolveMattermostReplyToMode(
   return account.config.replyToMode ?? "off";
 }
 
-export function listEnabledMattermostAccounts(cfg: OpenClawConfig): ResolvedMattermostAccount[] {
+export function listEnabledMattermostAccounts(cfg: LittleBabyConfig): ResolvedMattermostAccount[] {
   return listMattermostAccountIds(cfg)
     .map((accountId) => resolveMattermostAccount({ cfg, accountId }))
     .filter((account) => account.enabled);

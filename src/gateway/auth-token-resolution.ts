@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { resolveSecretInputRef } from "../config/types.secrets.js";
 import { trimToUndefined } from "./credentials.js";
 import {
@@ -10,7 +10,7 @@ export type GatewayAuthTokenResolutionSource = "explicit" | "config" | "secretRe
 export type GatewayAuthTokenEnvFallback = "never" | "no-secret-ref" | "always";
 
 export async function resolveGatewayAuthToken(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
   explicitToken?: string;
   envFallback?: GatewayAuthTokenEnvFallback;

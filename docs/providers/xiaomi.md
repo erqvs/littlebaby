@@ -1,14 +1,14 @@
 ---
-summary: "Use Xiaomi MiMo models with OpenClaw"
+summary: "Use Xiaomi MiMo models with LittleBaby"
 read_when:
-  - You want Xiaomi MiMo models in OpenClaw
+  - You want Xiaomi MiMo models in LittleBaby
   - You need XIAOMI_API_KEY setup
 title: "Xiaomi MiMo"
 ---
 
 # Xiaomi MiMo
 
-Xiaomi MiMo is the API platform for **MiMo** models. OpenClaw uses the Xiaomi
+Xiaomi MiMo is the API platform for **MiMo** models. LittleBaby uses the Xiaomi
 OpenAI-compatible endpoint with API-key authentication.
 
 | Property | Value                           |
@@ -26,19 +26,19 @@ OpenAI-compatible endpoint with API-key authentication.
   </Step>
   <Step title="Run onboarding">
     ```bash
-    openclaw onboard --auth-choice xiaomi-api-key
+    littlebaby onboard --auth-choice xiaomi-api-key
     ```
 
     Or pass the key directly:
 
     ```bash
-    openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
+    littlebaby onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
     ```
 
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider xiaomi
+    littlebaby models list --provider xiaomi
     ```
   </Step>
 </Steps>
@@ -137,7 +137,7 @@ The default model ref is `xiaomi/mimo-v2-flash`. The provider is injected automa
     Choosing providers, model refs, and failover behavior.
   </Card>
   <Card title="Configuration reference" href="/gateway/configuration" icon="gear">
-    Full OpenClaw configuration reference.
+    Full LittleBaby configuration reference.
   </Card>
   <Card title="Xiaomi MiMo console" href="https://platform.xiaomimimo.com" icon="arrow-up-right-from-square">
     Xiaomi MiMo dashboard and API key management.

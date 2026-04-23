@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# One-time host setup for rootless OpenClaw in Podman. Uses the current
+# One-time host setup for rootless LittleBaby in Podman. Uses the current
 # non-root user throughout, builds or pulls the image into that user's Podman
 # store, writes config under ~/.littlebaby by default, and uses the repo-local
-# launch script at ./scripts/run-openclaw-podman.sh.
+# launch script at ./scripts/run-littlebaby-podman.sh.
 #
 # Usage: ./scripts/podman/setup.sh [--quadlet|--container]
 #   --quadlet   Install a Podman Quadlet as the current user's systemd service
@@ -10,21 +10,21 @@
 #   Or set LITTLEBABY_PODMAN_QUADLET=1 (or 0) to choose without a flag.
 #
 # After this, start the gateway manually:
-#   ./scripts/run-openclaw-podman.sh launch
-#   ./scripts/run-openclaw-podman.sh launch setup
+#   ./scripts/run-littlebaby-podman.sh launch
+#   ./scripts/run-littlebaby-podman.sh launch setup
 # Or, if you used --quadlet:
-#   systemctl --user start openclaw.service
+#   systemctl --user start littlebaby.service
 set -euo pipefail
 
 REPO_PATH="${LITTLEBABY_REPO_PATH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-RUN_SCRIPT_SRC="$REPO_PATH/scripts/run-openclaw-podman.sh"
-QUADLET_TEMPLATE="$REPO_PATH/scripts/podman/openclaw.container.in"
+RUN_SCRIPT_SRC="$REPO_PATH/scripts/run-littlebaby-podman.sh"
+QUADLET_TEMPLATE="$REPO_PATH/scripts/podman/littlebaby.container.in"
 LITTLEBABY_USER="$(id -un)"
 LITTLEBABY_HOME="${HOME:-}"
 LITTLEBABY_CONFIG_DIR="${LITTLEBABY_CONFIG_DIR:-}"
 LITTLEBABY_WORKSPACE_DIR="${LITTLEBABY_WORKSPACE_DIR:-}"
-LITTLEBABY_IMAGE="${LITTLEBABY_PODMAN_IMAGE:-${LITTLEBABY_IMAGE:-openclaw:local}}"
-LITTLEBABY_CONTAINER_NAME="${LITTLEBABY_PODMAN_CONTAINER:-openclaw}"
+LITTLEBABY_IMAGE="${LITTLEBABY_PODMAN_IMAGE:-${LITTLEBABY_IMAGE:-littlebaby:local}}"
+LITTLEBABY_CONTAINER_NAME="${LITTLEBABY_PODMAN_CONTAINER:-littlebaby}"
 PLATFORM_NAME="$(uname -s 2>/dev/null || echo unknown)"
 HOST_GATEWAY_PORT="${LITTLEBABY_PODMAN_GATEWAY_HOST_PORT:-${LITTLEBABY_GATEWAY_PORT:-18789}}"
 QUADLET_GATEWAY_PORT="18789"
@@ -324,7 +324,7 @@ if is_root; then
   echo "Run scripts/podman/setup.sh as your normal user so Podman stays rootless." >&2
   exit 1
 fi
-if [[ "$LITTLEBABY_IMAGE" == "openclaw:local" ]] && [[ ! -f "$REPO_PATH/Dockerfile" ]]; then
+if [[ "$LITTLEBABY_IMAGE" == "littlebaby:local" ]] && [[ ! -f "$REPO_PATH/Dockerfile" ]]; then
   echo "Dockerfile not found at $REPO_PATH. Set LITTLEBABY_REPO_PATH to the repo root." >&2
   exit 1
 fi
@@ -366,7 +366,7 @@ if [[ -n "${LITTLEBABY_EXTENSIONS:-}" ]]; then
   BUILD_ARGS+=(--build-arg "LITTLEBABY_EXTENSIONS=${LITTLEBABY_EXTENSIONS}")
 fi
 
-if [[ "$LITTLEBABY_IMAGE" == "openclaw:local" ]]; then
+if [[ "$LITTLEBABY_IMAGE" == "littlebaby:local" ]]; then
   echo "Building image $LITTLEBABY_IMAGE ..."
   podman build -t "$LITTLEBABY_IMAGE" -f "$REPO_PATH/Dockerfile" "${BUILD_ARGS[@]+"${BUILD_ARGS[@]}"}" "$REPO_PATH"
 else
@@ -392,7 +392,7 @@ fi
 upsert_env_var "$ENV_FILE" "LITTLEBABY_PODMAN_CONTAINER" "$LITTLEBABY_CONTAINER_NAME"
 upsert_env_var "$ENV_FILE" "LITTLEBABY_PODMAN_IMAGE" "$LITTLEBABY_IMAGE"
 
-CONFIG_JSON="$LITTLEBABY_CONFIG_DIR/openclaw.json"
+CONFIG_JSON="$LITTLEBABY_CONFIG_DIR/littlebaby.json"
 if [[ ! -f "$CONFIG_JSON" ]]; then
   (
     umask 077
@@ -416,7 +416,7 @@ seed_local_control_ui_origins "$CONFIG_JSON" "$SEED_GATEWAY_PORT"
 
 if [[ "$INSTALL_QUADLET" == true ]]; then
   QUADLET_DIR="$LITTLEBABY_HOME/.config/containers/systemd"
-  QUADLET_DST="$QUADLET_DIR/openclaw.container"
+  QUADLET_DST="$QUADLET_DIR/littlebaby.container"
   echo "Installing Quadlet to $QUADLET_DST ..."
   mkdir -p "$QUADLET_DIR"
   ensure_safe_existing_dir "quadlet directory" "$QUADLET_DIR"
@@ -435,11 +435,11 @@ if [[ "$INSTALL_QUADLET" == true ]]; then
 
   if command -v systemctl >/dev/null 2>&1; then
     echo "Reloading and starting user service..."
-    if systemctl --user daemon-reload && systemctl --user start openclaw.service; then
+    if systemctl --user daemon-reload && systemctl --user start littlebaby.service; then
       echo "Quadlet installed and service started."
     else
       echo "Quadlet installed, but automatic start failed." >&2
-      echo "Try: systemctl --user daemon-reload && systemctl --user start openclaw.service" >&2
+      echo "Try: systemctl --user daemon-reload && systemctl --user start littlebaby.service" >&2
       if command -v loginctl >/dev/null 2>&1; then
         echo "For boot persistence on headless hosts, you may also need: sudo loginctl enable-linger $(whoami)" >&2
       fi
@@ -453,6 +453,6 @@ fi
 
 echo
 echo "Next:"
-echo "  ./scripts/run-openclaw-podman.sh launch"
-echo "  ./scripts/run-openclaw-podman.sh launch setup"
-echo "  openclaw --container $LITTLEBABY_CONTAINER_NAME dashboard --no-open"
+echo "  ./scripts/run-littlebaby-podman.sh launch"
+echo "  ./scripts/run-littlebaby-podman.sh launch setup"
+echo "  littlebaby --container $LITTLEBABY_CONTAINER_NAME dashboard --no-open"

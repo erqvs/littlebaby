@@ -15,8 +15,8 @@ describe("skills-cli (e2e)", () => {
 
   beforeAll(() => {
     envSnapshot = captureEnv(["LITTLEBABY_BUNDLED_SKILLS_DIR"]);
-    tempWorkspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-skills-test-"));
-    tempBundledDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-skills-test-"));
+    tempWorkspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-skills-test-"));
+    tempBundledDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-skills-test-"));
     process.env.LITTLEBABY_BUNDLED_SKILLS_DIR = tempBundledDir;
   });
 
@@ -40,7 +40,7 @@ describe("skills-cli (e2e)", () => {
           description: "Capture UI screenshots",
           filePath,
           baseDir,
-          source: "openclaw-bundled",
+          source: "littlebaby-bundled",
         }),
         frontmatter: {},
         metadata: { emoji: "📸" },

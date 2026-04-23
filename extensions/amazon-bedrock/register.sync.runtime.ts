@@ -1,14 +1,14 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { LittleBabyPluginApi } from "littlebaby/plugin-sdk/plugin-entry";
 import {
   ANTHROPIC_BY_MODEL_REPLAY_HOOKS,
   normalizeProviderId,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "littlebaby/plugin-sdk/provider-model-shared";
 import {
   createBedrockNoCacheWrapper,
   isAnthropicBedrockModel,
   streamWithPayloadPatch,
-} from "openclaw/plugin-sdk/provider-stream-shared";
+} from "littlebaby/plugin-sdk/provider-stream-shared";
 import {
   mergeImplicitBedrockProvider,
   resolveBedrockConfigApiKey,
@@ -62,7 +62,7 @@ function createGuardrailWrapStreamFn(
   };
 }
 
-export function registerAmazonBedrockPlugin(api: OpenClawPluginApi): void {
+export function registerAmazonBedrockPlugin(api: LittleBabyPluginApi): void {
   // Keep registration-local constants inside the function so partial module
   // initialization during test bootstrap cannot trip TDZ reads.
   const providerId = "amazon-bedrock";

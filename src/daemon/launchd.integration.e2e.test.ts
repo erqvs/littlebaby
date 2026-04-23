@@ -118,10 +118,10 @@ describeLaunchdIntegration("launchd integration", () => {
 
   beforeAll(async () => {
     const testId = randomUUID().slice(0, 8);
-    homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `openclaw-launchd-int-${testId}-`));
+    homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `littlebaby-launchd-int-${testId}-`));
     env = {
       HOME: homeDir,
-      LITTLEBABY_LAUNCHD_LABEL: `ai.openclaw.launchd-int-${testId}`,
+      LITTLEBABY_LAUNCHD_LABEL: `ai.littlebaby.launchd-int-${testId}`,
       LITTLEBABY_LOG_PREFIX: `gateway-launchd-int-${testId}`,
     };
   });

@@ -1,7 +1,7 @@
 import type {
   ProviderReplayPolicy,
   ProviderReplayPolicyContext,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "littlebaby/plugin-sdk/plugin-entry";
 
 /**
  * Returns the provider-owned replay policy for OpenAI-family transports.

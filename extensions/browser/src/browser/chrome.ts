@@ -2,7 +2,7 @@ import { type ChildProcess, type ChildProcessWithoutNullStreams, spawn } from "n
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import type { SsrFPolicy } from "../infra/net/ssrf.js";
 import { ensurePortAvailable } from "../infra/ports.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
@@ -40,7 +40,7 @@ import {
   resolveBrowserExecutableForPlatform,
 } from "./chrome.executables.js";
 import {
-  decorateOpenClawProfile,
+  decorateLittleBabyProfile,
   ensureProfileCleanExit,
   isProfileDecorated,
 } from "./chrome.profile-decoration.js";
@@ -66,7 +66,7 @@ export {
   resolveBrowserExecutableForPlatform,
 } from "./chrome.executables.js";
 export {
-  decorateOpenClawProfile,
+  decorateLittleBabyProfile,
   ensureProfileCleanExit,
   isProfileDecorated,
 } from "./chrome.profile-decoration.js";
@@ -92,7 +92,7 @@ function resolveBrowserExecutable(resolved: ResolvedBrowserConfig): BrowserExecu
   return resolveBrowserExecutableForPlatform(resolved, process.platform);
 }
 
-export function resolveOpenClawUserDataDir(profileName = DEFAULT_LITTLEBABY_BROWSER_PROFILE_NAME) {
+export function resolveLittleBabyUserDataDir(profileName = DEFAULT_LITTLEBABY_BROWSER_PROFILE_NAME) {
   return path.join(CONFIG_DIR, "browser", profileName, "user-data");
 }
 
@@ -100,7 +100,7 @@ function cdpUrlForPort(cdpPort: number) {
   return `http://127.0.0.1:${cdpPort}`;
 }
 
-export function buildOpenClawChromeLaunchArgs(params: {
+export function buildLittleBabyChromeLaunchArgs(params: {
   resolved: ResolvedBrowserConfig;
   profile: ResolvedBrowserProfile;
   userDataDir: string;
@@ -254,7 +254,7 @@ export async function isChromeCdpReady(
   return diagnostic.ok;
 }
 
-export async function launchOpenClawChrome(
+export async function launchLittleBabyChrome(
   resolved: ResolvedBrowserConfig,
   profile: ResolvedBrowserProfile,
 ): Promise<RunningChrome> {
@@ -270,7 +270,7 @@ export async function launchOpenClawChrome(
     );
   }
 
-  const userDataDir = resolveOpenClawUserDataDir(profile.name);
+  const userDataDir = resolveLittleBabyUserDataDir(profile.name);
   fs.mkdirSync(userDataDir, { recursive: true });
 
   const needsDecorate = !isProfileDecorated(
@@ -281,7 +281,7 @@ export async function launchOpenClawChrome(
 
   // First launch to create preference files if missing, then decorate and relaunch.
   const spawnOnce = () => {
-    const args = buildOpenClawChromeLaunchArgs({
+    const args = buildLittleBabyChromeLaunchArgs({
       resolved,
       profile,
       userDataDir,
@@ -333,20 +333,20 @@ export async function launchOpenClawChrome(
 
   if (needsDecorate) {
     try {
-      decorateOpenClawProfile(userDataDir, {
+      decorateLittleBabyProfile(userDataDir, {
         name: profile.name,
         color: profile.color,
       });
-      log.info(`🦞 openclaw browser profile decorated (${profile.color})`);
+      log.info(`🦞 littlebaby browser profile decorated (${profile.color})`);
     } catch (err) {
-      log.warn(`openclaw browser profile decoration failed: ${String(err)}`);
+      log.warn(`littlebaby browser profile decoration failed: ${String(err)}`);
     }
   }
 
   try {
     ensureProfileCleanExit(userDataDir);
   } catch (err) {
-    log.warn(`openclaw browser clean-exit prefs failed: ${String(err)}`);
+    log.warn(`littlebaby browser clean-exit prefs failed: ${String(err)}`);
   }
 
   const proc = spawnOnce();
@@ -398,7 +398,7 @@ export async function launchOpenClawChrome(
 
   const pid = proc.pid ?? -1;
   log.info(
-    `🦞 openclaw browser started (${exe.kind}) profile "${profile.name}" on 127.0.0.1:${profile.cdpPort} (pid ${pid})`,
+    `🦞 littlebaby browser started (${exe.kind}) profile "${profile.name}" on 127.0.0.1:${profile.cdpPort} (pid ${pid})`,
   );
 
   return {
@@ -411,7 +411,7 @@ export async function launchOpenClawChrome(
   };
 }
 
-export async function stopOpenClawChrome(
+export async function stopLittleBabyChrome(
   running: RunningChrome,
   timeoutMs = CHROME_STOP_TIMEOUT_MS,
 ) {

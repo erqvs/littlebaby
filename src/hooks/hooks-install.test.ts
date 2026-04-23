@@ -13,7 +13,7 @@ import { loadInternalHooks } from "./loader.js";
 const tempDirs: string[] = [];
 
 async function makeTempDir() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hooks-e2e-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-hooks-e2e-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -49,7 +49,7 @@ describe("hooks install (e2e)", () => {
         {
           name: "@acme/hello-hooks",
           version: "0.0.0",
-          openclaw: { hooks: ["./hooks/hello-hook"] },
+          littlebaby: { hooks: ["./hooks/hello-hook"] },
         },
         null,
         2,

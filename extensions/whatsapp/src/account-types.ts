@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 
 export type WhatsAppAccountConfig = NonNullable<
-  NonNullable<NonNullable<OpenClawConfig["channels"]>["whatsapp"]>["accounts"]
+  NonNullable<NonNullable<LittleBabyConfig["channels"]>["whatsapp"]>["accounts"]
 >[string];

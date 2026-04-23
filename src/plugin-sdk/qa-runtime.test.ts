@@ -4,14 +4,14 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const loadBundledPluginPublicSurfaceModuleSync = vi.hoisted(() => vi.fn());
-const resolveOpenClawPackageRootSync = vi.hoisted(() => vi.fn());
+const resolveLittleBabyPackageRootSync = vi.hoisted(() => vi.fn());
 
 vi.mock("./facade-runtime.js", () => ({
   loadBundledPluginPublicSurfaceModuleSync,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
-  resolveOpenClawPackageRootSync,
+vi.mock("../infra/littlebaby-root.js", () => ({
+  resolveLittleBabyPackageRootSync,
 }));
 
 describe("plugin-sdk qa-runtime", () => {
@@ -20,7 +20,7 @@ describe("plugin-sdk qa-runtime", () => {
 
   beforeEach(() => {
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
-    resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
+    resolveLittleBabyPackageRootSync.mockReset().mockReturnValue(null);
     delete process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI;
   });
 
@@ -60,13 +60,13 @@ describe("plugin-sdk qa-runtime", () => {
   });
 
   it("uses the source bundled tree for qa-lab runtime loading in private qa mode", async () => {
-    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-runtime-root-"));
+    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-qa-runtime-root-"));
     tempDirs.push(sourceRoot);
     fs.mkdirSync(path.join(sourceRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(sourceRoot, "extensions"), { recursive: true });
     fs.writeFileSync(path.join(sourceRoot, ".git"), "gitdir: /tmp/mock\n", "utf8");
     process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI = "1";
-    resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
+    resolveLittleBabyPackageRootSync.mockReturnValue(sourceRoot);
 
     const runtimeSurface = {
       defaultQaRuntimeModelForMode: vi.fn(),

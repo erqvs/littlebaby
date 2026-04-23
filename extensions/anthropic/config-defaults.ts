@@ -1,12 +1,12 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/plugin-entry";
+import { normalizeProviderId } from "littlebaby/plugin-sdk/provider-model-shared";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { CLAUDE_CLI_BACKEND_ID, CLAUDE_CLI_DEFAULT_ALLOWLIST_REFS } from "./cli-shared.js";
 
 const ANTHROPIC_PROVIDER_API = "anthropic-messages";
 
 function resolveAnthropicDefaultAuthMode(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   env: NodeJS.ProcessEnv,
 ): "api_key" | "oauth" | null {
   const profiles = config.auth?.profiles ?? {};
@@ -129,7 +129,7 @@ function isAnthropicCacheRetentionTarget(
   );
 }
 
-function usesClaudeCliModelSelection(config: OpenClawConfig): boolean {
+function usesClaudeCliModelSelection(config: LittleBabyConfig): boolean {
   const primary = resolveModelPrimaryValue(
     config.agents?.defaults?.model as
       | string
@@ -160,9 +160,9 @@ export function normalizeAnthropicProviderConfig<T extends { api?: string; model
 }
 
 export function applyAnthropicConfigDefaults(params: {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   const defaults = params.config.agents?.defaults;
   if (!defaults) {
     return params.config;

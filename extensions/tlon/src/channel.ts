@@ -1,13 +1,13 @@
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import { createHybridChannelConfigAdapter } from "openclaw/plugin-sdk/channel-config-helpers";
-import { createChatChannelPlugin, type ChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { createRuntimeOutboundDelegates } from "openclaw/plugin-sdk/outbound-runtime";
+import { describeAccountSnapshot } from "littlebaby/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID } from "littlebaby/plugin-sdk/account-id";
+import { createHybridChannelConfigAdapter } from "littlebaby/plugin-sdk/channel-config-helpers";
+import { createChatChannelPlugin, type ChannelPlugin } from "littlebaby/plugin-sdk/channel-core";
+import { createLazyRuntimeModule } from "littlebaby/plugin-sdk/lazy-runtime";
+import { createRuntimeOutboundDelegates } from "littlebaby/plugin-sdk/outbound-runtime";
 import {
   createComputedAccountStatusAdapter,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/status-helpers";
+} from "littlebaby/plugin-sdk/status-helpers";
 import { tlonChannelConfigSchema } from "./config-schema.js";
 import { tlonDoctor } from "./doctor.js";
 import { resolveTlonOutboundSessionRoute } from "./session-route.js";

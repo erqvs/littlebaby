@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import type { DeviceIdentity } from "../infra/device-identity.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import type { GatewayClient } from "./client.js";
@@ -19,7 +19,7 @@ import {
   assertLiveImageProbeReply,
   buildLiveCronProbeMessage,
   createLiveCronProbeSpec,
-  runOpenClawCliJson,
+  runLittleBabyCliJson,
   type CronListJob,
 } from "./live-agent-probes.js";
 import { renderCatFacePngBase64 } from "./live-image-probe.js";
@@ -231,7 +231,7 @@ async function writeLiveGatewayConfig(params: {
   token: string;
   workspace: string;
 }): Promise<void> {
-  const cfg: OpenClawConfig = {
+  const cfg: LittleBabyConfig = {
     gateway: {
       mode: "local",
       port: params.port,
@@ -402,7 +402,7 @@ async function verifyCodexCronMcpProbe(params: {
     expectedSessionKey: params.sessionKey,
   });
   if (createdJob.id) {
-    await runOpenClawCliJson(
+    await runLittleBabyCliJson(
       [
         "cron",
         "rm",
@@ -427,10 +427,10 @@ describeLive("gateway live (Codex harness)", () => {
       const { startGatewayServer } = await import("./server.js");
 
       const previousEnv = snapshotEnv();
-      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-codex-harness-"));
+      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-live-codex-harness-"));
       const stateDir = path.join(tempDir, "state");
       const workspace = await createLiveWorkspace(tempDir);
-      const configPath = path.join(tempDir, "openclaw.json");
+      const configPath = path.join(tempDir, "littlebaby.json");
       const token = `test-${randomUUID()}`;
       const port = await getFreeGatewayPort();
 
@@ -506,8 +506,8 @@ describeLive("gateway live (Codex harness)", () => {
             "Model: codex/",
             "Session: `agent:dev:live-codex-harness`",
             "Session: agent:dev:live-codex-harness",
-            "OpenClaw `",
-            "OpenClaw status:",
+            "LittleBaby `",
+            "LittleBaby status:",
             "model `codex/",
             "session `agent:dev:live-codex-harness`",
             "Model/status card shown above",

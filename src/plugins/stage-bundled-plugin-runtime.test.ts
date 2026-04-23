@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { stageBundledPluginRuntime } from "../../scripts/stage-bundled-plugin-runtime.mjs";
 import { bundledDistPluginFile } from "../../test/helpers/bundled-plugin-paths.js";
-import { discoverOpenClawPlugins } from "./discovery.js";
+import { discoverLittleBabyPlugins } from "./discovery.js";
 import { loadPluginManifestRegistry } from "./manifest-registry.js";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
@@ -77,7 +77,7 @@ afterEach(() => {
 
 describe("stageBundledPluginRuntime", () => {
   it("stages bundled dist plugins as runtime wrappers and links staged dist node_modules", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-");
     const distPluginDir = createDistPluginDir(repoRoot, "diffs");
     fs.mkdirSync(path.join(repoRoot, "dist"), { recursive: true });
     fs.mkdirSync(path.join(repoRoot, "dist", "plugin-sdk"), { recursive: true });
@@ -144,7 +144,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("keeps extension-local plugin-sdk wrappers resolving canonical dist chunks", async () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-sdk-wrapper-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-sdk-wrapper-");
     createDistPluginDir(repoRoot, "diffs");
     setupRepoFiles(repoRoot, {
       "dist/plugin-sdk/channel-entry-contract.js":
@@ -169,7 +169,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("writes wrappers that forward plugin entry imports into canonical dist files", async () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-chunks-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-chunks-");
     createDistPluginDir(repoRoot, "diffs");
     setupRepoFiles(repoRoot, {
       "dist/chunk-abc.js": "export const value = 1;\n",
@@ -191,7 +191,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("stages root runtime sidecars that bundled plugin boundaries resolve directly", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-sidecars-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-sidecars-");
     createDistPluginDir(repoRoot, "whatsapp");
     setupRepoFiles(repoRoot, {
       [bundledDistPluginFile("whatsapp", "index.js")]: "export default {};\n",
@@ -216,7 +216,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("keeps plugin command registration on the canonical dist graph when loaded from dist-runtime", async () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-commands-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-commands-");
     const distPluginDir = path.join(repoRoot, "dist", "extensions", "demo");
     const distCommandsDir = path.join(repoRoot, "dist", "plugins");
     fs.mkdirSync(distPluginDir, { recursive: true });
@@ -225,7 +225,7 @@ describe("stageBundledPluginRuntime", () => {
     fs.writeFileSync(
       path.join(distCommandsDir, "commands.js"),
       [
-        "const registry = globalThis.__openclawTestPluginCommands ??= new Map();",
+        "const registry = globalThis.__littlebabyTestPluginCommands ??= new Map();",
         "export function registerPluginCommand(pluginId, command) {",
         "  registry.set(`/${command.name.toLowerCase()}`, { ...command, pluginId });",
         "}",
@@ -323,15 +323,15 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("copies package metadata files but symlinks other non-js plugin artifacts into the runtime overlay", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-assets-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-assets-");
     createDistPluginDir(repoRoot, "diffs");
     setupRepoFiles(repoRoot, {
       [bundledDistPluginFile("diffs", "package.json")]: JSON.stringify(
-        { name: "@openclaw/diffs", openclaw: { extensions: ["./index.js"] } },
+        { name: "@littlebaby/diffs", littlebaby: { extensions: ["./index.js"] } },
         null,
         2,
       ),
-      [bundledDistPluginFile("diffs", "openclaw.plugin.json")]: "{}\n",
+      [bundledDistPluginFile("diffs", "littlebaby.plugin.json")]: "{}\n",
       [bundledDistPluginFile("diffs", "assets/info.txt")]: "ok\n",
     });
 
@@ -340,7 +340,7 @@ describe("stageBundledPluginRuntime", () => {
     expectRuntimeArtifactText({
       repoRoot,
       pluginId: "diffs",
-      relativePath: "openclaw.plugin.json",
+      relativePath: "littlebaby.plugin.json",
       expectedText: "{}\n",
       symbolicLink: false,
     });
@@ -363,14 +363,14 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("preserves package metadata needed for bundled plugin discovery from dist-runtime", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-discovery-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-discovery-");
     const runtimeExtensionsDir = path.join(repoRoot, "dist-runtime", "extensions");
     createDistPluginDir(repoRoot, "demo");
     setupRepoFiles(repoRoot, {
       [bundledDistPluginFile("demo", "package.json")]: JSON.stringify(
         {
-          name: "@openclaw/demo",
-          openclaw: {
+          name: "@littlebaby/demo",
+          littlebaby: {
             extensions: ["./main.js"],
             setupEntry: "./setup.js",
             startup: {
@@ -381,7 +381,7 @@ describe("stageBundledPluginRuntime", () => {
         null,
         2,
       ),
-      [bundledDistPluginFile("demo", "openclaw.plugin.json")]: JSON.stringify(
+      [bundledDistPluginFile("demo", "littlebaby.plugin.json")]: JSON.stringify(
         {
           id: "demo",
           channels: ["demo"],
@@ -401,7 +401,7 @@ describe("stageBundledPluginRuntime", () => {
       LITTLEBABY_DISABLE_BUNDLED_PLUGINS: undefined,
       LITTLEBABY_BUNDLED_PLUGINS_DIR: runtimeExtensionsDir,
     };
-    const discovery = discoverOpenClawPlugins({
+    const discovery = discoverLittleBabyPlugins({
       env,
       cache: false,
     });
@@ -432,7 +432,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("removes stale runtime plugin directories that are no longer in dist", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-stale-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-stale-");
     const staleRuntimeDir = path.join(repoRoot, "dist-runtime", "extensions", "stale");
     fs.mkdirSync(staleRuntimeDir, { recursive: true });
     fs.writeFileSync(path.join(staleRuntimeDir, "index.js"), "stale\n", "utf8");
@@ -444,7 +444,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("removes dist-runtime when the built bundled plugin tree is absent", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-missing-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-missing-");
     const runtimeRoot = path.join(repoRoot, "dist-runtime", "extensions", "diffs");
     fs.mkdirSync(runtimeRoot, { recursive: true });
 
@@ -454,7 +454,7 @@ describe("stageBundledPluginRuntime", () => {
   });
 
   it("tolerates EEXIST when an identical runtime symlink is materialized concurrently", () => {
-    const repoRoot = makeRepoRoot("openclaw-stage-bundled-runtime-eexist-");
+    const repoRoot = makeRepoRoot("littlebaby-stage-bundled-runtime-eexist-");
     createDistPluginDir(repoRoot, "feishu");
     setupRepoFiles(repoRoot, {
       [bundledDistPluginFile("feishu", "index.js")]: "export default {}\n",

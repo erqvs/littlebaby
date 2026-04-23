@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { resolveSessionAuthProfileOverride } from "./session-override.js";
 import type { AuthProfileStore } from "./types.js";
 
@@ -54,7 +54,7 @@ vi.mock("./usage.js", () => ({
 
 async function withAuthStateDir<T>(run: (params: { stateDir: string }) => Promise<T>): Promise<T> {
   const previousStateDir = process.env.LITTLEBABY_STATE_DIR;
-  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-"));
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-auth-"));
   const stateDir = path.join(tempRoot, "state");
   process.env.LITTLEBABY_STATE_DIR = stateDir;
   try {
@@ -114,7 +114,7 @@ describe("resolveSessionAuthProfileOverride", () => {
       const sessionStore = { "agent:main:main": sessionEntry };
 
       const resolved = await resolveSessionAuthProfileOverride({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as LittleBabyConfig,
         provider: "openrouter",
         agentDir,
         sessionEntry,
@@ -148,7 +148,7 @@ describe("resolveSessionAuthProfileOverride", () => {
       const sessionStore = { "agent:main:main": sessionEntry };
 
       const resolved = await resolveSessionAuthProfileOverride({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as LittleBabyConfig,
         provider: "z.ai",
         agentDir,
         sessionEntry,
@@ -195,7 +195,7 @@ describe("resolveSessionAuthProfileOverride", () => {
       const sessionStore = { "agent:main:main": sessionEntry };
 
       const resolved = await resolveSessionAuthProfileOverride({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as LittleBabyConfig,
         provider: "openai-codex",
         agentDir,
         sessionEntry,

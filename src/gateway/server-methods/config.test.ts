@@ -24,16 +24,16 @@ function invokeExecFileCallback(args: unknown[], error: Error | null) {
 
 describe("resolveConfigOpenCommand", () => {
   it("uses open on macOS", () => {
-    expect(resolveConfigOpenCommand("/tmp/openclaw.json", "darwin")).toEqual({
+    expect(resolveConfigOpenCommand("/tmp/littlebaby.json", "darwin")).toEqual({
       command: "open",
-      args: ["/tmp/openclaw.json"],
+      args: ["/tmp/littlebaby.json"],
     });
   });
 
   it("uses xdg-open on Linux", () => {
-    expect(resolveConfigOpenCommand("/tmp/openclaw.json", "linux")).toEqual({
+    expect(resolveConfigOpenCommand("/tmp/littlebaby.json", "linux")).toEqual({
       command: "xdg-open",
-      args: ["/tmp/openclaw.json"],
+      args: ["/tmp/littlebaby.json"],
     });
   });
 

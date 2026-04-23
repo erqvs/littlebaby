@@ -47,8 +47,8 @@ describe("debug proxy runtime", () => {
     storeState.store.recordEvent.mockClear();
     storeState.closeDebugProxyCaptureStore.mockClear();
     process.env.LITTLEBABY_DEBUG_PROXY_ENABLED = "1";
-    process.env.LITTLEBABY_DEBUG_PROXY_DB_PATH = "/tmp/openclaw-proxy-runtime-test.sqlite";
-    process.env.LITTLEBABY_DEBUG_PROXY_BLOB_DIR = "/tmp/openclaw-proxy-runtime-test-blobs";
+    process.env.LITTLEBABY_DEBUG_PROXY_DB_PATH = "/tmp/littlebaby-proxy-runtime-test.sqlite";
+    process.env.LITTLEBABY_DEBUG_PROXY_BLOB_DIR = "/tmp/littlebaby-proxy-runtime-test-blobs";
     process.env.LITTLEBABY_DEBUG_PROXY_SESSION_ID = "runtime-test-session";
     process.env.LITTLEBABY_DEBUG_PROXY_SOURCE_PROCESS = "runtime-test";
   });

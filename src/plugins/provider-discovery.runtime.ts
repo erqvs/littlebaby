@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { loadPluginManifestRegistry } from "./manifest-registry.js";
 import { resolveDiscoveredProviderPluginIds } from "./providers.js";
 import { resolvePluginProviders } from "./providers.runtime.js";
@@ -38,7 +38,7 @@ function normalizeDiscoveryModule(value: ProviderDiscoveryModule): ProviderPlugi
 }
 
 function resolveProviderDiscoveryEntryPlugins(params: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   onlyPluginIds?: string[];
@@ -71,7 +71,7 @@ function resolveProviderDiscoveryEntryPlugins(params: {
 }
 
 export function resolvePluginDiscoveryProvidersRuntime(params: {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   onlyPluginIds?: string[];

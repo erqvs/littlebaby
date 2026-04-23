@@ -10,7 +10,7 @@ describe("resolveOAuthRefreshLockPath", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-lock-path-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-auth-lock-path-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
   });
 
@@ -118,7 +118,7 @@ describe("resolveOAuthRefreshLockPath fuzz", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-lock-path-fuzz-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-auth-lock-path-fuzz-"));
     process.env.LITTLEBABY_STATE_DIR = stateDir;
   });
 

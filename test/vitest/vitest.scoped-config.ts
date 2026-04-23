@@ -138,7 +138,7 @@ export function createScopedVitestConfig(
     environment?: string;
     exclude?: string[];
     argv?: string[];
-    includeOpenClawRuntimeSetup?: boolean;
+    includeLittleBabyRuntimeSetup?: boolean;
     isolate?: boolean;
     name?: string;
     fileParallelism?: boolean;
@@ -167,7 +167,7 @@ export function createScopedVitestConfig(
     ...new Set([
       ...(baseTest.setupFiles ?? []),
       ...(options?.setupFiles ?? []),
-      ...(options?.includeOpenClawRuntimeSetup === false ? [] : ["test/setup-openclaw-runtime.ts"]),
+      ...(options?.includeLittleBabyRuntimeSetup === false ? [] : ["test/setup-littlebaby-runtime.ts"]),
     ]),
   ].map(resolveRepoRootPath);
   const useNonIsolatedRunner = options?.useNonIsolatedRunner ?? !isolate;

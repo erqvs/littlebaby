@@ -71,7 +71,7 @@ function defaultIndexHTML() {
   return `<!doctype html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>OpenClaw Canvas</title>
+<title>LittleBaby Canvas</title>
 <style>
   html, body { height: 100%; margin: 0; background: #000; color: #fff; font: 16px/1.4 -apple-system, BlinkMacSystemFont, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
   .wrap { min-height: 100%; display: grid; place-items: center; padding: 24px; }
@@ -89,7 +89,7 @@ function defaultIndexHTML() {
 <div class="wrap">
   <div class="card">
     <div class="title">
-      <h1>OpenClaw Canvas</h1>
+      <h1>LittleBaby Canvas</h1>
       <div class="sub">Interactive test page (auto-reload enabled)</div>
     </div>
 
@@ -114,14 +114,14 @@ function defaultIndexHTML() {
     !!(
       window.webkit &&
       window.webkit.messageHandlers &&
-      window.webkit.messageHandlers.openclawCanvasA2UIAction
+      window.webkit.messageHandlers.littlebabyCanvasA2UIAction
     );
   const hasAndroid = () =>
     !!(
-      (window.openclawCanvasA2UIAction &&
-        typeof window.openclawCanvasA2UIAction.postMessage === "function")
+      (window.littlebabyCanvasA2UIAction &&
+        typeof window.littlebabyCanvasA2UIAction.postMessage === "function")
     );
-  const hasHelper = () => typeof window.openclawSendUserAction === "function";
+  const hasHelper = () => typeof window.littlebabySendUserAction === "function";
   const helperReady = hasHelper();
   statusEl.textContent = "";
   statusEl.appendChild(document.createTextNode("Bridge: "));
@@ -139,16 +139,16 @@ function defaultIndexHTML() {
     const d = ev && ev.detail || {};
     log("Action status: id=" + (d.id || "?") + " ok=" + String(!!d.ok) + (d.error ? (" error=" + d.error) : ""));
   };
-  window.addEventListener("openclaw:a2ui-action-status", onStatus);
+  window.addEventListener("littlebaby:a2ui-action-status", onStatus);
 
   function send(name, sourceComponentId) {
     if (!hasHelper()) {
-      log("No action bridge found. Ensure you're viewing this on an iOS/Android OpenClaw node canvas.");
+      log("No action bridge found. Ensure you're viewing this on an iOS/Android LittleBaby node canvas.");
       return;
     }
     const sendUserAction =
-      typeof window.openclawSendUserAction === "function"
-        ? window.openclawSendUserAction
+      typeof window.littlebabySendUserAction === "function"
+        ? window.littlebabySendUserAction
         : undefined;
     const ok = sendUserAction({
       name,
@@ -376,7 +376,7 @@ export async function createCanvasHostHandler(
           res.statusCode = 404;
           res.setHeader("Content-Type", "text/html; charset=utf-8");
           res.end(
-            `<!doctype html><meta charset="utf-8" /><title>OpenClaw Canvas</title><pre>Missing file.\nCreate ${rootDir}/index.html</pre>`,
+            `<!doctype html><meta charset="utf-8" /><title>LittleBaby Canvas</title><pre>Missing file.\nCreate ${rootDir}/index.html</pre>`,
           );
           return true;
         }

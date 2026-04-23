@@ -1,21 +1,21 @@
 {
-  "name": "@openclaw/bluebubbles",
+  "name": "@littlebaby/bluebubbles",
   "version": "2026.4.20",
-  "description": "OpenClaw BlueBubbles channel plugin",
+  "description": "LittleBaby BlueBubbles channel plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*",
+    "littlebaby": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.20"
+    "littlebaby": ">=2026.4.20"
   },
   "peerDependenciesMeta": {
     "littlebaby": {
       "optional": true
     }
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ],
@@ -38,7 +38,7 @@
       "order": 75
     },
     "install": {
-      "npmSpec": "@openclaw/bluebubbles",
+      "npmSpec": "@littlebaby/bluebubbles",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -46,7 +46,7 @@
       "pluginApi": ">=2026.4.20"
     },
     "build": {
-      "openclawVersion": "2026.4.20"
+      "littlebabyVersion": "2026.4.20"
     },
     "release": {
       "publishToClawHub": true,

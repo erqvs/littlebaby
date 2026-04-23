@@ -103,7 +103,7 @@ describe("openai codex provider", () => {
         store: { version: 1, profiles: {} },
       }),
     ).toBe(
-      "Deprecated profile. Run `openclaw models auth login --provider openai-codex` or `openclaw configure`.",
+      "Deprecated profile. Run `littlebaby models auth login --provider openai-codex` or `littlebaby configure`.",
     );
   });
 
@@ -156,7 +156,7 @@ describe("openai codex provider", () => {
   it("uses the provider auth context env when importing Codex CLI auth", async () => {
     const provider = buildOpenAICodexProviderPlugin();
     const importMethod = provider.auth?.find((method) => method.id === "import-codex-cli");
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-openai-codex-provider-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-openai-codex-provider-"));
     tempDirs.push(agentDir);
     readOpenAICodexCliOAuthProfileMock.mockImplementationOnce(({ env }) => {
       expect(env).toMatchObject({

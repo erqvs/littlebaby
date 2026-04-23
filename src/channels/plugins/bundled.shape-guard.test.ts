@@ -66,7 +66,7 @@ describe("bundled channel entry shape guards", () => {
   });
 
   it("fills sparse bundled channel plugin metadata from package metadata", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-metadata-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-metadata-"));
     const previousBundledPluginsDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
     const pluginDir = path.join(tempRoot, "dist", "extensions", "alpha");
     fs.mkdirSync(pluginDir, { recursive: true });
@@ -149,7 +149,7 @@ describe("bundled channel entry shape guards", () => {
   });
 
   it("uses the active bundled plugin root override for channel entry loading", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-override-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-override-"));
     const previousBundledPluginsDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
     const pluginDir = path.join(tempRoot, "dist", "extensions", "alpha");
     fs.mkdirSync(pluginDir, { recursive: true });
@@ -237,7 +237,7 @@ describe("bundled channel entry shape guards", () => {
   });
 
   it("treats direct bundled plugin-tree overrides as scan roots", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-direct-override-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-direct-override-"));
     const previousBundledPluginsDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
     const pluginsRoot = path.join(tempRoot, "bundled-plugins");
     const pluginDir = path.join(pluginsRoot, "alpha");
@@ -328,8 +328,8 @@ describe("bundled channel entry shape guards", () => {
   });
 
   it("partitions bundled channel lazy caches by active bundled root without re-importing", async () => {
-    const rootA = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-root-a-"));
-    const rootB = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-root-b-"));
+    const rootA = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-root-a-"));
+    const rootB = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-root-b-"));
     const previousBundledPluginsDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
     const testGlobal = globalThis as typeof globalThis & {
       __bundledRootRuntime?: unknown;
@@ -469,7 +469,7 @@ describe("bundled channel entry shape guards", () => {
   });
 
   it("loads setup-entry feature plugins without loading the main channel entry", async () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-setup-only-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-setup-only-"));
     const previousBundledPluginsDir = process.env.LITTLEBABY_BUNDLED_PLUGINS_DIR;
     const pluginDir = path.join(root, "dist", "extensions", "alpha");
     const testGlobal = globalThis as typeof globalThis & {
@@ -600,9 +600,9 @@ describe("bundled channel entry shape guards", () => {
           continue;
         }
         if (
-          !source.includes('from "openclaw/plugin-sdk/channel-entry-contract"') ||
-          source.includes('from "openclaw/plugin-sdk/core"') ||
-          source.includes('from "openclaw/plugin-sdk/channel-core"')
+          !source.includes('from "littlebaby/plugin-sdk/channel-entry-contract"') ||
+          source.includes('from "littlebaby/plugin-sdk/core"') ||
+          source.includes('from "littlebaby/plugin-sdk/channel-core"')
         ) {
           offenders.push(path.relative(process.cwd(), filePath));
         }
@@ -623,13 +623,13 @@ describe("bundled channel entry shape guards", () => {
       }
       const setupEntrySource = fs.readFileSync(setupEntryPath, "utf8");
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8")) as {
-        openclaw?: {
+        littlebaby?: {
           setupFeatures?: Record<string, boolean>;
         };
       };
       for (const feature of ["legacyStateMigrations", "legacySessionSurfaces"]) {
         const usesFeature = setupEntrySource.includes(`${feature}: true`);
-        const hasHint = packageJson.openclaw?.setupFeatures?.[feature] === true;
+        const hasHint = packageJson.littlebaby?.setupFeatures?.[feature] === true;
         if (usesFeature !== hasHint) {
           offenders.push(`${path.relative(process.cwd(), extensionDir)}:${feature}`);
         }
@@ -677,7 +677,7 @@ describe("bundled channel entry shape guards", () => {
         if (!source.includes("createChatChannelPlugin")) {
           continue;
         }
-        if (source.includes('from "openclaw/plugin-sdk/core"')) {
+        if (source.includes('from "littlebaby/plugin-sdk/core"')) {
           offenders.push(path.relative(process.cwd(), filePath));
         }
       }
@@ -699,7 +699,7 @@ describe("bundled channel entry shape guards", () => {
       "extensions/irc/src/runtime-api.ts",
       "extensions/matrix/src/runtime-api.ts",
     ].filter((filePath) =>
-      fs.readFileSync(path.resolve(filePath), "utf8").includes("openclaw/plugin-sdk/core"),
+      fs.readFileSync(path.resolve(filePath), "utf8").includes("littlebaby/plugin-sdk/core"),
     );
 
     expect(offenders).toEqual([]);
@@ -740,14 +740,14 @@ describe("bundled channel entry shape guards", () => {
     ].filter((filePath) =>
       fs
         .readFileSync(path.resolve(filePath), "utf8")
-        .includes('from "openclaw/plugin-sdk/runtime"'),
+        .includes('from "littlebaby/plugin-sdk/runtime"'),
     );
 
     expect(offenders).toEqual([]);
   });
 
   it("breaks reentrant bundled channel discovery cycles with an empty fallback", async () => {
-    const pluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundled-reentrant-"));
+    const pluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-bundled-reentrant-"));
     const modulePath = path.join(pluginDir, "index.js");
     fs.writeFileSync(modulePath, "export {};\n", "utf8");
 

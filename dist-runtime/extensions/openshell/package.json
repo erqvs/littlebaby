@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/openshell-sandbox",
+  "name": "@littlebaby/openshell-sandbox",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw OpenShell sandbox backend",
+  "description": "LittleBaby OpenShell sandbox backend",
   "type": "module",
   "dependencies": {
     "openshell": "0.1.0"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

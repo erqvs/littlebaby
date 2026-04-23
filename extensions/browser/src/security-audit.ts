@@ -1,8 +1,8 @@
-import type { OpenClawPluginSecurityAuditContext } from "openclaw/plugin-sdk/plugin-entry";
-import { hasConfiguredSecretInput } from "openclaw/plugin-sdk/secret-input";
-import { formatCliCommand } from "openclaw/plugin-sdk/setup-tools";
-import { isPrivateNetworkOptInEnabled, isPrivateIpAddress } from "openclaw/plugin-sdk/ssrf-policy";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import type { LittleBabyPluginSecurityAuditContext } from "littlebaby/plugin-sdk/plugin-entry";
+import { hasConfiguredSecretInput } from "littlebaby/plugin-sdk/secret-input";
+import { formatCliCommand } from "littlebaby/plugin-sdk/setup-tools";
+import { isPrivateNetworkOptInEnabled, isPrivateIpAddress } from "littlebaby/plugin-sdk/ssrf-policy";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { redactCdpUrl, resolveBrowserConfig, resolveProfile } from "./browser/config.js";
 import { resolveBrowserControlAuth } from "./browser/control-auth.js";
 import { hasNonEmptyString } from "./record-shared.js";
@@ -18,7 +18,7 @@ function isTrustedPrivateHostname(hostname: string): boolean {
   return normalized.length > 0 && BLOCKED_HOSTNAMES.has(normalized);
 }
 
-export function collectBrowserSecurityAuditFindings(ctx: OpenClawPluginSecurityAuditContext) {
+export function collectBrowserSecurityAuditFindings(ctx: LittleBabyPluginSecurityAuditContext) {
   const findings: Array<{
     checkId: string;
     severity: "warn" | "critical";
@@ -36,7 +36,7 @@ export function collectBrowserSecurityAuditFindings(ctx: OpenClawPluginSecurityA
       severity: "warn" as const,
       title: "Browser control config looks invalid",
       detail: String(err),
-      remediation: `Fix browser.cdpUrl in ${ctx.configPath} and re-run "${formatCliCommand("openclaw security audit --deep")}".`,
+      remediation: `Fix browser.cdpUrl in ${ctx.configPath} and re-run "${formatCliCommand("littlebaby security audit --deep")}".`,
     });
     return findings;
   }

@@ -1,7 +1,7 @@
 import {
   buildUntrustedChannelMetadata,
   wrapExternalContent,
-} from "openclaw/plugin-sdk/security-runtime";
+} from "littlebaby/plugin-sdk/security-runtime";
 import {
   resolveDiscordMemberAllowed,
   resolveDiscordOwnerAllowFrom,

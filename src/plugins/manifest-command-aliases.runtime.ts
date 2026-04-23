@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import {
   resolveManifestCommandAliasOwnerInRegistry,
   type PluginManifestCommandAliasRegistry,
@@ -8,7 +8,7 @@ import { loadPluginManifestRegistry } from "./manifest-registry.js";
 
 export function resolveManifestCommandAliasOwner(params: {
   command: string | undefined;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   registry?: PluginManifestCommandAliasRegistry;

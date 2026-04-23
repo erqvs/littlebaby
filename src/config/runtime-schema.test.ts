@@ -7,9 +7,9 @@ import {
   resetPluginRuntimeStateForTest,
   setActivePluginRegistry,
 } from "../plugins/runtime.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "./types.js";
+import type { ConfigFileSnapshot, LittleBabyConfig } from "./types.js";
 
-const mockLoadConfig = vi.hoisted(() => vi.fn<() => OpenClawConfig>());
+const mockLoadConfig = vi.hoisted(() => vi.fn<() => LittleBabyConfig>());
 const mockReadConfigFileSnapshot = vi.hoisted(() => vi.fn<() => Promise<ConfigFileSnapshot>>());
 const mockLoadPluginManifestRegistry = vi.hoisted(() => vi.fn());
 
@@ -27,9 +27,9 @@ vi.mock("../plugins/manifest-registry.js", () => ({
   loadPluginManifestRegistry: (...args: unknown[]) => mockLoadPluginManifestRegistry(...args),
 }));
 
-function makeSnapshot(params: { valid: boolean; config?: OpenClawConfig }): ConfigFileSnapshot {
+function makeSnapshot(params: { valid: boolean; config?: LittleBabyConfig }): ConfigFileSnapshot {
   return {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/littlebaby.json",
     exists: true,
     raw: "{}",
     parsed: params.config ?? {},

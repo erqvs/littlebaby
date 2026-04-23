@@ -9,7 +9,7 @@ import type {
   SessionCompactionCheckpointReason,
   SessionEntry,
 } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { resolveGatewaySessionStoreTarget } from "./session-utils.js";
 
@@ -118,7 +118,7 @@ export async function cleanupCompactionCheckpointSnapshot(
 }
 
 export async function persistSessionCompactionCheckpoint(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   sessionKey: string;
   sessionId: string;
   reason: SessionCompactionCheckpointReason;

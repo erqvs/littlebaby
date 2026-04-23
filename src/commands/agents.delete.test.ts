@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { loadSessionStore, resolveStorePath, saveSessionStore } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { withStateDirEnv } from "../test-helpers/state-dir-env.js";
 import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
 
@@ -40,15 +40,15 @@ describe("agents delete command", () => {
   });
 
   it("purges deleted agent entries from the session store", async () => {
-    await withStateDirEnv("openclaw-agents-delete-", async ({ stateDir }) => {
-      const cfg: OpenClawConfig = {
+    await withStateDirEnv("littlebaby-agents-delete-", async ({ stateDir }) => {
+      const cfg: LittleBabyConfig = {
         agents: {
           list: [
             { id: "main", workspace: path.join(stateDir, "workspace-main") },
             { id: "ops", workspace: path.join(stateDir, "workspace-ops") },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies LittleBabyConfig;
       const storePath = resolveStorePath(cfg.session?.store, { agentId: "ops" });
       await saveSessionStore(storePath, {
         "agent:ops:main": { sessionId: "sess-ops-main", updatedAt: 1 },
@@ -83,8 +83,8 @@ describe("agents delete command", () => {
   });
 
   it("purges legacy main-alias entries owned by the deleted default agent", async () => {
-    await withStateDirEnv("openclaw-agents-delete-main-alias-", async ({ stateDir }) => {
-      const cfg: OpenClawConfig = {
+    await withStateDirEnv("littlebaby-agents-delete-main-alias-", async ({ stateDir }) => {
+      const cfg: LittleBabyConfig = {
         agents: {
           list: [{ id: "ops", default: true, workspace: path.join(stateDir, "workspace-ops") }],
         },
@@ -118,8 +118,8 @@ describe("agents delete command", () => {
   });
 
   it("preserves shared-store legacy default keys when deleting another agent", async () => {
-    await withStateDirEnv("openclaw-agents-delete-shared-store-", async ({ stateDir }) => {
-      const cfg: OpenClawConfig = {
+    await withStateDirEnv("littlebaby-agents-delete-shared-store-", async ({ stateDir }) => {
+      const cfg: LittleBabyConfig = {
         session: { store: path.join(stateDir, "sessions.json") },
         agents: {
           list: [

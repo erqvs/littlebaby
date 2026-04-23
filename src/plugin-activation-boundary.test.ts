@@ -37,7 +37,7 @@ const loadBundledPluginPublicSurfaceModuleSync = vi.hoisted(() =>
           headless: true,
           noSandbox: false,
           profiles: {
-            openclaw: {
+            littlebaby: {
               color: "#FF4500",
               driver: "littlebaby",
               name: "littlebaby",

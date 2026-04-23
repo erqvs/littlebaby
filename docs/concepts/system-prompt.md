@@ -1,5 +1,5 @@
 ---
-summary: "What the OpenClaw system prompt contains and how it is assembled"
+summary: "What the LittleBaby system prompt contains and how it is assembled"
 read_when:
   - Editing system prompt text, tools list, or time/heartbeat sections
   - Changing workspace bootstrap or skills injection behavior
@@ -8,12 +8,12 @@ title: "System Prompt"
 
 # System Prompt
 
-OpenClaw builds a custom system prompt for every agent run. The prompt is **OpenClaw-owned** and does not use the pi-coding-agent default prompt.
+LittleBaby builds a custom system prompt for every agent run. The prompt is **LittleBaby-owned** and does not use the pi-coding-agent default prompt.
 
-The prompt is assembled by OpenClaw and injected into each agent run.
+The prompt is assembled by LittleBaby and injected into each agent run.
 
 Provider plugins can contribute cache-aware prompt guidance without replacing
-the full OpenClaw-owned prompt. The provider runtime can:
+the full LittleBaby-owned prompt. The provider runtime can:
 
 - replace a small set of named core sections (`interaction_style`,
   `tool_call_style`, `execution_bias`)
@@ -31,14 +31,14 @@ The prompt is intentionally compact and uses fixed sections:
 - **Tooling**: structured-tool source-of-truth reminder plus runtime tool-use guidance.
 - **Safety**: short guardrail reminder to avoid power-seeking behavior or bypassing oversight.
 - **Skills** (when available): tells the model how to load skill instructions on demand.
-- **OpenClaw Self-Update**: how to inspect config safely with
+- **LittleBaby Self-Update**: how to inspect config safely with
   `config.schema.lookup`, patch config with `config.patch`, replace the full
   config with `config.apply`, and run `update.run` only on explicit user
   request. The owner-only `gateway` tool also refuses to rewrite
   `tools.exec.ask` / `tools.exec.security`, including legacy `tools.bash.*`
   aliases that normalize to those protected exec paths.
 - **Workspace**: working directory (`agents.defaults.workspace`).
-- **Documentation**: local path to OpenClaw docs (repo or npm package) and when to read them.
+- **Documentation**: local path to LittleBaby docs (repo or npm package) and when to read them.
 - **Workspace Files (injected)**: indicates bootstrap files are included below.
 - **Sandbox** (when enabled): indicates sandboxed runtime, sandbox paths, and whether elevated exec is available.
 - **Current Date & Time**: user-local time, timezone, and time format.
@@ -76,11 +76,11 @@ manual approval is the only path.
 
 ## Prompt modes
 
-OpenClaw can render smaller system prompts for sub-agents. The runtime sets a
+LittleBaby can render smaller system prompts for sub-agents. The runtime sets a
 `promptMode` for each run (not a user-facing config):
 
 - `full` (default): includes all sections above.
-- `minimal`: used for sub-agents; omits **Skills**, **Memory Recall**, **OpenClaw
+- `minimal`: used for sub-agents; omits **Skills**, **Memory Recall**, **LittleBaby
   Self-Update**, **Model Aliases**, **User Identity**, **Reply Tags**,
   **Messaging**, **Silent Replies**, and **Heartbeats**. Tooling, **Safety**,
   Workspace, Sandbox, Current Date & Time (when known), Runtime, and injected
@@ -121,7 +121,7 @@ Large files are truncated with a marker. The max per-file size is controlled by
 `agents.defaults.bootstrapMaxChars` (default: 12000). Total injected bootstrap
 content across files is capped by `agents.defaults.bootstrapTotalMaxChars`
 (default: 60000). Missing files inject a short missing-file marker. When truncation
-occurs, OpenClaw can inject a warning block in Project Context; control this with
+occurs, LittleBaby can inject a warning block in Project Context; control this with
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
 default: `once`).
 
@@ -155,7 +155,7 @@ See [Date & Time](/date-time) for full behavior details.
 
 ## Skills
 
-When eligible skills exist, OpenClaw injects a compact **available skills list**
+When eligible skills exist, LittleBaby injects a compact **available skills list**
 (`formatSkillsForPrompt`) that includes the **file path** for each skill. The
 prompt instructs the model to use `read` to load the SKILL.md at the listed
 location (workspace, managed, or bundled). If no skills are eligible, the
@@ -193,8 +193,8 @@ as `memory_get`, live tool results, and post-compaction AGENTS.md refreshes.
 ## Documentation
 
 When available, the system prompt includes a **Documentation** section that points to the
-local OpenClaw docs directory (either `docs/` in the repo workspace or the bundled npm
+local LittleBaby docs directory (either `docs/` in the repo workspace or the bundled npm
 package docs) and also notes the public mirror, source repo, community Discord, and
 ClawHub ([https://clawhub.ai](https://clawhub.ai)) for skills discovery. The prompt instructs the model to consult local docs first
-for OpenClaw behavior, commands, configuration, or architecture, and to run
-`openclaw status` itself when possible (asking the user only when it lacks access).
+for LittleBaby behavior, commands, configuration, or architecture, and to run
+`littlebaby status` itself when possible (asking the user only when it lacks access).

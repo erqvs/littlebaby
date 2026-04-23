@@ -2,9 +2,9 @@ import crypto from "node:crypto";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import { loadConfig, writeConfigFile } from "../config/config.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { resolveGatewayAuth } from "../gateway/auth.js";
 import { ensureGatewayStartupAuth } from "../gateway/startup-auth.js";
 
@@ -14,7 +14,7 @@ export type BrowserControlAuth = {
 };
 
 export function resolveBrowserControlAuth(
-  cfg?: OpenClawConfig,
+  cfg?: LittleBabyConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): BrowserControlAuth {
   const auth = resolveGatewayAuth({
@@ -43,7 +43,7 @@ export function shouldAutoGenerateBrowserAuth(env: NodeJS.ProcessEnv): boolean {
 }
 
 function hasExplicitNonStringGatewayCredentialForMode(params: {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   mode: "none" | "trusted-proxy";
 }): boolean {
   const { cfg, mode } = params;
@@ -62,14 +62,14 @@ function generateBrowserControlToken(): string {
 }
 
 async function generateAndPersistBrowserControlToken(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
 }): Promise<{
   auth: BrowserControlAuth;
   generatedToken?: string;
 }> {
   const token = generateBrowserControlToken();
-  const nextCfg: OpenClawConfig = {
+  const nextCfg: LittleBabyConfig = {
     ...params.cfg,
     gateway: {
       ...params.cfg.gateway,
@@ -94,14 +94,14 @@ async function generateAndPersistBrowserControlToken(params: {
 }
 
 async function generateAndPersistBrowserControlPassword(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
 }): Promise<{
   auth: BrowserControlAuth;
   generatedToken?: string;
 }> {
   const password = generateBrowserControlToken();
-  const nextCfg: OpenClawConfig = {
+  const nextCfg: LittleBabyConfig = {
     ...params.cfg,
     gateway: {
       ...params.cfg.gateway,
@@ -126,7 +126,7 @@ async function generateAndPersistBrowserControlPassword(params: {
 }
 
 export async function ensureBrowserControlAuth(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
 }): Promise<{
   auth: BrowserControlAuth;

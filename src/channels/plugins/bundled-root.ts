@@ -1,10 +1,10 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
+import { resolveLittleBabyPackageRootSync } from "../../infra/littlebaby-root.js";
 import { resolveBundledPluginsDir } from "../../plugins/bundled-dir.js";
 
 const LITTLEBABY_PACKAGE_ROOT =
-  resolveOpenClawPackageRootSync({
+  resolveLittleBabyPackageRootSync({
     argv1: process.argv[1],
     cwd: process.cwd(),
     moduleUrl: import.meta.url.startsWith("file:") ? import.meta.url : undefined,

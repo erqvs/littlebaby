@@ -438,7 +438,7 @@ function resolveNativeOpenAISessionHeaders(params: {
   }
   return {
     "x-client-request-id": sessionId,
-    "x-openclaw-session-id": sessionId,
+    "x-littlebaby-session-id": sessionId,
   };
 }
 
@@ -463,14 +463,14 @@ function resolveNativeOpenAITransportTurnState(params: {
   return {
     headers: {
       ...sessionHeaders,
-      "x-openclaw-turn-id": turnId,
-      "x-openclaw-turn-attempt": attempt,
+      "x-littlebaby-turn-id": turnId,
+      "x-littlebaby-turn-attempt": attempt,
     },
     metadata: {
-      openclaw_session_id: sessionHeaders["x-openclaw-session-id"] ?? "",
-      openclaw_turn_id: turnId,
-      openclaw_turn_attempt: attempt,
-      openclaw_transport: params.transport,
+      littlebaby_session_id: sessionHeaders["x-littlebaby-session-id"] ?? "",
+      littlebaby_turn_id: turnId,
+      littlebaby_turn_attempt: attempt,
+      littlebaby_transport: params.transport,
     },
   };
 }

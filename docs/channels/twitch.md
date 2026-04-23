@@ -1,17 +1,17 @@
 ---
 summary: "Twitch chat bot configuration and setup"
 read_when:
-  - Setting up Twitch chat integration for OpenClaw
+  - Setting up Twitch chat integration for LittleBaby
 title: "Twitch"
 ---
 
 # Twitch
 
-Twitch chat support via IRC connection. OpenClaw connects as a Twitch user (bot account) to receive and send messages in channels.
+Twitch chat support via IRC connection. LittleBaby connects as a Twitch user (bot account) to receive and send messages in channels.
 
 ## Bundled plugin
 
-Twitch ships as a bundled plugin in current OpenClaw releases, so normal
+Twitch ships as a bundled plugin in current LittleBaby releases, so normal
 packaged builds do not need a separate install.
 
 If you are on an older build or a custom install that excludes Twitch, install
@@ -20,13 +20,13 @@ it manually:
 Install via CLI (npm registry):
 
 ```bash
-openclaw plugins install @openclaw/twitch
+littlebaby plugins install @littlebaby/twitch
 ```
 
 Local checkout (when running from a git repo):
 
 ```bash
-openclaw plugins install ./path/to/local/twitch-plugin
+littlebaby plugins install ./path/to/local/twitch-plugin
 ```
 
 Details: [Plugins](/tools/plugin)
@@ -34,7 +34,7 @@ Details: [Plugins](/tools/plugin)
 ## Quick setup (beginner)
 
 1. Ensure the Twitch plugin is available.
-   - Current packaged OpenClaw releases already bundle it.
+   - Current packaged LittleBaby releases already bundle it.
    - Older/custom installs can add it manually with the commands above.
 2. Create a dedicated Twitch account for the bot (or use an existing account).
 3. Generate credentials: [Twitch Token Generator](https://twitchtokengenerator.com/)
@@ -258,8 +258,8 @@ By default, `requireMention` is `true`. To disable and respond to all messages:
 First, run diagnostic commands:
 
 ```bash
-openclaw doctor
-openclaw channels status --probe
+littlebaby doctor
+littlebaby channels status --probe
 ```
 
 ### Bot does not respond to messages

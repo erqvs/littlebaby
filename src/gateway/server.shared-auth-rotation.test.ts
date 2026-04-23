@@ -42,7 +42,7 @@ async function openAuthenticatedWs(token: string): Promise<WebSocket> {
 }
 
 async function openDeviceTokenWs(): Promise<WebSocket> {
-  const identityPath = path.join(os.tmpdir(), `openclaw-shared-auth-${process.pid}-${port}.json`);
+  const identityPath = path.join(os.tmpdir(), `littlebaby-shared-auth-${process.pid}-${port}.json`);
   const { loadOrCreateDeviceIdentity, publicKeyRawBase64UrlFromPem } =
     await import("../infra/device-identity.js");
   const { approveDevicePairing, requestDevicePairing, rotateDeviceToken } =

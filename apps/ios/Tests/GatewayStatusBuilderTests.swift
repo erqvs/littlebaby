@@ -1,6 +1,6 @@
-import OpenClawKit
+import LittleBabyKit
 import Testing
-@testable import OpenClaw
+@testable import LittleBaby
 
 @Suite struct GatewayStatusBuilderTests {
     @Test func pausedProblemKeepsErrorStatus() {

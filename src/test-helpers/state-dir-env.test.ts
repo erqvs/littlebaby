@@ -9,17 +9,17 @@ import {
 } from "./state-dir-env.js";
 
 type EnvSnapshot = {
-  openclaw?: string;
+  littlebaby?: string;
 };
 
 function snapshotCurrentStateDirVars(): EnvSnapshot {
   return {
-    openclaw: process.env.LITTLEBABY_STATE_DIR,
+    littlebaby: process.env.LITTLEBABY_STATE_DIR,
   };
 }
 
 function expectStateDirVars(snapshot: EnvSnapshot) {
-  expect(process.env.LITTLEBABY_STATE_DIR).toBe(snapshot.openclaw);
+  expect(process.env.LITTLEBABY_STATE_DIR).toBe(snapshot.littlebaby);
 }
 
 async function expectPathMissing(filePath: string) {
@@ -41,8 +41,8 @@ describe("state-dir-env helpers", () => {
     const prev = snapshotCurrentStateDirVars();
     const snapshot = snapshotStateDirEnv();
 
-    setStateDirEnv("/tmp/openclaw-state-dir-test");
-    expect(process.env.LITTLEBABY_STATE_DIR).toBe("/tmp/openclaw-state-dir-test");
+    setStateDirEnv("/tmp/littlebaby-state-dir-test");
+    expect(process.env.LITTLEBABY_STATE_DIR).toBe("/tmp/littlebaby-state-dir-test");
 
     restoreStateDirEnv(snapshot);
     expectStateDirVars(prev);
@@ -53,7 +53,7 @@ describe("state-dir-env helpers", () => {
 
     let capturedTempRoot = "";
     let capturedStateDir = "";
-    await withStateDirEnv("openclaw-state-dir-env-", async ({ tempRoot, stateDir }) => {
+    await withStateDirEnv("littlebaby-state-dir-env-", async ({ tempRoot, stateDir }) => {
       capturedTempRoot = tempRoot;
       capturedStateDir = stateDir;
       expect(process.env.LITTLEBABY_STATE_DIR).toBe(stateDir);
@@ -69,7 +69,7 @@ describe("state-dir-env helpers", () => {
     let capturedTempRoot = "";
     let capturedStateDir = "";
     await expect(
-      withStateDirEnv("openclaw-state-dir-env-", async ({ tempRoot, stateDir }) => {
+      withStateDirEnv("littlebaby-state-dir-env-", async ({ tempRoot, stateDir }) => {
         capturedTempRoot = tempRoot;
         capturedStateDir = stateDir;
         throw new Error("boom");

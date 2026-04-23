@@ -7,14 +7,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const loadPluginManifestRegistry = vi.hoisted(() => vi.fn());
 const loadBundledPluginPublicSurfaceModuleSync = vi.hoisted(() => vi.fn());
 const tryLoadActivatedBundledPluginPublicSurfaceModuleSync = vi.hoisted(() => vi.fn());
-const resolveOpenClawPackageRootSync = vi.hoisted(() => vi.fn());
+const resolveLittleBabyPackageRootSync = vi.hoisted(() => vi.fn());
 
 vi.mock("../plugins/manifest-registry.js", () => ({
   loadPluginManifestRegistry,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
-  resolveOpenClawPackageRootSync,
+vi.mock("../infra/littlebaby-root.js", () => ({
+  resolveLittleBabyPackageRootSync,
 }));
 
 vi.mock("./facade-runtime.js", () => ({
@@ -33,7 +33,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
     });
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
     tryLoadActivatedBundledPluginPublicSurfaceModuleSync.mockReset();
-    resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
+    resolveLittleBabyPackageRootSync.mockReset().mockReturnValue(null);
     delete process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI;
   });
 
@@ -73,13 +73,13 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("uses the source bundled tree for qa-lab runtime loading in private qa mode", async () => {
-    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-runtime-root-"));
+    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-qa-runtime-root-"));
     tempDirs.push(sourceRoot);
     fs.mkdirSync(path.join(sourceRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(sourceRoot, "extensions"), { recursive: true });
     fs.writeFileSync(path.join(sourceRoot, ".git"), "gitdir: /tmp/mock\n", "utf8");
     process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI = "1";
-    resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
+    resolveLittleBabyPackageRootSync.mockReturnValue(sourceRoot);
 
     const runtimeSurface = {
       defaultQaRuntimeModelForMode: vi.fn(),
@@ -101,13 +101,13 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("loads bundled plugin test APIs with the private QA source tree override", async () => {
-    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-test-api-root-"));
+    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-qa-test-api-root-"));
     tempDirs.push(sourceRoot);
     fs.mkdirSync(path.join(sourceRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(sourceRoot, "extensions"), { recursive: true });
     fs.writeFileSync(path.join(sourceRoot, ".git"), "gitdir: /tmp/mock\n", "utf8");
     process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI = "1";
-    resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
+    resolveLittleBabyPackageRootSync.mockReturnValue(sourceRoot);
 
     const testApi = { marker: "matrix-test-api" };
     loadBundledPluginPublicSurfaceModuleSync.mockReturnValue(testApi);
@@ -203,13 +203,13 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("prefers the source bundled tree for private qa discovery in repo checkouts", async () => {
-    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-runner-root-"));
+    const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-qa-runner-root-"));
     tempDirs.push(sourceRoot);
     fs.mkdirSync(path.join(sourceRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(sourceRoot, "extensions"), { recursive: true });
     fs.writeFileSync(path.join(sourceRoot, ".git"), "gitdir: /tmp/mock\n", "utf8");
     process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI = "1";
-    resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
+    resolveLittleBabyPackageRootSync.mockReturnValue(sourceRoot);
 
     const register = vi.fn((qa: Command) => qa);
     loadPluginManifestRegistry.mockReturnValue({
@@ -306,7 +306,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
     const module = await import("./qa-runner-runtime.js");
 
     expect(() => module.listQaRunnerCliContributions()).toThrow(
-      'QA runner plugin "qa-matrix" exported "extra" from runtime-api.js but did not declare it in openclaw.plugin.json',
+      'QA runner plugin "qa-matrix" exported "extra" from runtime-api.js but did not declare it in littlebaby.plugin.json',
     );
   });
 });

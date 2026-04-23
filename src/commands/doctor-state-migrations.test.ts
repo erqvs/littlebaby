@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import {
   autoMigrateLegacyStateDir,
   autoMigrateLegacyState,
@@ -26,7 +26,7 @@ vi.mock("../channels/plugins/bundled.js", async () => {
     }
   }
 
-  function resolveTelegramAccountId(cfg: OpenClawConfig): string {
+  function resolveTelegramAccountId(cfg: LittleBabyConfig): string {
     const defaultAgentId = cfg.agents?.list?.find((agent) => agent.default)?.id ?? "main";
     const boundAccountId = cfg.bindings?.find(
       (binding) =>
@@ -38,7 +38,7 @@ vi.mock("../channels/plugins/bundled.js", async () => {
   }
 
   function detectTelegramAllowFromMigration(params: {
-    cfg: OpenClawConfig;
+    cfg: LittleBabyConfig;
     env: NodeJS.ProcessEnv;
   }) {
     const root = params.env.LITTLEBABY_STATE_DIR;
@@ -103,7 +103,7 @@ vi.mock("../channels/plugins/bundled.js", async () => {
     ]),
     listBundledChannelLegacyStateMigrationDetectors: vi.fn(() => [
       ({ oauthDir }: { oauthDir: string }) => detectWhatsAppLegacyStateMigrations({ oauthDir }),
-      ({ cfg, env }: { cfg: OpenClawConfig; env: NodeJS.ProcessEnv }) =>
+      ({ cfg, env }: { cfg: LittleBabyConfig; env: NodeJS.ProcessEnv }) =>
         detectTelegramAllowFromMigration({ cfg, env }),
     ]),
     listBundledChannelSetupPluginsByFeature: vi.fn((feature: string) => {
@@ -137,7 +137,7 @@ vi.mock("../channels/plugins/bundled.js", async () => {
                 cfg,
                 env,
               }: {
-                cfg: OpenClawConfig;
+                cfg: LittleBabyConfig;
                 env: NodeJS.ProcessEnv;
               }) => detectTelegramAllowFromMigration({ cfg, env }),
             },
@@ -181,14 +181,14 @@ vi.mock("../infra/json-files.js", async () => {
 });
 
 async function makeTempRoot() {
-  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-"));
+  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "littlebaby-doctor-"));
   tempRoots.push(root);
   return root;
 }
 
 async function makeRootWithEmptyCfg() {
   const root = await makeTempRoot();
-  const cfg: OpenClawConfig = {};
+  const cfg: LittleBabyConfig = {};
   return { root, cfg };
 }
 
@@ -207,7 +207,7 @@ function writeLegacyTelegramAllowFromStore(oauthDir: string) {
   );
 }
 
-async function runTelegramAllowFromMigration(params: { root: string; cfg: OpenClawConfig }) {
+async function runTelegramAllowFromMigration(params: { root: string; cfg: LittleBabyConfig }) {
   const oauthDir = ensureCredentialsDir(params.root);
   writeLegacyTelegramAllowFromStore(oauthDir);
   const detected = await detectLegacyStateMigrations({
@@ -248,7 +248,7 @@ function writeLegacySessionsFixture(params: {
 
 async function detectAndRunMigrations(params: {
   root: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   now?: () => number;
 }) {
   const detected = await detectLegacyStateMigrations({
@@ -267,7 +267,7 @@ function readSessionsStore(targetDir: string) {
 
 async function runAndReadSessionsStore(params: {
   root: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   targetDir: string;
   now?: () => number;
 }) {
@@ -285,7 +285,7 @@ const DIR_LINK_TYPE = process.platform === "win32" ? "junction" : "dir";
 
 function getStateDirMigrationPaths(root: string) {
   return {
-    targetDir: path.join(root, ".openclaw"),
+    targetDir: path.join(root, ".littlebaby"),
     legacyDir: path.join(root, ".clawdbot"),
   };
 }
@@ -311,7 +311,7 @@ async function runFreshStateDirMigration(root: string, env = {} as NodeJS.Proces
 
 async function runAutoMigrateLegacyStateWithLog(params: {
   root: string;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   now?: () => number;
 }) {
   const log = { info: vi.fn(), warn: vi.fn() };
@@ -354,7 +354,7 @@ function ensureCredentialsDir(root: string) {
 describe("doctor legacy state migrations", () => {
   it("migrates legacy sessions into agents/<id>/sessions", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const legacySessionsDir = writeLegacySessionsFixture({
       root,
       sessions: {
@@ -400,7 +400,7 @@ describe("doctor legacy state migrations", () => {
 
   it("keeps shipped WhatsApp legacy group keys channel-qualified during migration", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const targetDir = path.join(root, "agents", "main", "sessions");
 
     writeLegacySessionsFixture({
@@ -514,7 +514,7 @@ describe("doctor legacy state migrations", () => {
 
   it("does not fan out legacy Telegram pairing allowFrom store to configured named accounts", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       channels: {
         telegram: {
           defaultAccount: "bot2",
@@ -546,7 +546,7 @@ describe("doctor legacy state migrations", () => {
 
   it("migrates legacy Telegram pairing allowFrom store to the default agent bound account", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       agents: {
         list: [{ id: "ops", default: true }],
       },
@@ -582,7 +582,7 @@ describe("doctor legacy state migrations", () => {
 
   it("no-ops when nothing detected", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const detected = await detectLegacyStateMigrations({
       cfg,
       env: { LITTLEBABY_STATE_DIR: root } as NodeJS.ProcessEnv,
@@ -593,7 +593,7 @@ describe("doctor legacy state migrations", () => {
 
   it("routes legacy state to the default agent entry", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       agents: { list: [{ id: "alpha", default: true }] },
     };
     writeLegacySessionsFixture({
@@ -615,7 +615,7 @@ describe("doctor legacy state migrations", () => {
 
   it("honors session.mainKey when seeding the direct-chat bucket", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = { session: { mainKey: "work" } };
+    const cfg: LittleBabyConfig = { session: { mainKey: "work" } };
     writeLegacySessionsFixture({
       root,
       sessions: {
@@ -655,7 +655,7 @@ describe("doctor legacy state migrations", () => {
 
   it("prefers the newest entry when collapsing main aliases", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = { session: { mainKey: "work" } };
+    const cfg: LittleBabyConfig = { session: { mainKey: "work" } };
     const targetDir = path.join(root, "agents", "main", "sessions");
     writeJson5(path.join(targetDir, "sessions.json"), {
       "agent:main:main": { sessionId: "legacy", updatedAt: 50 },
@@ -674,7 +674,7 @@ describe("doctor legacy state migrations", () => {
 
   it("lowercases agent session keys during canonicalization", async () => {
     const root = await makeTempRoot();
-    const cfg: OpenClawConfig = {};
+    const cfg: LittleBabyConfig = {};
     const targetDir = path.join(root, "agents", "main", "sessions");
     writeJson5(path.join(targetDir, "sessions.json"), {
       "agent:main:slack:channel:C123": { sessionId: "legacy", updatedAt: 10 },

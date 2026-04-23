@@ -4,15 +4,15 @@ import { createClientHarness } from "./test-support.js";
 
 const mocks = vi.hoisted(() => ({
   bridgeCodexAppServerStartOptions: vi.fn(async ({ startOptions }) => startOptions),
-  resolveOpenClawAgentDir: vi.fn(() => "/tmp/openclaw-agent"),
+  resolveLittleBabyAgentDir: vi.fn(() => "/tmp/littlebaby-agent"),
 }));
 
 vi.mock("./auth-bridge.js", () => ({
   bridgeCodexAppServerStartOptions: mocks.bridgeCodexAppServerStartOptions,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth", () => ({
-  resolveOpenClawAgentDir: mocks.resolveOpenClawAgentDir,
+vi.mock("littlebaby/plugin-sdk/provider-auth", () => ({
+  resolveLittleBabyAgentDir: mocks.resolveLittleBabyAgentDir,
 }));
 
 let listCodexAppServerModels: typeof import("./models.js").listCodexAppServerModels;
@@ -29,7 +29,7 @@ describe("shared Codex app-server client", () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     mocks.bridgeCodexAppServerStartOptions.mockClear();
-    mocks.resolveOpenClawAgentDir.mockClear();
+    mocks.resolveLittleBabyAgentDir.mockClear();
   });
 
   it("closes the shared app-server when the version gate fails", async () => {
@@ -43,7 +43,7 @@ describe("shared Codex app-server client", () => {
     const initialize = JSON.parse(harness.writes[0] ?? "{}") as { id?: number };
     harness.send({
       id: initialize.id,
-      result: { userAgent: "openclaw/0.117.9 (macOS; test)" },
+      result: { userAgent: "littlebaby/0.117.9 (macOS; test)" },
     });
 
     await expect(listPromise).rejects.toThrow(
@@ -71,7 +71,7 @@ describe("shared Codex app-server client", () => {
     const initialize = JSON.parse(second.writes[0] ?? "{}") as { id?: number };
     second.send({
       id: initialize.id,
-      result: { userAgent: "openclaw/0.118.0 (macOS; test)" },
+      result: { userAgent: "littlebaby/0.118.0 (macOS; test)" },
     });
     await vi.waitFor(() => expect(second.writes.length).toBeGreaterThanOrEqual(3));
     const modelList = JSON.parse(second.writes[2] ?? "{}") as { id?: number };
@@ -93,7 +93,7 @@ describe("shared Codex app-server client", () => {
     const initialize = JSON.parse(harness.writes[0] ?? "{}") as { id?: number };
     harness.send({
       id: initialize.id,
-      result: { userAgent: "openclaw/0.118.0 (macOS; test)" },
+      result: { userAgent: "littlebaby/0.118.0 (macOS; test)" },
     });
     await vi.waitFor(() => expect(harness.writes.length).toBeGreaterThanOrEqual(3));
     const modelList = JSON.parse(harness.writes[2] ?? "{}") as { id?: number };

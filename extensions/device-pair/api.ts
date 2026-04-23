@@ -6,15 +6,15 @@ export {
   listDevicePairing,
   revokeDeviceBootstrapToken,
   type DeviceBootstrapProfile,
-} from "openclaw/plugin-sdk/device-bootstrap";
-export { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+} from "littlebaby/plugin-sdk/device-bootstrap";
+export { definePluginEntry, type LittleBabyPluginApi } from "littlebaby/plugin-sdk/plugin-entry";
 export {
   resolveGatewayBindUrl,
   resolveGatewayPort,
   resolveTailnetHostWithRunner,
-} from "openclaw/plugin-sdk/core";
+} from "littlebaby/plugin-sdk/core";
 export {
-  resolvePreferredOpenClawTmpDir,
+  resolvePreferredLittleBabyTmpDir,
   runPluginCommandWithTimeout,
-} from "openclaw/plugin-sdk/sandbox";
+} from "littlebaby/plugin-sdk/sandbox";
 export { renderQrPngBase64 } from "./qr-image.js";

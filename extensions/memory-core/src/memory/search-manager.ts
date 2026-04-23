@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
 import {
   createSubsystemLogger,
   resolveAgentWorkspaceDir,
   resolveGlobalSingleton,
-  type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import { checkQmdBinaryAvailability } from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+  type LittleBabyConfig,
+} from "littlebaby/plugin-sdk/memory-core-host-engine-foundation";
+import { checkQmdBinaryAvailability } from "littlebaby/plugin-sdk/memory-core-host-engine-qmd";
 import {
   resolveMemoryBackendConfig,
   type MemoryEmbeddingProbeResult,
@@ -14,9 +14,9 @@ import {
   type MemorySearchRuntimeDebug,
   type MemorySyncProgressUpdate,
   type ResolvedQmdConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "littlebaby/plugin-sdk/memory-core-host-engine-storage";
 
-const MEMORY_SEARCH_MANAGER_CACHE_KEY = Symbol.for("openclaw.memorySearchManagerCache");
+const MEMORY_SEARCH_MANAGER_CACHE_KEY = Symbol.for("littlebaby.memorySearchManagerCache");
 type MemorySearchManagerCacheStore = {
   qmdManagerCache: Map<string, MemorySearchManager>;
 };
@@ -52,7 +52,7 @@ export type MemorySearchManagerResult = {
 };
 
 export async function getMemorySearchManager(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
   purpose?: "default" | "status";
 }): Promise<MemorySearchManagerResult> {
@@ -133,7 +133,7 @@ export async function getMemorySearchManager(params: {
 }
 
 async function getBuiltinMemorySearchManager(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   agentId: string;
   purpose?: "default" | "status";
 }): Promise<MemorySearchManagerResult> {

@@ -1,4 +1,4 @@
-# Pre-commit hooks for openclaw
+# Pre-commit hooks for littlebaby
 # Install: prek install
 # Run manually: prek run --all-files
 #
@@ -62,7 +62,7 @@ repos:
           - --exclude-lines
           - 'export CUSTOM_API_K[E]Y="your-key"'
           - --exclude-lines
-          - 'grep -q ''N[O]DE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache'' ~/.bashrc \|\| cat >> ~/.bashrc <<''EOF'''
+          - 'grep -q ''N[O]DE_COMPILE_CACHE=/var/tmp/littlebaby-compile-cache'' ~/.bashrc \|\| cat >> ~/.bashrc <<''EOF'''
           - --exclude-lines
           - 'env: \{ MISTRAL_API_K[E]Y: "sk-\.\.\." \},'
           - --exclude-lines

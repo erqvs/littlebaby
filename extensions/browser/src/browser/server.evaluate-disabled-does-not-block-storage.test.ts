@@ -45,7 +45,7 @@ vi.mock("../config/config.js", async () => {
         evaluateEnabled: false,
         defaultProfile: "littlebaby",
         profiles: {
-          openclaw: { cdpPort: testPort + 1, color: "#FF4500" },
+          littlebaby: { cdpPort: testPort + 1, color: "#FF4500" },
         },
       },
     }),

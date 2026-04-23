@@ -122,7 +122,7 @@ function getSharedBundledPublicSurfaceJiti(modulePath: string, tryNative: boolea
   if (
     !isBundledPluginExtensionPath({
       modulePath,
-      openClawPackageRoot: LITTLEBABY_PACKAGE_ROOT,
+      littleBabyPackageRoot: LITTLEBABY_PACKAGE_ROOT,
       ...(bundledPluginsDir ? { bundledPluginsDir } : {}),
     })
   ) {
@@ -162,7 +162,7 @@ export function loadBundledPluginPublicArtifactModuleSync<T extends object>(para
     rootPath: location.boundaryRoot,
     boundaryLabel:
       location.boundaryRoot === LITTLEBABY_PACKAGE_ROOT
-        ? "OpenClaw package root"
+        ? "LittleBaby package root"
         : "bundled plugin directory",
     rejectHardlinks: false,
   });

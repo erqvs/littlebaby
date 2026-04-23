@@ -1,5 +1,5 @@
 import { resolveProviderAuthAliasMap } from "../agents/provider-auth-aliases.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { loadPluginManifestRegistry } from "../plugins/manifest-registry.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
 import {
@@ -22,7 +22,7 @@ const CORE_PROVIDER_SETUP_ENV_VAR_OVERRIDES = {
 } as const;
 
 export type ProviderEnvVarLookupParams = {
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   includeUntrustedWorkspacePlugins?: boolean;
@@ -30,7 +30,7 @@ export type ProviderEnvVarLookupParams = {
 
 function isWorkspacePluginTrustedForProviderEnvVars(
   plugin: PluginManifestRecord,
-  config: OpenClawConfig | undefined,
+  config: LittleBabyConfig | undefined,
 ): boolean {
   return isWorkspacePluginAllowedByConfig({
     config,
@@ -199,7 +199,7 @@ export function getProviderEnvVars(
 
 const EXTRA_PROVIDER_AUTH_ENV_VARS = ["MINIMAX_CODE_PLAN_KEY", "MINIMAX_CODING_API_KEY"] as const;
 
-// LITTLEBABY_API_KEY authenticates the local OpenClaw bridge itself and must
+// LITTLEBABY_API_KEY authenticates the local LittleBaby bridge itself and must
 // remain available to child bridge/runtime processes.
 export function listKnownProviderAuthEnvVarNames(params?: ProviderEnvVarLookupParams): string[] {
   return [

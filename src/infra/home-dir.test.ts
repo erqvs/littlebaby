@@ -14,12 +14,12 @@ describe("resolveEffectiveHomeDir", () => {
     {
       name: "prefers LITTLEBABY_HOME over HOME and USERPROFILE",
       env: {
-        LITTLEBABY_HOME: " /srv/openclaw-home ",
+        LITTLEBABY_HOME: " /srv/littlebaby-home ",
         HOME: "/home/other",
         USERPROFILE: "C:/Users/other",
       } as NodeJS.ProcessEnv,
       homedir: () => "/fallback",
-      expected: "/srv/openclaw-home",
+      expected: "/srv/littlebaby-home",
     },
     {
       name: "falls back to HOME",
@@ -115,7 +115,7 @@ describe("resolveOsHomeDir", () => {
     expect(
       resolveOsHomeDir(
         {
-          LITTLEBABY_HOME: "/srv/openclaw-home",
+          LITTLEBABY_HOME: "/srv/littlebaby-home",
           HOME: "/home/alice",
           USERPROFILE: "C:/Users/alice",
         } as NodeJS.ProcessEnv,
@@ -131,15 +131,15 @@ describe("expandHomePrefix", () => {
       name: "expands ~/ using effective home",
       input: "~/x",
       opts: {
-        env: { LITTLEBABY_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv,
+        env: { LITTLEBABY_HOME: "/srv/littlebaby-home" } as NodeJS.ProcessEnv,
       },
-      expected: `${path.resolve("/srv/openclaw-home")}/x`,
+      expected: `${path.resolve("/srv/littlebaby-home")}/x`,
     },
     {
       name: "expands exact ~ using explicit home",
       input: "~",
-      opts: { home: " /srv/openclaw-home " },
-      expected: "/srv/openclaw-home",
+      opts: { home: " /srv/littlebaby-home " },
+      expected: "/srv/littlebaby-home",
     },
     {
       name: "expands ~\\\\ using resolved env home",
@@ -180,9 +180,9 @@ describe("resolveHomeRelativePath", () => {
       name: "expands tilde paths using the resolved home directory",
       input: "~/docs",
       opts: {
-        env: { LITTLEBABY_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv,
+        env: { LITTLEBABY_HOME: "/srv/littlebaby-home" } as NodeJS.ProcessEnv,
       },
-      expected: path.resolve("/srv/openclaw-home/docs"),
+      expected: path.resolve("/srv/littlebaby-home/docs"),
     },
     {
       name: "falls back to cwd when tilde paths have no home source",
@@ -205,7 +205,7 @@ describe("resolveOsHomeRelativePath", () => {
     expect(
       resolveOsHomeRelativePath("~/docs", {
         env: {
-          LITTLEBABY_HOME: "/srv/openclaw-home",
+          LITTLEBABY_HOME: "/srv/littlebaby-home",
           HOME: "/home/alice",
         } as NodeJS.ProcessEnv,
       }),

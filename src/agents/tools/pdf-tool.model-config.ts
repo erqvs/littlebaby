@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import {
   bundledProviderSupportsNativePdfDocument,
   resolveBundledAutoMediaKeyProviders,
@@ -13,7 +13,7 @@ import { hasAuthForProvider, resolveDefaultModelRef } from "./model-config.helpe
 import { coercePdfModelConfig } from "./pdf-tool.helpers.js";
 
 function resolveBundledImageCandidateRefs(params: {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   agentDir: string;
   filter?: (providerId: string) => boolean;
 }): string[] {
@@ -36,7 +36,7 @@ function resolveBundledImageCandidateRefs(params: {
 }
 
 export function resolvePdfModelConfigForTool(params: {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   agentDir: string;
 }): ImageModelConfig | null {
   const explicitPdf = coercePdfModelConfig(params.cfg);

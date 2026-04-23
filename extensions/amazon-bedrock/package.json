@@ -1,8 +1,8 @@
 {
-  "name": "@openclaw/amazon-bedrock-provider",
+  "name": "@littlebaby/amazon-bedrock-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Amazon Bedrock provider plugin",
+  "description": "LittleBaby Amazon Bedrock provider plugin",
   "type": "module",
   "dependencies": {
     "@aws-sdk/client-bedrock": "3.1032.0",
@@ -10,9 +10,9 @@
     "@aws-sdk/credential-provider-node": "3.972.32"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "bundle": {
       "stageRuntimeDependencies": true
     },

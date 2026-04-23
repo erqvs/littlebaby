@@ -5,10 +5,10 @@ import {
   collectPluginSchemaMetadata,
 } from "./channel-config-metadata.js";
 import { loadConfig, readConfigFileSnapshot } from "./config.js";
-import type { OpenClawConfig } from "./config.js";
+import type { LittleBabyConfig } from "./config.js";
 import { buildConfigSchema, type ConfigSchemaResponse } from "./schema.js";
 
-function loadManifestRegistry(config: OpenClawConfig, env?: NodeJS.ProcessEnv) {
+function loadManifestRegistry(config: LittleBabyConfig, env?: NodeJS.ProcessEnv) {
   const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
   return loadPluginManifestRegistry({
     config,

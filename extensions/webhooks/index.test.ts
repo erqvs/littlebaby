@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 import { createTestPluginApi } from "../../test/helpers/plugins/plugin-api.js";
-import type { OpenClawPluginApi } from "./api.js";
+import type { LittleBabyPluginApi } from "./api.js";
 import plugin from "./index.js";
 
 function createApi(params?: {
-  pluginConfig?: OpenClawPluginApi["pluginConfig"];
-  registerHttpRoute?: OpenClawPluginApi["registerHttpRoute"];
-  logger?: OpenClawPluginApi["logger"];
-}): OpenClawPluginApi {
+  pluginConfig?: LittleBabyPluginApi["pluginConfig"];
+  registerHttpRoute?: LittleBabyPluginApi["registerHttpRoute"];
+  logger?: LittleBabyPluginApi["logger"];
+}): LittleBabyPluginApi {
   return createTestPluginApi({
     id: "webhooks",
     name: "Webhooks",
@@ -17,7 +17,7 @@ function createApi(params?: {
       taskFlow: {
         bindSession: vi.fn(({ sessionKey }: { sessionKey: string }) => ({ sessionKey })),
       },
-    } as unknown as OpenClawPluginApi["runtime"],
+    } as unknown as LittleBabyPluginApi["runtime"],
     registerHttpRoute: params?.registerHttpRoute ?? vi.fn(),
     logger:
       params?.logger ??
@@ -26,7 +26,7 @@ function createApi(params?: {
         warn: vi.fn(),
         error: vi.fn(),
         debug: vi.fn(),
-      } as OpenClawPluginApi["logger"]),
+      } as LittleBabyPluginApi["logger"]),
   });
 }
 

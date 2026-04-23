@@ -1,10 +1,10 @@
-import type { ProviderRuntimeModel } from "openclaw/plugin-sdk/plugin-entry";
+import type { ProviderRuntimeModel } from "littlebaby/plugin-sdk/plugin-entry";
 import {
   normalizeModelCompat,
   type ModelDefinitionConfig,
   type ModelProviderConfig,
   type ProviderPlugin,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "littlebaby/plugin-sdk/provider-model-shared";
 import {
   listCodexAppServerModels,
   type CodexAppServerModel,

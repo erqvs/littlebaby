@@ -184,7 +184,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(
@@ -211,7 +211,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([
@@ -224,14 +224,14 @@ describe("doctor preview warnings", () => {
   it("includes stale plugin config warnings", async () => {
     const warnings = await collectDoctorPreviewWarnings({
       cfg: stalePluginConfig(),
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([
       expect.stringContaining('plugins.allow: stale plugin reference "acpx"'),
     ]);
     expect(warnings[0]).toContain("plugins.entries.acpx");
-    expect(warnings[0]).toContain('Run "openclaw doctor --fix"');
+    expect(warnings[0]).toContain('Run "littlebaby doctor --fix"');
     expect(warnings[0]).not.toContain("Auto-removal is paused");
   });
 
@@ -248,13 +248,13 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([
       expect.stringContaining(`plugins.load.paths: legacy bundled plugin path "${legacyPath}"`),
     ]);
-    expect(warnings[0]).toContain('Run "openclaw doctor --fix"');
+    expect(warnings[0]).toContain('Run "littlebaby doctor --fix"');
   });
 
   it("warns but skips auto-removal when plugin discovery has errors", async () => {
@@ -265,14 +265,14 @@ describe("doctor preview warnings", () => {
 
     const warnings = await collectDoctorPreviewWarnings({
       cfg: stalePluginConfig(),
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([
       expect.stringContaining('plugins.allow: stale plugin reference "acpx"'),
     ]);
     expect(warnings[0]).toContain("Auto-removal is paused");
-    expect(warnings[0]).toContain('rerun "openclaw doctor --fix"');
+    expect(warnings[0]).toContain('rerun "littlebaby doctor --fix"');
   });
 
   it("warns when a configured channel plugin is disabled explicitly", async () => {
@@ -294,7 +294,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([
@@ -320,7 +320,7 @@ describe("doctor preview warnings", () => {
           enabled: false,
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([

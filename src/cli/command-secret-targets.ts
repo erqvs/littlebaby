@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { normalizeOptionalAccountId } from "../routing/session-key.js";
 import {
   discoverConfigSecretTargetsByIds,
@@ -118,7 +118,7 @@ function pathTargetsScopedChannelAccount(params: {
 }
 
 export function getScopedChannelsCommandSecretTargets(params: {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   channel?: string | null;
   accountId?: string | null;
 }): {

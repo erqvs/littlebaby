@@ -17,8 +17,8 @@ run_step() {
 run_protocol_ci_mirror() {
   local targets=(
     "dist/protocol.schema.json"
-    "apps/macos/Sources/OpenClawProtocol/GatewayModels.swift"
-    "apps/shared/OpenClawKit/Sources/OpenClawProtocol/GatewayModels.swift"
+    "apps/macos/Sources/LittleBabyProtocol/GatewayModels.swift"
+    "apps/shared/LittleBabyKit/Sources/LittleBabyProtocol/GatewayModels.swift"
   )
   local before after
   before="$(git diff --no-ext-diff -- "${targets[@]}" || true)"
@@ -37,17 +37,17 @@ run_protocol_ci_mirror() {
 
 has_native_swift_changes() {
   if git rev-parse --verify --quiet origin/main >/dev/null; then
-    if git diff --name-only --relative origin/main...HEAD -- apps/macos apps/ios apps/shared/OpenClawKit | rg -q .; then
+    if git diff --name-only --relative origin/main...HEAD -- apps/macos apps/ios apps/shared/LittleBabyKit | rg -q .; then
       return 0
     fi
   fi
 
   if git rev-parse --verify --quiet HEAD^ >/dev/null; then
-    git diff --name-only --relative HEAD^..HEAD -- apps/macos apps/ios apps/shared/OpenClawKit | rg -q .
+    git diff --name-only --relative HEAD^..HEAD -- apps/macos apps/ios apps/shared/LittleBabyKit | rg -q .
     return $?
   fi
 
-  git show --name-only --relative --pretty='' HEAD -- apps/macos apps/ios apps/shared/OpenClawKit | rg -q .
+  git show --name-only --relative --pretty='' HEAD -- apps/macos apps/ios apps/shared/LittleBabyKit | rg -q .
 }
 
 run_linux_ci_mirror() {

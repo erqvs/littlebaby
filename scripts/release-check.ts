@@ -66,7 +66,7 @@ const legacyUpdateCompatPackPaths = new Set([
 ]);
 const forbiddenPrefixes = [
   "dist-runtime/",
-  "dist/OpenClaw.app/",
+  "dist/LittleBaby.app/",
   "dist/extensions/qa-lab/",
   "dist/plugin-sdk/extensions/qa-lab/",
   "dist/plugin-sdk/qa-lab.",
@@ -205,7 +205,7 @@ function resolveGlobalRoot(prefixDir: string, cwd: string): string {
 }
 
 function runPackedBundledChannelEntrySmoke(): void {
-  const tmpRoot = mkdtempSync(join(tmpdir(), "openclaw-release-pack-smoke-"));
+  const tmpRoot = mkdtempSync(join(tmpdir(), "littlebaby-release-pack-smoke-"));
   try {
     const packDir = join(tmpRoot, "pack");
     mkdirSync(packDir);
@@ -393,7 +393,7 @@ function checkAppcastSparkleVersions() {
   }
 }
 
-// Critical functions that channel extension plugins import from openclaw/plugin-sdk.
+// Critical functions that channel extension plugins import from littlebaby/plugin-sdk.
 // If any are missing from the compiled output, plugins crash at runtime (#27569).
 const requiredPluginSdkExports = [
   "isDangerousNameMatchingEnabled",

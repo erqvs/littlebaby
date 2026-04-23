@@ -1,4 +1,4 @@
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 
 export function isOpenAIApiBaseUrl(baseUrl?: string): boolean {
   const trimmed = normalizeOptionalString(baseUrl);

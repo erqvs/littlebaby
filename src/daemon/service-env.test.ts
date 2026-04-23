@@ -291,9 +291,9 @@ describe("buildServiceEnvironment", () => {
     expect(env.LITTLEBABY_SERVICE_KIND).toBe("gateway");
     expect(typeof env.LITTLEBABY_SERVICE_VERSION).toBe("string");
     expect(env.LITTLEBABY_SYSTEMD_UNIT).toBe("littlebaby-gateway.service");
-    expect(env.LITTLEBABY_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway");
+    expect(env.LITTLEBABY_WINDOWS_TASK_NAME).toBe("LittleBaby Gateway");
     if (process.platform === "darwin") {
-      expect(env.LITTLEBABY_LAUNCHD_LABEL).toBe("ai.openclaw.gateway");
+      expect(env.LITTLEBABY_LAUNCHD_LABEL).toBe("ai.littlebaby.gateway");
     }
   });
 
@@ -319,9 +319,9 @@ describe("buildServiceEnvironment", () => {
       port: 18789,
     });
     expect(env.LITTLEBABY_SYSTEMD_UNIT).toBe("littlebaby-gateway-work.service");
-    expect(env.LITTLEBABY_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway (work)");
+    expect(env.LITTLEBABY_WINDOWS_TASK_NAME).toBe("LittleBaby Gateway (work)");
     if (process.platform === "darwin") {
-      expect(env.LITTLEBABY_LAUNCHD_LABEL).toBe("ai.openclaw.work");
+      expect(env.LITTLEBABY_LAUNCHD_LABEL).toBe("ai.littlebaby.work");
     }
   });
 
@@ -356,7 +356,7 @@ describe("buildServiceEnvironment", () => {
     });
 
     expect(env).not.toHaveProperty("PATH");
-    expect(env.LITTLEBABY_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway");
+    expect(env.LITTLEBABY_WINDOWS_TASK_NAME).toBe("LittleBaby Gateway");
   });
 
   it("prepends extra runtime directories to the gateway service PATH", () => {
@@ -486,32 +486,32 @@ describe("shared Node TLS env defaults", () => {
 describe("resolveGatewayStateDir", () => {
   it("uses the default state dir when no overrides are set", () => {
     const env = { HOME: "/Users/test" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".openclaw"));
+    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".littlebaby"));
   });
 
   it("appends the profile suffix when set", () => {
     const env = { HOME: "/Users/test", LITTLEBABY_PROFILE: "rescue" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".openclaw-rescue"));
+    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".littlebaby-rescue"));
   });
 
   it("treats default profiles as the base state dir", () => {
     const env = { HOME: "/Users/test", LITTLEBABY_PROFILE: "Default" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".openclaw"));
+    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".littlebaby"));
   });
 
   it("uses LITTLEBABY_STATE_DIR when provided", () => {
-    const env = { HOME: "/Users/test", LITTLEBABY_STATE_DIR: "/var/lib/openclaw" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/openclaw"));
+    const env = { HOME: "/Users/test", LITTLEBABY_STATE_DIR: "/var/lib/littlebaby" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/littlebaby"));
   });
 
   it("expands ~ in LITTLEBABY_STATE_DIR", () => {
-    const env = { HOME: "/Users/test", LITTLEBABY_STATE_DIR: "~/openclaw-state" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/openclaw-state"));
+    const env = { HOME: "/Users/test", LITTLEBABY_STATE_DIR: "~/littlebaby-state" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/littlebaby-state"));
   });
 
   it("preserves Windows absolute paths without HOME", () => {
-    const env = { LITTLEBABY_STATE_DIR: "C:\\State\\openclaw" };
-    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\openclaw");
+    const env = { LITTLEBABY_STATE_DIR: "C:\\State\\littlebaby" };
+    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\littlebaby");
   });
 });
 

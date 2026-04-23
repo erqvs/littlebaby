@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { LittleBabyConfig } from "../../config/config.js";
 import {
   defaultRuntime,
   resetLifecycleRuntimeLogs,
@@ -9,7 +9,7 @@ import {
   stubEmptyGatewayEnv,
 } from "./test-helpers/lifecycle-core-harness.js";
 
-const loadConfig = vi.fn<() => OpenClawConfig>(() => ({
+const loadConfig = vi.fn<() => LittleBabyConfig>(() => ({
   gateway: {
     auth: {
       token: "config-token",
@@ -101,21 +101,21 @@ describe("runServiceRestart token drift", () => {
 
   it("prints the container restart hint when restart is requested for a not-loaded service", async () => {
     service.isLoaded.mockResolvedValue(false);
-    vi.stubEnv("LITTLEBABY_CONTAINER_HINT", "openclaw-demo-container");
+    vi.stubEnv("LITTLEBABY_CONTAINER_HINT", "littlebaby-demo-container");
 
     await runServiceRestart({
       serviceNoun: "Gateway",
       service,
       renderStartHints: () => [
-        "Restart the container or the service that manages it for openclaw-demo-container.",
-        "openclaw gateway install",
+        "Restart the container or the service that manages it for littlebaby-demo-container.",
+        "littlebaby gateway install",
       ],
       opts: { json: false },
     });
 
     expect(runtimeLogs).toContain("Gateway service not loaded.");
     expect(runtimeLogs).toContain(
-      "Start with: Restart the container or the service that manages it for openclaw-demo-container.",
+      "Start with: Restart the container or the service that manages it for littlebaby-demo-container.",
     );
   });
 
@@ -339,7 +339,7 @@ describe("runServiceRestart token drift", () => {
     await runServiceStart({
       serviceNoun: "Gateway",
       service,
-      renderStartHints: () => ["openclaw gateway install"],
+      renderStartHints: () => ["littlebaby gateway install"],
       opts: { json: true },
     });
 
@@ -351,12 +351,12 @@ describe("runServiceRestart token drift", () => {
     }>();
     expect(payload.ok).toBe(true);
     expect(payload.result).toBe("not-loaded");
-    expect(payload.hints).toEqual(expect.arrayContaining(["openclaw gateway install"]));
+    expect(payload.hints).toEqual(expect.arrayContaining(["littlebaby gateway install"]));
     expect(payload.hintItems).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           kind: "install",
-          text: "openclaw gateway install",
+          text: "littlebaby gateway install",
         }),
       ]),
     );

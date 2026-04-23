@@ -2,15 +2,15 @@ import { Type } from "@sinclair/typebox";
 import {
   createUnionActionGate,
   listTokenSourcedAccounts,
-} from "openclaw/plugin-sdk/channel-actions";
+} from "littlebaby/plugin-sdk/channel-actions";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
   ChannelMessageToolDiscovery,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { DiscordActionConfig } from "openclaw/plugin-sdk/config-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
-import { extractToolSend } from "openclaw/plugin-sdk/tool-send";
+} from "littlebaby/plugin-sdk/channel-contract";
+import type { DiscordActionConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
+import { extractToolSend } from "littlebaby/plugin-sdk/tool-send";
 import {
   createDiscordActionGate,
   listEnabledDiscordAccounts,

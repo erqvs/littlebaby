@@ -1,8 +1,8 @@
 import path from "node:path";
 import type { ZodIssue } from "zod";
 import { CONFIG_PATH } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { OpenClawSchema } from "../config/zod-schema.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
+import { LittleBabySchema } from "../config/zod-schema.js";
 import { note } from "../terminal/note.js";
 import { isRecord } from "../utils.js";
 
@@ -59,11 +59,11 @@ export function resolveConfigPathTarget(root: unknown, path: Array<string | numb
   return current;
 }
 
-export function stripUnknownConfigKeys(config: OpenClawConfig): {
-  config: OpenClawConfig;
+export function stripUnknownConfigKeys(config: LittleBabyConfig): {
+  config: LittleBabyConfig;
   removed: string[];
 } {
-  const parsed = OpenClawSchema.safeParse(config);
+  const parsed = LittleBabySchema.safeParse(config);
   if (parsed.success) {
     return { config, removed: [] };
   }
@@ -92,7 +92,7 @@ export function stripUnknownConfigKeys(config: OpenClawConfig): {
   return { config: next, removed };
 }
 
-export function noteOpencodeProviderOverrides(cfg: OpenClawConfig): void {
+export function noteOpencodeProviderOverrides(cfg: LittleBabyConfig): void {
   const providers = cfg.models?.providers;
   if (!providers) {
     return;

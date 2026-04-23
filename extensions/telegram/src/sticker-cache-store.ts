@@ -1,7 +1,7 @@
 import path from "node:path";
-import { loadJsonFile, saveJsonFile } from "openclaw/plugin-sdk/json-store";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+import { loadJsonFile, saveJsonFile } from "littlebaby/plugin-sdk/json-store";
+import { resolveStateDir } from "littlebaby/plugin-sdk/state-paths";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 
 const CACHE_VERSION = 1;
 

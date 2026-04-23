@@ -2,7 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import chokidar from "chokidar";
 import { bumpSkillsSnapshotVersion } from "../agents/skills/refresh-state.js";
 import type {
-  OpenClawConfig,
+  LittleBabyConfig,
   ConfigFileSnapshot,
   ConfigWriteNotification,
   GatewayReloadMode,
@@ -80,7 +80,7 @@ export function diffConfigPaths(prev: unknown, next: unknown, prefix = ""): stri
   return [prefix || "<root>"];
 }
 
-export function resolveGatewayReloadSettings(cfg: OpenClawConfig): GatewayReloadSettings {
+export function resolveGatewayReloadSettings(cfg: LittleBabyConfig): GatewayReloadSettings {
   const rawMode = cfg.gateway?.reload?.mode;
   const mode =
     rawMode === "off" || rawMode === "restart" || rawMode === "hot" || rawMode === "hybrid"
@@ -99,11 +99,11 @@ export type GatewayConfigReloader = {
 };
 
 export function startGatewayConfigReloader(opts: {
-  initialConfig: OpenClawConfig;
+  initialConfig: LittleBabyConfig;
   initialInternalWriteHash?: string | null;
   readSnapshot: () => Promise<ConfigFileSnapshot>;
-  onHotReload: (plan: GatewayReloadPlan, nextConfig: OpenClawConfig) => Promise<void>;
-  onRestart: (plan: GatewayReloadPlan, nextConfig: OpenClawConfig) => void | Promise<void>;
+  onHotReload: (plan: GatewayReloadPlan, nextConfig: LittleBabyConfig) => Promise<void>;
+  onRestart: (plan: GatewayReloadPlan, nextConfig: LittleBabyConfig) => void | Promise<void>;
   recoverSnapshot?: (snapshot: ConfigFileSnapshot, reason: string) => Promise<boolean>;
   promoteSnapshot?: (snapshot: ConfigFileSnapshot, reason: string) => Promise<boolean>;
   onRecovered?: (params: {
@@ -127,7 +127,7 @@ export function startGatewayConfigReloader(opts: {
   let stopped = false;
   let restartQueued = false;
   let missingConfigRetries = 0;
-  let pendingInProcessConfig: { config: OpenClawConfig; persistedHash: string } | null = null;
+  let pendingInProcessConfig: { config: LittleBabyConfig; persistedHash: string } | null = null;
   let lastAppliedWriteHash = opts.initialInternalWriteHash ?? null;
 
   const scheduleAfter = (wait: number) => {
@@ -144,7 +144,7 @@ export function startGatewayConfigReloader(opts: {
   const schedule = () => {
     scheduleAfter(settings.debounceMs);
   };
-  const queueRestart = (plan: GatewayReloadPlan, nextConfig: OpenClawConfig) => {
+  const queueRestart = (plan: GatewayReloadPlan, nextConfig: LittleBabyConfig) => {
     if (restartQueued) {
       return;
     }
@@ -213,7 +213,7 @@ export function startGatewayConfigReloader(opts: {
     return nextSnapshot;
   };
 
-  const applySnapshot = async (nextConfig: OpenClawConfig) => {
+  const applySnapshot = async (nextConfig: LittleBabyConfig) => {
     const changedPaths = diffConfigPaths(currentConfig, nextConfig);
     currentConfig = nextConfig;
     settings = resolveGatewayReloadSettings(nextConfig);

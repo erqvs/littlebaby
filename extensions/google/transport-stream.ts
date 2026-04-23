@@ -19,8 +19,8 @@ import {
   stripSystemPromptCacheBoundary,
   transformTransportMessages,
   type WritableTransportStream,
-} from "openclaw/plugin-sdk/provider-transport-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/provider-transport-runtime";
+import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { parseGeminiAuth } from "./gemini-auth.js";
 import { normalizeGoogleApiBaseUrl } from "./provider-policy.js";
 import {

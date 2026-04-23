@@ -1,10 +1,10 @@
 import path from "node:path";
-import { resolveSendableOutboundReplyParts } from "openclaw/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "littlebaby/plugin-sdk/reply-payload";
 import { resolveSessionAgentId } from "../../agents/agent-scope.js";
 import { resolvePathFromInput, toRelativeWorkspacePath } from "../../agents/path-policy.js";
 import { assertMediaNotDataUrl, resolveSandboxedMediaSource } from "../../agents/sandbox-paths.js";
 import { ensureSandboxWorkspaceForSession } from "../../agents/sandbox.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { logVerbose } from "../../globals.js";
 import { resolveChannelAccountMediaMaxMb } from "../../media/configured-max-bytes.js";
 import { isPassThroughRemoteMediaSource } from "../../media/media-source-url.js";
@@ -49,7 +49,7 @@ function getPayloadMediaList(payload: ReplyPayload): string[] {
 }
 
 function resolveReplyMediaMaxBytes(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   channel?: string;
   accountId?: string;
 }): number {
@@ -61,7 +61,7 @@ function resolveReplyMediaMaxBytes(params: {
 }
 
 export function createReplyMediaPathNormalizer(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   sessionKey?: string;
   agentId?: string;
   workspaceDir: string;
@@ -76,7 +76,7 @@ export function createReplyMediaPathNormalizer(params: {
   requesterSenderE164?: string;
 }): (payload: ReplyPayload) => Promise<ReplyPayload> {
   // Prefer an explicit agentId so callers without a resolved sessionKey (e.g.
-  // `openclaw agent --deliver` with `--reply-channel/--reply-to`) still get
+  // `littlebaby agent --deliver` with `--reply-channel/--reply-to`) still get
   // the stricter agent-scoped file-read policy applied during staging.
   const agentId =
     params.agentId ??

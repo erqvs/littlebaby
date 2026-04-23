@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.js";
+import type { LittleBabyConfig } from "../config/types.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 import {
   bundledProviderSupportsNativePdfDocument,
@@ -39,12 +39,12 @@ export const DEFAULT_VIDEO_MAX_BASE64_BYTES = 70 * MB;
 export const CLI_OUTPUT_MAX_BUFFER = 5 * MB;
 export const DEFAULT_MEDIA_CONCURRENCY = 2;
 
-function resolveDefaultRegistry(cfg?: OpenClawConfig) {
-  return buildMediaUnderstandingRegistry(undefined, cfg ?? ({} as OpenClawConfig));
+function resolveDefaultRegistry(cfg?: LittleBabyConfig) {
+  return buildMediaUnderstandingRegistry(undefined, cfg ?? ({} as LittleBabyConfig));
 }
 
 function resolveConfiguredImageProviderModel(params: {
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   providerId: string;
 }): string | undefined {
   const providers = params.cfg?.models?.providers;
@@ -71,7 +71,7 @@ function resolveConfiguredImageProviderModel(params: {
 export function resolveDefaultMediaModel(params: {
   providerId: string;
   capability: MediaUnderstandingCapability;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   providerRegistry?: Map<string, MediaUnderstandingProvider>;
 }): string | undefined {
   if (!params.providerRegistry) {
@@ -100,7 +100,7 @@ export function resolveDefaultMediaModel(params: {
 
 export function resolveAutoMediaKeyProviders(params: {
   capability: MediaUnderstandingCapability;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   providerRegistry?: Map<string, MediaUnderstandingProvider>;
 }): string[] {
   if (!params.providerRegistry) {
@@ -151,7 +151,7 @@ export function resolveAutoMediaKeyProviders(params: {
 
 export function providerSupportsNativePdfDocument(params: {
   providerId: string;
-  cfg?: OpenClawConfig;
+  cfg?: LittleBabyConfig;
   providerRegistry?: Map<string, MediaUnderstandingProvider>;
 }): boolean {
   if (!params.providerRegistry && bundledProviderSupportsNativePdfDocument(params.providerId)) {

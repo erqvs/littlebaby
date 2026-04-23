@@ -1,7 +1,7 @@
 ---
 summary: "How the installer scripts work (install.sh, install-cli.sh, install.ps1), flags, and automation"
 read_when:
-  - You want to understand `openclaw.ai/install.sh`
+  - You want to understand `littlebaby.ai/install.sh`
   - You want to automate installs (CI / headless)
   - You want to install from a GitHub checkout
 title: "Installer Internals"
@@ -9,51 +9,51 @@ title: "Installer Internals"
 
 # Installer internals
 
-OpenClaw ships three installer scripts, served from `openclaw.ai`.
+LittleBaby ships three installer scripts, served from `littlebaby.ai`.
 
 | Script                             | Platform             | What it does                                                                                                   |
 | ---------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`install.sh`](#installsh)         | macOS / Linux / WSL  | Installs Node if needed, installs OpenClaw via npm (default) or git, and can run onboarding.                   |
-| [`install-cli.sh`](#install-clish) | macOS / Linux / WSL  | Installs Node + OpenClaw into a local prefix (`~/.littlebaby`) with npm or git checkout modes. No root required. |
-| [`install.ps1`](#installps1)       | Windows (PowerShell) | Installs Node if needed, installs OpenClaw via npm (default) or git, and can run onboarding.                   |
+| [`install.sh`](#installsh)         | macOS / Linux / WSL  | Installs Node if needed, installs LittleBaby via npm (default) or git, and can run onboarding.                   |
+| [`install-cli.sh`](#install-clish) | macOS / Linux / WSL  | Installs Node + LittleBaby into a local prefix (`~/.littlebaby`) with npm or git checkout modes. No root required. |
+| [`install.ps1`](#installps1)       | Windows (PowerShell) | Installs Node if needed, installs LittleBaby via npm (default) or git, and can run onboarding.                   |
 
 ## Quick commands
 
 <Tabs>
   <Tab title="install.sh">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash
     ```
 
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --help
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash -s -- --help
     ```
 
   </Tab>
   <Tab title="install-cli.sh">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash
     ```
 
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --help
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash -s -- --help
     ```
 
   </Tab>
   <Tab title="install.ps1">
     ```powershell
-    iwr -useb https://openclaw.ai/install.ps1 | iex
+    iwr -useb https://littlebaby.ai/install.ps1 | iex
     ```
 
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -Tag beta -NoOnboard -DryRun
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -Tag beta -NoOnboard -DryRun
     ```
 
   </Tab>
 </Tabs>
 
 <Note>
-If install succeeds but `openclaw` is not found in a new terminal, see [Node.js troubleshooting](/install/node#troubleshooting).
+If install succeeds but `littlebaby` is not found in a new terminal, see [Node.js troubleshooting](/install/node#troubleshooting).
 </Note>
 
 ---
@@ -73,18 +73,18 @@ Recommended for most interactive installs on macOS/Linux/WSL.
     Supports macOS and Linux (including WSL). If macOS is detected, installs Homebrew if missing.
   </Step>
   <Step title="Ensure Node.js 24 by default">
-    Checks Node version and installs Node 24 if needed (Homebrew on macOS, NodeSource setup scripts on Linux apt/dnf/yum). OpenClaw still supports Node 22 LTS, currently `22.14+`, for compatibility.
+    Checks Node version and installs Node 24 if needed (Homebrew on macOS, NodeSource setup scripts on Linux apt/dnf/yum). LittleBaby still supports Node 22 LTS, currently `22.14+`, for compatibility.
   </Step>
   <Step title="Ensure Git">
     Installs Git if missing.
   </Step>
-  <Step title="Install OpenClaw">
+  <Step title="Install LittleBaby">
     - `npm` method (default): global npm install
-    - `git` method: clone/update repo, install deps with pnpm, build, then install wrapper at `~/.local/bin/openclaw`
+    - `git` method: clone/update repo, install deps with pnpm, build, then install wrapper at `~/.local/bin/littlebaby`
   </Step>
   <Step title="Post-install tasks">
-    - Refreshes a loaded gateway service best-effort (`openclaw gateway install --force`, then restart)
-    - Runs `openclaw doctor --non-interactive` on upgrades and git installs (best effort)
+    - Refreshes a loaded gateway service best-effort (`littlebaby gateway install --force`, then restart)
+    - Runs `littlebaby doctor --non-interactive` on upgrades and git installs (best effort)
     - Attempts onboarding when appropriate (TTY available, onboarding not disabled, and bootstrap/config checks pass)
     - Defaults `SHARP_IGNORE_GLOBAL_LIBVIPS=1`
   </Step>
@@ -92,7 +92,7 @@ Recommended for most interactive installs on macOS/Linux/WSL.
 
 ### Source checkout detection
 
-If run inside an OpenClaw checkout (`package.json` + `pnpm-workspace.yaml`), the script offers:
+If run inside an LittleBaby checkout (`package.json` + `pnpm-workspace.yaml`), the script offers:
 
 - use checkout (`git`), or
 - use global install (`npm`)
@@ -106,27 +106,27 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 <Tabs>
   <Tab title="Default">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash
     ```
   </Tab>
   <Tab title="Skip onboarding">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-onboard
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash -s -- --no-onboard
     ```
   </Tab>
   <Tab title="Git install">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash -s -- --install-method git
     ```
   </Tab>
   <Tab title="GitHub main via npm">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --version main
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash -s -- --version main
     ```
   </Tab>
   <Tab title="Dry run">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --dry-run
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash -s -- --dry-run
     ```
   </Tab>
 </Tabs>
@@ -141,7 +141,7 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 | `--git`                               | Shortcut for git method. Alias: `--github`                 |
 | `--version <version\|dist-tag\|spec>` | npm version, dist-tag, or package spec (default: `latest`) |
 | `--beta`                              | Use beta dist-tag if available, else fallback to `latest`  |
-| `--git-dir <path>`                    | Checkout directory (default: `~/openclaw`). Alias: `--dir` |
+| `--git-dir <path>`                    | Checkout directory (default: `~/littlebaby`). Alias: `--dir` |
 | `--no-git-update`                     | Skip `git pull` for existing checkout                      |
 | `--no-prompt`                         | Disable prompts                                            |
 | `--no-onboard`                        | Skip onboarding                                            |
@@ -192,13 +192,13 @@ by default, plus git-checkout installs under the same prefix flow.
   <Step title="Ensure Git">
     If Git is missing, attempts install via apt/dnf/yum on Linux or Homebrew on macOS.
   </Step>
-  <Step title="Install OpenClaw under prefix">
-    - `npm` method (default): installs under the prefix with npm, then writes wrapper to `<prefix>/bin/openclaw`
-    - `git` method: clones/updates a checkout (default `~/openclaw`) and still writes the wrapper to `<prefix>/bin/openclaw`
+  <Step title="Install LittleBaby under prefix">
+    - `npm` method (default): installs under the prefix with npm, then writes wrapper to `<prefix>/bin/littlebaby`
+    - `git` method: clones/updates a checkout (default `~/littlebaby`) and still writes the wrapper to `<prefix>/bin/littlebaby`
   </Step>
   <Step title="Refresh loaded gateway service">
     If a gateway service is already loaded from that same prefix, the script runs
-    `openclaw gateway install --force`, then `openclaw gateway restart`, and
+    `littlebaby gateway install --force`, then `littlebaby gateway restart`, and
     probes gateway health best-effort.
   </Step>
 </Steps>
@@ -208,27 +208,27 @@ by default, plus git-checkout installs under the same prefix flow.
 <Tabs>
   <Tab title="Default">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash
     ```
   </Tab>
   <Tab title="Custom prefix + version">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --prefix /opt/openclaw --version latest
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash -s -- --prefix /opt/littlebaby --version latest
     ```
   </Tab>
   <Tab title="Git install">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --install-method git --git-dir ~/openclaw
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash -s -- --install-method git --git-dir ~/littlebaby
     ```
   </Tab>
   <Tab title="Automation JSON output">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/openclaw
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash -s -- --json --prefix /opt/littlebaby
     ```
   </Tab>
   <Tab title="Run onboarding">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --onboard
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash -s -- --onboard
     ```
   </Tab>
 </Tabs>
@@ -242,11 +242,11 @@ by default, plus git-checkout installs under the same prefix flow.
 | `--install-method npm\|git` | Choose install method (default: `npm`). Alias: `--method`                       |
 | `--npm`                     | Shortcut for npm method                                                         |
 | `--git`, `--github`         | Shortcut for git method                                                         |
-| `--git-dir <path>`          | Git checkout directory (default: `~/openclaw`). Alias: `--dir`                  |
-| `--version <ver>`           | OpenClaw version or dist-tag (default: `latest`)                                |
+| `--git-dir <path>`          | Git checkout directory (default: `~/littlebaby`). Alias: `--dir`                  |
+| `--version <ver>`           | LittleBaby version or dist-tag (default: `latest`)                                |
 | `--node-version <ver>`      | Node version (default: `22.22.0`)                                               |
 | `--json`                    | Emit NDJSON events                                                              |
-| `--onboard`                 | Run `openclaw onboard` after install                                            |
+| `--onboard`                 | Run `littlebaby onboard` after install                                            |
 | `--no-onboard`              | Skip onboarding (default)                                                       |
 | `--set-npm-prefix`          | On Linux, force npm prefix to `~/.npm-global` if current prefix is not writable |
 | `--help`                    | Show usage (`-h`)                                                               |
@@ -259,7 +259,7 @@ by default, plus git-checkout installs under the same prefix flow.
 | ------------------------------------------- | --------------------------------------------- |
 | `LITTLEBABY_PREFIX=<path>`                    | Install prefix                                |
 | `LITTLEBABY_INSTALL_METHOD=git\|npm`          | Install method                                |
-| `LITTLEBABY_VERSION=<ver>`                    | OpenClaw version or dist-tag                  |
+| `LITTLEBABY_VERSION=<ver>`                    | LittleBaby version or dist-tag                  |
 | `LITTLEBABY_NODE_VERSION=<ver>`               | Node version                                  |
 | `LITTLEBABY_GIT_DIR=<path>`                   | Git checkout directory for git installs       |
 | `LITTLEBABY_GIT_UPDATE=0\|1`                  | Toggle git updates for existing checkouts     |
@@ -285,14 +285,14 @@ by default, plus git-checkout installs under the same prefix flow.
   <Step title="Ensure Node.js 24 by default">
     If missing, attempts install via winget, then Chocolatey, then Scoop. Node 22 LTS, currently `22.14+`, remains supported for compatibility.
   </Step>
-  <Step title="Install OpenClaw">
+  <Step title="Install LittleBaby">
     - `npm` method (default): global npm install using selected `-Tag`
-    - `git` method: clone/update repo, install/build with pnpm, and install wrapper at `%USERPROFILE%\.local\bin\openclaw.cmd`
+    - `git` method: clone/update repo, install/build with pnpm, and install wrapper at `%USERPROFILE%\.local\bin\littlebaby.cmd`
   </Step>
   <Step title="Post-install tasks">
     - Adds needed bin directory to user PATH when possible
-    - Refreshes a loaded gateway service best-effort (`openclaw gateway install --force`, then restart)
-    - Runs `openclaw doctor --non-interactive` on upgrades and git installs (best effort)
+    - Refreshes a loaded gateway service best-effort (`littlebaby gateway install --force`, then restart)
+    - Runs `littlebaby doctor --non-interactive` on upgrades and git installs (best effort)
   </Step>
 </Steps>
 
@@ -301,34 +301,34 @@ by default, plus git-checkout installs under the same prefix flow.
 <Tabs>
   <Tab title="Default">
     ```powershell
-    iwr -useb https://openclaw.ai/install.ps1 | iex
+    iwr -useb https://littlebaby.ai/install.ps1 | iex
     ```
   </Tab>
   <Tab title="Git install">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -InstallMethod git
     ```
   </Tab>
   <Tab title="GitHub main via npm">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -Tag main
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -Tag main
     ```
   </Tab>
   <Tab title="Custom git directory">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git -GitDir "C:\openclaw"
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -InstallMethod git -GitDir "C:\littlebaby"
     ```
   </Tab>
   <Tab title="Dry run">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -DryRun
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -DryRun
     ```
   </Tab>
   <Tab title="Debug trace">
     ```powershell
     # install.ps1 has no dedicated -Verbose flag yet.
     Set-PSDebug -Trace 1
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -NoOnboard
     Set-PSDebug -Trace 0
     ```
   </Tab>
@@ -341,7 +341,7 @@ by default, plus git-checkout installs under the same prefix flow.
 | --------------------------- | ---------------------------------------------------------- |
 | `-InstallMethod npm\|git`   | Install method (default: `npm`)                            |
 | `-Tag <tag\|version\|spec>` | npm dist-tag, version, or package spec (default: `latest`) |
-| `-GitDir <path>`            | Checkout directory (default: `%USERPROFILE%\openclaw`)     |
+| `-GitDir <path>`            | Checkout directory (default: `%USERPROFILE%\littlebaby`)     |
 | `-NoOnboard`                | Skip onboarding                                            |
 | `-NoGitUpdate`              | Skip `git pull`                                            |
 | `-DryRun`                   | Print actions only                                         |
@@ -374,23 +374,23 @@ Use non-interactive flags/env vars for predictable runs.
 <Tabs>
   <Tab title="install.sh (non-interactive npm)">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash -s -- --no-prompt --no-onboard
     ```
   </Tab>
   <Tab title="install.sh (non-interactive git)">
     ```bash
     LITTLEBABY_INSTALL_METHOD=git LITTLEBABY_NO_PROMPT=1 \
-      curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+      curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash
     ```
   </Tab>
   <Tab title="install-cli.sh (JSON)">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/openclaw
+    curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install-cli.sh | bash -s -- --json --prefix /opt/littlebaby
     ```
   </Tab>
   <Tab title="install.ps1 (skip onboarding)">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -NoOnboard
     ```
   </Tab>
 </Tabs>
@@ -412,7 +412,7 @@ Use non-interactive flags/env vars for predictable runs.
     The scripts default `SHARP_IGNORE_GLOBAL_LIBVIPS=1` to avoid sharp building against system libvips. To override:
 
     ```bash
-    SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+    SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash
     ```
 
   </Accordion>
@@ -421,7 +421,7 @@ Use non-interactive flags/env vars for predictable runs.
     Install Git for Windows, reopen PowerShell, rerun installer.
   </Accordion>
 
-  <Accordion title='Windows: "openclaw is not recognized"'>
+  <Accordion title='Windows: "littlebaby is not recognized"'>
     Run `npm config get prefix` and add that directory to your user PATH (no `\bin` suffix needed on Windows), then reopen PowerShell.
   </Accordion>
 
@@ -431,13 +431,13 @@ Use non-interactive flags/env vars for predictable runs.
 
     ```powershell
     Set-PSDebug -Trace 1
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://littlebaby.ai/install.ps1))) -NoOnboard
     Set-PSDebug -Trace 0
     ```
 
   </Accordion>
 
-  <Accordion title="openclaw not found after install">
+  <Accordion title="littlebaby not found after install">
     Usually a PATH issue. See [Node.js troubleshooting](/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>

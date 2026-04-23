@@ -69,7 +69,7 @@ function setCachedSessionTitleFields(cacheKey: string, stat: fs.Stats, value: Se
   }
 }
 
-export function attachOpenClawTranscriptMeta(
+export function attachLittleBabyTranscriptMeta(
   message: unknown,
   meta: Record<string, unknown>,
 ): unknown {
@@ -78,12 +78,12 @@ export function attachOpenClawTranscriptMeta(
   }
   const record = message as Record<string, unknown>;
   const existing =
-    record.__openclaw && typeof record.__openclaw === "object" && !Array.isArray(record.__openclaw)
-      ? (record.__openclaw as Record<string, unknown>)
+    record.__littlebaby && typeof record.__littlebaby === "object" && !Array.isArray(record.__littlebaby)
+      ? (record.__littlebaby as Record<string, unknown>)
       : {};
   return {
     ...record,
-    __openclaw: {
+    __littlebaby: {
       ...existing,
       ...meta,
     },
@@ -114,7 +114,7 @@ export function readSessionMessages(
       if (parsed?.message) {
         messageSeq += 1;
         messages.push(
-          attachOpenClawTranscriptMeta(parsed.message, {
+          attachLittleBabyTranscriptMeta(parsed.message, {
             ...(typeof parsed.id === "string" ? { id: parsed.id } : {}),
             seq: messageSeq,
           }),
@@ -132,7 +132,7 @@ export function readSessionMessages(
           role: "system",
           content: [{ type: "text", text: "Compaction" }],
           timestamp,
-          __openclaw: {
+          __littlebaby: {
             kind: "compaction",
             id: typeof parsed.id === "string" ? parsed.id : undefined,
             seq: messageSeq,

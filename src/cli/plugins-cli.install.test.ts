@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 import { installedPluginRoot } from "../../test/helpers/bundled-plugin-paths.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import {
   applyExclusiveSlotSelection,
   buildPluginDiagnosticsReport,
@@ -27,13 +27,13 @@ import {
   writeConfigFile,
 } from "./plugins-cli-test-helpers.js";
 
-const CLI_STATE_ROOT = "/tmp/openclaw-state";
+const CLI_STATE_ROOT = "/tmp/littlebaby-state";
 
 function cliInstallPath(pluginId: string): string {
   return installedPluginRoot(CLI_STATE_ROOT, pluginId);
 }
 
-function createEnabledPluginConfig(pluginId: string): OpenClawConfig {
+function createEnabledPluginConfig(pluginId: string): LittleBabyConfig {
   return {
     plugins: {
       entries: {
@@ -42,21 +42,21 @@ function createEnabledPluginConfig(pluginId: string): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
-function createEmptyPluginConfig(): OpenClawConfig {
+function createEmptyPluginConfig(): LittleBabyConfig {
   return {
     plugins: {
       entries: {},
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 function createClawHubInstalledConfig(params: {
   pluginId: string;
   install: Record<string, unknown>;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   const enabledCfg = createEnabledPluginConfig(params.pluginId);
   return {
     ...enabledCfg,
@@ -66,7 +66,7 @@ function createClawHubInstalledConfig(params: {
         [params.pluginId]: params.install,
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 function createClawHubInstallResult(params: {
@@ -135,7 +135,7 @@ function primeNpmPluginFallback(pluginId = "demo") {
   return { cfg, enabledCfg };
 }
 
-function createPathHookPackInstalledConfig(tmpRoot: string): OpenClawConfig {
+function createPathHookPackInstalledConfig(tmpRoot: string): LittleBabyConfig {
   return {
     hooks: {
       internal: {
@@ -148,10 +148,10 @@ function createPathHookPackInstalledConfig(tmpRoot: string): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
-function createNpmHookPackInstalledConfig(): OpenClawConfig {
+function createNpmHookPackInstalledConfig(): LittleBabyConfig {
   return {
     hooks: {
       internal: {
@@ -163,7 +163,7 @@ function createNpmHookPackInstalledConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 function createHookPackInstallResult(targetDir: string): {
@@ -183,14 +183,14 @@ function createHookPackInstallResult(targetDir: string): {
 }
 
 function primeHookPackNpmFallback() {
-  const cfg = {} as OpenClawConfig;
+  const cfg = {} as LittleBabyConfig;
   const installedCfg = createNpmHookPackInstalledConfig();
 
   loadConfig.mockReturnValue(cfg);
   mockClawHubPackageNotFound("@acme/demo-hooks");
   installPluginFromNpmSpec.mockResolvedValue({
     ok: false,
-    error: "package.json missing openclaw.plugin.json",
+    error: "package.json missing littlebaby.plugin.json",
   });
   installHooksFromNpmSpec.mockResolvedValue({
     ...createHookPackInstallResult("/tmp/hooks/demo-hooks"),
@@ -208,10 +208,10 @@ function primeHookPackNpmFallback() {
 function primeHookPackPathFallback(params: {
   tmpRoot: string;
   pluginInstallError: string;
-}): OpenClawConfig {
+}): LittleBabyConfig {
   const installedCfg = createPathHookPackInstalledConfig(params.tmpRoot);
 
-  loadConfig.mockReturnValue({} as OpenClawConfig);
+  loadConfig.mockReturnValue({} as LittleBabyConfig);
   installPluginFromPath.mockResolvedValueOnce({
     ok: false,
     error: params.pluginInstallError,
@@ -282,7 +282,7 @@ describe("plugins cli install", () => {
       throw invalidConfigErr;
     });
     readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw-config.json5",
+      path: "/tmp/littlebaby-config.json5",
       exists: true,
       raw: '{ "models": { "default": 123 } }',
       parsed: { models: { default: 123 } },
@@ -298,7 +298,7 @@ describe("plugins cli install", () => {
     await expect(runPluginsCommand(["plugins", "install", "alpha"])).rejects.toThrow("__exit__:1");
 
     expect(runtimeErrors.at(-1)).toContain(
-      "Config invalid; run `openclaw doctor --fix` before installing plugins.",
+      "Config invalid; run `littlebaby doctor --fix` before installing plugins.",
     );
     expect(installPluginFromMarketplace).not.toHaveBeenCalled();
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
@@ -310,7 +310,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const enabledCfg = {
       plugins: {
         entries: {
@@ -319,7 +319,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const installedCfg = {
       ...enabledCfg,
       plugins: {
@@ -331,7 +331,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromMarketplace.mockResolvedValue({
@@ -382,7 +382,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
     const installedCfg = createClawHubInstalledConfig({
       pluginId: "demo",
@@ -441,7 +441,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
 
     loadConfig.mockReturnValue(cfg);
@@ -476,7 +476,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
     const installedCfg = createClawHubInstalledConfig({
       pluginId: "demo",
@@ -571,9 +571,9 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
-    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-link-"));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-plugin-link-"));
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromPath.mockResolvedValueOnce({
@@ -612,7 +612,7 @@ describe("plugins cli install", () => {
   });
 
   it("passes dangerous force unsafe install to linked hook-pack probe fallback", async () => {
-    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-hook-link-"));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-hook-link-"));
     primeHookPackPathFallback({
       tmpRoot,
       pluginInstallError: "plugin install probe failed",
@@ -640,7 +640,7 @@ describe("plugins cli install", () => {
   });
 
   it("passes dangerous force unsafe install to local hook-pack fallback installs", async () => {
-    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-hook-install-"));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-hook-install-"));
     primeHookPackPathFallback({
       tmpRoot,
       pluginInstallError: "plugin install failed",
@@ -679,7 +679,7 @@ describe("plugins cli install", () => {
   });
 
   it("passes the install logger to the --link dry-run probe", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-link-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-link-plugin-"));
     const cfg = {
       plugins: {
         entries: {},
@@ -687,7 +687,7 @@ describe("plugins cli install", () => {
           paths: [],
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
 
     loadConfig.mockReturnValue(cfg);
@@ -751,8 +751,8 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for local path when dangerous force unsafe install is set", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
-    const cfg = {} as OpenClawConfig;
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-local-plugin-"));
+    const cfg = {} as LittleBabyConfig;
     const pluginInstallError = "plugin blocked by security scan";
 
     loadConfig.mockReturnValue(cfg);
@@ -780,8 +780,8 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for local path when security scan fails under dangerous force unsafe install", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
-    const cfg = {} as OpenClawConfig;
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-local-plugin-"));
+    const cfg = {} as LittleBabyConfig;
     const pluginInstallError = "plugin security scan failed";
 
     loadConfig.mockReturnValue(cfg);
@@ -809,7 +809,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for npm installs when dangerous force unsafe install is set", async () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as LittleBabyConfig;
     const pluginInstallError = "plugin blocked by security scan";
 
     loadConfig.mockReturnValue(cfg);
@@ -833,7 +833,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for npm installs when security scan fails under dangerous force unsafe install", async () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as LittleBabyConfig;
     const pluginInstallError = "plugin security scan failed";
 
     loadConfig.mockReturnValue(cfg);
@@ -857,8 +857,8 @@ describe("plugins cli install", () => {
   });
 
   it("still falls back to local hook pack when dangerous force unsafe install is set for non-security errors", async () => {
-    const localHookDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-hook-pack-"));
-    const cfg = {} as OpenClawConfig;
+    const localHookDir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-local-hook-pack-"));
+    const cfg = {} as LittleBabyConfig;
     const installedCfg = {
       hooks: {
         internal: {
@@ -870,13 +870,13 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromPath.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.plugin.json",
-      code: "missing_openclaw_extensions",
+      error: "package.json missing littlebaby.plugin.json",
+      code: "missing_littlebaby_extensions",
     });
     installHooksFromPath.mockResolvedValue({
       ok: true,
@@ -907,7 +907,7 @@ describe("plugins cli install", () => {
   });
 
   it("still falls back to npm hook pack when dangerous force unsafe install is set for non-security errors", async () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as LittleBabyConfig;
     const installedCfg = {
       hooks: {
         internal: {
@@ -919,7 +919,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromClawHub.mockResolvedValue({
@@ -929,8 +929,8 @@ describe("plugins cli install", () => {
     });
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.plugin.json",
-      code: "missing_openclaw_extensions",
+      error: "package.json missing littlebaby.plugin.json",
+      code: "missing_littlebaby_extensions",
     });
     installHooksFromNpmSpec.mockResolvedValue({
       ok: true,
@@ -964,14 +964,14 @@ describe("plugins cli install", () => {
   it("does not fall back to npm when ClawHub rejects a real package", async () => {
     installPluginFromClawHub.mockResolvedValue({
       ok: false,
-      error: 'Use "openclaw skills install demo" instead.',
+      error: 'Use "littlebaby skills install demo" instead.',
       code: "skill_package",
     });
 
     await expect(runPluginsCommand(["plugins", "install", "demo"])).rejects.toThrow("__exit__:1");
 
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
-    expect(runtimeErrors.at(-1)).toContain('Use "openclaw skills install demo" instead.');
+    expect(runtimeErrors.at(-1)).toContain('Use "littlebaby skills install demo" instead.');
   });
 
   it("falls back to installing hook packs from npm specs", async () => {

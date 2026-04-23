@@ -18,7 +18,7 @@ import {
 } from "./install.js";
 import * as hookInstallRuntime from "./install.runtime.js";
 
-const fixtureRoot = path.join(process.cwd(), ".tmp", `openclaw-hook-install-${randomUUID()}`);
+const fixtureRoot = path.join(process.cwd(), ".tmp", `littlebaby-hook-install-${randomUUID()}`);
 const sharedArchiveDir = path.join(fixtureRoot, "_archives");
 let tempDirIndex = 0;
 const sharedArchivePathByName = new Map<string, string>();
@@ -97,9 +97,9 @@ function writeHookPackManifest(params: {
   fs.writeFileSync(
     path.join(params.pkgDir, "package.json"),
     JSON.stringify({
-      name: "@openclaw/test-hooks",
+      name: "@littlebaby/test-hooks",
       version: "0.0.1",
-      openclaw: { hooks: params.hooks },
+      littlebaby: { hooks: params.hooks },
       ...(params.dependencies ? { dependencies: params.dependencies } : {}),
     }),
     "utf-8",
@@ -278,12 +278,12 @@ describe("installHooksFromPath", () => {
       {
         hooks: ["../outside"],
         setupLink: false,
-        expected: "openclaw.hooks entry escapes package directory",
+        expected: "littlebaby.hooks entry escapes package directory",
       },
       {
         hooks: ["./linked"],
         setupLink: true,
-        expected: "openclaw.hooks entry resolves outside package directory",
+        expected: "littlebaby.hooks entry resolves outside package directory",
       },
     ] as const;
 
@@ -350,7 +350,7 @@ describe("installHooksFromNpmSpec", () => {
 
     try {
       const result = await installHooksFromNpmSpec({
-        spec: "@openclaw/test-hooks@0.0.1",
+        spec: "@littlebaby/test-hooks@0.0.1",
       });
 
       expect(result.ok).toBe(true);
@@ -377,8 +377,8 @@ describe("installHooksFromNpmSpec", () => {
           code: 0,
           stdout: JSON.stringify([
             {
-              id: "@openclaw/test-hooks@0.0.1",
-              name: "@openclaw/test-hooks",
+              id: "@littlebaby/test-hooks@0.0.1",
+              name: "@littlebaby/test-hooks",
               version: "0.0.1",
               filename: packedName,
               integrity: "sha512-hook-test",
@@ -396,7 +396,7 @@ describe("installHooksFromNpmSpec", () => {
 
     const hooksDir = path.join(stateDir, "hooks");
     const result = await installHooksFromNpmSpec({
-      spec: "@openclaw/test-hooks@0.0.1",
+      spec: "@littlebaby/test-hooks@0.0.1",
       hooksDir,
       logger: { info: () => {}, warn: () => {} },
     });
@@ -405,13 +405,13 @@ describe("installHooksFromNpmSpec", () => {
       return;
     }
     expect(result.hookPackId).toBe("test-hooks");
-    expect(result.npmResolution?.resolvedSpec).toBe("@openclaw/test-hooks@0.0.1");
+    expect(result.npmResolution?.resolvedSpec).toBe("@littlebaby/test-hooks@0.0.1");
     expect(result.npmResolution?.integrity).toBe("sha512-hook-test");
     expect(fs.existsSync(path.join(result.targetDir, "hooks", "one-hook", "HOOK.md"))).toBe(true);
 
     expectSingleNpmPackIgnoreScriptsCall({
       calls: run.mock.calls,
-      expectedSpec: "@openclaw/test-hooks@0.0.1",
+      expectedSpec: "@littlebaby/test-hooks@0.0.1",
     });
 
     expect(packTmpDir).not.toBe("");
@@ -421,8 +421,8 @@ describe("installHooksFromNpmSpec", () => {
   it("aborts when integrity drift callback rejects the fetched artifact", async () => {
     const run = vi.mocked(runCommandWithTimeout);
     mockNpmPackMetadataResult(run, {
-      id: "@openclaw/test-hooks@0.0.1",
-      name: "@openclaw/test-hooks",
+      id: "@littlebaby/test-hooks@0.0.1",
+      name: "@littlebaby/test-hooks",
       version: "0.0.1",
       filename: "test-hooks-0.0.1.tgz",
       integrity: "sha512-new",
@@ -431,7 +431,7 @@ describe("installHooksFromNpmSpec", () => {
 
     const onIntegrityDrift = vi.fn(async () => false);
     const result = await installHooksFromNpmSpec({
-      spec: "@openclaw/test-hooks@0.0.1",
+      spec: "@littlebaby/test-hooks@0.0.1",
       expectedIntegrity: "sha512-old",
       onIntegrityDrift,
     });
@@ -448,8 +448,8 @@ describe("installHooksFromNpmSpec", () => {
 
     const run = vi.mocked(runCommandWithTimeout);
     mockNpmPackMetadataResult(run, {
-      id: "@openclaw/test-hooks@0.0.2-beta.1",
-      name: "@openclaw/test-hooks",
+      id: "@littlebaby/test-hooks@0.0.2-beta.1",
+      name: "@littlebaby/test-hooks",
       version: "0.0.2-beta.1",
       filename: "test-hooks-0.0.2-beta.1.tgz",
       integrity: "sha512-beta",
@@ -457,13 +457,13 @@ describe("installHooksFromNpmSpec", () => {
     });
 
     const result = await installHooksFromNpmSpec({
-      spec: "@openclaw/test-hooks",
+      spec: "@littlebaby/test-hooks",
       logger: { info: () => {}, warn: () => {} },
     });
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error).toContain("prerelease version 0.0.2-beta.1");
-      expect(result.error).toContain('"@openclaw/test-hooks@beta"');
+      expect(result.error).toContain('"@littlebaby/test-hooks@beta"');
     }
   });
 });

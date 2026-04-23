@@ -15,14 +15,14 @@ vi.mock("./schtasks-exec.js", () => ({
 // Real content from the littlebaby-gateway.service unit file (the canonical gateway unit).
 const GATEWAY_SERVICE_CONTENTS = `\
 [Unit]
-Description=OpenClaw Gateway (v2026.3.8)
+Description=LittleBaby Gateway (v2026.3.8)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/bin/node /home/openclaw/.npm-global/lib/node_modules/openclaw/dist/entry.js gateway --port 18789
+ExecStart=/usr/bin/node /home/littlebaby/.npm-global/lib/node_modules/littlebaby/dist/entry.js gateway --port 18789
 Restart=always
-Environment=LITTLEBABY_SERVICE_MARKER=openclaw
+Environment=LITTLEBABY_SERVICE_MARKER=littlebaby
 Environment=LITTLEBABY_SERVICE_KIND=gateway
 Environment=LITTLEBABY_SERVICE_VERSION=2026.3.8
 
@@ -30,10 +30,10 @@ Environment=LITTLEBABY_SERVICE_VERSION=2026.3.8
 WantedBy=default.target
 `;
 
-// Real content from the openclaw-test.service unit file (a non-gateway openclaw service).
+// Real content from the littlebaby-test.service unit file (a non-gateway littlebaby service).
 const TEST_SERVICE_CONTENTS = `\
 [Unit]
-Description=OpenClaw test service
+Description=LittleBaby test service
 After=default.target
 
 [Service]
@@ -54,11 +54,11 @@ Environment=HOME=/home/clawdbot
 `;
 
 describe("detectMarkerLineWithGateway", () => {
-  it("returns null for openclaw-test.service (openclaw only in description, no gateway on same line)", () => {
+  it("returns null for littlebaby-test.service (littlebaby only in description, no gateway on same line)", () => {
     expect(detectMarkerLineWithGateway(TEST_SERVICE_CONTENTS)).toBeNull();
   });
 
-  it("returns openclaw for the canonical gateway unit (ExecStart has both openclaw and gateway)", () => {
+  it("returns littlebaby for the canonical gateway unit (ExecStart has both littlebaby and gateway)", () => {
     expect(detectMarkerLineWithGateway(GATEWAY_SERVICE_CONTENTS)).toBe("littlebaby");
   });
 
@@ -67,7 +67,7 @@ describe("detectMarkerLineWithGateway", () => {
   });
 
   it("handles line continuations — marker and gateway split across physical lines", () => {
-    const contents = `[Service]\nExecStart=/usr/bin/node /opt/openclaw/dist/entry.js \\\n  gateway --port 18789\n`;
+    const contents = `[Service]\nExecStart=/usr/bin/node /opt/littlebaby/dist/entry.js \\\n  gateway --port 18789\n`;
     expect(detectMarkerLineWithGateway(contents)).toBe("littlebaby");
   });
 });
@@ -78,12 +78,12 @@ describe("findExtraGatewayServices (linux / scanSystemdDir) — real filesystem"
   // Only runs on Linux/macOS where the linux branch of findExtraGatewayServices is active.
   const isLinux = process.platform === "linux";
 
-  it.skipIf(!isLinux)("does not report openclaw-test.service as a gateway service", async () => {
-    const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
+  it.skipIf(!isLinux)("does not report littlebaby-test.service as a gateway service", async () => {
+    const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-test-"));
     const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
     try {
       await fs.mkdir(systemdDir, { recursive: true });
-      await fs.writeFile(path.join(systemdDir, "openclaw-test.service"), TEST_SERVICE_CONTENTS);
+      await fs.writeFile(path.join(systemdDir, "littlebaby-test.service"), TEST_SERVICE_CONTENTS);
       const result = await findExtraGatewayServices({ HOME: tmpHome });
       expect(result).toEqual([]);
     } finally {
@@ -94,7 +94,7 @@ describe("findExtraGatewayServices (linux / scanSystemdDir) — real filesystem"
   it.skipIf(!isLinux)(
     "does not report the canonical littlebaby-gateway.service as an extra service",
     async () => {
-      const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
+      const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-test-"));
       const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
       try {
         await fs.mkdir(systemdDir, { recursive: true });
@@ -113,7 +113,7 @@ describe("findExtraGatewayServices (linux / scanSystemdDir) — real filesystem"
   it.skipIf(!isLinux)(
     "reports a legacy clawdbot-gateway service as an extra gateway service",
     async () => {
-      const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
+      const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-test-"));
       const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
       const unitPath = path.join(systemdDir, "clawdbot-gateway.service");
       try {
@@ -172,12 +172,12 @@ describe("findExtraGatewayServices (win32)", () => {
     expect(result).toEqual([]);
   });
 
-  it("collects only non-openclaw marker tasks from schtasks output", async () => {
+  it("collects only non-littlebaby marker tasks from schtasks output", async () => {
     execSchtasksMock.mockResolvedValueOnce({
       code: 0,
       stdout: [
-        "TaskName: OpenClaw Gateway",
-        "Task To Run: C:\\Program Files\\OpenClaw\\openclaw.exe gateway run",
+        "TaskName: LittleBaby Gateway",
+        "Task To Run: C:\\Program Files\\LittleBaby\\littlebaby.exe gateway run",
         "",
         "TaskName: Clawdbot Legacy",
         "Task To Run: C:\\clawdbot\\clawdbot.exe run",

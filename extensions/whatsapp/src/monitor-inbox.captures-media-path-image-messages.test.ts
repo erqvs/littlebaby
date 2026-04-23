@@ -11,9 +11,9 @@ import {
 let monitorWebInbox: typeof import("./inbound.js").monitorWebInbox;
 const inboundLoggerInfoMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/text-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/text-runtime")>(
-    "openclaw/plugin-sdk/text-runtime",
+vi.mock("littlebaby/plugin-sdk/text-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/text-runtime")>(
+    "littlebaby/plugin-sdk/text-runtime",
   );
   return {
     ...actual,

@@ -1,4 +1,4 @@
-import { resolveOpenClawAgentDir } from "../agents/agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../agents/agent-paths.js";
 import {
   listAgentIds,
   resolveAgentDir,
@@ -15,7 +15,7 @@ import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshotRefreshHandler,
   setRuntimeConfigSnapshot,
-  type OpenClawConfig,
+  type LittleBabyConfig,
 } from "../config/config.js";
 import type { PluginOrigin } from "../plugins/plugin-origin.types.js";
 import { resolveUserPath } from "../utils.js";
@@ -30,8 +30,8 @@ import type { RuntimeWebToolsMetadata } from "./runtime-web-tools.js";
 export type { SecretResolverWarning } from "./runtime-shared.js";
 
 export type PreparedSecretsRuntimeSnapshot = {
-  sourceConfig: OpenClawConfig;
-  config: OpenClawConfig;
+  sourceConfig: LittleBabyConfig;
+  config: LittleBabyConfig;
   authStores: Array<{ agentDir: string; store: AuthProfileStore }>;
   warnings: SecretResolverWarning[];
   webTools: RuntimeWebToolsMetadata;
@@ -108,11 +108,11 @@ function clearActiveSecretsRuntimeState(): void {
 }
 
 function collectCandidateAgentDirs(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): string[] {
   const dirs = new Set<string>();
-  dirs.add(resolveUserPath(resolveOpenClawAgentDir(env), env));
+  dirs.add(resolveUserPath(resolveLittleBabyAgentDir(env), env));
   for (const agentId of listAgentIds(config)) {
     dirs.add(resolveUserPath(resolveAgentDir(config, agentId, env), env));
   }
@@ -120,7 +120,7 @@ function collectCandidateAgentDirs(
 }
 
 function resolveRefreshAgentDirs(
-  config: OpenClawConfig,
+  config: LittleBabyConfig,
   context: SecretsRuntimeRefreshContext,
 ): string[] {
   const configDerived = collectCandidateAgentDirs(config, context.env);
@@ -131,7 +131,7 @@ function resolveRefreshAgentDirs(
 }
 
 async function resolveLoadablePluginOrigins(params: {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
 }): Promise<ReadonlyMap<string, PluginOrigin>> {
   const workspaceDir = resolveAgentWorkspaceDir(
@@ -164,7 +164,7 @@ function mergeSecretsRuntimeEnv(
   return merged;
 }
 
-function hasConfiguredPluginEntries(config: OpenClawConfig): boolean {
+function hasConfiguredPluginEntries(config: LittleBabyConfig): boolean {
   const entries = config.plugins?.entries;
   return (
     !!entries &&
@@ -175,7 +175,7 @@ function hasConfiguredPluginEntries(config: OpenClawConfig): boolean {
 }
 
 export async function prepareSecretsRuntimeSnapshot(params: {
-  config: OpenClawConfig;
+  config: LittleBabyConfig;
   env?: NodeJS.ProcessEnv;
   agentDirs?: string[];
   includeAuthStoreRefs?: boolean;

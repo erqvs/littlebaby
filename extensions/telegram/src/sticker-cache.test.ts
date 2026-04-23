@@ -3,18 +3,18 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import * as stickerCache from "./sticker-cache-store.js";
 
-const TEST_CACHE_DIR = "/tmp/openclaw-test-sticker-cache/telegram";
+const TEST_CACHE_DIR = "/tmp/littlebaby-test-sticker-cache/telegram";
 const TEST_CACHE_FILE = path.join(TEST_CACHE_DIR, "sticker-cache.json");
 
 describe("sticker-cache", () => {
   beforeEach(() => {
-    process.env.LITTLEBABY_STATE_DIR = "/tmp/openclaw-test-sticker-cache";
-    fs.rmSync("/tmp/openclaw-test-sticker-cache", { recursive: true, force: true });
+    process.env.LITTLEBABY_STATE_DIR = "/tmp/littlebaby-test-sticker-cache";
+    fs.rmSync("/tmp/littlebaby-test-sticker-cache", { recursive: true, force: true });
     fs.mkdirSync(TEST_CACHE_DIR, { recursive: true });
   });
 
   afterEach(() => {
-    fs.rmSync("/tmp/openclaw-test-sticker-cache", { recursive: true, force: true });
+    fs.rmSync("/tmp/littlebaby-test-sticker-cache", { recursive: true, force: true });
     delete process.env.LITTLEBABY_STATE_DIR;
   });
 

@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/opencode-go-provider",
+  "name": "@littlebaby/opencode-go-provider",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw OpenCode Go provider plugin",
+  "description": "LittleBaby OpenCode Go provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@littlebaby/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.ts"
     ]

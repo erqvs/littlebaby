@@ -23,7 +23,7 @@ import {
   assertLiveImageProbeReply,
   buildLiveCronProbeMessage,
   createLiveCronProbeSpec,
-  runOpenClawCliJson,
+  runLittleBabyCliJson,
 } from "./live-agent-probes.js";
 import { renderCatFacePngBase64 } from "./live-image-probe.js";
 import { startGatewayServer } from "./server.js";
@@ -469,9 +469,9 @@ describeLive("gateway live (ACP bind)", () => {
       const liveAgent = normalizeAcpAgent(process.env.LITTLEBABY_LIVE_ACP_BIND_AGENT);
       const agentCommandOverride =
         process.env.LITTLEBABY_LIVE_ACP_BIND_AGENT_COMMAND?.trim() || undefined;
-      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-acp-bind-"));
+      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-live-acp-bind-"));
       const tempStateDir = path.join(tempRoot, "state");
-      const tempConfigPath = path.join(tempRoot, "openclaw.json");
+      const tempConfigPath = path.join(tempRoot, "littlebaby.json");
       const port = await getFreeGatewayPort();
       const token = `test-${randomUUID()}`;
       const originalSessionKey = "main";
@@ -843,7 +843,7 @@ describeLive("gateway live (ACP bind)", () => {
         if (!cronJobId) {
           throw new Error(`acp cron cli verify did not create job ${cronProbe.name}`);
         }
-        await runOpenClawCliJson(
+        await runLittleBabyCliJson(
           ["cron", "rm", cronJobId, "--json", "--url", `ws://127.0.0.1:${port}`, "--token", token],
           process.env,
         );

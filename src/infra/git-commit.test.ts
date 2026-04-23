@@ -9,7 +9,7 @@ import { createTrackedTempDirs } from "../test-utils/tracked-temp-dirs.js";
 const tempDirs = createTrackedTempDirs();
 
 async function makeTempDir(label: string): Promise<string> {
-  return await tempDirs.make(`openclaw-${label}-`);
+  return await tempDirs.make(`littlebaby-${label}-`);
 }
 
 async function makeFakeGitRepo(
@@ -191,7 +191,7 @@ describe("git commit resolution", () => {
     );
   });
 
-  it("does not walk out of the openclaw package into a host repo", async () => {
+  it("does not walk out of the littlebaby package into a host repo", async () => {
     const temp = await makeTempDir("git-commit-package-boundary");
     const hostRepo = path.join(temp, "host");
     await fs.mkdir(hostRepo, { recursive: true });

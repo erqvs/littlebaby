@@ -1,17 +1,17 @@
 ---
-summary: "Run OpenClaw with Ollama (cloud and local models)"
+summary: "Run LittleBaby with Ollama (cloud and local models)"
 read_when:
-  - You want to run OpenClaw with cloud or local models via Ollama
+  - You want to run LittleBaby with cloud or local models via Ollama
   - You need Ollama setup and configuration guidance
 title: "Ollama"
 ---
 
 # Ollama
 
-OpenClaw integrates with Ollama's native API (`/api/chat`) for hosted cloud models and local/self-hosted Ollama servers. You can use Ollama in three modes: `Cloud + Local` through a reachable Ollama host, `Cloud only` against `https://ollama.com`, or `Local only` against a reachable Ollama host.
+LittleBaby integrates with Ollama's native API (`/api/chat`) for hosted cloud models and local/self-hosted Ollama servers. You can use Ollama in three modes: `Cloud + Local` through a reachable Ollama host, `Cloud only` against `https://ollama.com`, or `Local only` against a reachable Ollama host.
 
 <Warning>
-**Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with OpenClaw. This breaks tool calling and models may output raw tool JSON as plain text. Use the native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).
+**Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with LittleBaby. This breaks tool calling and models may output raw tool JSON as plain text. Use the native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).
 </Warning>
 
 ## Getting started
@@ -25,7 +25,7 @@ Choose your preferred setup method and mode.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        littlebaby onboard
         ```
 
         Select **Ollama** from the provider list.
@@ -40,7 +40,7 @@ Choose your preferred setup method and mode.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider ollama
+        littlebaby models list --provider ollama
         ```
       </Step>
     </Steps>
@@ -48,7 +48,7 @@ Choose your preferred setup method and mode.
     ### Non-interactive mode
 
     ```bash
-    openclaw onboard --non-interactive \
+    littlebaby onboard --non-interactive \
       --auth-choice ollama \
       --accept-risk
     ```
@@ -56,7 +56,7 @@ Choose your preferred setup method and mode.
     Optionally specify a custom base URL or model:
 
     ```bash
-    openclaw onboard --non-interactive \
+    littlebaby onboard --non-interactive \
       --auth-choice ollama \
       --custom-base-url "http://ollama-host:11434" \
       --custom-model-id "qwen3.5:27b" \
@@ -83,7 +83,7 @@ Choose your preferred setup method and mode.
         ollama pull llama3.3
         ```
       </Step>
-      <Step title="Enable Ollama for OpenClaw">
+      <Step title="Enable Ollama for LittleBaby">
         For `Cloud only`, use your real `OLLAMA_API_KEY`. For host-backed setups, any placeholder value works:
 
         ```bash
@@ -94,13 +94,13 @@ Choose your preferred setup method and mode.
         export OLLAMA_API_KEY="ollama-local"
 
         # Or configure in your config file
-        openclaw config set models.providers.ollama.apiKey "OLLAMA_API_KEY"
+        littlebaby config set models.providers.ollama.apiKey "OLLAMA_API_KEY"
         ```
       </Step>
       <Step title="Inspect and set your model">
         ```bash
-        openclaw models list
-        openclaw models set ollama/gemma4
+        littlebaby models list
+        littlebaby models set ollama/gemma4
         ```
 
         Or set the default in config:
@@ -126,38 +126,38 @@ Choose your preferred setup method and mode.
   <Tab title="Cloud + Local">
     `Cloud + Local` uses a reachable Ollama host as the control point for both local and cloud models. This is Ollama's preferred hybrid flow.
 
-    Use **Cloud + Local** during setup. OpenClaw prompts for the Ollama base URL, discovers local models from that host, and checks whether the host is signed in for cloud access with `ollama signin`. When the host is signed in, OpenClaw also suggests hosted cloud defaults such as `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, and `glm-5.1:cloud`.
+    Use **Cloud + Local** during setup. LittleBaby prompts for the Ollama base URL, discovers local models from that host, and checks whether the host is signed in for cloud access with `ollama signin`. When the host is signed in, LittleBaby also suggests hosted cloud defaults such as `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, and `glm-5.1:cloud`.
 
-    If the host is not signed in yet, OpenClaw keeps the setup local-only until you run `ollama signin`.
+    If the host is not signed in yet, LittleBaby keeps the setup local-only until you run `ollama signin`.
 
   </Tab>
 
   <Tab title="Cloud only">
     `Cloud only` runs against Ollama's hosted API at `https://ollama.com`.
 
-    Use **Cloud only** during setup. OpenClaw prompts for `OLLAMA_API_KEY`, sets `baseUrl: "https://ollama.com"`, and seeds the hosted cloud model list. This path does **not** require a local Ollama server or `ollama signin`.
+    Use **Cloud only** during setup. LittleBaby prompts for `OLLAMA_API_KEY`, sets `baseUrl: "https://ollama.com"`, and seeds the hosted cloud model list. This path does **not** require a local Ollama server or `ollama signin`.
 
   </Tab>
 
   <Tab title="Local only">
-    In local-only mode, OpenClaw discovers models from the configured Ollama instance. This path is for local or self-hosted Ollama servers.
+    In local-only mode, LittleBaby discovers models from the configured Ollama instance. This path is for local or self-hosted Ollama servers.
 
-    OpenClaw currently suggests `gemma4` as the local default.
+    LittleBaby currently suggests `gemma4` as the local default.
 
   </Tab>
 </Tabs>
 
 ## Model discovery (implicit provider)
 
-When you set `OLLAMA_API_KEY` (or an auth profile) and **do not** define `models.providers.ollama`, OpenClaw discovers models from the local Ollama instance at `http://127.0.0.1:11434`.
+When you set `OLLAMA_API_KEY` (or an auth profile) and **do not** define `models.providers.ollama`, LittleBaby discovers models from the local Ollama instance at `http://127.0.0.1:11434`.
 
 | Behavior             | Detail                                                                                                                                                              |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Catalog query        | Queries `/api/tags`                                                                                                                                                 |
 | Capability detection | Uses best-effort `/api/show` lookups to read `contextWindow` and detect capabilities (including vision)                                                             |
-| Vision models        | Models with a `vision` capability reported by `/api/show` are marked as image-capable (`input: ["text", "image"]`), so OpenClaw auto-injects images into the prompt |
+| Vision models        | Models with a `vision` capability reported by `/api/show` are marked as image-capable (`input: ["text", "image"]`), so LittleBaby auto-injects images into the prompt |
 | Reasoning detection  | Marks `reasoning` with a model-name heuristic (`r1`, `reasoning`, `think`)                                                                                          |
-| Token limits         | Sets `maxTokens` to the default Ollama max-token cap used by OpenClaw                                                                                               |
+| Token limits         | Sets `maxTokens` to the default Ollama max-token cap used by LittleBaby                                                                                               |
 | Costs                | Sets all costs to `0`                                                                                                                                               |
 
 This avoids manual model entries while keeping the catalog aligned with the local Ollama instance.
@@ -165,7 +165,7 @@ This avoids manual model entries while keeping the catalog aligned with the loca
 ```bash
 # See what models are available
 ollama list
-openclaw models list
+littlebaby models list
 ```
 
 To add a new model, simply pull it with Ollama:
@@ -191,7 +191,7 @@ If you set `models.providers.ollama` explicitly, auto-discovery is skipped and y
     ```
 
     <Tip>
-    If `OLLAMA_API_KEY` is set, you can omit `apiKey` in the provider entry and OpenClaw will fill it for availability checks.
+    If `OLLAMA_API_KEY` is set, you can omit `apiKey` in the provider entry and LittleBaby will fill it for availability checks.
     </Tip>
 
   </Tab>
@@ -269,7 +269,7 @@ Once configured, all your Ollama models are available:
 
 ## Ollama Web Search
 
-OpenClaw supports **Ollama Web Search** as a bundled `web_search` provider.
+LittleBaby supports **Ollama Web Search** as a bundled `web_search` provider.
 
 | Property    | Detail                                                                                                            |
 | ----------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -277,7 +277,7 @@ OpenClaw supports **Ollama Web Search** as a bundled `web_search` provider.
 | Auth        | Key-free                                                                                                          |
 | Requirement | Ollama must be running and signed in with `ollama signin`                                                         |
 
-Choose **Ollama Web Search** during `openclaw onboard` or `openclaw configure --section web`, or set:
+Choose **Ollama Web Search** during `littlebaby onboard` or `littlebaby configure --section web`, or set:
 
 ```json5
 {
@@ -323,7 +323,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
 
     This mode may not support streaming and tool calling simultaneously. You may need to disable streaming with `params: { streaming: false }` in model config.
 
-    When `api: "openai-completions"` is used with Ollama, OpenClaw injects `options.num_ctx` by default so Ollama does not silently fall back to a 4096 context window. If your proxy/upstream rejects unknown `options` fields, disable this behavior:
+    When `api: "openai-completions"` is used with Ollama, LittleBaby injects `options.num_ctx` by default so Ollama does not silently fall back to a 4096 context window. If your proxy/upstream rejects unknown `options` fields, disable this behavior:
 
     ```json5
     {
@@ -344,7 +344,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Context windows">
-    For auto-discovered models, OpenClaw uses the context window reported by Ollama when available, otherwise it falls back to the default Ollama context window used by OpenClaw.
+    For auto-discovered models, LittleBaby uses the context window reported by Ollama when available, otherwise it falls back to the default Ollama context window used by LittleBaby.
 
     You can override `contextWindow` and `maxTokens` in explicit provider config:
 
@@ -369,13 +369,13 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Reasoning models">
-    OpenClaw treats models with names such as `deepseek-r1`, `reasoning`, or `think` as reasoning-capable by default.
+    LittleBaby treats models with names such as `deepseek-r1`, `reasoning`, or `think` as reasoning-capable by default.
 
     ```bash
     ollama pull deepseek-r1:32b
     ```
 
-    No additional configuration is needed -- OpenClaw marks them automatically.
+    No additional configuration is needed -- LittleBaby marks them automatically.
 
   </Accordion>
 
@@ -408,7 +408,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Streaming configuration">
-    OpenClaw's Ollama integration uses the **native Ollama API** (`/api/chat`) by default, which fully supports streaming and tool calling simultaneously. No special configuration is needed.
+    LittleBaby's Ollama integration uses the **native Ollama API** (`/api/chat`) by default, which fully supports streaming and tool calling simultaneously. No special configuration is needed.
 
     <Tip>
     If you need to use the OpenAI-compatible endpoint, see the "Legacy OpenAI-compatible mode" section above. Streaming and tool calling may not work simultaneously in that mode.

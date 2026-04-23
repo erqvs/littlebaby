@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildBackupArchiveRoot } from "./backup-shared.js";
 import { backupVerifyCommand } from "./backup-verify.js";
 
-const TEST_ARCHIVE_ROOT = "2026-03-09T00-00-00.000Z-openclaw-backup";
+const TEST_ARCHIVE_ROOT = "2026-03-09T00-00-00.000Z-littlebaby-backup";
 
 const createBackupVerifyRuntime = () => ({
   log: vi.fn(),
@@ -98,7 +98,7 @@ describe("backupVerifyCommand", () => {
   });
 
   it("verifies a valid backup archive", async () => {
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-verify-out-"));
+    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-backup-verify-out-"));
     try {
       const runtime = createBackupVerifyRuntime();
       const nowMs = Date.UTC(2026, 2, 9, 0, 0, 0);
@@ -142,7 +142,7 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the archive does not contain a manifest", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-no-manifest-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-backup-no-manifest-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     try {
       const root = path.join(tempDir, "root");
@@ -160,10 +160,10 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the manifest references a missing asset payload", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-missing-asset-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-backup-missing-asset-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     try {
-      const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
+      const rootName = "2026-03-09T00-00-00.000Z-littlebaby-backup";
       const root = path.join(tempDir, rootName);
       await fs.mkdir(root, { recursive: true });
       const manifest = {
@@ -199,12 +199,12 @@ describe("backupVerifyCommand", () => {
   it("rejects unsafe archive paths", async () => {
     for (const { tempPrefix, archivePath, error } of [
       {
-        tempPrefix: "openclaw-backup-traversal-",
+        tempPrefix: "littlebaby-backup-traversal-",
         archivePath: `${TEST_ARCHIVE_ROOT}/payload/../escaped.txt`,
         error: /path traversal segments/i,
       },
       {
-        tempPrefix: "openclaw-backup-backslash-",
+        tempPrefix: "littlebaby-backup-backslash-",
         archivePath: `${TEST_ARCHIVE_ROOT}/payload\\..\\escaped.txt`,
         error: /forward slashes/i,
       },
@@ -226,7 +226,7 @@ describe("backupVerifyCommand", () => {
   });
 
   it("ignores payload manifest.json files when locating the backup manifest", async () => {
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-verify-out-"));
+    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-backup-verify-out-"));
     try {
       const runtime = createBackupVerifyRuntime();
       const nowMs = Date.UTC(2026, 2, 9, 2, 0, 0);
@@ -301,7 +301,7 @@ describe("backupVerifyCommand", () => {
     const payloadArchivePath = `${TEST_ARCHIVE_ROOT}/payload/posix/tmp/.littlebaby/payload.txt`;
     for (const options of [
       {
-        tempPrefix: "openclaw-backup-duplicate-manifest-",
+        tempPrefix: "littlebaby-backup-duplicate-manifest-",
         payloads: [{ fileName: "payload.txt", contents: "payload\n" }],
         buildTarEntries: ({
           manifestPath,
@@ -313,7 +313,7 @@ describe("backupVerifyCommand", () => {
         error: /expected exactly one backup manifest entry, found 2/i,
       },
       {
-        tempPrefix: "openclaw-backup-duplicate-payload-",
+        tempPrefix: "littlebaby-backup-duplicate-payload-",
         payloads: [
           { fileName: "payload-a.txt", contents: "payload-a\n", archivePath: payloadArchivePath },
           { fileName: "payload-b.txt", contents: "payload-b\n", archivePath: payloadArchivePath },

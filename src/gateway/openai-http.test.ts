@@ -72,7 +72,7 @@ async function postChatCompletions(port: number, body: unknown, headers?: Record
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "x-openclaw-scopes": "operator.write",
+      "x-littlebaby-scopes": "operator.write",
       ...headers,
     },
     body: JSON.stringify(body),
@@ -187,7 +187,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
       {
         await expectAgentSessionKeyMatch({
           body: { model: "littlebaby", messages: [{ role: "user", content: "hi" }] },
-          headers: { "x-openclaw-agent-id": "beta" },
+          headers: { "x-littlebaby-agent-id": "beta" },
           matcher: /^agent:beta:/,
         });
       }
@@ -195,7 +195,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
       {
         await expectAgentSessionKeyMatch({
           body: {
-            model: "openclaw/beta",
+            model: "littlebaby/beta",
             messages: [{ role: "user", content: "hi" }],
           },
           matcher: /^agent:beta:/,
@@ -205,7 +205,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
       {
         await expectAgentSessionKeyMatch({
           body: {
-            model: "openclaw/default",
+            model: "littlebaby/default",
             messages: [{ role: "user", content: "hi" }],
           },
           matcher: /^agent:main:/,
@@ -218,8 +218,8 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
           port,
           { model: "littlebaby", messages: [{ role: "user", content: "hi" }] },
           {
-            "x-openclaw-agent-id": "beta",
-            "x-openclaw-session-key": "agent:beta:openai:custom",
+            "x-littlebaby-agent-id": "beta",
+            "x-littlebaby-session-key": "agent:beta:openai:custom",
           },
         );
         expect(res.status).toBe(200);
@@ -255,7 +255,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
             model: "littlebaby",
             messages: [{ role: "user", content: "hi" }],
           },
-          { "x-openclaw-message-channel": "custom-client-channel" },
+          { "x-littlebaby-message-channel": "custom-client-channel" },
         );
         expect(res.status).toBe(200);
         expect(getFirstAgentCall()?.messageChannel).toBe("custom-client-channel");
@@ -271,7 +271,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
             messages: [{ role: "user", content: "hi" }],
           },
           {
-            "x-openclaw-model": "openai/gpt-5.4",
+            "x-littlebaby-model": "openai/gpt-5.4",
           },
         );
         expect(res.status).toBe(200);
@@ -299,7 +299,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
             messages: [{ role: "user", content: "hi" }],
           },
           {
-            "x-openclaw-model": "gpt-5.4",
+            "x-littlebaby-model": "gpt-5.4",
           },
         );
         expect(res.status).toBe(200);
@@ -319,7 +319,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
         const json = (await res.json()) as { error?: { type?: string; message?: string } };
         expect(json.error?.type).toBe("invalid_request_error");
         expect(json.error?.message).toBe(
-          "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+          "Invalid `model`. Use `littlebaby` or `littlebaby/<agentId>`.",
         );
         expect(agentCommand).toHaveBeenCalledTimes(0);
       }
@@ -332,12 +332,12 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
             model: "littlebaby",
             messages: [{ role: "user", content: "hi" }],
           },
-          { "x-openclaw-model": "openai/" },
+          { "x-littlebaby-model": "openai/" },
         );
         expect(res.status).toBe(400);
         const json = (await res.json()) as { error?: { type?: string; message?: string } };
         expect(json.error?.type).toBe("invalid_request_error");
-        expect(json.error?.message).toBe("Invalid `x-openclaw-model`.");
+        expect(json.error?.message).toBe("Invalid `x-littlebaby-model`.");
         expect(agentCommand).toHaveBeenCalledTimes(0);
       }
 
@@ -824,7 +824,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
         const json = await postSyncUserMessage("hi");
         const choice0 = (json.choices as Array<Record<string, unknown>>)[0] ?? {};
         const msg = (choice0.message as Record<string, unknown> | undefined) ?? {};
-        expect(msg.content).toBe("No response from OpenClaw.");
+        expect(msg.content).toBe("No response from LittleBaby.");
       }
 
       {
@@ -1230,7 +1230,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
         headers: {
           authorization: "Bearer secret",
           "content-type": "application/json",
-          "x-openclaw-scopes": "operator.approvals",
+          "x-littlebaby-scopes": "operator.approvals",
         },
         body: JSON.stringify({
           model: "littlebaby",

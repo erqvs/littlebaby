@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { resetLogger, setLoggerOverride } from "../logging/logger.js";
 import { createWarnLogCapture } from "../logging/test-helpers/warn-log-capture.js";
 import { AUTH_STORE_VERSION } from "./auth-profiles/constants.js";
@@ -142,7 +142,7 @@ afterEach(() => {
   authSourceCheckMock.hasAnyAuthProfileStoreSource.mockReset().mockReturnValue(true);
 });
 
-function makeFallbacksOnlyCfg(): OpenClawConfig {
+function makeFallbacksOnlyCfg(): LittleBabyConfig {
   return {
     agents: {
       defaults: {
@@ -151,10 +151,10 @@ function makeFallbacksOnlyCfg(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
-function makeProviderFallbackCfg(provider: string): OpenClawConfig {
+function makeProviderFallbackCfg(provider: string): LittleBabyConfig {
   return makeCfg({
     agents: {
       defaults: {
@@ -177,12 +177,12 @@ async function withTempAuthStore<T>(
 }
 
 async function makeAuthTempDir(): Promise<string> {
-  authTempRoot ||= path.join("/tmp", "openclaw-auth-suite-mock");
+  authTempRoot ||= path.join("/tmp", "littlebaby-auth-suite-mock");
   return path.join(authTempRoot, `case-${++authTempCounter}`);
 }
 
 async function runWithStoredAuth(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   store: AuthProfileStore;
   provider: string;
   run: (provider: string, model: string) => Promise<string>;
@@ -314,7 +314,7 @@ const OPENAI_RATE_LIMIT_MESSAGE =
 const ANTHROPIC_OVERLOADED_PAYLOAD =
   '{"type":"error","error":{"type":"overloaded_error","message":"Overloaded"},"request_id":"req_test"}';
 // Issue-backed Anthropic/OpenAI-compatible insufficient_quota payload under HTTP 400:
-// https://github.com/openclaw/openclaw/issues/23440
+// https://github.com/littlebaby/littlebaby/issues/23440
 const INSUFFICIENT_QUOTA_PAYLOAD =
   '{"type":"error","error":{"type":"insufficient_quota","message":"Your account has insufficient quota balance to run this request."}}';
 
@@ -327,13 +327,13 @@ describe("runWithModelFallback", () => {
       cfg: makeCfg(),
       provider: "openai",
       model: "gpt-4.1-mini",
-      agentDir: "/tmp/openclaw-no-auth-profiles",
+      agentDir: "/tmp/littlebaby-no-auth-profiles",
       run,
     });
 
     expect(result.result).toBe("ok");
     expect(authSourceCheckMock.hasAnyAuthProfileStoreSource).toHaveBeenCalledWith(
-      "/tmp/openclaw-no-auth-profiles",
+      "/tmp/littlebaby-no-auth-profiles",
     );
     expect(authRuntimeMock.runtime.ensureAuthProfileStore).not.toHaveBeenCalled();
     expect(run).toHaveBeenCalledWith("openai", "gpt-4.1-mini");
@@ -769,7 +769,7 @@ describe("runWithModelFallback", () => {
   });
 
   it("sanitizes model identifiers in model_not_found warnings", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-model-fallback-test");
+    const warnLogs = createWarnLogCapture("littlebaby-model-fallback-test");
     try {
       const cfg = makeCfg();
       const run = vi

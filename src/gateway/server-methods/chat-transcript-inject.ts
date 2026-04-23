@@ -90,7 +90,7 @@ export function appendInjectedAssistantMessageToTranscript(params: {
     ...(params.idempotencyKey ? { idempotencyKey: params.idempotencyKey } : {}),
     ...(params.abortMeta
       ? {
-          openclawAbort: {
+          littlebabyAbort: {
             aborted: true,
             origin: params.abortMeta.origin,
             runId: params.abortMeta.runId,

@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { disposeRegisteredAgentHarnesses } from "openclaw/plugin-sdk/agent-harness";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { disposeRegisteredAgentHarnesses } from "littlebaby/plugin-sdk/agent-harness";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
 import { startQaGatewayChild, type QaCliBackendAuthMode } from "./gateway-child.js";
 import type {
   QaLabLatestReport,
@@ -329,7 +329,7 @@ async function writeQaSuiteArtifacts(params: {
   scenarioIds?: readonly string[];
 }) {
   const report = renderQaMarkdownReport({
-    title: "OpenClaw QA Scenario Suite",
+    title: "LittleBaby QA Scenario Suite",
     startedAt: params.startedAt,
     finishedAt: params.finishedAt,
     checks: [],
@@ -604,7 +604,7 @@ export async function runQaSuite(params?: QaSuiteRunParams): Promise<QaSuiteResu
     enabledPluginIds,
     forwardHostHome: gatewayRuntimeOptions?.forwardHostHome,
     mutateConfig: gatewayConfigPatch
-      ? (cfg) => applyQaMergePatch(cfg, gatewayConfigPatch) as OpenClawConfig
+      ? (cfg) => applyQaMergePatch(cfg, gatewayConfigPatch) as LittleBabyConfig
       : undefined,
   });
   lab.setControlUi({

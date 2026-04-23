@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: openclaw
+  name: littlebaby
   labels:
-    app: openclaw
+    app: littlebaby
 spec:
   type: ClusterIP
   selector:
-    app: openclaw
+    app: littlebaby
   ports:
     - name: gateway
       port: 18789

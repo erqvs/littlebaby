@@ -37,7 +37,7 @@ type ExecFileError = Error & {
 };
 
 const TEST_SERVICE_HOME = "/home/test";
-const TEST_MANAGED_HOME = "/tmp/openclaw-test-home";
+const TEST_MANAGED_HOME = "/tmp/littlebaby-test-home";
 const GATEWAY_SERVICE = "littlebaby-gateway.service";
 
 const createExecFileError = (
@@ -107,10 +107,10 @@ function mockReadGatewayServiceFile(
 }
 
 async function expectExecStartWithoutEnvironment(envFileLine: string) {
-  mockReadGatewayServiceFile(["[Service]", "ExecStart=/usr/bin/openclaw gateway run", envFileLine]);
+  mockReadGatewayServiceFile(["[Service]", "ExecStart=/usr/bin/littlebaby gateway run", envFileLine]);
 
   const command = await readSystemdServiceExecStart({ HOME: TEST_SERVICE_HOME });
-  expect(command?.programArguments).toEqual(["/usr/bin/openclaw", "gateway", "run"]);
+  expect(command?.programArguments).toEqual(["/usr/bin/littlebaby", "gateway", "run"]);
   expect(command?.environment).toBeUndefined();
 }
 
@@ -228,7 +228,7 @@ describe("isSystemdServiceEnabled", () => {
     err.code = "ENOENT";
     vi.spyOn(fs, "access").mockRejectedValueOnce(err);
 
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/littlebaby-test-home" } });
 
     expect(result).toBe(false);
     expect(execFileMock).not.toHaveBeenCalled();
@@ -346,7 +346,7 @@ describe("isSystemdServiceEnabled", () => {
         cb(err, "", "permission denied");
       });
     await expect(
-      isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } }),
+      isSystemdServiceEnabled({ env: { HOME: "/tmp/littlebaby-test-home" } }),
     ).rejects.toThrow("systemctl is-enabled unavailable: permission denied");
   });
 
@@ -361,7 +361,7 @@ describe("isSystemdServiceEnabled", () => {
       err.code = 4;
       cb(err, "not-found\n", "");
     });
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/littlebaby-test-home" } });
     expect(result).toBe(false);
   });
 });
@@ -469,8 +469,8 @@ describe("resolveSystemdUserUnitPath", () => {
 
 describe("splitArgsPreservingQuotes", () => {
   it("splits on whitespace outside quotes", () => {
-    expect(splitArgsPreservingQuotes('/usr/bin/openclaw gateway start --name "My Bot"')).toEqual([
-      "/usr/bin/openclaw",
+    expect(splitArgsPreservingQuotes('/usr/bin/littlebaby gateway start --name "My Bot"')).toEqual([
+      "/usr/bin/littlebaby",
       "gateway",
       "start",
       "--name",
@@ -480,7 +480,7 @@ describe("splitArgsPreservingQuotes", () => {
 
   it("supports systemd-style backslash escaping", () => {
     expect(
-      splitArgsPreservingQuotes('openclaw --name "My \\"Bot\\"" --foo bar', {
+      splitArgsPreservingQuotes('littlebaby --name "My \\"Bot\\"" --foo bar', {
         escapeMode: "backslash",
       }),
     ).toEqual(["littlebaby", "--name", 'My "Bot"', "--foo", "bar"]);
@@ -488,13 +488,13 @@ describe("splitArgsPreservingQuotes", () => {
 
   it("supports schtasks-style escaped quotes while preserving other backslashes", () => {
     expect(
-      splitArgsPreservingQuotes('openclaw --path "C:\\\\Program Files\\\\OpenClaw"', {
+      splitArgsPreservingQuotes('littlebaby --path "C:\\\\Program Files\\\\LittleBaby"', {
         escapeMode: "backslash-quote-only",
       }),
-    ).toEqual(["littlebaby", "--path", "C:\\\\Program Files\\\\OpenClaw"]);
+    ).toEqual(["littlebaby", "--path", "C:\\\\Program Files\\\\LittleBaby"]);
 
     expect(
-      splitArgsPreservingQuotes('openclaw --label "My \\"Quoted\\" Name"', {
+      splitArgsPreservingQuotes('littlebaby --label "My \\"Quoted\\" Name"', {
         escapeMode: "backslash-quote-only",
       }),
     ).toEqual(["littlebaby", "--label", 'My "Quoted" Name']);
@@ -503,9 +503,9 @@ describe("splitArgsPreservingQuotes", () => {
 
 describe("parseSystemdExecStart", () => {
   it("preserves quoted arguments", () => {
-    const execStart = '/usr/bin/openclaw gateway start --name "My Bot"';
+    const execStart = '/usr/bin/littlebaby gateway start --name "My Bot"';
     expect(parseSystemdExecStart(execStart)).toEqual([
-      "/usr/bin/openclaw",
+      "/usr/bin/littlebaby",
       "gateway",
       "start",
       "--name",
@@ -521,7 +521,7 @@ describe("readSystemdServiceExecStart", () => {
 
   it("loads LITTLEBABY_GATEWAY_TOKEN from EnvironmentFile", async () => {
     const readFileSpy = mockReadGatewayServiceFile(
-      ["[Service]", "ExecStart=/usr/bin/openclaw gateway run", "EnvironmentFile=%h/.littlebaby/.env"],
+      ["[Service]", "ExecStart=/usr/bin/littlebaby gateway run", "EnvironmentFile=%h/.littlebaby/.env"],
       { [`${TEST_SERVICE_HOME}/.littlebaby/.env`]: "LITTLEBABY_GATEWAY_TOKEN=env-file-token\n" },
     );
 
@@ -534,7 +534,7 @@ describe("readSystemdServiceExecStart", () => {
     mockReadGatewayServiceFile(
       [
         "[Service]",
-        "ExecStart=/usr/bin/openclaw gateway run",
+        "ExecStart=/usr/bin/littlebaby gateway run",
         "EnvironmentFile=%h/.littlebaby/.env",
         'Environment="LITTLEBABY_GATEWAY_TOKEN=inline-token"',
       ],
@@ -560,7 +560,7 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/littlebaby-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
+          "ExecStart=/usr/bin/littlebaby gateway run",
           'EnvironmentFile=%h/.littlebaby/first.env "%h/.littlebaby/second env.env"',
         ].join("\n");
       }
@@ -586,7 +586,7 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/littlebaby-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
+          "ExecStart=/usr/bin/littlebaby gateway run",
           "EnvironmentFile=./gateway.env ./override.env",
         ].join("\n");
       }
@@ -615,7 +615,7 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/littlebaby-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
+          "ExecStart=/usr/bin/littlebaby gateway run",
           "EnvironmentFile=%h/.littlebaby/gateway.env",
         ].join("\n");
       }
@@ -649,9 +649,9 @@ describe("stageSystemdService", () => {
   });
 
   it("writes dotenv-backed values to a separate env file and keeps inline env minimal", async () => {
-    const tempHomeRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-systemd-stage-"));
+    const tempHomeRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-systemd-stage-"));
     const home = path.join(tempHomeRoot, "home");
-    const stateDir = path.join(home, ".openclaw");
+    const stateDir = path.join(home, ".littlebaby");
     const env = {
       HOME: home,
       LITTLEBABY_STATE_DIR: stateDir,
@@ -676,7 +676,7 @@ describe("stageSystemdService", () => {
       await stageSystemdService({
         env,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "gateway", "run"],
+        programArguments: ["/usr/bin/littlebaby", "gateway", "run"],
         workingDirectory: "/tmp",
         environment: {
           LITTLEBABY_GATEWAY_TOKEN: "dotenv-token",
@@ -703,9 +703,9 @@ describe("stageSystemdService", () => {
   });
 
   it("keeps inline overrides out of the generated env file", async () => {
-    const tempHomeRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-systemd-stage-"));
+    const tempHomeRoot = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-systemd-stage-"));
     const home = path.join(tempHomeRoot, "home");
-    const stateDir = path.join(home, ".openclaw");
+    const stateDir = path.join(home, ".littlebaby");
     const env = {
       HOME: home,
       LITTLEBABY_STATE_DIR: stateDir,
@@ -730,7 +730,7 @@ describe("stageSystemdService", () => {
       await stageSystemdService({
         env,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "gateway", "run"],
+        programArguments: ["/usr/bin/littlebaby", "gateway", "run"],
         workingDirectory: "/tmp",
         environment: {
           LITTLEBABY_GATEWAY_TOKEN: "fresh-token",

@@ -1,17 +1,17 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { getSessionBindingService } from "openclaw/plugin-sdk/conversation-runtime";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
+import { getSessionBindingService } from "littlebaby/plugin-sdk/conversation-runtime";
+import { resolveStateDir } from "littlebaby/plugin-sdk/state-paths";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { importFreshModule } from "../../../test/helpers/import-fresh.js";
 
 const writeJsonFileAtomicallyMock = vi.hoisted(() => vi.fn());
 const readAcpSessionEntryMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/acp-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/acp-runtime")>(
-    "openclaw/plugin-sdk/acp-runtime",
+vi.mock("littlebaby/plugin-sdk/acp-runtime", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/acp-runtime")>(
+    "littlebaby/plugin-sdk/acp-runtime",
   );
   readAcpSessionEntryMock.mockImplementation(actual.readAcpSessionEntry);
   return {
@@ -20,9 +20,9 @@ vi.mock("openclaw/plugin-sdk/acp-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/json-store", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/json-store")>(
-    "openclaw/plugin-sdk/json-store",
+vi.mock("littlebaby/plugin-sdk/json-store", async () => {
+  const actual = await vi.importActual<typeof import("littlebaby/plugin-sdk/json-store")>(
+    "littlebaby/plugin-sdk/json-store",
   );
   writeJsonFileAtomicallyMock.mockImplementation(actual.writeJsonFileAtomically);
   return {
@@ -49,8 +49,8 @@ describe("telegram thread bindings", () => {
   beforeEach(async () => {
     writeJsonFileAtomicallyMock.mockClear();
     readAcpSessionEntryMock.mockReset();
-    const acpRuntime = await vi.importActual<typeof import("openclaw/plugin-sdk/acp-runtime")>(
-      "openclaw/plugin-sdk/acp-runtime",
+    const acpRuntime = await vi.importActual<typeof import("littlebaby/plugin-sdk/acp-runtime")>(
+      "littlebaby/plugin-sdk/acp-runtime",
     );
     readAcpSessionEntryMock.mockImplementation(acpRuntime.readAcpSessionEntry);
     await __testing.resetTelegramThreadBindingsForTests();
@@ -234,7 +234,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("does not persist lifecycle updates when manager persistence is disabled", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-03-06T10:00:00.000Z"));
@@ -275,7 +275,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("persists unbinds before restart so removed bindings do not come back", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
 
     createTelegramThreadBindingManager({
@@ -285,7 +285,7 @@ describe("telegram thread bindings", () => {
     });
 
     const bound = await getSessionBindingService().bind({
-      targetSessionKey: "plugin-binding:openclaw-codex-app-server:abc123",
+      targetSessionKey: "plugin-binding:littlebaby-codex-app-server:abc123",
       targetKind: "session",
       conversation: {
         channel: "telegram",
@@ -311,7 +311,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("cleans up stale ACP bindings before restart routing can reuse them", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
 
     createTelegramThreadBindingManager({
@@ -365,7 +365,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("keeps plugin-owned bindings when ACP cleanup runs on startup", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
 
     createTelegramThreadBindingManager({
@@ -375,7 +375,7 @@ describe("telegram thread bindings", () => {
     });
 
     await getSessionBindingService().bind({
-      targetSessionKey: "plugin-binding:openclaw-codex-app-server:still-valid",
+      targetSessionKey: "plugin-binding:littlebaby-codex-app-server:still-valid",
       targetKind: "session",
       conversation: {
         channel: "telegram",
@@ -393,13 +393,13 @@ describe("telegram thread bindings", () => {
     });
 
     expect(reloaded.getByConversationId("plugin-binding-convo")?.targetSessionKey).toBe(
-      "plugin-binding:openclaw-codex-app-server:still-valid",
+      "plugin-binding:littlebaby-codex-app-server:still-valid",
     );
     expect(readAcpSessionEntryMock).not.toHaveBeenCalled();
   });
 
   it("keeps ACP bindings when the session store cannot be read during startup cleanup", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
 
     createTelegramThreadBindingManager({
@@ -441,7 +441,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("flushes pending lifecycle update persists before test reset", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-03-06T10:00:00.000Z"));
@@ -482,7 +482,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("does not leak unhandled rejections when a persist write fails", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-telegram-bindings-"));
     process.env.LITTLEBABY_STATE_DIR = stateDirOverride;
     const unhandled: unknown[] = [];
     const onUnhandledRejection = (reason: unknown) => {

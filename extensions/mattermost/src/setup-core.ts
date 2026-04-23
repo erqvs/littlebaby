@@ -1,12 +1,12 @@
-import type { ChannelSetupAdapter } from "openclaw/plugin-sdk/channel-setup";
-import { createSetupInputPresenceValidator } from "openclaw/plugin-sdk/setup-runtime";
+import type { ChannelSetupAdapter } from "littlebaby/plugin-sdk/channel-setup";
+import { createSetupInputPresenceValidator } from "littlebaby/plugin-sdk/setup-runtime";
 import {
   applyAccountNameToChannelSection,
   applySetupAccountConfigPatch,
   DEFAULT_ACCOUNT_ID,
   migrateBaseNameToDefaultAccount,
   normalizeAccountId,
-  type OpenClawConfig,
+  type LittleBabyConfig,
 } from "./runtime-api.js";
 import {
   resolveMattermostAccount,
@@ -23,7 +23,7 @@ export function isMattermostConfigured(account: ResolvedMattermostAccount): bool
   return tokenConfigured && Boolean(account.baseUrl);
 }
 
-export function resolveMattermostAccountWithSecrets(cfg: OpenClawConfig, accountId: string) {
+export function resolveMattermostAccountWithSecrets(cfg: LittleBabyConfig, accountId: string) {
   return resolveMattermostAccount({
     cfg,
     accountId,

@@ -1,7 +1,7 @@
-import type { OpenClawConfig } from "./types.js";
+import type { LittleBabyConfig } from "./types.js";
 
 export type RuntimeConfigSnapshotRefreshParams = {
-  sourceConfig: OpenClawConfig;
+  sourceConfig: LittleBabyConfig;
 };
 
 export type RuntimeConfigSnapshotRefreshHandler = {
@@ -11,20 +11,20 @@ export type RuntimeConfigSnapshotRefreshHandler = {
 
 export type RuntimeConfigWriteNotification = {
   configPath: string;
-  sourceConfig: OpenClawConfig;
-  runtimeConfig: OpenClawConfig;
+  sourceConfig: LittleBabyConfig;
+  runtimeConfig: LittleBabyConfig;
   persistedHash: string;
   writtenAtMs: number;
 };
 
-let runtimeConfigSnapshot: OpenClawConfig | null = null;
-let runtimeConfigSourceSnapshot: OpenClawConfig | null = null;
+let runtimeConfigSnapshot: LittleBabyConfig | null = null;
+let runtimeConfigSourceSnapshot: LittleBabyConfig | null = null;
 let runtimeConfigSnapshotRefreshHandler: RuntimeConfigSnapshotRefreshHandler | null = null;
 const runtimeConfigWriteListeners = new Set<(event: RuntimeConfigWriteNotification) => void>();
 
 export function setRuntimeConfigSnapshot(
-  config: OpenClawConfig,
-  sourceConfig?: OpenClawConfig,
+  config: LittleBabyConfig,
+  sourceConfig?: LittleBabyConfig,
 ): void {
   runtimeConfigSnapshot = config;
   runtimeConfigSourceSnapshot = sourceConfig ?? null;
@@ -39,11 +39,11 @@ export function clearRuntimeConfigSnapshot(): void {
   resetConfigRuntimeState();
 }
 
-export function getRuntimeConfigSnapshot(): OpenClawConfig | null {
+export function getRuntimeConfigSnapshot(): LittleBabyConfig | null {
   return runtimeConfigSnapshot;
 }
 
-export function getRuntimeConfigSourceSnapshot(): OpenClawConfig | null {
+export function getRuntimeConfigSourceSnapshot(): LittleBabyConfig | null {
   return runtimeConfigSourceSnapshot;
 }
 
@@ -76,7 +76,7 @@ export function notifyRuntimeConfigWriteListeners(event: RuntimeConfigWriteNotif
   }
 }
 
-export function loadPinnedRuntimeConfig(loadFresh: () => OpenClawConfig): OpenClawConfig {
+export function loadPinnedRuntimeConfig(loadFresh: () => LittleBabyConfig): LittleBabyConfig {
   if (runtimeConfigSnapshot) {
     return runtimeConfigSnapshot;
   }
@@ -86,10 +86,10 @@ export function loadPinnedRuntimeConfig(loadFresh: () => OpenClawConfig): OpenCl
 }
 
 export async function finalizeRuntimeSnapshotWrite(params: {
-  nextSourceConfig: OpenClawConfig;
+  nextSourceConfig: LittleBabyConfig;
   hadRuntimeSnapshot: boolean;
   hadBothSnapshots: boolean;
-  loadFreshConfig: () => OpenClawConfig;
+  loadFreshConfig: () => LittleBabyConfig;
   notifyCommittedWrite: () => void;
   createRefreshError: (detail: string, cause: unknown) => Error;
   formatRefreshError: (error: unknown) => string;

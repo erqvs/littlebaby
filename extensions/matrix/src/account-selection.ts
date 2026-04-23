@@ -3,15 +3,15 @@ import {
   listConfiguredAccountIds,
   resolveListedDefaultAccountId,
   resolveNormalizedAccountEntry,
-} from "openclaw/plugin-sdk/account-core";
+} from "littlebaby/plugin-sdk/account-core";
 import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   normalizeOptionalAccountId,
-} from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { hasConfiguredSecretInput } from "openclaw/plugin-sdk/secret-input-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "littlebaby/plugin-sdk/account-id";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { hasConfiguredSecretInput } from "littlebaby/plugin-sdk/secret-input-runtime";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/string-coerce-runtime";
 import {
   resolveMatrixAccountStringValues,
   type MatrixResolvedStringField,
@@ -136,12 +136,12 @@ function hasConfiguredDefaultMatrixAccountSource(params: {
   });
 }
 
-export function resolveMatrixChannelConfig(cfg: OpenClawConfig): Record<string, unknown> | null {
+export function resolveMatrixChannelConfig(cfg: LittleBabyConfig): Record<string, unknown> | null {
   return isRecord(cfg.channels?.matrix) ? cfg.channels.matrix : null;
 }
 
 export function findMatrixAccountEntry(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   accountId: string,
 ): Record<string, unknown> | null {
   const channel = resolveMatrixChannelConfig(cfg);
@@ -158,7 +158,7 @@ export function findMatrixAccountEntry(
 }
 
 export function resolveConfiguredMatrixAccountIds(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): string[] {
   const channel = resolveMatrixChannelConfig(cfg);
@@ -182,7 +182,7 @@ export function resolveConfiguredMatrixAccountIds(
 }
 
 export function resolveMatrixDefaultOrOnlyAccountId(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): string {
   const channel = resolveMatrixChannelConfig(cfg);
@@ -202,7 +202,7 @@ export function resolveMatrixDefaultOrOnlyAccountId(
 }
 
 export function requiresExplicitMatrixDefaultAccount(
-  cfg: OpenClawConfig,
+  cfg: LittleBabyConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
   const channel = resolveMatrixChannelConfig(cfg);

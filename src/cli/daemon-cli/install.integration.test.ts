@@ -49,8 +49,8 @@ describe("runDaemonInstall integration", () => {
       "LITTLEBABY_GATEWAY_TOKEN",
       "LITTLEBABY_GATEWAY_PASSWORD",
     ]);
-    tempHome = await makeTempWorkspace("openclaw-daemon-install-int-");
-    configPath = path.join(tempHome, "openclaw.json");
+    tempHome = await makeTempWorkspace("littlebaby-daemon-install-int-");
+    configPath = path.join(tempHome, "littlebaby.json");
     process.env.HOME = tempHome;
     process.env.LITTLEBABY_STATE_DIR = tempHome;
     process.env.LITTLEBABY_CONFIG_PATH = configPath;

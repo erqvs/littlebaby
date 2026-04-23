@@ -3,20 +3,20 @@ import {
   logAckFailure,
   logTypingFailure,
   removeAckReactionAfterReply,
-} from "openclaw/plugin-sdk/channel-feedback";
-import { createChannelReplyPipeline } from "openclaw/plugin-sdk/channel-reply-pipeline";
-import { resolveChannelStreamingBlockEnabled } from "openclaw/plugin-sdk/channel-streaming";
+} from "littlebaby/plugin-sdk/channel-feedback";
+import { createChannelReplyPipeline } from "littlebaby/plugin-sdk/channel-reply-pipeline";
+import { resolveChannelStreamingBlockEnabled } from "littlebaby/plugin-sdk/channel-streaming";
 import type {
-  OpenClawConfig,
+  LittleBabyConfig,
   ReplyToMode,
   TelegramAccountConfig,
-} from "openclaw/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { clearHistoryEntriesIfEnabled } from "openclaw/plugin-sdk/reply-history";
-import { resolveSendableOutboundReplyParts } from "openclaw/plugin-sdk/reply-payload";
-import { isAbortRequestText, type ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { danger, logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
+import { clearHistoryEntriesIfEnabled } from "littlebaby/plugin-sdk/reply-history";
+import { resolveSendableOutboundReplyParts } from "littlebaby/plugin-sdk/reply-payload";
+import { isAbortRequestText, type ReplyPayload } from "littlebaby/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "littlebaby/plugin-sdk/runtime-env";
+import { danger, logVerbose } from "littlebaby/plugin-sdk/runtime-env";
 import { defaultTelegramBotDeps, type TelegramBotDeps } from "./bot-deps.js";
 import type { TelegramMessageContext } from "./bot-message-context.js";
 import {
@@ -69,7 +69,7 @@ const EMPTY_RESPONSE_FALLBACK = "No response generated. Please try again.";
 /** Minimum chars before sending first streaming message (improves push notification UX) */
 const DRAFT_MIN_INITIAL_CHARS = 30;
 
-async function resolveStickerVisionSupport(cfg: OpenClawConfig, agentId: string) {
+async function resolveStickerVisionSupport(cfg: LittleBabyConfig, agentId: string) {
   try {
     const catalog = await loadModelCatalog({ config: cfg });
     const defaultModel = resolveDefaultModelForAgent({ cfg, agentId });
@@ -117,7 +117,7 @@ export function pruneStickerMediaFromContext(
 type DispatchTelegramMessageParams = {
   context: TelegramMessageContext;
   bot: Bot;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   runtime: RuntimeEnv;
   replyToMode: ReplyToMode;
   streamMode: TelegramStreamMode;
@@ -195,7 +195,7 @@ export function resetTelegramAbortFenceForTests(): void {
 }
 
 function resolveTelegramReasoningLevel(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   sessionKey?: string;
   agentId: string;
   telegramDeps: TelegramBotDeps;

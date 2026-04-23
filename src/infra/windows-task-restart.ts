@@ -8,7 +8,7 @@ import { renderCmdRestartLogSetup } from "../daemon/restart-logs.js";
 import { resolveTaskScriptPath } from "../daemon/schtasks.js";
 import { formatErrorMessage } from "./errors.js";
 import type { RestartAttempt } from "./restart.types.js";
-import { resolvePreferredOpenClawTmpDir } from "./tmp-openclaw-dir.js";
+import { resolvePreferredLittleBabyTmpDir } from "./tmp-littlebaby-dir.js";
 
 const TASK_RESTART_RETRY_LIMIT = 12;
 const TASK_RESTART_RETRY_DELAY_SEC = 1;
@@ -33,7 +33,7 @@ function buildScheduledTaskRestartScript(params: {
     "@echo off",
     "setlocal",
     ...setupLines,
-    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart attempt source=windows-task-handoff target=${quotedTaskName}`,
+    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] littlebaby restart attempt source=windows-task-handoff target=${quotedTaskName}`,
     `schtasks /Query /TN ${quotedTaskName} >> ${quotedLogPath} 2>&1`,
     "if errorlevel 1 goto fallback",
     "set /a attempts=0",
@@ -45,7 +45,7 @@ function buildScheduledTaskRestartScript(params: {
     `if %attempts% GEQ ${TASK_RESTART_RETRY_LIMIT} goto fallback`,
     "goto retry",
     ":fallback",
-    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart fallback source=windows-task-handoff`,
+    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] littlebaby restart fallback source=windows-task-handoff`,
   ];
   if (taskScriptPath) {
     const quotedScript = quoteCmdScriptArg(taskScriptPath);
@@ -53,7 +53,7 @@ function buildScheduledTaskRestartScript(params: {
   }
   lines.push(
     ":cleanup",
-    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart finished source=windows-task-handoff`,
+    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] littlebaby restart finished source=windows-task-handoff`,
     'del "%~f0" >nul 2>&1',
   );
   return lines.join("\r\n");
@@ -63,8 +63,8 @@ export function relaunchGatewayScheduledTask(env: NodeJS.ProcessEnv = process.en
   const taskName = resolveWindowsTaskName(env);
   const taskScriptPath = resolveTaskScriptPath(env);
   const scriptPath = path.join(
-    resolvePreferredOpenClawTmpDir(),
-    `openclaw-schtasks-restart-${randomUUID()}.cmd`,
+    resolvePreferredLittleBabyTmpDir(),
+    `littlebaby-schtasks-restart-${randomUUID()}.cmd`,
   );
   const quotedScriptPath = quoteCmdScriptArg(scriptPath);
   const restartLog = renderCmdRestartLogSetup({ ...process.env, ...env });

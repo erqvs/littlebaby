@@ -3,7 +3,7 @@ import { captureFullEnv } from "../test-utils/env.js";
 import { SUPERVISOR_HINT_ENV_VARS } from "./supervisor-markers.js";
 
 const spawnMock = vi.hoisted(() => vi.fn());
-const triggerOpenClawRestartMock = vi.hoisted(() => vi.fn());
+const triggerLittleBabyRestartMock = vi.hoisted(() => vi.fn());
 
 vi.mock("node:child_process", async () => {
   const { mockNodeBuiltinModule } = await import("../../test/helpers/node-builtin-mocks.js");
@@ -15,7 +15,7 @@ vi.mock("node:child_process", async () => {
   );
 });
 vi.mock("./restart.js", () => ({
-  triggerOpenClawRestart: (...args: unknown[]) => triggerOpenClawRestartMock(...args),
+  triggerLittleBabyRestart: (...args: unknown[]) => triggerLittleBabyRestartMock(...args),
 }));
 
 import { restartGatewayProcessWithFreshPid } from "./process-respawn.js";
@@ -40,7 +40,7 @@ afterEach(() => {
   process.argv = [...originalArgv];
   process.execArgv = [...originalExecArgv];
   spawnMock.mockClear();
-  triggerOpenClawRestartMock.mockClear();
+  triggerLittleBabyRestartMock.mockClear();
   if (originalPlatformDescriptor) {
     Object.defineProperty(process, "platform", originalPlatformDescriptor);
   }
@@ -57,10 +57,10 @@ function expectLaunchdSupervisedWithoutKickstart(params?: { launchJobLabel?: str
   if (params?.launchJobLabel) {
     process.env.LAUNCH_JOB_LABEL = params.launchJobLabel;
   }
-  process.env.LITTLEBABY_LAUNCHD_LABEL = "ai.openclaw.gateway";
+  process.env.LITTLEBABY_LAUNCHD_LABEL = "ai.littlebaby.gateway";
   const result = restartGatewayProcessWithFreshPid();
   expect(result).toEqual({ mode: "supervised" });
-  expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+  expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
   expect(spawnMock).not.toHaveBeenCalled();
 }
 
@@ -76,30 +76,30 @@ describe("restartGatewayProcessWithFreshPid", () => {
     clearSupervisorHints();
     setPlatform("darwin");
     process.env.LITTLEBABY_NO_RESPAWN = "1";
-    process.env.LAUNCH_JOB_LABEL = "ai.openclaw.gateway";
+    process.env.LAUNCH_JOB_LABEL = "ai.littlebaby.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
     expect(result).toEqual({ mode: "disabled" });
-    expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+    expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
   it("returns supervised when launchd hints are present on macOS (no kickstart)", () => {
     clearSupervisorHints();
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.littlebaby.gateway" });
   });
 
   it("returns supervised on macOS when launchd label is set (no kickstart)", () => {
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.littlebaby.gateway" });
   });
 
-  it("launchd supervisor never returns failed regardless of triggerOpenClawRestart outcome", () => {
+  it("launchd supervisor never returns failed regardless of triggerLittleBabyRestart outcome", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.LITTLEBABY_LAUNCHD_LABEL = "ai.openclaw.gateway";
-    // Even if triggerOpenClawRestart *would* fail, launchd path must not call it.
-    triggerOpenClawRestartMock.mockReturnValue({
+    process.env.LITTLEBABY_LAUNCHD_LABEL = "ai.littlebaby.gateway";
+    // Even if triggerLittleBabyRestart *would* fail, launchd path must not call it.
+    triggerLittleBabyRestartMock.mockReturnValue({
       ok: false,
       method: "launchctl",
       detail: "Bootstrap failed: 5: Input/output error",
@@ -107,28 +107,28 @@ describe("restartGatewayProcessWithFreshPid", () => {
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
     expect(result.mode).not.toBe("failed");
-    expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+    expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
   });
 
   it("does not schedule kickstart on non-darwin platforms", () => {
     setPlatform("linux");
     process.env.INVOCATION_ID = "abc123";
-    process.env.LITTLEBABY_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.LITTLEBABY_LAUNCHD_LABEL = "ai.littlebaby.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
     expect(result.mode).toBe("supervised");
-    expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+    expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
   it("returns supervised when XPC_SERVICE_NAME is set by launchd", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.gateway";
+    process.env.XPC_SERVICE_NAME = "ai.littlebaby.gateway";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
-    expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+    expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
@@ -167,15 +167,15 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("returns supervised when OpenClaw gateway task markers are set on Windows", () => {
+  it("returns supervised when LittleBaby gateway task markers are set on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
     process.env.LITTLEBABY_SERVICE_MARKER = "littlebaby";
     process.env.LITTLEBABY_SERVICE_KIND = "gateway";
-    triggerOpenClawRestartMock.mockReturnValue({ ok: true, method: "schtasks" });
+    triggerLittleBabyRestartMock.mockReturnValue({ ok: true, method: "schtasks" });
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
-    expect(triggerOpenClawRestartMock).toHaveBeenCalledOnce();
+    expect(triggerLittleBabyRestartMock).toHaveBeenCalledOnce();
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
@@ -189,7 +189,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
     const result = restartGatewayProcessWithFreshPid();
 
     expect(result).toEqual({ mode: "spawned", pid: 4242 });
-    expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+    expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
   });
 
   it("returns disabled on Windows without Scheduled Task markers", () => {
@@ -206,7 +206,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("ignores node task script hints for gateway restart detection on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
-    process.env.LITTLEBABY_TASK_SCRIPT = "C:\\openclaw\\node.cmd";
+    process.env.LITTLEBABY_TASK_SCRIPT = "C:\\littlebaby\\node.cmd";
     process.env.LITTLEBABY_TASK_SCRIPT_NAME = "node.cmd";
     process.env.LITTLEBABY_SERVICE_MARKER = "littlebaby";
     process.env.LITTLEBABY_SERVICE_KIND = "node";
@@ -214,7 +214,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
     const result = restartGatewayProcessWithFreshPid();
 
     expect(result.mode).toBe("disabled");
-    expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
+    expect(triggerLittleBabyRestartMock).not.toHaveBeenCalled();
     expect(spawnMock).not.toHaveBeenCalled();
   });
 

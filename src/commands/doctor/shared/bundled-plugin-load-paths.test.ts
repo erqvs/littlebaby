@@ -16,7 +16,7 @@ function bundled(pluginId: string, localPath: string): BundledPluginSource {
   return {
     pluginId,
     localPath,
-    npmSpec: `@openclaw/${pluginId}`,
+    npmSpec: `@littlebaby/${pluginId}`,
   };
 }
 
@@ -40,7 +40,7 @@ function createPluginLoadPathConfig(
 
 describe("bundled plugin load path repair", () => {
   beforeEach(() => {
-    const packageRoot = "/app/node_modules/openclaw";
+    const packageRoot = "/app/node_modules/littlebaby";
     mockBundledSource("feishu", bundledDistPluginRootAt(packageRoot, "feishu"));
   });
 
@@ -171,12 +171,12 @@ describe("bundled plugin load path repair", () => {
           pathLabel: "plugins.load.paths",
         },
       ],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "littlebaby doctor --fix",
     });
 
     expect(warnings).toEqual([
       expect.stringContaining(`plugins.load.paths: legacy bundled plugin path "${legacyPath}"`),
-      expect.stringContaining('Run "openclaw doctor --fix"'),
+      expect.stringContaining('Run "littlebaby doctor --fix"'),
     ]);
   });
 

@@ -4,17 +4,17 @@
 
 #include "Config/Version.xcconfig"
 
-OPENCLAW_CODE_SIGN_STYLE = Manual
-OPENCLAW_DEVELOPMENT_TEAM = Y5PE65HELJ
+LITTLEBABY_CODE_SIGN_STYLE = Manual
+LITTLEBABY_DEVELOPMENT_TEAM = Y5PE65HELJ
 
-OPENCLAW_APP_BUNDLE_ID = ai.openclaw.client
-OPENCLAW_SHARE_BUNDLE_ID = ai.openclaw.client.share
-OPENCLAW_WATCH_APP_BUNDLE_ID = ai.openclaw.client.watchkitapp
-OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = ai.openclaw.client.watchkitapp.extension
-OPENCLAW_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclaw.client.activitywidget
+LITTLEBABY_APP_BUNDLE_ID = ai.littlebaby.client
+LITTLEBABY_SHARE_BUNDLE_ID = ai.littlebaby.client.share
+LITTLEBABY_WATCH_APP_BUNDLE_ID = ai.littlebaby.client.watchkitapp
+LITTLEBABY_WATCH_EXTENSION_BUNDLE_ID = ai.littlebaby.client.watchkitapp.extension
+LITTLEBABY_ACTIVITY_WIDGET_BUNDLE_ID = ai.littlebaby.client.activitywidget
 
-OPENCLAW_APP_PROFILE = ai.openclaw.client Development
-OPENCLAW_SHARE_PROFILE = ai.openclaw.client.share Development
+LITTLEBABY_APP_PROFILE = ai.littlebaby.client Development
+LITTLEBABY_SHARE_PROFILE = ai.littlebaby.client.share Development
 
 // Keep local includes after defaults: xcconfig is evaluated top-to-bottom,
 // so later assignments in local files override the defaults above.

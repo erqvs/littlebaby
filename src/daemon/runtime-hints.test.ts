@@ -7,16 +7,16 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "darwin",
         env: {
-          LITTLEBABY_STATE_DIR: "/tmp/openclaw-state",
+          LITTLEBABY_STATE_DIR: "/tmp/littlebaby-state",
           LITTLEBABY_LOG_PREFIX: "gateway",
         },
         systemdServiceName: "littlebaby-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "LittleBaby Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /tmp/openclaw-state/logs/gateway.log",
-      "Launchd stderr (if installed): /tmp/openclaw-state/logs/gateway.err.log",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Launchd stdout (if installed): /tmp/littlebaby-state/logs/gateway.log",
+      "Launchd stderr (if installed): /tmp/littlebaby-state/logs/gateway.err.log",
+      "Restart attempts: /tmp/littlebaby-state/logs/gateway-restart.log",
     ]);
   });
 
@@ -25,27 +25,27 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "linux",
         env: {
-          LITTLEBABY_STATE_DIR: "/tmp/openclaw-state",
+          LITTLEBABY_STATE_DIR: "/tmp/littlebaby-state",
         },
         systemdServiceName: "littlebaby-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "LittleBaby Gateway",
       }),
     ).toEqual([
       "Logs: journalctl --user -u littlebaby-gateway.service -n 200 --no-pager",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Restart attempts: /tmp/littlebaby-state/logs/gateway-restart.log",
     ]);
     expect(
       buildPlatformRuntimeLogHints({
         platform: "win32",
         env: {
-          LITTLEBABY_STATE_DIR: "/tmp/openclaw-state",
+          LITTLEBABY_STATE_DIR: "/tmp/littlebaby-state",
         },
         systemdServiceName: "littlebaby-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "LittleBaby Gateway",
       }),
     ).toEqual([
-      'Logs: schtasks /Query /TN "OpenClaw Gateway" /V /FO LIST',
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      'Logs: schtasks /Query /TN "LittleBaby Gateway" /V /FO LIST',
+      "Restart attempts: /tmp/littlebaby-state/logs/gateway-restart.log",
     ]);
   });
 });
@@ -55,29 +55,29 @@ describe("buildPlatformServiceStartHints", () => {
     expect(
       buildPlatformServiceStartHints({
         platform: "darwin",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
+        installCommand: "littlebaby gateway install",
+        startCommand: "littlebaby gateway",
+        launchAgentPlistPath: "~/Library/LaunchAgents/com.littlebaby.gateway.plist",
         systemdServiceName: "littlebaby-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "LittleBaby Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
-      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.openclaw.gateway.plist",
+      "littlebaby gateway install",
+      "littlebaby gateway",
+      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.littlebaby.gateway.plist",
     ]);
     expect(
       buildPlatformServiceStartHints({
         platform: "linux",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
+        installCommand: "littlebaby gateway install",
+        startCommand: "littlebaby gateway",
+        launchAgentPlistPath: "~/Library/LaunchAgents/com.littlebaby.gateway.plist",
         systemdServiceName: "littlebaby-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "LittleBaby Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
+      "littlebaby gateway install",
+      "littlebaby gateway",
       "systemctl --user start littlebaby-gateway.service",
     ]);
   });

@@ -4,8 +4,8 @@ import { formatBackupCreateSummary, type BackupCreateResult } from "./backup-cre
 function makeResult(overrides: Partial<BackupCreateResult> = {}): BackupCreateResult {
   return {
     createdAt: "2026-01-01T00:00:00.000Z",
-    archiveRoot: "openclaw-backup-2026-01-01",
-    archivePath: "/tmp/openclaw-backup.tar.gz",
+    archiveRoot: "littlebaby-backup-2026-01-01",
+    archivePath: "/tmp/littlebaby-backup.tar.gz",
     dryRun: false,
     includeWorkspace: true,
     onlyConfig: false,
@@ -17,7 +17,7 @@ function makeResult(overrides: Partial<BackupCreateResult> = {}): BackupCreateRe
 }
 
 describe("formatBackupCreateSummary", () => {
-  const backupArchiveLine = "Backup archive: /tmp/openclaw-backup.tar.gz";
+  const backupArchiveLine = "Backup archive: /tmp/littlebaby-backup.tar.gz";
 
   it.each([
     {
@@ -36,7 +36,7 @@ describe("formatBackupCreateSummary", () => {
           {
             kind: "workspace",
             sourcePath: "/workspace",
-            displayPath: "~/Projects/openclaw",
+            displayPath: "~/Projects/littlebaby",
             reason: "covered",
             coveredBy: "~/.littlebaby",
           },
@@ -47,8 +47,8 @@ describe("formatBackupCreateSummary", () => {
         "Included 1 path:",
         "- state: ~/.littlebaby",
         "Skipped 1 path:",
-        "- workspace: ~/Projects/openclaw (covered by ~/.littlebaby)",
-        "Created /tmp/openclaw-backup.tar.gz",
+        "- workspace: ~/Projects/littlebaby (covered by ~/.littlebaby)",
+        "Created /tmp/littlebaby-backup.tar.gz",
         "Archive verification: passed",
       ],
     },

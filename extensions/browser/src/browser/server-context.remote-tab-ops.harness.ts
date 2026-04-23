@@ -35,7 +35,7 @@ export function makeState(
           cdpPort: 9222,
           color: "#00AA00",
         },
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        littlebaby: { cdpPort: 18800, color: "#FF4500" },
       },
     },
     profiles: new Map(),

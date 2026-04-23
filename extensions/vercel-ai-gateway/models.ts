@@ -1,5 +1,5 @@
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
+import type { ModelDefinitionConfig } from "littlebaby/plugin-sdk/provider-model-shared";
+import { createSubsystemLogger } from "littlebaby/plugin-sdk/runtime-env";
 
 export const VERCEL_AI_GATEWAY_PROVIDER_ID = "vercel-ai-gateway";
 export const VERCEL_AI_GATEWAY_BASE_URL = "https://ai-gateway.vercel.sh";

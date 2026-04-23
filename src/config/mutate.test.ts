@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ConfigMutationConflictError, mutateConfigFile, replaceConfigFile } from "./mutate.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "./types.js";
+import type { ConfigFileSnapshot, LittleBabyConfig } from "./types.js";
 
 const ioMocks = vi.hoisted(() => ({
   readConfigFileSnapshotForWrite: vi.fn(),
@@ -13,14 +13,14 @@ vi.mock("./io.js", () => ioMocks);
 function createSnapshot(params: {
   hash: string;
   path?: string;
-  sourceConfig: OpenClawConfig;
-  runtimeConfig?: OpenClawConfig;
+  sourceConfig: LittleBabyConfig;
+  runtimeConfig?: LittleBabyConfig;
 }): ConfigFileSnapshot {
   const runtimeConfig = (params.runtimeConfig ??
     params.sourceConfig) as ConfigFileSnapshot["config"];
   const sourceConfig = params.sourceConfig as ConfigFileSnapshot["sourceConfig"];
   return {
-    path: params.path ?? "/tmp/openclaw.json",
+    path: params.path ?? "/tmp/littlebaby.json",
     exists: true,
     raw: "{}",
     parsed: params.sourceConfig,

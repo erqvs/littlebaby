@@ -21,7 +21,7 @@ describe("private-qa-cli", () => {
 
   it("loads the private QA CLI from a source checkout path", async () => {
     process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI = "1";
-    const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-private-qa-source-"));
+    const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-private-qa-source-"));
     tempDirs.push(repoRoot);
     const expectedPaths = new Set([
       path.join(repoRoot, ".git"),
@@ -53,7 +53,7 @@ describe("private-qa-cli", () => {
 
   it("rejects non-source package roots even when private QA is enabled", async () => {
     process.env.LITTLEBABY_ENABLE_PRIVATE_QA_CLI = "1";
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-private-qa-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-private-qa-"));
     tempDirs.push(root);
     fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "littlebaby" }), "utf8");
     const importModule = vi.fn(async () => ({}));
@@ -63,7 +63,7 @@ describe("private-qa-cli", () => {
         resolvePackageRootSync: () => root,
         importModule,
       }),
-    ).toThrow("Private QA CLI is only available from an OpenClaw source checkout.");
+    ).toThrow("Private QA CLI is only available from an LittleBaby source checkout.");
     expect(importModule).not.toHaveBeenCalled();
   });
 
@@ -72,7 +72,7 @@ describe("private-qa-cli", () => {
     const importModule = vi.fn(async () => ({}));
 
     expect(() => loadPrivateQaCliModule({ importModule })).toThrow(
-      "Private QA CLI is only available from an OpenClaw source checkout.",
+      "Private QA CLI is only available from an LittleBaby source checkout.",
     );
     expect(importModule).not.toHaveBeenCalled();
   });

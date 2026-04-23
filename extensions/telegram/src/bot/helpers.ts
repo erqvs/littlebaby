@@ -1,13 +1,13 @@
 import type { Chat, Message } from "@grammyjs/types";
-import { formatLocationText } from "openclaw/plugin-sdk/channel-inbound";
+import { formatLocationText } from "littlebaby/plugin-sdk/channel-inbound";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "openclaw/plugin-sdk/config-runtime";
-import { readChannelAllowFromStore } from "openclaw/plugin-sdk/conversation-runtime";
-import { normalizeAccountId } from "openclaw/plugin-sdk/routing";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/config-runtime";
+import { readChannelAllowFromStore } from "littlebaby/plugin-sdk/conversation-runtime";
+import { normalizeAccountId } from "littlebaby/plugin-sdk/routing";
+import { normalizeOptionalString } from "littlebaby/plugin-sdk/text-runtime";
 import { firstDefined, normalizeAllowFrom, type NormalizedAllowFrom } from "../bot-access.js";
 import { normalizeTelegramReplyToMessageId } from "../outbound-params.js";
 import { resolveTelegramPreviewStreamMode } from "../preview-streaming.js";

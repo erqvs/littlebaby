@@ -210,7 +210,7 @@ let sessionStoreCaseSeq = 0;
 
 beforeAll(async () => {
   harness = await startGatewayServerHarness();
-  sharedSessionStoreDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-"));
+  sharedSessionStoreDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sessions-"));
 });
 
 afterAll(async () => {
@@ -1516,7 +1516,7 @@ describe("gateway server sessions", () => {
   });
 
   test("sessions.patch preserves nested model ids under provider overrides", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gw-sessions-nested-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-gw-sessions-nested-"));
     const storePath = path.join(dir, "sessions.json");
     await fs.writeFile(
       storePath,
@@ -1542,7 +1542,7 @@ describe("gateway server sessions", () => {
           list: [{ id: "main", default: true, workspace: dir }],
         },
       };
-      const configPath = path.join(dir, "openclaw.json");
+      const configPath = path.join(dir, "littlebaby.json");
       await fs.writeFile(configPath, JSON.stringify(cfg, null, 2), "utf-8");
 
       await withEnvAsync({ LITTLEBABY_CONFIG_PATH: configPath }, async () => {
@@ -3321,7 +3321,7 @@ describe("gateway server sessions", () => {
   });
 
   test("session:patch hook fires with correct context", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-patch-hook-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sessions-patch-hook-"));
     const storePath = path.join(dir, "sessions.json");
     testState.sessionStorePath = storePath;
 
@@ -3367,7 +3367,7 @@ describe("gateway server sessions", () => {
   });
 
   test("session:patch hook does not fire for webchat clients", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-webchat-hook-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sessions-webchat-hook-"));
     const storePath = path.join(dir, "sessions.json");
     testState.sessionStorePath = storePath;
 
@@ -3409,7 +3409,7 @@ describe("gateway server sessions", () => {
   });
 
   test("session:patch hook only fires after successful patch", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-success-hook-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sessions-success-hook-"));
     const storePath = path.join(dir, "sessions.json");
     testState.sessionStorePath = storePath;
 
@@ -3521,7 +3521,7 @@ describe("gateway server sessions", () => {
   });
 
   test("control-ui client can delete sessions even in webchat mode", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-control-ui-delete-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-sessions-control-ui-delete-"));
     const storePath = path.join(dir, "sessions.json");
     testState.sessionStorePath = storePath;
 

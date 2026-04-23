@@ -1,8 +1,8 @@
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../../config/types.littlebaby.js";
 import { normalizeBaseCompatibilityConfigValues } from "./legacy-config-compatibility-base.js";
 
-export function normalizeRuntimeCompatibilityConfigValues(cfg: OpenClawConfig): {
-  config: OpenClawConfig;
+export function normalizeRuntimeCompatibilityConfigValues(cfg: LittleBabyConfig): {
+  config: LittleBabyConfig;
   changes: string[];
 } {
   const changes: string[] = [];

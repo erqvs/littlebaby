@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/video-generation-core",
+  "name": "@littlebaby/video-generation-core",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw video generation runtime package",
+  "description": "LittleBaby video generation runtime package",
   "type": "module"
 }

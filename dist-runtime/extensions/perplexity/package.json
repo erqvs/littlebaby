@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/perplexity-plugin",
+  "name": "@littlebaby/perplexity-plugin",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw Perplexity plugin",
+  "description": "LittleBaby Perplexity plugin",
   "type": "module",
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

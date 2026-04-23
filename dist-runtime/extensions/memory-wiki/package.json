@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/memory-wiki",
+  "name": "@littlebaby/memory-wiki",
   "version": "2026.4.20",
   "private": true,
-  "description": "OpenClaw persistent wiki plugin",
+  "description": "LittleBaby persistent wiki plugin",
   "type": "module",
   "dependencies": {
     "yaml": "^2.8.3"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ]

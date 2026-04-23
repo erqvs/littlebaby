@@ -1,9 +1,9 @@
-import { createClaimableDedupe, type ClaimableDedupe } from "openclaw/plugin-sdk/persistent-dedupe";
-import { isPrivateNetworkOptInEnabled } from "openclaw/plugin-sdk/ssrf-runtime";
+import { createClaimableDedupe, type ClaimableDedupe } from "littlebaby/plugin-sdk/persistent-dedupe";
+import { isPrivateNetworkOptInEnabled } from "littlebaby/plugin-sdk/ssrf-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import { getMattermostRuntime } from "../runtime.js";
 import { resolveMattermostAccount, resolveMattermostReplyToMode } from "./accounts.js";
 import {
@@ -58,7 +58,7 @@ import { deliverMattermostReplyPayload } from "./reply-delivery.js";
 import type {
   ChannelAccountSnapshot,
   ChatType,
-  OpenClawConfig,
+  LittleBabyConfig,
   ReplyPayload,
   RuntimeEnv,
 } from "./runtime-api.js";
@@ -102,7 +102,7 @@ export type MonitorMattermostOpts = {
   botToken?: string;
   baseUrl?: string;
   accountId?: string;
-  config?: OpenClawConfig;
+  config?: LittleBabyConfig;
   runtime?: RuntimeEnv;
   abortSignal?: AbortSignal;
   statusSink?: (patch: Partial<ChannelAccountSnapshot>) => void;
@@ -593,7 +593,7 @@ export async function monitorMattermostProvider(opts: MonitorMattermostOpts = {}
               message: post.message ?? "",
               props: post.props ?? undefined,
             },
-            ephemeral_text: `OpenClaw ignored this action for ${decision.roomLabel}.`,
+            ephemeral_text: `LittleBaby ignored this action for ${decision.roomLabel}.`,
           },
         };
       },

@@ -2,13 +2,13 @@
 title: "Fireworks"
 summary: "Fireworks setup (auth + model selection)"
 read_when:
-  - You want to use Fireworks with OpenClaw
+  - You want to use Fireworks with LittleBaby
   - You need the Fireworks API key env var or default model id
 ---
 
 # Fireworks
 
-[Fireworks](https://fireworks.ai) exposes open-weight and routed models through an OpenAI-compatible API. OpenClaw includes a bundled Fireworks provider plugin.
+[Fireworks](https://fireworks.ai) exposes open-weight and routed models through an OpenAI-compatible API. LittleBaby includes a bundled Fireworks provider plugin.
 
 | Property      | Value                                                  |
 | ------------- | ------------------------------------------------------ |
@@ -23,15 +23,15 @@ read_when:
 <Steps>
   <Step title="Set up Fireworks auth through onboarding">
     ```bash
-    openclaw onboard --auth-choice fireworks-api-key
+    littlebaby onboard --auth-choice fireworks-api-key
     ```
 
-    This stores your Fireworks key in OpenClaw config and sets the Fire Pass starter model as the default.
+    This stores your Fireworks key in LittleBaby config and sets the Fire Pass starter model as the default.
 
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider fireworks
+    littlebaby models list --provider fireworks
     ```
   </Step>
 </Steps>
@@ -41,7 +41,7 @@ read_when:
 For scripted or CI setups, pass all values on the command line:
 
 ```bash
-openclaw onboard --non-interactive \
+littlebaby onboard --non-interactive \
   --mode local \
   --auth-choice fireworks-api-key \
   --fireworks-api-key "$FIREWORKS_API_KEY" \
@@ -61,7 +61,7 @@ If Fireworks publishes a newer model such as a fresh Qwen or Gemma release, you 
 
 ## Custom Fireworks model ids
 
-OpenClaw accepts dynamic Fireworks model ids too. Use the exact model or router id shown by Fireworks and prefix it with `fireworks/`.
+LittleBaby accepts dynamic Fireworks model ids too. Use the exact model or router id shown by Fireworks and prefix it with `fireworks/`.
 
 ```json5
 {
@@ -77,12 +77,12 @@ OpenClaw accepts dynamic Fireworks model ids too. Use the exact model or router 
 
 <AccordionGroup>
   <Accordion title="How model id prefixing works">
-    Every Fireworks model ref in OpenClaw starts with `fireworks/` followed by the exact id or router path from the Fireworks platform. For example:
+    Every Fireworks model ref in LittleBaby starts with `fireworks/` followed by the exact id or router path from the Fireworks platform. For example:
 
     - Router model: `fireworks/accounts/fireworks/routers/kimi-k2p5-turbo`
     - Direct model: `fireworks/accounts/fireworks/models/<model-name>`
 
-    OpenClaw strips the `fireworks/` prefix when building the API request and sends the remaining path to the Fireworks endpoint.
+    LittleBaby strips the `fireworks/` prefix when building the API request and sends the remaining path to the Fireworks endpoint.
 
   </Accordion>
 

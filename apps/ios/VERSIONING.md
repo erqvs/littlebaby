@@ -1,6 +1,6 @@
-# OpenClaw iOS Versioning
+# LittleBaby iOS Versioning
 
-OpenClaw iOS uses a **pinned CalVer release version** instead of reading the current gateway version automatically on every build.
+LittleBaby iOS uses a **pinned CalVer release version** instead of reading the current gateway version automatically on every build.
 
 ## Goals
 

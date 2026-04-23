@@ -1,7 +1,7 @@
 ---
 summary: "Plugin internals: capability model, ownership, contracts, load pipeline, and runtime helpers"
 read_when:
-  - Building or debugging native OpenClaw plugins
+  - Building or debugging native LittleBaby plugins
   - Understanding the plugin capability model or ownership boundaries
   - Working on the plugin load pipeline or registry
   - Implementing provider runtime hooks or channel plugins
@@ -20,12 +20,12 @@ sidebarTitle: "Internals"
   - [SDK Overview](/plugins/sdk-overview) — import map and registration API
 </Info>
 
-This page covers the internal architecture of the OpenClaw plugin system.
+This page covers the internal architecture of the LittleBaby plugin system.
 
 ## Public capability model
 
-Capabilities are the public **native plugin** model inside OpenClaw. Every
-native OpenClaw plugin registers against one or more capability types:
+Capabilities are the public **native plugin** model inside LittleBaby. Every
+native LittleBaby plugin registers against one or more capability types:
 
 | Capability             | Registration method                              | Example plugins                      |
 | ---------------------- | ------------------------------------------------ | ------------------------------------ |
@@ -71,7 +71,7 @@ Practical rule:
 
 ### Plugin shapes
 
-OpenClaw classifies every loaded plugin into a shape based on its actual
+LittleBaby classifies every loaded plugin into a shape based on its actual
 registration behavior (not just static metadata):
 
 - **plain-capability** -- registers exactly one capability type (for example a
@@ -84,7 +84,7 @@ registration behavior (not just static metadata):
 - **non-capability** -- registers tools, commands, services, or routes but no
   capabilities
 
-Use `openclaw plugins inspect <id>` to see a plugin's shape and capability
+Use `littlebaby plugins inspect <id>` to see a plugin's shape and capability
 breakdown. See [CLI reference](/cli/plugins#inspect) for details.
 
 ### Legacy hooks
@@ -102,7 +102,7 @@ Direction:
 
 ### Compatibility signals
 
-When you run `openclaw doctor` or `openclaw plugins inspect <id>`, you may see
+When you run `littlebaby doctor` or `littlebaby plugins inspect <id>`, you may see
 one of these labels:
 
 | Signal                     | Meaning                                                      |
@@ -114,25 +114,25 @@ one of these labels:
 
 Neither `hook-only` nor `before_agent_start` will break your plugin today --
 `hook-only` is advisory, and `before_agent_start` only triggers a warning. These
-signals also appear in `openclaw status --all` and `openclaw plugins doctor`.
+signals also appear in `littlebaby status --all` and `littlebaby plugins doctor`.
 
 ## Architecture overview
 
-OpenClaw's plugin system has four layers:
+LittleBaby's plugin system has four layers:
 
 1. **Manifest + discovery**
-   OpenClaw finds candidate plugins from configured paths, workspace roots,
+   LittleBaby finds candidate plugins from configured paths, workspace roots,
    global extension roots, and bundled extensions. Discovery reads native
-   `openclaw.plugin.json` manifests plus supported bundle manifests first.
+   `littlebaby.plugin.json` manifests plus supported bundle manifests first.
 2. **Enablement + validation**
    Core decides whether a discovered plugin is enabled, disabled, blocked, or
    selected for an exclusive slot such as memory.
 3. **Runtime loading**
-   Native OpenClaw plugins are loaded in-process via jiti and register
+   Native LittleBaby plugins are loaded in-process via jiti and register
    capabilities into a central registry. Compatible bundles are normalized into
    registry records without importing runtime code.
 4. **Surface consumption**
-   The rest of OpenClaw reads the registry to expose tools, channels, provider
+   The rest of LittleBaby reads the registry to expose tools, channels, provider
    setup, hooks, HTTP routes, CLI commands, and services.
 
 For plugin CLI specifically, root command discovery is split in two phases:
@@ -140,7 +140,7 @@ For plugin CLI specifically, root command discovery is split in two phases:
 - parse-time metadata comes from `registerCli(..., { descriptors: [...] })`
 - the real plugin CLI module can stay lazy and register on first invocation
 
-That keeps plugin-owned CLI code inside the plugin while still letting OpenClaw
+That keeps plugin-owned CLI code inside the plugin while still letting LittleBaby
 reserve root command names before parsing.
 
 The important design boundary:
@@ -149,13 +149,13 @@ The important design boundary:
   without executing plugin code
 - native runtime behavior comes from the plugin module's `register(api)` path
 
-That split lets OpenClaw validate config, explain missing/disabled plugins, and
+That split lets LittleBaby validate config, explain missing/disabled plugins, and
 build UI/schema hints before the full runtime is active.
 
 ### Channel plugins and the shared message tool
 
 Channel plugins do not need to register a separate send/edit/react tool for
-normal chat actions. OpenClaw keeps one shared `message` tool in core, and
+normal chat actions. LittleBaby keeps one shared `message` tool in core, and
 channel plugins own the channel-specific discovery and execution behind it.
 
 The current boundary is:
@@ -231,12 +231,12 @@ See [Load pipeline](#load-pipeline) for the full startup sequence.
 
 ## Capability ownership model
 
-OpenClaw treats a native plugin as the ownership boundary for a **company** or a
+LittleBaby treats a native plugin as the ownership boundary for a **company** or a
 **feature**, not as a grab bag of unrelated integrations.
 
 That means:
 
-- a company plugin should usually own all of that company's OpenClaw-facing
+- a company plugin should usually own all of that company's LittleBaby-facing
   surfaces
 - a feature plugin should usually own the full feature surface it introduces
 - channels should consume shared core capabilities instead of re-implementing
@@ -273,7 +273,7 @@ This is the key distinction:
 - **plugin** = ownership boundary
 - **capability** = core contract that multiple plugins can implement or consume
 
-So if OpenClaw adds a new domain such as video, the first question is not
+So if LittleBaby adds a new domain such as video, the first question is not
 "which provider should hardcode video handling?" The first question is "what is
 the core video capability contract?" Once that contract exists, vendor plugins
 can register against it and channel/feature plugins can consume it.
@@ -309,19 +309,19 @@ That same pattern should be preferred for future capabilities.
 
 ### Multi-capability company plugin example
 
-A company plugin should feel cohesive from the outside. If OpenClaw has shared
+A company plugin should feel cohesive from the outside. If LittleBaby has shared
 contracts for models, speech, realtime transcription, realtime voice, media
 understanding, image generation, video generation, web fetch, and web search,
 a vendor can own all of its surfaces in one place:
 
 ```ts
-import type { OpenClawPluginDefinition } from "openclaw/plugin-sdk/plugin-entry";
+import type { LittleBabyPluginDefinition } from "littlebaby/plugin-sdk/plugin-entry";
 import {
   describeImageWithModel,
   transcribeOpenAiCompatibleAudio,
-} from "openclaw/plugin-sdk/media-understanding";
+} from "littlebaby/plugin-sdk/media-understanding";
 
-const plugin: OpenClawPluginDefinition = {
+const plugin: LittleBabyPluginDefinition = {
   id: "exampleai",
   name: "ExampleAI",
   register(api) {
@@ -376,7 +376,7 @@ What matters is not the exact helper names. The shape matters:
 
 ### Capability example: video understanding
 
-OpenClaw already treats image/audio/video understanding as one shared
+LittleBaby already treats image/audio/video understanding as one shared
 capability. The same ownership model applies there:
 
 1. core defines the media-understanding contract
@@ -398,7 +398,7 @@ Need a concrete rollout checklist? See
 ## Contracts and enforcement
 
 The plugin API surface is intentionally typed and centralized in
-`OpenClawPluginApi`. That contract defines the supported registration points and
+`LittleBabyPluginApi`. That contract defines the supported registration points and
 the runtime helpers a plugin may rely on.
 
 Why this matters:
@@ -417,11 +417,11 @@ There are two layers of enforcement:
    registrations produce plugin diagnostics instead of undefined behavior.
 2. **contract tests**
    Bundled plugins are captured in contract registries during test runs so
-   OpenClaw can assert ownership explicitly. Today this is used for model
+   LittleBaby can assert ownership explicitly. Today this is used for model
    providers, speech providers, web search providers, and bundled registration
    ownership.
 
-The practical effect is that OpenClaw knows, up front, which plugin owns which
+The practical effect is that LittleBaby knows, up front, which plugin owns which
 surface. That lets core and channels compose seamlessly because ownership is
 declared, typed, and testable rather than implicit.
 
@@ -441,7 +441,7 @@ Bad plugin contracts are:
 - vendor-specific policy hidden in core
 - one-off plugin escape hatches that bypass the registry
 - channel code reaching straight into a vendor implementation
-- ad hoc runtime objects that are not part of `OpenClawPluginApi` or
+- ad hoc runtime objects that are not part of `LittleBabyPluginApi` or
   `api.runtime`
 
 When in doubt, raise the abstraction level: define the capability first, then
@@ -449,7 +449,7 @@ let plugins plug into it.
 
 ## Execution model
 
-Native OpenClaw plugins run **in-process** with the Gateway. They are not
+Native LittleBaby plugins run **in-process** with the Gateway. They are not
 sandboxed. A loaded native plugin has the same process-level trust boundary as
 core code.
 
@@ -458,9 +458,9 @@ Implications:
 - a native plugin can register tools, network handlers, hooks, and services
 - a native plugin bug can crash or destabilize the gateway
 - a malicious native plugin is equivalent to arbitrary code execution inside
-  the OpenClaw process
+  the LittleBaby process
 
-Compatible bundles are safer by default because OpenClaw currently treats them
+Compatible bundles are safer by default because LittleBaby currently treats them
 as metadata/content packs. In current releases, that mostly means bundled
 skills.
 
@@ -468,7 +468,7 @@ Use allowlists and explicit install/load paths for non-bundled plugins. Treat
 workspace plugins as development-time code, not production defaults.
 
 For bundled workspace package names, keep the plugin id anchored in the npm
-name: `@openclaw/<id>` by default, or an approved typed suffix such as
+name: `@littlebaby/<id>` by default, or an approved typed suffix such as
 `-provider`, `-plugin`, `-speech`, `-sandbox`, or `-media-understanding` when
 the package intentionally exposes a narrower plugin role.
 
@@ -481,7 +481,7 @@ Important trust note:
 
 ## Export boundary
 
-OpenClaw exports capabilities, not implementation convenience.
+LittleBaby exports capabilities, not implementation convenience.
 
 Keep capability registration public. Trim non-contract helper exports:
 
@@ -499,7 +499,7 @@ new third-party plugins.
 
 ## Load pipeline
 
-At startup, OpenClaw does roughly this:
+At startup, LittleBaby does roughly this:
 
 1. discover candidate plugin roots
 2. read native or compatible bundle manifests and package metadata
@@ -521,7 +521,7 @@ ownership looks suspicious for non-bundled plugins.
 
 ### Manifest-first behavior
 
-The manifest is the control-plane source of truth. OpenClaw uses it to:
+The manifest is the control-plane source of truth. LittleBaby uses it to:
 
 - identify the plugin
 - discover declared channels/skills/config schema or bundle capabilities
@@ -554,7 +554,7 @@ order.
 
 ### What the loader caches
 
-OpenClaw keeps short in-process caches for:
+LittleBaby keeps short in-process caches for:
 
 - discovery results
 - manifest registry data
@@ -664,7 +664,7 @@ Provider plugins now have two layers:
   `buildReplayPolicy`,
   `sanitizeReplayHistory`, `validateReplayTurns`, `onModelSelected`
 
-OpenClaw still owns the generic agent loop, failover, transcript handling, and
+LittleBaby still owns the generic agent loop, failover, transcript handling, and
 tool policy. These hooks are the extension surface for provider-specific behavior without
 needing a whole custom inference transport.
 
@@ -684,14 +684,14 @@ without loading channel runtime.
 
 ### Hook order and usage
 
-For model/provider plugins, OpenClaw calls hooks in this rough order.
+For model/provider plugins, LittleBaby calls hooks in this rough order.
 The "When to use" column is the quick decision guide.
 
 | #   | Hook                              | What it does                                                                                                   | When to use                                                                                                                                 |
 | --- | --------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | `catalog`                         | Publish provider config into `models.providers` during `models.json` generation                                | Provider owns a catalog or base URL defaults                                                                                                |
 | 2   | `applyConfigDefaults`             | Apply provider-owned global config defaults during config materialization                                      | Defaults depend on auth mode, env, or provider model-family semantics                                                                       |
-| --  | _(built-in model lookup)_         | OpenClaw tries the normal registry/catalog path first                                                          | _(not a plugin hook)_                                                                                                                       |
+| --  | _(built-in model lookup)_         | LittleBaby tries the normal registry/catalog path first                                                          | _(not a plugin hook)_                                                                                                                       |
 | 3   | `normalizeModelId`                | Normalize legacy or preview model-id aliases before lookup                                                     | Provider owns alias cleanup before canonical model resolution                                                                               |
 | 4   | `normalizeTransport`              | Normalize provider-family `api` / `baseUrl` before generic model assembly                                      | Provider owns transport cleanup for custom provider ids in the same transport family                                                        |
 | 5   | `normalizeConfig`                 | Normalize `models.providers.<id>` before runtime/provider resolution                                           | Provider needs config cleanup that should live with the plugin; bundled Google-family helpers also backstop supported Google config entries |
@@ -745,7 +745,7 @@ that compatibility cleanup.
 
 If the provider needs a fully custom wire protocol or custom request executor,
 that is a different class of extension. These hooks are for provider behavior
-that still runs on OpenClaw's normal inference loop.
+that still runs on LittleBaby's normal inference loop.
 
 ### Provider example
 
@@ -829,7 +829,7 @@ api.registerProvider({
   reasoning-compat payload shaping, and Responses context management.
 - OpenRouter uses `catalog` plus `resolveDynamicModel` and
   `prepareDynamicModel` because the provider is pass-through and may expose new
-  model ids before OpenClaw's static catalog updates; it also uses
+  model ids before LittleBaby's static catalog updates; it also uses
   `capabilities`, `wrapStreamFn`, and `isCacheTtlEligible` to keep
   provider-specific request headers, routing metadata, reasoning patches, and
   prompt-cache policy out of core. Its replay policy comes from the
@@ -919,12 +919,12 @@ Plugins can access selected core helpers via `api.runtime`. For TTS:
 
 ```ts
 const clip = await api.runtime.tts.textToSpeech({
-  text: "Hello from OpenClaw",
+  text: "Hello from LittleBaby",
   cfg: api.config,
 });
 
 const result = await api.runtime.tts.textToSpeechTelephony({
-  text: "Hello from OpenClaw",
+  text: "Hello from LittleBaby",
   cfg: api.config,
 });
 
@@ -967,7 +967,7 @@ Notes:
 - Use speech providers for vendor-owned synthesis behavior.
 - Legacy Microsoft `edge` input is normalized to the `microsoft` provider id.
 - The preferred ownership model is company-oriented: one vendor plugin can own
-  text, speech, image, and future media providers as OpenClaw adds those
+  text, speech, image, and future media providers as LittleBaby adds those
   capability contracts.
 
 For image/audio/video understanding, plugins register one typed
@@ -1044,7 +1044,7 @@ const result = await api.runtime.subagent.run({
 Notes:
 
 - `provider` and `model` are optional per-run overrides, not persistent session changes.
-- OpenClaw only honors those override fields for trusted callers.
+- LittleBaby only honors those override fields for trusted callers.
 - For plugin-owned fallback runs, operators must opt in with `plugins.entries.<id>.subagent.allowModelOverride: true`.
 - Use `plugins.entries.<id>.subagent.allowedModels` to restrict trusted plugins to specific canonical `provider/model` targets, or `"*"` to allow any target explicitly.
 - Untrusted plugin subagent runs still work, but override requests are rejected instead of silently falling back.
@@ -1060,7 +1060,7 @@ const providers = api.runtime.webSearch.listProviders({
 const result = await api.runtime.webSearch.search({
   config: api.config,
   args: {
-    query: "OpenClaw plugin runtime helpers",
+    query: "LittleBaby plugin runtime helpers",
     count: 5,
   },
 });
@@ -1124,33 +1124,33 @@ Notes:
 - Overlapping routes with different `auth` levels are rejected. Keep `exact`/`prefix` fallthrough chains on the same auth level only.
 - `auth: "plugin"` routes do **not** receive operator runtime scopes automatically. They are for plugin-managed webhooks/signature verification, not privileged Gateway helper calls.
 - `auth: "gateway"` routes run inside a Gateway request runtime scope, but that scope is intentionally conservative:
-  - shared-secret bearer auth (`gateway.auth.mode = "token"` / `"password"`) keeps plugin-route runtime scopes pinned to `operator.write`, even if the caller sends `x-openclaw-scopes`
-  - trusted identity-bearing HTTP modes (for example `trusted-proxy` or `gateway.auth.mode = "none"` on a private ingress) honor `x-openclaw-scopes` only when the header is explicitly present
-  - if `x-openclaw-scopes` is absent on those identity-bearing plugin-route requests, runtime scope falls back to `operator.write`
-- Practical rule: do not assume a gateway-auth plugin route is an implicit admin surface. If your route needs admin-only behavior, require an identity-bearing auth mode and document the explicit `x-openclaw-scopes` header contract.
+  - shared-secret bearer auth (`gateway.auth.mode = "token"` / `"password"`) keeps plugin-route runtime scopes pinned to `operator.write`, even if the caller sends `x-littlebaby-scopes`
+  - trusted identity-bearing HTTP modes (for example `trusted-proxy` or `gateway.auth.mode = "none"` on a private ingress) honor `x-littlebaby-scopes` only when the header is explicitly present
+  - if `x-littlebaby-scopes` is absent on those identity-bearing plugin-route requests, runtime scope falls back to `operator.write`
+- Practical rule: do not assume a gateway-auth plugin route is an implicit admin surface. If your route needs admin-only behavior, require an identity-bearing auth mode and document the explicit `x-littlebaby-scopes` header contract.
 
 ## Plugin SDK import paths
 
-Use SDK subpaths instead of the monolithic `openclaw/plugin-sdk` import when
+Use SDK subpaths instead of the monolithic `littlebaby/plugin-sdk` import when
 authoring plugins:
 
-- `openclaw/plugin-sdk/plugin-entry` for plugin registration primitives.
-- `openclaw/plugin-sdk/core` for the generic shared plugin-facing contract.
-- `openclaw/plugin-sdk/config-schema` for the root `openclaw.json` Zod schema
-  export (`OpenClawSchema`).
-- Stable channel primitives such as `openclaw/plugin-sdk/channel-setup`,
-  `openclaw/plugin-sdk/setup-runtime`,
-  `openclaw/plugin-sdk/setup-adapter-runtime`,
-  `openclaw/plugin-sdk/setup-tools`,
-  `openclaw/plugin-sdk/channel-pairing`,
-  `openclaw/plugin-sdk/channel-contract`,
-  `openclaw/plugin-sdk/channel-feedback`,
-  `openclaw/plugin-sdk/channel-inbound`,
-  `openclaw/plugin-sdk/channel-lifecycle`,
-  `openclaw/plugin-sdk/channel-reply-pipeline`,
-  `openclaw/plugin-sdk/command-auth`,
-  `openclaw/plugin-sdk/secret-input`, and
-  `openclaw/plugin-sdk/webhook-ingress` for shared setup/auth/reply/webhook
+- `littlebaby/plugin-sdk/plugin-entry` for plugin registration primitives.
+- `littlebaby/plugin-sdk/core` for the generic shared plugin-facing contract.
+- `littlebaby/plugin-sdk/config-schema` for the root `littlebaby.json` Zod schema
+  export (`LittleBabySchema`).
+- Stable channel primitives such as `littlebaby/plugin-sdk/channel-setup`,
+  `littlebaby/plugin-sdk/setup-runtime`,
+  `littlebaby/plugin-sdk/setup-adapter-runtime`,
+  `littlebaby/plugin-sdk/setup-tools`,
+  `littlebaby/plugin-sdk/channel-pairing`,
+  `littlebaby/plugin-sdk/channel-contract`,
+  `littlebaby/plugin-sdk/channel-feedback`,
+  `littlebaby/plugin-sdk/channel-inbound`,
+  `littlebaby/plugin-sdk/channel-lifecycle`,
+  `littlebaby/plugin-sdk/channel-reply-pipeline`,
+  `littlebaby/plugin-sdk/command-auth`,
+  `littlebaby/plugin-sdk/secret-input`, and
+  `littlebaby/plugin-sdk/webhook-ingress` for shared setup/auth/reply/webhook
   wiring. `channel-inbound` is the shared home for debounce, mention matching,
   inbound mention-policy helpers, envelope formatting, and inbound envelope
   context helpers.
@@ -1161,25 +1161,25 @@ authoring plugins:
   `setup-tools` is the small CLI/archive/docs helper seam (`formatCliCommand`,
   `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`,
   `CONFIG_DIR`).
-- Domain subpaths such as `openclaw/plugin-sdk/channel-config-helpers`,
-  `openclaw/plugin-sdk/allow-from`,
-  `openclaw/plugin-sdk/channel-config-schema`,
-  `openclaw/plugin-sdk/telegram-command-config`,
-  `openclaw/plugin-sdk/channel-policy`,
-  `openclaw/plugin-sdk/approval-gateway-runtime`,
-  `openclaw/plugin-sdk/approval-handler-adapter-runtime`,
-  `openclaw/plugin-sdk/approval-handler-runtime`,
-  `openclaw/plugin-sdk/approval-runtime`,
-  `openclaw/plugin-sdk/config-runtime`,
-  `openclaw/plugin-sdk/infra-runtime`,
-  `openclaw/plugin-sdk/agent-runtime`,
-  `openclaw/plugin-sdk/lazy-runtime`,
-  `openclaw/plugin-sdk/reply-history`,
-  `openclaw/plugin-sdk/routing`,
-  `openclaw/plugin-sdk/status-helpers`,
-  `openclaw/plugin-sdk/text-runtime`,
-  `openclaw/plugin-sdk/runtime-store`, and
-  `openclaw/plugin-sdk/directory-runtime` for shared runtime/config helpers.
+- Domain subpaths such as `littlebaby/plugin-sdk/channel-config-helpers`,
+  `littlebaby/plugin-sdk/allow-from`,
+  `littlebaby/plugin-sdk/channel-config-schema`,
+  `littlebaby/plugin-sdk/telegram-command-config`,
+  `littlebaby/plugin-sdk/channel-policy`,
+  `littlebaby/plugin-sdk/approval-gateway-runtime`,
+  `littlebaby/plugin-sdk/approval-handler-adapter-runtime`,
+  `littlebaby/plugin-sdk/approval-handler-runtime`,
+  `littlebaby/plugin-sdk/approval-runtime`,
+  `littlebaby/plugin-sdk/config-runtime`,
+  `littlebaby/plugin-sdk/infra-runtime`,
+  `littlebaby/plugin-sdk/agent-runtime`,
+  `littlebaby/plugin-sdk/lazy-runtime`,
+  `littlebaby/plugin-sdk/reply-history`,
+  `littlebaby/plugin-sdk/routing`,
+  `littlebaby/plugin-sdk/status-helpers`,
+  `littlebaby/plugin-sdk/text-runtime`,
+  `littlebaby/plugin-sdk/runtime-store`, and
+  `littlebaby/plugin-sdk/directory-runtime` for shared runtime/config helpers.
   `telegram-command-config` is the narrow public seam for Telegram custom
   command normalization/validation and stays available even if the bundled
   Telegram contract surface is temporarily unavailable.
@@ -1190,12 +1190,12 @@ authoring plugins:
   contract on the plugin. Core then reads approval auth, delivery, render,
   native-routing, and lazy native-handler behavior through that one capability
   instead of mixing approval behavior into unrelated plugin fields.
-- `openclaw/plugin-sdk/channel-runtime` is deprecated and remains only as a
+- `littlebaby/plugin-sdk/channel-runtime` is deprecated and remains only as a
   compatibility shim for older plugins. New code should import the narrower
   generic primitives instead, and repo code should not add new imports of the
   shim.
 - Bundled extension internals remain private. External plugins should use only
-  `openclaw/plugin-sdk/*` subpaths. OpenClaw core/test code may use the repo
+  `littlebaby/plugin-sdk/*` subpaths. LittleBaby core/test code may use the repo
   public entry points under a plugin package root such as `index.js`, `api.js`,
   `runtime-api.js`, `setup-entry.js`, and narrowly scoped files such as
   `login-qr-api.js`. Never import a plugin package's `src/*` from core or from
@@ -1216,7 +1216,7 @@ authoring plugins:
     `plugin-sdk/provider-stream` helpers for repo-local use.
 - Facade-loaded public entry points prefer the active runtime config snapshot
   when one exists, then fall back to the resolved config file on disk when
-  OpenClaw is not yet serving a runtime snapshot.
+  LittleBaby is not yet serving a runtime snapshot.
 - Generic shared primitives remain the preferred public SDK contract. A small
   reserved compatibility set of bundled channel-branded helper seams still
   exists. Treat those as bundled-maintenance/compatibility seams, not new
@@ -1226,20 +1226,20 @@ authoring plugins:
 
 Compatibility note:
 
-- Avoid the root `openclaw/plugin-sdk` barrel for new code.
+- Avoid the root `littlebaby/plugin-sdk` barrel for new code.
 - Prefer the narrow stable primitives first. The newer setup/pairing/reply/
   feedback/contract/inbound/threading/command/secret-input/webhook/infra/
   allowlist/status/message-tool subpaths are the intended contract for new
   bundled and external plugin work.
-  Target parsing/matching belongs on `openclaw/plugin-sdk/channel-targets`.
+  Target parsing/matching belongs on `littlebaby/plugin-sdk/channel-targets`.
   Message action gates and reaction message-id helpers belong on
-  `openclaw/plugin-sdk/channel-actions`.
+  `littlebaby/plugin-sdk/channel-actions`.
 - Bundled extension-specific helper barrels are not stable by default. If a
   helper is only needed by a bundled extension, keep it behind the extension's
   local `api.js` or `runtime-api.js` seam instead of promoting it into
-  `openclaw/plugin-sdk/<extension>`.
+  `littlebaby/plugin-sdk/<extension>`.
 - New shared helper seams should be generic, not channel-branded. Shared target
-  parsing belongs on `openclaw/plugin-sdk/channel-targets`; channel-specific
+  parsing belongs on `littlebaby/plugin-sdk/channel-targets`; channel-specific
   internals stay behind the owning plugin's local `api.js` or `runtime-api.js`
   seam.
 - Capability-specific subpaths such as `image-generation`,
@@ -1253,7 +1253,7 @@ Plugins should own channel-specific `describeMessageTool(...)` schema
 contributions. Keep provider-specific fields in the plugin, not in shared core.
 
 For shared portable schema fragments, reuse the generic helpers exported through
-`openclaw/plugin-sdk/channel-actions`:
+`littlebaby/plugin-sdk/channel-actions`:
 
 - `createMessageToolButtonsSchema()` for button-grid style payloads
 - `createMessageToolCardSchema()` for structured card payloads
@@ -1291,7 +1291,7 @@ Recommended split:
 
 Plugins that derive directory entries from config should keep that logic in the
 plugin and reuse the shared helpers from
-`openclaw/plugin-sdk/directory-runtime`.
+`littlebaby/plugin-sdk/directory-runtime`.
 
 Use this when a channel needs config-backed peers/groups such as:
 
@@ -1314,7 +1314,7 @@ plugin implementation.
 Provider plugins can define model catalogs for inference with
 `registerProvider({ catalog: { run(...) { ... } } })`.
 
-`catalog.run(...)` returns the same shape OpenClaw writes into
+`catalog.run(...)` returns the same shape LittleBaby writes into
 `models.providers`:
 
 - `{ provider }` for one provider entry
@@ -1323,7 +1323,7 @@ Provider plugins can define model catalogs for inference with
 Use `catalog` when the plugin owns provider-specific model ids, base URL
 defaults, or auth-gated model metadata.
 
-`catalog.order` controls when a plugin's catalog merges relative to OpenClaw's
+`catalog.order` controls when a plugin's catalog merges relative to LittleBaby's
 built-in implicit providers:
 
 - `simple`: plain API-key or env-driven providers
@@ -1337,7 +1337,7 @@ built-in provider entry with the same provider id.
 Compatibility:
 
 - `discovery` still works as a legacy alias
-- if both `catalog` and `discovery` are registered, OpenClaw uses `catalog`
+- if both `catalog` and `discovery` are registered, LittleBaby uses `catalog`
 
 ## Read-only channel inspection
 
@@ -1348,8 +1348,8 @@ Why:
 
 - `resolveAccount(...)` is the runtime path. It is allowed to assume credentials
   are fully materialized and can fail fast when required secrets are missing.
-- Read-only command paths such as `openclaw status`, `openclaw status --all`,
-  `openclaw channels status`, `openclaw channels resolve`, and doctor/config
+- Read-only command paths such as `littlebaby status`, `littlebaby status --all`,
+  `littlebaby channels status`, `littlebaby channels resolve`, and doctor/config
   repair flows should not need to materialize runtime credentials just to
   describe configuration.
 
@@ -1373,7 +1373,7 @@ path" instead of crashing or misreporting the account as not configured.
 
 ## Package packs
 
-A plugin directory may include a `package.json` with `openclaw.extensions`:
+A plugin directory may include a `package.json` with `littlebaby.extensions`:
 
 ```json
 {
@@ -1391,22 +1391,22 @@ becomes `name/<fileBase>`.
 If your plugin imports npm deps, install them in that directory so
 `node_modules` is available (`npm install` / `pnpm install`).
 
-Security guardrail: every `openclaw.extensions` entry must stay inside the plugin
+Security guardrail: every `littlebaby.extensions` entry must stay inside the plugin
 directory after symlink resolution. Entries that escape the package directory are
 rejected.
 
-Security note: `openclaw plugins install` installs plugin dependencies with
+Security note: `littlebaby plugins install` installs plugin dependencies with
 `npm install --omit=dev --ignore-scripts` (no lifecycle scripts, no dev dependencies at runtime). Keep plugin dependency
 trees "pure JS/TS" and avoid packages that require `postinstall` builds.
 
-Optional: `openclaw.setupEntry` can point at a lightweight setup-only module.
-When OpenClaw needs setup surfaces for a disabled channel plugin, or
+Optional: `littlebaby.setupEntry` can point at a lightweight setup-only module.
+When LittleBaby needs setup surfaces for a disabled channel plugin, or
 when a channel plugin is enabled but still unconfigured, it loads `setupEntry`
 instead of the full plugin entry. This keeps startup and setup lighter
 when your main plugin entry also wires tools, hooks, or other runtime-only
 code.
 
-Optional: `openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen`
+Optional: `littlebaby.startup.deferConfiguredChannelFullLoadUntilAfterListen`
 can opt a channel plugin into the same `setupEntry` path during the gateway's
 pre-listen startup phase, even when the channel is already configured.
 
@@ -1419,7 +1419,7 @@ must register every channel-owned capability that startup depends on, such as:
 - any gateway methods, tools, or services that must exist during that same window
 
 If your full entry still owns any required startup capability, do not enable
-this flag. Keep the plugin on the default behavior and let OpenClaw load the
+this flag. Keep the plugin on the default behavior and let LittleBaby load the
 full entry during startup.
 
 Bundled channels can also publish setup-only contract-surface helpers that core
@@ -1463,14 +1463,14 @@ Example:
 
 ### Channel catalog metadata
 
-Channel plugins can advertise setup/discovery metadata via `openclaw.channel` and
-install hints via `openclaw.install`. This keeps the core catalog data-free.
+Channel plugins can advertise setup/discovery metadata via `littlebaby.channel` and
+install hints via `littlebaby.install`. This keeps the core catalog data-free.
 
 Example:
 
 ```json
 {
-  "name": "@openclaw/nextcloud-talk",
+  "name": "@littlebaby/nextcloud-talk",
   "littlebaby": {
     "extensions": ["./index.ts"],
     "channel": {
@@ -1484,7 +1484,7 @@ Example:
       "aliases": ["nc-talk", "nc"]
     },
     "install": {
-      "npmSpec": "@openclaw/nextcloud-talk",
+      "npmSpec": "@littlebaby/nextcloud-talk",
       "localPath": "<bundled-plugin-local-path>",
       "defaultChoice": "npm"
     }
@@ -1492,7 +1492,7 @@ Example:
 }
 ```
 
-Useful `openclaw.channel` fields beyond the minimal example:
+Useful `littlebaby.channel` fields beyond the minimal example:
 
 - `detailLabel`: secondary label for richer catalog/status surfaces
 - `docsLabel`: override link text for the docs link
@@ -1507,7 +1507,7 @@ Useful `openclaw.channel` fields beyond the minimal example:
 - `forceAccountBinding`: require explicit account binding even when only one account exists
 - `preferSessionLookupForAnnounceTarget`: prefer session lookup when resolving announce targets
 
-OpenClaw can also merge **external channel catalogs** (for example, an MPM
+LittleBaby can also merge **external channel catalogs** (for example, an MPM
 registry export). Drop a JSON file at one of:
 
 - `~/.littlebaby/mpm/plugins.json`
@@ -1529,7 +1529,7 @@ Use this when your plugin needs to replace or extend the default context
 pipeline rather than just add memory search or hooks.
 
 ```ts
-import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
+import { buildMemorySystemPromptAddition } from "littlebaby/plugin-sdk/core";
 
 export default function (api) {
   api.registerContextEngine("lossless-claw", () => ({
@@ -1561,7 +1561,7 @@ implemented and delegate it explicitly:
 import {
   buildMemorySystemPromptAddition,
   delegateCompactionToRuntime,
-} from "openclaw/plugin-sdk/core";
+} from "littlebaby/plugin-sdk/core";
 
 export default function (api) {
   api.registerContextEngine("my-memory-engine", () => ({
@@ -1601,7 +1601,7 @@ Recommended sequence:
    Decide what shared behavior core should own: policy, fallback, config merge,
    lifecycle, channel-facing semantics, and runtime helper shape.
 2. add typed plugin registration/runtime surfaces
-   Extend `OpenClawPluginApi` and/or `api.runtime` with the smallest useful
+   Extend `LittleBabyPluginApi` and/or `api.runtime` with the smallest useful
    typed capability surface.
 3. wire core + channel/feature consumers
    Channels and feature plugins should consume the new capability through core,
@@ -1611,7 +1611,7 @@ Recommended sequence:
 5. add contract coverage
    Add tests so ownership and registration shape stay explicit over time.
 
-This is how OpenClaw stays opinionated without becoming hardcoded to one
+This is how LittleBaby stays opinionated without becoming hardcoded to one
 provider's worldview. See the [Capability Cookbook](/tools/capability-cookbook)
 for a concrete file checklist and worked example.
 

@@ -49,7 +49,7 @@ export async function writeGatewayScript(
     [
       "@echo off",
       `set "LITTLEBABY_GATEWAY_PORT=${port}"`,
-      `"C:\\Program Files\\nodejs\\node.exe" "C:\\Users\\steipete\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js" gateway --port ${port}`,
+      `"C:\\Program Files\\nodejs\\node.exe" "C:\\Users\\steipete\\AppData\\Roaming\\npm\\node_modules\\littlebaby\\dist\\index.js" gateway --port ${port}`,
       "",
     ].join("\r\n"),
     "utf8",

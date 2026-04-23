@@ -72,7 +72,7 @@ Resolve the active state directory first:
 STATE_DIR="${LITTLEBABY_STATE_DIR:-$HOME/.littlebaby}"
 ```
 
-Then write those resolved paths into the active OpenClaw config file (`$LITTLEBABY_CONFIG_PATH`, default `~/.littlebaby/openclaw.json`):
+Then write those resolved paths into the active LittleBaby config file (`$LITTLEBABY_CONFIG_PATH`, default `~/.littlebaby/littlebaby.json`):
 
 ```json5
 {

@@ -8,7 +8,7 @@ import { listChannelPlugins } from "../channels/plugins/index.js";
 import { formatChannelStatusState } from "../channels/plugins/status-state.js";
 import type { ChannelPlugin } from "../channels/plugins/types.plugin.js";
 import type { ChannelAccountSnapshot } from "../channels/plugins/types.public.js";
-import { type OpenClawConfig, loadConfig } from "../config/config.js";
+import { type LittleBabyConfig, loadConfig } from "../config/config.js";
 import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
 import { theme } from "../terminal/theme.js";
 import { formatTimeAgo } from "./format-time/format-relative.ts";
@@ -16,7 +16,7 @@ import { formatTimeAgo } from "./format-time/format-relative.ts";
 export type ChannelSummaryOptions = {
   colorize?: boolean;
   includeAllowFrom?: boolean;
-  sourceConfig?: OpenClawConfig;
+  sourceConfig?: LittleBabyConfig;
 };
 
 const DEFAULT_OPTIONS: Omit<Required<ChannelSummaryOptions>, "sourceConfig"> = {
@@ -46,7 +46,7 @@ const accountLine = (label: string, details: string[]) =>
 const buildAccountDetails = (params: {
   entry: ChannelAccountEntry;
   plugin: ChannelPlugin;
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   includeAllowFrom: boolean;
 }): string[] => {
   const details: string[] = [];
@@ -103,7 +103,7 @@ const buildAccountDetails = (params: {
 };
 
 export async function buildChannelSummary(
-  cfg?: OpenClawConfig,
+  cfg?: LittleBabyConfig,
   options?: ChannelSummaryOptions,
 ): Promise<string[]> {
   const effective = cfg ?? loadConfig();

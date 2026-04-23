@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { resolveOpenClawAgentDir } from "../src/agents/agent-paths.js";
+import { resolveLittleBabyAgentDir } from "../src/agents/agent-paths.js";
 import { collectProviderApiKeys } from "../src/agents/live-auth-keys.js";
 import { isLiveProfileKeyModeEnabled, isLiveTestEnabled } from "../src/agents/live-test-helpers.js";
 import { resolveApiKeyForProvider } from "../src/agents/model-auth.js";
-import { loadConfig, type OpenClawConfig } from "../src/config/config.js";
+import { loadConfig, type LittleBabyConfig } from "../src/config/config.js";
 import { isTruthyEnvValue } from "../src/infra/env.js";
 import { getShellEnvAppliedKeys, loadShellEnvFallback } from "../src/infra/shell-env.js";
 import { encodePngRgba, fillPixel } from "../src/media/png-encode.js";
@@ -54,7 +54,7 @@ const CASES: LiveProviderCase[] = [
   .filter((entry) => (providerFilter ? providerFilter.has(entry.providerId) : true))
   .toSorted((left, right) => left.providerId.localeCompare(right.providerId));
 
-function withPluginsEnabled(cfg: OpenClawConfig): OpenClawConfig {
+function withPluginsEnabled(cfg: LittleBabyConfig): LittleBabyConfig {
   return {
     ...cfg,
     plugins: {
@@ -133,7 +133,7 @@ describeLive("music generation provider live", () => {
     async () => {
       const cfg = withPluginsEnabled(loadConfig());
       const configuredModels = resolveConfiguredLiveMusicModels(cfg);
-      const agentDir = resolveOpenClawAgentDir();
+      const agentDir = resolveLittleBabyAgentDir();
       const attempted: string[] = [];
       const skipped: string[] = [];
       const failures: string[] = [];

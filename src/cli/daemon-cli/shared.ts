@@ -154,7 +154,7 @@ export function renderRuntimeHints(
   const hints: string[] = [];
   const fileLog = logFile ?? null;
   if (runtime.missingUnit) {
-    hints.push(`Service not installed. Run: ${formatCliCommand("openclaw gateway install", env)}`);
+    hints.push(`Service not installed. Run: ${formatCliCommand("littlebaby gateway install", env)}`);
     if (fileLog) {
       hints.push(`File logs: ${fileLog}`);
     }
@@ -179,8 +179,8 @@ export function renderGatewayServiceStartHints(env: NodeJS.ProcessEnv = process.
   const profile = env.LITTLEBABY_PROFILE;
   const container = resolveDaemonContainerContext(env);
   const hints = buildPlatformServiceStartHints({
-    installCommand: formatCliCommand("openclaw gateway install", env),
-    startCommand: formatCliCommand("openclaw gateway", env),
+    installCommand: formatCliCommand("littlebaby gateway install", env),
+    startCommand: formatCliCommand("littlebaby gateway", env),
     launchAgentPlistPath: `~/Library/LaunchAgents/${resolveGatewayLaunchAgentLabel(profile)}.plist`,
     systemdServiceName: resolveGatewaySystemdServiceName(profile),
     windowsTaskName: resolveGatewayWindowsTaskName(profile),

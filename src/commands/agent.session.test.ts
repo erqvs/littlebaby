@@ -5,12 +5,12 @@ import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.j
 import { resolveAgentDir, resolveSessionAgentId } from "../agents/agent-scope.js";
 import { resolveSession } from "../agents/command/session.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../config/types.littlebaby.js";
 import { buildOutboundSessionContext } from "../infra/outbound/session-context.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   return withTempHomeBase(fn, {
-    prefix: "openclaw-agent-session-",
+    prefix: "littlebaby-agent-session-",
     skipSessionCleanup: true,
   });
 }
@@ -19,7 +19,7 @@ function mockConfig(
   home: string,
   storePath: string,
   agentsList?: Array<{ id: string; default?: boolean }>,
-): OpenClawConfig {
+): LittleBabyConfig {
   return {
     agents: {
       defaults: {
@@ -30,7 +30,7 @@ function mockConfig(
       list: agentsList,
     },
     session: { store: storePath, mainKey: "main" },
-  } as OpenClawConfig;
+  } as LittleBabyConfig;
 }
 
 function writeSessionStoreSeed(
@@ -42,7 +42,7 @@ function writeSessionStoreSeed(
 }
 
 async function withCrossAgentResumeFixture(
-  run: (params: { sessionId: string; sessionKey: string; cfg: OpenClawConfig }) => Promise<void>,
+  run: (params: { sessionId: string; sessionKey: string; cfg: LittleBabyConfig }) => Promise<void>,
 ): Promise<void> {
   await withTempHome(async (home) => {
     const storePattern = path.join(home, "sessions", "{agentId}", "sessions.json");

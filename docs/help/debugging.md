@@ -16,13 +16,13 @@ provider mixes reasoning into normal text.
 
 Use `/debug` in chat to set **runtime-only** config overrides (memory, not disk).
 `/debug` is disabled by default; enable with `commands.debug: true`.
-This is handy when you need to toggle obscure settings without editing `openclaw.json`.
+This is handy when you need to toggle obscure settings without editing `littlebaby.json`.
 
 Examples:
 
 ```
 /debug show
-/debug set messages.responsePrefix="[openclaw]"
+/debug set messages.responsePrefix="[littlebaby]"
 /debug unset messages.responsePrefix
 /debug reset
 ```
@@ -61,7 +61,7 @@ node scripts/watch-node.mjs gateway --force
 ```
 
 The watcher restarts on build-relevant files under `src/`, extension source files,
-extension `package.json` and `openclaw.plugin.json` metadata, `tsconfig.json`,
+extension `package.json` and `littlebaby.plugin.json` metadata, `tsconfig.json`,
 `package.json`, and `tsdown.config.ts`. Extension metadata changes restart the
 gateway without forcing a `tsdown` rebuild; source and config changes still
 rebuild `dist` first.
@@ -84,17 +84,17 @@ Recommended flow (dev profile + dev bootstrap):
 
 ```bash
 pnpm gateway:dev
-LITTLEBABY_PROFILE=dev openclaw tui
+LITTLEBABY_PROFILE=dev littlebaby tui
 ```
 
-If you don’t have a global install yet, run the CLI via `pnpm openclaw ...`.
+If you don’t have a global install yet, run the CLI via `pnpm littlebaby ...`.
 
 What this does:
 
 1. **Profile isolation** (global `--dev`)
    - `LITTLEBABY_PROFILE=dev`
    - `LITTLEBABY_STATE_DIR=~/.littlebaby-dev`
-   - `LITTLEBABY_CONFIG_PATH=~/.littlebaby-dev/openclaw.json`
+   - `LITTLEBABY_CONFIG_PATH=~/.littlebaby-dev/littlebaby.json`
    - `LITTLEBABY_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
 
 2. **Dev bootstrap** (`gateway --dev`)
@@ -116,7 +116,7 @@ Note: `--dev` is a **global** profile flag and gets eaten by some runners.
 If you need to spell it out, use the env var form:
 
 ```bash
-LITTLEBABY_PROFILE=dev openclaw gateway --dev --reset
+LITTLEBABY_PROFILE=dev littlebaby gateway --dev --reset
 ```
 
 `--reset` wipes config, credentials, sessions, and the dev workspace (using
@@ -125,12 +125,12 @@ LITTLEBABY_PROFILE=dev openclaw gateway --dev --reset
 Tip: if a non‑dev gateway is already running (launchd/systemd), stop it first:
 
 ```bash
-openclaw gateway stop
+littlebaby gateway stop
 ```
 
-## Raw stream logging (OpenClaw)
+## Raw stream logging (LittleBaby)
 
-OpenClaw can log the **raw assistant stream** before any filtering/formatting.
+LittleBaby can log the **raw assistant stream** before any filtering/formatting.
 This is the best way to see whether reasoning is arriving as plain text deltas
 (or as separate thinking blocks).
 

@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { saveAuthProfileStore } from "openclaw/plugin-sdk/agent-runtime";
+import { saveAuthProfileStore } from "littlebaby/plugin-sdk/agent-runtime";
 import { afterEach, describe, expect, it } from "vitest";
 import { prepareOpenAICodexCliExecution } from "./openai-codex-cli-bridge.js";
 
@@ -22,8 +22,8 @@ describe("prepareOpenAICodexCliExecution", () => {
     );
   });
 
-  it("writes a private CODEX_HOME bridge from canonical OpenClaw oauth", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-cli-bridge-"));
+  it("writes a private CODEX_HOME bridge from canonical LittleBaby oauth", async () => {
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-cli-bridge-"));
     tempDirs.push(agentDir);
     saveAuthProfileStore(
       {
@@ -79,7 +79,7 @@ describe("prepareOpenAICodexCliExecution", () => {
   });
 
   it("returns null when there is no bridgeable canonical oauth credential", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-cli-bridge-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-cli-bridge-"));
     tempDirs.push(agentDir);
     saveAuthProfileStore(
       {
@@ -109,7 +109,7 @@ describe("prepareOpenAICodexCliExecution", () => {
   });
 
   it("refuses to overwrite a symlinked codex cli auth bridge file", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-cli-bridge-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "littlebaby-codex-cli-bridge-"));
     tempDirs.push(agentDir);
     const codexHome = resolveHashedCodexHome(agentDir, "openai-codex:default");
     await fs.mkdir(codexHome, { recursive: true });

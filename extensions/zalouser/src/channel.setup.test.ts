@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { withEnvAsync } from "openclaw/plugin-sdk/testing";
+import { withEnvAsync } from "littlebaby/plugin-sdk/testing";
 import { describe, expect, it } from "vitest";
 import { createPluginSetupWizardStatus } from "../../../test/helpers/plugins/setup-wizard.js";
 import "./zalo-js.test-mocks.js";
@@ -11,7 +11,7 @@ const zalouserSetupGetStatus = createPluginSetupWizardStatus(zalouserSetupPlugin
 
 describe("zalouser setup plugin", () => {
   it("builds setup status without an initialized runtime", async () => {
-    const stateDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-zalouser-setup-"));
+    const stateDir = await mkdtemp(path.join(os.tmpdir(), "littlebaby-zalouser-setup-"));
 
     try {
       await withEnvAsync({ LITTLEBABY_STATE_DIR: stateDir }, async () => {

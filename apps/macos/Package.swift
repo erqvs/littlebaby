@@ -1,18 +1,18 @@
 // swift-tools-version: 6.2
-// Package manifest for the OpenClaw macOS companion (menu bar app + IPC library).
+// Package manifest for the LittleBaby macOS companion (menu bar app + IPC library).
 
 import PackageDescription
 
 let package = Package(
-    name: "OpenClaw",
+    name: "LittleBaby",
     platforms: [
         .macOS(.v15),
     ],
     products: [
-        .library(name: "OpenClawIPC", targets: ["OpenClawIPC"]),
-        .library(name: "OpenClawDiscovery", targets: ["OpenClawDiscovery"]),
-        .executable(name: "OpenClaw", targets: ["OpenClaw"]),
-        .executable(name: "openclaw-mac", targets: ["OpenClawMacCLI"]),
+        .library(name: "LittleBabyIPC", targets: ["LittleBabyIPC"]),
+        .library(name: "LittleBabyDiscovery", targets: ["LittleBabyDiscovery"]),
+        .executable(name: "LittleBaby", targets: ["LittleBaby"]),
+        .executable(name: "littlebaby-mac", targets: ["LittleBabyMacCLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/orchetect/MenuBarExtraAccess", exact: "1.2.2"),
@@ -21,33 +21,33 @@ let package = Package(
         .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.9.0"),
         .package(url: "https://github.com/steipete/Peekaboo.git", branch: "main"),
         .package(url: "https://github.com/Blaizzy/mlx-audio-swift", exact: "0.1.2"),
-        .package(path: "../shared/OpenClawKit"),
+        .package(path: "../shared/LittleBabyKit"),
         .package(path: "../../Swabble"),
     ],
     targets: [
         .target(
-            name: "OpenClawIPC",
+            name: "LittleBabyIPC",
             dependencies: [],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .target(
-            name: "OpenClawDiscovery",
+            name: "LittleBabyDiscovery",
             dependencies: [
-                .product(name: "OpenClawKit", package: "OpenClawKit"),
+                .product(name: "LittleBabyKit", package: "LittleBabyKit"),
             ],
-            path: "Sources/OpenClawDiscovery",
+            path: "Sources/LittleBabyDiscovery",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "OpenClaw",
+            name: "LittleBaby",
             dependencies: [
-                "OpenClawIPC",
-                "OpenClawDiscovery",
-                .product(name: "OpenClawKit", package: "OpenClawKit"),
-                .product(name: "OpenClawChatUI", package: "OpenClawKit"),
-                .product(name: "OpenClawProtocol", package: "OpenClawKit"),
+                "LittleBabyIPC",
+                "LittleBabyDiscovery",
+                .product(name: "LittleBabyKit", package: "LittleBabyKit"),
+                .product(name: "LittleBabyChatUI", package: "LittleBabyKit"),
+                .product(name: "LittleBabyProtocol", package: "LittleBabyKit"),
                 .product(name: "SwabbleKit", package: "swabble"),
                 .product(name: "MenuBarExtraAccess", package: "MenuBarExtraAccess"),
                 .product(name: "Subprocess", package: "swift-subprocess"),
@@ -61,30 +61,30 @@ let package = Package(
                 "Resources/Info.plist",
             ],
             resources: [
-                .copy("Resources/OpenClaw.icns"),
+                .copy("Resources/LittleBaby.icns"),
                 .copy("Resources/DeviceModels"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "OpenClawMacCLI",
+            name: "LittleBabyMacCLI",
             dependencies: [
-                "OpenClawDiscovery",
-                .product(name: "OpenClawKit", package: "OpenClawKit"),
-                .product(name: "OpenClawProtocol", package: "OpenClawKit"),
+                "LittleBabyDiscovery",
+                .product(name: "LittleBabyKit", package: "LittleBabyKit"),
+                .product(name: "LittleBabyProtocol", package: "LittleBabyKit"),
             ],
-            path: "Sources/OpenClawMacCLI",
+            path: "Sources/LittleBabyMacCLI",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .testTarget(
-            name: "OpenClawIPCTests",
+            name: "LittleBabyIPCTests",
             dependencies: [
-                "OpenClawIPC",
-                "OpenClaw",
-                "OpenClawDiscovery",
-                .product(name: "OpenClawProtocol", package: "OpenClawKit"),
+                "LittleBabyIPC",
+                "LittleBaby",
+                "LittleBabyDiscovery",
+                .product(name: "LittleBabyProtocol", package: "LittleBabyKit"),
                 .product(name: "SwabbleKit", package: "swabble"),
             ],
             swiftSettings: [

@@ -1,7 +1,7 @@
 import type {
-  OpenClawConfig,
+  LittleBabyConfig,
   ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "littlebaby/plugin-sdk/memory-core-host-engine-foundation";
 import {
   resolveEmbeddingProviderFallbackModel,
   type EmbeddingProvider,
@@ -68,7 +68,7 @@ export function applyMemoryFallbackProviderState(params: {
 }
 
 export function resolveMemoryFallbackProviderRequest(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   settings: ResolvedMemorySearchConfig;
   currentProviderId: string | null;
 }): {

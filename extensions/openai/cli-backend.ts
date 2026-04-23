@@ -1,8 +1,8 @@
-import type { CliBackendPlugin } from "openclaw/plugin-sdk/cli-backend";
+import type { CliBackendPlugin } from "littlebaby/plugin-sdk/cli-backend";
 import {
   CLI_FRESH_WATCHDOG_DEFAULTS,
   CLI_RESUME_WATCHDOG_DEFAULTS,
-} from "openclaw/plugin-sdk/cli-backend";
+} from "littlebaby/plugin-sdk/cli-backend";
 import { OPENAI_CODEX_DEFAULT_PROFILE_ID } from "./openai-codex-cli-auth.js";
 import { prepareOpenAICodexCliExecution } from "./openai-codex-cli-bridge.js";
 

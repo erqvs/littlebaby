@@ -7,17 +7,17 @@ import {
   loadSessionStore,
   resolveStorePath,
   updateSessionStore,
-} from "openclaw/plugin-sdk/config-runtime";
+} from "littlebaby/plugin-sdk/config-runtime";
 import {
   extractErrorCode,
   formatErrorMessage,
   RequestScopedSubagentRuntimeError,
   readErrorName,
   SUBAGENT_RUNTIME_REQUEST_SCOPE_ERROR_CODE,
-} from "openclaw/plugin-sdk/error-runtime";
-import { resolveGlobalMap } from "openclaw/plugin-sdk/global-singleton";
-import { createAsyncLock } from "openclaw/plugin-sdk/infra-runtime";
-import { resolveStateDir } from "openclaw/plugin-sdk/memory-core-host-runtime-core";
+} from "littlebaby/plugin-sdk/error-runtime";
+import { resolveGlobalMap } from "littlebaby/plugin-sdk/global-singleton";
+import { createAsyncLock } from "littlebaby/plugin-sdk/infra-runtime";
+import { resolveStateDir } from "littlebaby/plugin-sdk/memory-core-host-runtime-core";
 
 // ── Types ──────────────────────────────────────────────────────────────
 
@@ -91,10 +91,10 @@ const DREAMING_TRANSCRIPT_RUN_MARKER = '"runId":"dreaming-narrative-';
 const DREAMING_ORPHAN_MIN_AGE_MS = 300_000;
 const SAFE_SESSION_ID_RE = /^[a-z0-9][a-z0-9._-]{0,127}$/i;
 const DREAMS_FILENAMES = ["DREAMS.md", "dreams.md"] as const;
-const DIARY_START_MARKER = "<!-- openclaw:dreaming:diary:start -->";
-const DIARY_END_MARKER = "<!-- openclaw:dreaming:diary:end -->";
-const BACKFILL_ENTRY_MARKER = "openclaw:dreaming:backfill-entry";
-const DREAMS_FILE_LOCKS_KEY = Symbol.for("openclaw.memoryCore.dreamingNarrative.fileLocks");
+const DIARY_START_MARKER = "<!-- littlebaby:dreaming:diary:start -->";
+const DIARY_END_MARKER = "<!-- littlebaby:dreaming:diary:end -->";
+const BACKFILL_ENTRY_MARKER = "littlebaby:dreaming:backfill-entry";
+const DREAMS_FILE_LOCKS_KEY = Symbol.for("littlebaby.memoryCore.dreamingNarrative.fileLocks");
 
 type DreamsFileLockEntry = {
   withLock: ReturnType<typeof createAsyncLock>;

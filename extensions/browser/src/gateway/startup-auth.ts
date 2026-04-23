@@ -1,1 +1,1 @@
-export { ensureGatewayStartupAuth } from "openclaw/plugin-sdk/browser-node-runtime";
+export { ensureGatewayStartupAuth } from "littlebaby/plugin-sdk/browser-node-runtime";

@@ -1,4 +1,4 @@
-import type { SsrFPolicy } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { SsrFPolicy } from "littlebaby/plugin-sdk/ssrf-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "./test-mocks.js";
 import {

@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/routing";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { DEFAULT_ACCOUNT_ID } from "littlebaby/plugin-sdk/routing";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { handleWhatsAppAction, whatsAppActionRuntime } from "./action-runtime.js";
 
@@ -8,13 +8,13 @@ const sendReactionWhatsApp = vi.fn(async () => undefined);
 
 const enabledConfig = {
   channels: { whatsapp: { actions: { reactions: true } } },
-} as OpenClawConfig;
+} as LittleBabyConfig;
 
 describe("handleWhatsAppAction", () => {
-  function reactionConfig(reactionLevel: "minimal" | "extensive" | "off" | "ack"): OpenClawConfig {
+  function reactionConfig(reactionLevel: "minimal" | "extensive" | "off" | "ack"): LittleBabyConfig {
     return {
       channels: { whatsapp: { actions: { reactions: true }, reactionLevel } },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
   }
 
   beforeEach(() => {
@@ -158,7 +158,7 @@ describe("handleWhatsAppAction", () => {
   it("respects reaction gating", async () => {
     const cfg = {
       channels: { whatsapp: { actions: { reactions: false } } },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
     await expect(
       handleWhatsAppAction(
         {
@@ -181,7 +181,7 @@ describe("handleWhatsAppAction", () => {
           messageId: "msg1",
           emoji: "✅",
         },
-        {} as OpenClawConfig,
+        {} as LittleBabyConfig,
       ),
     ).rejects.toThrow(/WhatsApp reactions are disabled/);
   });
@@ -189,7 +189,7 @@ describe("handleWhatsAppAction", () => {
   it("prefers the action gate error when both actions.reactions and reactionLevel disable reactions", async () => {
     const cfg = {
       channels: { whatsapp: { actions: { reactions: false }, reactionLevel: "ack" } },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     await expect(
       handleWhatsAppAction(
@@ -238,7 +238,7 @@ describe("handleWhatsAppAction", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     await expect(
       handleWhatsAppAction(
@@ -268,7 +268,7 @@ describe("handleWhatsAppAction", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as LittleBabyConfig;
 
     await handleWhatsAppAction(
       {

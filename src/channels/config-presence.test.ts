@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import {
   hasMeaningfulChannelConfig,
   hasPotentialConfiguredChannels,
@@ -27,13 +27,13 @@ vi.mock("../channels/plugins/persisted-auth-state.js", () => ({
 const tempDirs: string[] = [];
 
 function makeTempStateDir() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-channel-config-presence-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "littlebaby-channel-config-presence-"));
   tempDirs.push(dir);
   return dir;
 }
 
 function expectPotentialConfiguredChannelCase(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   env: NodeJS.ProcessEnv;
   expectedIds: string[];
   expectedConfigured: boolean;
@@ -94,7 +94,7 @@ describe("config presence", () => {
 
   it("detects persisted Matrix credentials without config or env", () => {
     const stateDir = makeTempStateDir().replace(
-      "openclaw-channel-config-presence-",
+      "littlebaby-channel-config-presence-",
       "persisted-matrix-",
     );
     fs.mkdirSync(stateDir, { recursive: true });

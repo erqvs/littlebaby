@@ -1,10 +1,10 @@
 import { completeSimple, type Api, type Model } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
 import { loadConfig } from "../config/config.js";
-import { resolveOpenClawAgentDir } from "./agent-paths.js";
+import { resolveLittleBabyAgentDir } from "./agent-paths.js";
 import { isLiveProfileKeyModeEnabled, isLiveTestEnabled } from "./live-test-helpers.js";
 import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
-import { ensureOpenClawModelsJson } from "./models-config.js";
+import { ensureLittleBabyModelsJson } from "./models-config.js";
 import { discoverAuthStorage, discoverModels } from "./pi-model-discovery.js";
 
 const LIVE = isLiveTestEnabled();
@@ -121,9 +121,9 @@ describeLive("openai reasoning compat live", () => {
     async () => {
       const { provider, modelId } = resolveTargetModelRef();
       const cfg = loadConfig();
-      await ensureOpenClawModelsJson(cfg);
+      await ensureLittleBabyModelsJson(cfg);
 
-      const agentDir = resolveOpenClawAgentDir();
+      const agentDir = resolveLittleBabyAgentDir();
       const authStorage = discoverAuthStorage(agentDir);
       const modelRegistry = discoverModels(authStorage, agentDir);
       const model = modelRegistry.find(provider, modelId) as Model<Api> | null;

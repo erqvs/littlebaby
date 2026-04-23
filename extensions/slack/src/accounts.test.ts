@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
 import { describe, expect, it } from "vitest";
 import { resolveSlackAccount } from "./accounts.js";
 
@@ -127,7 +127,7 @@ describe("resolveSlackAccount tolerateUnresolvedSecrets", () => {
         },
       },
     },
-  } as unknown as OpenClawConfig;
+  } as unknown as LittleBabyConfig;
 
   it("throws by default when the snapshot still holds an unresolved SecretRef botToken", () => {
     expect(() =>
@@ -192,7 +192,7 @@ describe("resolveSlackAccount tolerateUnresolvedSecrets", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as LittleBabyConfig;
     const previousBotToken = process.env.SLACK_BOT_TOKEN;
     const previousAppToken = process.env.SLACK_APP_TOKEN;
     const previousUserToken = process.env.SLACK_USER_TOKEN;
@@ -293,7 +293,7 @@ describe("resolveSlackAccount tolerateUnresolvedSecrets", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as LittleBabyConfig,
         accountId: "default",
         tolerateUnresolvedSecrets: true,
       });

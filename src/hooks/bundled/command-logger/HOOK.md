@@ -1,14 +1,14 @@
 ---
 name: command-logger
 description: "Log all command events to a centralized audit file"
-homepage: https://docs.openclaw.ai/automation/hooks#command-logger
+homepage: https://docs.littlebaby.ai/automation/hooks#command-logger
 metadata:
   {
     "littlebaby":
       {
         "emoji": "📝",
         "events": ["command"],
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with LittleBaby" }],
       },
   }
 ---
@@ -62,7 +62,7 @@ No configuration needed. The hook automatically:
 To disable this hook:
 
 ```bash
-openclaw hooks disable command-logger
+littlebaby hooks disable command-logger
 ```
 
 Or via config:
@@ -90,7 +90,7 @@ The hook does not automatically rotate logs. To manage log size, you can:
    ```
 
 2. **Use logrotate** (Linux):
-   Create `/etc/logrotate.d/openclaw`:
+   Create `/etc/logrotate.d/littlebaby`:
    ```
    /home/username/.littlebaby/logs/commands.log {
        weekly

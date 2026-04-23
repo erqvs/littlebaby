@@ -8,19 +8,19 @@ import {
   ThreadUpdateListener,
   type User,
 } from "@buape/carbon";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/infra-runtime";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
+import type { LittleBabyConfig } from "littlebaby/plugin-sdk/config-runtime";
+import { enqueueSystemEvent } from "littlebaby/plugin-sdk/infra-runtime";
+import { resolveAgentRoute } from "littlebaby/plugin-sdk/routing";
 import {
   createSubsystemLogger,
   danger,
   formatDurationSeconds,
   logVerbose,
-} from "openclaw/plugin-sdk/runtime-env";
+} from "littlebaby/plugin-sdk/runtime-env";
 import {
   readStoreAllowFromForDmPolicy,
   resolveDmGroupAccessWithLists,
-} from "openclaw/plugin-sdk/security-runtime";
+} from "littlebaby/plugin-sdk/security-runtime";
 import {
   isDiscordGroupAllowedByPolicy,
   normalizeDiscordAllowList,
@@ -40,9 +40,9 @@ import { isThreadArchived } from "./thread-bindings.discord-api.js";
 import { closeDiscordThreadSessions } from "./thread-session-close.js";
 import { normalizeDiscordListenerTimeoutMs, runDiscordTaskWithTimeout } from "./timeouts.js";
 
-type LoadedConfig = ReturnType<typeof import("openclaw/plugin-sdk/config-runtime").loadConfig>;
-type RuntimeEnv = import("openclaw/plugin-sdk/runtime-env").RuntimeEnv;
-type Logger = ReturnType<typeof import("openclaw/plugin-sdk/runtime-env").createSubsystemLogger>;
+type LoadedConfig = ReturnType<typeof import("littlebaby/plugin-sdk/config-runtime").loadConfig>;
+type RuntimeEnv = import("littlebaby/plugin-sdk/runtime-env").RuntimeEnv;
+type Logger = ReturnType<typeof import("littlebaby/plugin-sdk/runtime-env").createSubsystemLogger>;
 
 export type DiscordMessageEvent = Parameters<MessageCreateListener["handle"]>[0];
 
@@ -734,7 +734,7 @@ type ThreadUpdateEvent = Parameters<ThreadUpdateListener["handle"]>[0];
 
 export class DiscordThreadUpdateListener extends ThreadUpdateListener {
   constructor(
-    private cfg: OpenClawConfig,
+    private cfg: LittleBabyConfig,
     private accountId: string,
     private logger?: Logger,
   ) {

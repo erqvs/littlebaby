@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { createConfigRuntimeEnv } from "../config/env-vars.js";
 import { unsetEnv, withTempEnv } from "./models-config.e2e-harness.js";
 import { resolveProvidersForModelsJsonWithDeps } from "./models-config.plan.js";
@@ -27,14 +27,14 @@ function createImplicitOpenRouterProvider(): ProviderConfig {
 }
 
 async function resolveProvidersForConfigEnvTest(params: {
-  cfg: OpenClawConfig;
+  cfg: LittleBabyConfig;
   onResolveImplicitProviders: (env: NodeJS.ProcessEnv) => void;
 }) {
   const env = createConfigRuntimeEnv(params.cfg);
   return await resolveProvidersForModelsJsonWithDeps(
     {
       cfg: params.cfg,
-      agentDir: "/tmp/openclaw-models-config-env-vars-test",
+      agentDir: "/tmp/littlebaby-models-config-env-vars-test",
       env,
     },
     {
@@ -48,7 +48,7 @@ async function resolveProvidersForConfigEnvTest(params: {
   );
 }
 
-function createConfigEnvVarsConfig(): OpenClawConfig {
+function createConfigEnvVarsConfig(): LittleBabyConfig {
   return {
     models: { providers: {} },
     env: {
@@ -60,7 +60,7 @@ function createConfigEnvVarsConfig(): OpenClawConfig {
   };
 }
 
-async function resolveProvidersAndCaptureDiscoveryEnv(cfg: OpenClawConfig) {
+async function resolveProvidersAndCaptureDiscoveryEnv(cfg: LittleBabyConfig) {
   let discoveryEnv: NodeJS.ProcessEnv | undefined;
   const providers = await resolveProvidersForConfigEnvTest({
     cfg,

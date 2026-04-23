@@ -13,7 +13,7 @@ type EvaluatedModules = {
   idToModuleMap: Map<string, EvaluatedModuleNode>;
 };
 
-const SHARED_TEST_SETUP = Symbol.for("openclaw.sharedTestSetup");
+const SHARED_TEST_SETUP = Symbol.for("littlebaby.sharedTestSetup");
 
 function getSharedTestHome(): string | undefined {
   const globalState = globalThis as typeof globalThis & {
@@ -60,7 +60,7 @@ function restoreSharedTestHomeAfterEnvUnstub(testHomeRaw: string | undefined): v
   process.env.XDG_CACHE_HOME = path.join(testHome, ".cache");
 }
 
-export default class OpenClawNonIsolatedRunner extends TestRunner {
+export default class LittleBabyNonIsolatedRunner extends TestRunner {
   override onCollectStart(file: { filepath: string }) {
     super.onCollectStart(file);
     restoreSharedTestHomeAfterEnvUnstub(getSharedTestHome());

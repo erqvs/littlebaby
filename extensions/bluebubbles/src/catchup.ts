@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { readJsonFileWithFallback, writeJsonFileAtomically } from "openclaw/plugin-sdk/json-store";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { readJsonFileWithFallback, writeJsonFileAtomically } from "littlebaby/plugin-sdk/json-store";
+import { resolveStateDir } from "littlebaby/plugin-sdk/state-paths";
+import { resolvePreferredLittleBabyTmpDir } from "littlebaby/plugin-sdk/temp-path";
 import { resolveBlueBubblesServerAccount } from "./account-resolve.js";
 import { createBlueBubblesClientFromParts } from "./client.js";
 import { warmupBlueBubblesInboundDedupe } from "./inbound-dedupe.js";
@@ -99,14 +99,14 @@ function resolveStateDirFromEnv(env: NodeJS.ProcessEnv = process.env): string {
     return resolveStateDir(env);
   }
   // Default test isolation: per-pid tmpdir, no bleed into real ~/.littlebaby.
-  // Use resolvePreferredOpenClawTmpDir + string concat (mirrors
+  // Use resolvePreferredLittleBabyTmpDir + string concat (mirrors
   // inbound-dedupe) so this doesn't trip the tmpdir-path-guard test that
   // flags dynamic template-literal suffixes on os.tmpdir() paths.
   if (env.VITEST || env.NODE_ENV === "test") {
-    const name = "openclaw-vitest-" + process.pid;
-    return path.join(resolvePreferredOpenClawTmpDir(), name);
+    const name = "littlebaby-vitest-" + process.pid;
+    return path.join(resolvePreferredLittleBabyTmpDir(), name);
   }
-  // Canonical OpenClaw state dir: honors `~` expansion + legacy/new
+  // Canonical LittleBaby state dir: honors `~` expansion + legacy/new
   // fallback. Sharing this resolver with inbound-dedupe is what guarantees
   // the catchup cursor and the dedupe state always live under the same
   // root, so a replayed GUID is recognized by the dedupe after catchup

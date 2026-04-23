@@ -11,7 +11,7 @@ Prepares local beta-release inputs without touching local signing overrides:
 - reads apps/ios/version.json and writes apps/ios/build/Version.xcconfig
 - writes apps/ios/build/BetaRelease.xcconfig with canonical bundle IDs
 - configures the beta build for relay-backed APNs registration
-- regenerates apps/ios/OpenClaw.xcodeproj via xcodegen
+- regenerates apps/ios/LittleBaby.xcodeproj via xcodegen
 EOF
 }
 
@@ -154,11 +154,11 @@ write_generated_file "${BETA_XCCONFIG}" <<EOF
 LITTLEBABY_CODE_SIGN_STYLE = Automatic
 LITTLEBABY_DEVELOPMENT_TEAM = ${TEAM_ID}
 LITTLEBABY_IOS_SELECTED_TEAM = ${TEAM_ID}
-LITTLEBABY_APP_BUNDLE_ID = ai.openclaw.client
-LITTLEBABY_SHARE_BUNDLE_ID = ai.openclaw.client.share
-LITTLEBABY_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclaw.client.activitywidget
-LITTLEBABY_WATCH_APP_BUNDLE_ID = ai.openclaw.client.watchkitapp
-LITTLEBABY_WATCH_EXTENSION_BUNDLE_ID = ai.openclaw.client.watchkitapp.extension
+LITTLEBABY_APP_BUNDLE_ID = ai.littlebaby.client
+LITTLEBABY_SHARE_BUNDLE_ID = ai.littlebaby.client.share
+LITTLEBABY_ACTIVITY_WIDGET_BUNDLE_ID = ai.littlebaby.client.activitywidget
+LITTLEBABY_WATCH_APP_BUNDLE_ID = ai.littlebaby.client.watchkitapp
+LITTLEBABY_WATCH_EXTENSION_BUNDLE_ID = ai.littlebaby.client.watchkitapp.extension
 LITTLEBABY_APP_PROFILE =
 LITTLEBABY_SHARE_PROFILE =
 LITTLEBABY_PUSH_TRANSPORT = relay

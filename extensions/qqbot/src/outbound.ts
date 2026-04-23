@@ -1,10 +1,10 @@
 import * as fs from "node:fs";
 import * as path from "path";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/text-runtime";
+} from "littlebaby/plugin-sdk/text-runtime";
 import {
   getAccessToken,
   sendC2CFileMessage,
@@ -1579,7 +1579,7 @@ function isVideoFile(filePath: string, mimeType?: string): boolean {
 }
 
 /**
- * Send a message emitted by an OpenClaw cron task.
+ * Send a message emitted by an LittleBaby cron task.
  *
  * Cron output may be either:
  * 1. A `QQBOT_CRON:{base64}` structured payload that includes target metadata.

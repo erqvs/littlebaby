@@ -3,9 +3,9 @@ import {
   type ModelAliasIndex,
   resolveDefaultModelForAgent,
 } from "../../agents/model-selection.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 
-export function resolveDefaultModel(params: { cfg: OpenClawConfig; agentId?: string }): {
+export function resolveDefaultModel(params: { cfg: LittleBabyConfig; agentId?: string }): {
   defaultProvider: string;
   defaultModel: string;
   aliasIndex: ModelAliasIndex;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { LittleBabyConfig } from "../config/config.js";
 import { resolveGatewayProbeAuthSafe, resolveGatewayProbeTarget } from "../gateway/probe-auth.js";
 import { collectDeepProbeFindings } from "./audit-deep-probe-findings.js";
 
@@ -18,7 +18,7 @@ describe("security audit gateway auth selection", () => {
 
     const cases: Array<{
       name: string;
-      cfg: OpenClawConfig;
+      cfg: LittleBabyConfig;
       env?: { token?: string; password?: string };
       expectedAuth: { token?: string; password?: string };
     }> = [
@@ -109,7 +109,7 @@ describe("security audit gateway auth selection", () => {
   });
 
   it("adds warning finding when probe auth SecretRef is unavailable", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: LittleBabyConfig = {
       gateway: {
         mode: "local",
         auth: {

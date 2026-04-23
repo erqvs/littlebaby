@@ -1,14 +1,14 @@
 {
-  "name": "@openclaw/twitch",
+  "name": "@littlebaby/twitch",
   "version": "2026.4.20",
-  "description": "OpenClaw Twitch channel plugin",
+  "description": "LittleBaby Twitch channel plugin",
   "type": "module",
   "dependencies": {
     "@twurple/api": "^8.1.3",
     "@twurple/auth": "^8.1.3",
     "@twurple/chat": "^8.1.3"
   },
-  "openclaw": {
+  "littlebaby": {
     "extensions": [
       "./index.js"
     ],
