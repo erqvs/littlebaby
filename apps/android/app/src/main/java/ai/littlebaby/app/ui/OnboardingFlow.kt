@@ -1723,7 +1723,7 @@ private fun FinalStep(
                   if (pairingRequired) {
                     "Approve this phone on the gateway host, or copy the report below."
                   } else {
-                    "Copy this report and give it to your Claw."
+                    "Copy this report and give it to your LittleBaby."
                   },
                   style = onboardingCalloutStyle,
                   color = onboardingTextSecondary,
@@ -1767,7 +1767,7 @@ private fun FinalStep(
             ) {
               Icon(Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(18.dp))
               Spacer(modifier = Modifier.width(8.dp))
-              Text("Copy Report for Claw", style = onboardingCalloutStyle.copy(fontWeight = FontWeight.Bold))
+              Text("Copy Report for LittleBaby", style = onboardingCalloutStyle.copy(fontWeight = FontWeight.Bold))
             }
           }
           if (pairingRequired) {
