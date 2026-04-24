@@ -8,27 +8,9 @@
     "@sinclair/typebox": "0.34.49",
     "openai": "^6.34.0"
   },
-  "devDependencies": {
-    "@littlebaby/plugin-sdk": "workspace:*"
-  },
   "littlebaby": {
     "extensions": [
       "./index.ts"
-    ],
-    "install": {
-      "npmSpec": "@littlebaby/memory-lancedb",
-      "defaultChoice": "npm",
-      "minHostVersion": ">=2026.4.10"
-    },
-    "compat": {
-      "pluginApi": ">=2026.4.20"
-    },
-    "build": {
-      "littlebabyVersion": "2026.4.20"
-    },
-    "release": {
-      "publishToLittleBabyHub": true,
-      "publishToNpm": true
-    }
+    ]
   }
 }

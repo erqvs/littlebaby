@@ -4,9 +4,6 @@
   "private": true,
   "description": "LittleBaby Z.AI provider plugin",
   "type": "module",
-  "devDependencies": {
-    "@littlebaby/plugin-sdk": "workspace:*"
-  },
   "littlebaby": {
     "extensions": [
       "./index.ts"
