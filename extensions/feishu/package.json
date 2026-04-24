@@ -8,18 +8,6 @@
     "@sinclair/typebox": "0.34.49",
     "qrcode-terminal": "^0.12.0"
   },
-  "devDependencies": {
-    "@littlebaby/plugin-sdk": "workspace:*",
-    "littlebaby": "workspace:*"
-  },
-  "peerDependencies": {
-    "littlebaby": ">=2026.4.20"
-  },
-  "peerDependenciesMeta": {
-    "littlebaby": {
-      "optional": true
-    }
-  },
   "littlebaby": {
     "extensions": [
       "./index.ts"
@@ -28,33 +16,15 @@
     "channel": {
       "id": "feishu",
       "label": "Feishu",
-      "selectionLabel": "Feishu/Lark (\u98de\u4e66)",
+      "selectionLabel": "Feishu/Lark (飞书)",
       "docsPath": "/channels/feishu",
       "docsLabel": "feishu",
-      "blurb": "\u98de\u4e66/Lark enterprise messaging with doc/wiki/drive tools.",
+      "blurb": "飞书/Lark enterprise messaging with doc/wiki/drive tools.",
       "aliases": [
         "lark"
       ],
       "order": 35,
       "quickstartAllowFrom": true
-    },
-    "install": {
-      "npmSpec": "@littlebaby/feishu",
-      "defaultChoice": "npm",
-      "minHostVersion": ">=2026.4.10"
-    },
-    "compat": {
-      "pluginApi": ">=2026.4.20"
-    },
-    "build": {
-      "littlebabyVersion": "2026.4.20"
-    },
-    "bundle": {
-      "stageRuntimeDependencies": true
-    },
-    "release": {
-      "publishToLittleBabyHub": true,
-      "publishToNpm": true
     }
   }
 }

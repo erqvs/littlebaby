@@ -3,8 +3,5 @@
   "version": "2026.4.20",
   "private": true,
   "description": "LittleBaby media understanding runtime package",
-  "type": "module",
-  "devDependencies": {
-    "@littlebaby/plugin-sdk": "workspace:*"
-  }
+  "type": "module"
 }
