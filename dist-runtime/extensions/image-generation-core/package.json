@@ -1,7 +1,0 @@
-{
-  "name": "@littlebaby/image-generation-core",
-  "version": "2026.4.20",
-  "private": true,
-  "description": "LittleBaby image generation runtime package",
-  "type": "module"
-}
