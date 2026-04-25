@@ -1500,7 +1500,8 @@
     "undici": "8.1.0",
     "ws": "^8.20.0",
     "yaml": "^2.8.3",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "@larksuiteoapi/node-sdk": "^1.61.0"
   },
   "devDependencies": {
     "@copilotkit/aimock": "1.14.3",
@@ -1592,9 +1593,6 @@
           "strip-ansi": "^7.2.0"
         }
       }
-    },
-    "patchedDependencies": {
-      "@whiskeysockets/baileys@7.0.0-rc.9": "patches/@whiskeysockets__baileys@7.0.0-rc.9.patch"
     }
   }
 }

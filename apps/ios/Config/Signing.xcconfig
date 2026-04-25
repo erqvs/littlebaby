@@ -1,0 +1,25 @@
+// Shared iOS signing defaults for local development + CI.
+#include "Version.xcconfig"
+
+LITTLEBABY_IOS_DEFAULT_TEAM = Y5PE65HELJ
+LITTLEBABY_IOS_SELECTED_TEAM = $(LITTLEBABY_IOS_DEFAULT_TEAM)
+LITTLEBABY_DEVELOPMENT_TEAM = $(LITTLEBABY_IOS_SELECTED_TEAM)
+LITTLEBABY_CODE_SIGN_STYLE = Automatic
+LITTLEBABY_APP_BUNDLE_ID = ai.littlebaby.client
+LITTLEBABY_WATCH_APP_BUNDLE_ID = ai.littlebaby.client.watchkitapp
+LITTLEBABY_WATCH_EXTENSION_BUNDLE_ID = ai.littlebaby.client.watchkitapp.extension
+LITTLEBABY_ACTIVITY_WIDGET_BUNDLE_ID = ai.littlebaby.client.activitywidget
+LITTLEBABY_WATCH_APP_PROFILE =
+LITTLEBABY_WATCH_EXTENSION_PROFILE =
+
+// Local contributors can override this by running scripts/ios-configure-signing.sh.
+// Keep include after defaults: xcconfig is evaluated top-to-bottom.
+#include? "../.local-signing.xcconfig"
+#include? "../LocalSigning.xcconfig"
+
+CODE_SIGN_STYLE = $(LITTLEBABY_CODE_SIGN_STYLE)
+CODE_SIGN_IDENTITY = Apple Development
+DEVELOPMENT_TEAM = $(LITTLEBABY_DEVELOPMENT_TEAM)
+
+// Let Xcode manage provisioning for the selected local team unless a local override pins one.
+PROVISIONING_PROFILE_SPECIFIER =
