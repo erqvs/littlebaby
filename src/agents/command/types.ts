@@ -56,9 +56,9 @@ export type AgentCommandOpts = {
   replyAccountId?: string;
   /** Override delivery thread/topic id (separate from session routing). */
   threadId?: string | number;
-  /** Message channel context (webchat|voicewake|whatsapp|...). */
+  /** Message channel context (webchat|voicewake|feishu|...). */
   messageChannel?: string;
-  channel?: string; // delivery channel (whatsapp|telegram|...)
+  channel?: string; // delivery channel (feishu or plugin channel)
   /** Account ID for multi-account channel routing (e.g., WhatsApp account). */
   accountId?: string;
   /** Context for embedded run routing (channel/account/thread). */

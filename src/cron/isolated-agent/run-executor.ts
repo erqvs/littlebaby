@@ -38,13 +38,7 @@ function resolveCurrentChannelTarget(params: {
   to?: string;
   threadId?: string | number;
 }): string | undefined {
-  if (!params.to) {
-    return undefined;
-  }
-  if (params.channel !== "telegram" || params.threadId == null) {
-    return params.to;
-  }
-  return params.to.includes(":topic:") ? params.to : `${params.to}:topic:${params.threadId}`;
+  return params.to || undefined;
 }
 
 async function loadCronEmbeddedRuntime() {
@@ -352,7 +346,7 @@ export async function executeCronRun(params: {
       payloads: interimPayloads,
       runLevelError: runResult.meta?.error,
       finalAssistantVisibleText: runResult.meta?.finalAssistantVisibleText,
-      preferFinalAssistantVisibleText: params.resolvedDelivery.channel === "telegram",
+      preferFinalAssistantVisibleText: false,
     });
     const interimText = interimOutputText?.trim() ?? "";
     const shouldRetryInterimAck =

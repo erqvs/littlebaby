@@ -1,6 +1,5 @@
 import { getActiveEmbeddedRunCount } from "../agents/pi-embedded-runner/runs.js";
 import { getTotalPendingReplies } from "../auto-reply/reply/dispatcher-registry.js";
-import type { CanvasHostServer } from "../canvas-host/server.js";
 import { type ChannelId, listChannelPlugins } from "../channels/plugins/index.js";
 import { createDefaultDeps } from "../cli/deps.js";
 import { isRestartEnabled } from "../config/commands.flags.js";
@@ -14,7 +13,6 @@ import {
   readConfigFileSnapshot,
   recoverConfigFromLastKnownGood,
   registerConfigWriteListener,
-  writeConfigFile,
 } from "../config/config.js";
 import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
 import { resolveMainSessionKey } from "../config/sessions.js";
@@ -38,14 +36,12 @@ import {
   getInspectableTaskRegistrySummary,
   stopTaskRegistryMaintenance,
 } from "../tasks/task-registry.maintenance.js";
-import { runSetupWizard } from "../wizard/setup.js";
 import { createAuthRateLimiter, type AuthRateLimiter } from "./auth-rate-limit.js";
 import { resolveGatewayAuth } from "./auth.js";
 import { closeMcpLoopbackServer } from "./mcp-http.js";
 import { createGatewayAuxHandlers } from "./server-aux-handlers.js";
 import { createChannelManager } from "./server-channels.js";
 import { createGatewayCloseHandler, runGatewayClosePrelude } from "./server-close.js";
-import { resolveGatewayControlUiRootState } from "./server-control-ui-root.js";
 import { buildGatewayCronService } from "./server-cron.js";
 import { applyGatewayLaneConcurrency } from "./server-lanes.js";
 import { createGatewayServerLiveState, type GatewayServerLiveState } from "./server-live-state.js";
@@ -78,7 +74,6 @@ import {
 import { prepareGatewayPluginBootstrap } from "./server-startup-plugins.js";
 import { STARTUP_UNAVAILABLE_GATEWAY_METHODS } from "./server-startup-unavailable-methods.js";
 import { startGatewayEarlyRuntime, startGatewayPostAttachRuntime } from "./server-startup.js";
-import { createWizardSessionTracker } from "./server-wizard-sessions.js";
 import { attachGatewayWsHandlers } from "./server-ws-runtime.js";
 import {
   getHealthCache,
@@ -91,7 +86,6 @@ import { resolveHookClientIpConfig } from "./server/hooks.js";
 import { createReadinessChecker } from "./server/readiness.js";
 import { loadGatewayTlsRuntime } from "./server/tls.js";
 import { resolveSharedGatewaySessionGeneration } from "./server/ws-shared-generation.js";
-import { maybeSeedControlUiAllowedOriginsAtStartup } from "./startup-control-ui-origins.js";
 
 export { __resetModelCatalogCacheForTest } from "./server-model-catalog.js";
 
@@ -109,7 +103,6 @@ function resolveMediaCleanupTtlMs(ttlHoursRaw: number): number {
 }
 
 const log = createSubsystemLogger("gateway");
-const logCanvas = log.child("canvas");
 const logDiscovery = log.child("discovery");
 const logTailscale = log.child("tailscale");
 const logChannels = log.child("channels");
@@ -128,8 +121,6 @@ const logHooks = log.child("hooks");
 const logPlugins = log.child("plugins");
 const logWsControl = log.child("ws");
 const logSecrets = log.child("secrets");
-const gatewayRuntime = runtimeForLogger(log);
-const canvasRuntime = runtimeForLogger(logCanvas);
 
 type AuthRateLimitConfig = Parameters<typeof createAuthRateLimiter>[0];
 
@@ -165,11 +156,6 @@ export type GatewayServerOptions = {
    */
   host?: string;
   /**
-   * If false, do not serve the browser Control UI.
-   * Default: config `gateway.controlUi.enabled` (or true when absent).
-   */
-  controlUiEnabled?: boolean;
-  /**
    * If false, do not serve `POST /v1/chat/completions`.
    * Default: config `gateway.http.endpoints.chatCompletions.enabled` (or false when absent).
    */
@@ -187,18 +173,6 @@ export type GatewayServerOptions = {
    * Override gateway Tailscale exposure configuration (merges with config).
    */
   tailscale?: import("../config/config.js").GatewayTailscaleConfig;
-  /**
-   * Test-only: allow canvas host startup even when NODE_ENV/VITEST would disable it.
-   */
-  allowCanvasHostInTests?: boolean;
-  /**
-   * Test-only: override the setup wizard runner.
-   */
-  wizardRunner?: (
-    opts: import("../commands/onboard-types.js").OnboardOptions,
-    runtime: import("../runtime.js").RuntimeEnv,
-    prompter: import("../wizard/prompts.js").WizardPrompter,
-  ) => Promise<void>;
   /**
    * Optional startup timestamp used for concise readiness logging.
    */
@@ -277,18 +251,8 @@ export async function startGatewayServer(
       getActiveEmbeddedRunCount() +
       getInspectableTaskRegistrySummary().active,
   );
-  // Unconditional startup migration: seed gateway.controlUi.allowedOrigins for existing
-  // non-loopback installs that upgraded to v2026.2.26+ without required origins.
-  const controlUiSeed = minimalTestGateway
-    ? { config: cfgAtStart, persistedAllowedOriginsSeed: false }
-    : await maybeSeedControlUiAllowedOriginsAtStartup({
-        config: cfgAtStart,
-        writeConfig: writeConfigFile,
-        log,
-      });
-  cfgAtStart = controlUiSeed.config;
   // Always capture the final config hash after all startup writes (plugin
-  // auto-enable, auth token generation, control-UI origin seeding) so the
+  // auto-enable and auth token generation) so the
   // config reloader can recognize its own startup writes and suppress the
   // spurious hot-reload that would otherwise trigger a SIGUSR1 restart loop.
   // Previously the hash was only captured when auth or control-UI persisted
@@ -331,7 +295,6 @@ export async function startGatewayServer(
     port,
     bind: opts.bind,
     host: opts.host,
-    controlUiEnabled: opts.controlUiEnabled,
     openAiChatCompletionsEnabled: opts.openAiChatCompletionsEnabled,
     openResponsesEnabled: opts.openResponsesEnabled,
     auth: opts.auth,
@@ -339,14 +302,11 @@ export async function startGatewayServer(
   });
   const {
     bindHost,
-    controlUiEnabled,
     openAiChatCompletionsEnabled,
     openAiChatCompletionsConfig,
     openResponsesEnabled,
     openResponsesConfig,
     strictTransportSecurityHeader,
-    controlUiBasePath,
-    controlUiRoot: controlUiRootOverride,
     resolvedAuth,
     tailscaleConfig,
     tailscaleMode,
@@ -385,26 +345,13 @@ export async function startGatewayServer(
   };
   const initialHooksConfig = runtimeConfig.hooksConfig;
   const initialHookClientIpConfig = resolveHookClientIpConfig(cfgAtStart);
-  const canvasHostEnabled = runtimeConfig.canvasHostEnabled;
-
   // Create auth rate limiters used by connect/auth flows.
   const rateLimitConfig = cfgAtStart.gateway?.auth?.rateLimit;
   const { rateLimiter: authRateLimiter, browserRateLimiter: browserAuthRateLimiter } =
     createGatewayAuthRateLimiters(rateLimitConfig);
 
-  const controlUiRootState = await resolveGatewayControlUiRootState({
-    controlUiRootOverride,
-    controlUiEnabled,
-    gatewayRuntime,
-    log,
-  });
-
-  const wizardRunner = opts.wizardRunner ?? runSetupWizard;
-  const { wizardSessions, findRunningWizard, purgeWizardSession } = createWizardSessionTracker();
-
   const deps = createDefaultDeps();
   let runtimeState: GatewayServerLiveState | null = null;
-  let canvasHostServer: CanvasHostServer | null = null;
   const gatewayTls = await loadGatewayTlsRuntime(cfgAtStart.gateway?.tls, log.child("tls"));
   if (cfgAtStart.gateway?.tls?.enabled && !gatewayTls.enabled) {
     throw new Error(gatewayTls.error ?? "gateway tls: failed to enable");
@@ -426,7 +373,6 @@ export async function startGatewayServer(
   });
   log.info("starting HTTP server...");
   const {
-    canvasHost,
     releasePluginRouteRegistry,
     httpServer,
     httpServers,
@@ -450,9 +396,6 @@ export async function startGatewayServer(
     cfg: cfgAtStart,
     bindHost,
     port,
-    controlUiEnabled,
-    controlUiBasePath,
-    controlUiRoot: controlUiRootState,
     openAiChatCompletionsEnabled,
     openAiChatCompletionsConfig,
     openResponsesEnabled,
@@ -467,10 +410,6 @@ export async function startGatewayServer(
     pluginRegistry,
     pinChannelRegistry: !minimalTestGateway,
     deps,
-    canvasRuntime,
-    canvasHostEnabled,
-    allowCanvasHostInTests: opts.allowCanvasHostInTests,
-    logCanvas,
     log,
     logHooks,
     logPlugins,
@@ -526,8 +465,6 @@ export async function startGatewayServer(
     await createGatewayCloseHandler({
       bonjourStop: runtimeState.bonjourStop,
       tailscaleCleanup: runtimeState.tailscaleCleanup,
-      canvasHost,
-      canvasHostServer,
       releasePluginRouteRegistry,
       stopChannel,
       pluginServices: runtimeState.pluginServices,
@@ -635,8 +572,6 @@ export async function startGatewayServer(
       clients,
     });
 
-    const canvasHostServerPort = (canvasHostServer as CanvasHostServer | null)?.port;
-
     const unavailableGatewayMethods = new Set<string>(
       minimalTestGateway ? [] : STARTUP_UNAVAILABLE_GATEWAY_METHODS,
     );
@@ -689,14 +624,10 @@ export async function startGatewayServer(
       getSessionEventSubscriberConnIds: sessionEventSubscribers.getAll,
       registerToolEventRecipient: toolEventRecipients.add,
       dedupe,
-      wizardSessions,
-      findRunningWizard,
-      purgeWizardSession,
       getRuntimeSnapshot,
       startChannel,
       stopChannel,
       markChannelLoggedOut,
-      wizardRunner,
       broadcastVoiceWakeChanged,
       unavailableGatewayMethods,
     });
@@ -723,9 +654,6 @@ export async function startGatewayServer(
       clients,
       preauthConnectionBudget,
       port,
-      gatewayHost: bindHost ?? undefined,
-      canvasHostEnabled: Boolean(canvasHost),
-      canvasHostServerPort,
       resolvedAuth,
       getResolvedAuth,
       getRequiredSharedGatewaySessionGeneration: () =>
@@ -758,7 +686,6 @@ export async function startGatewayServer(
       broadcast,
       tailscaleMode,
       resetOnExit: tailscaleConfig.resetOnExit ?? false,
-      controlUiBasePath,
       logTailscale,
       gatewayPluginConfigAtStart,
       pluginRegistry,
@@ -829,8 +756,6 @@ export async function startGatewayServer(
   const close = createGatewayCloseHandler({
     bonjourStop: runtimeState.bonjourStop,
     tailscaleCleanup: runtimeState.tailscaleCleanup,
-    canvasHost,
-    canvasHostServer,
     releasePluginRouteRegistry,
     stopChannel,
     pluginServices: runtimeState.pluginServices,

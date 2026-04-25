@@ -111,9 +111,6 @@ export const EXTENSION_PACKAGE_BOUNDARY_XAI_PATHS = {
   "@littlebaby/*": ["../*"],
   "@littlebaby/plugin-sdk/*": ["../../dist/plugin-sdk/src/plugin-sdk/*.d.ts"],
   "@littlebaby/anthropic-vertex/api.js": ["./.boundary-stubs/anthropic-vertex-api.d.ts"],
-  "@littlebaby/ollama/api.js": ["./.boundary-stubs/ollama-api.d.ts"],
-  "@littlebaby/ollama/runtime-api.js": ["./.boundary-stubs/ollama-runtime-api.d.ts"],
-  "@littlebaby/speech-core/runtime-api.js": ["./.boundary-stubs/speech-core-runtime-api.d.ts"],
 } as const;
 
 export type ExtensionPackageBoundaryTsConfigJson = {

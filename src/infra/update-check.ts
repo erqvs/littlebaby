@@ -129,7 +129,7 @@ export async function checkGitUpdateStatus(params: {
       timeoutMs,
     }).catch(() => null),
     runCommandWithTimeout(
-      ["git", "-C", root, "status", "--porcelain", "--", ":!dist/control-ui/"],
+      ["git", "-C", root, "status", "--porcelain"],
       {
         timeoutMs,
       },

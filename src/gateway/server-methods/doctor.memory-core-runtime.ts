@@ -1,8 +1,3 @@
-export {
-  dedupeDreamDiaryEntries,
-  removeBackfillDiaryEntries,
-  previewGroundedRemMarkdown,
-  repairDreamingArtifacts,
-  writeBackfillDiaryEntries,
-  removeGroundedShortTermCandidates,
-} from "../../plugin-sdk/memory-core-bundled-runtime.js";
+export async function resolveMemoryDoctorRuntime(): Promise<never> {
+  throw new Error("Memory doctor runtime is not included in this minimal build.");
+}

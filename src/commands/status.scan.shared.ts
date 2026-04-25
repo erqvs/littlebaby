@@ -1,7 +1,6 @@
 import { existsSync } from "node:fs";
 import type { LittleBabyConfig } from "../config/types.js";
 import { buildGatewayConnectionDetailsWithResolvers } from "../gateway/connection-details.js";
-import { normalizeControlUiBasePath } from "../gateway/control-ui-shared.js";
 import { resolveGatewayProbeTarget } from "../gateway/probe-target.js";
 import type { probeGateway as probeGatewayFn } from "../gateway/probe.js";
 import type { MemoryProviderStatus } from "../memory-host-sdk/engine-storage.js";
@@ -76,7 +75,7 @@ export function resolveMemoryPluginStatus(cfg: LittleBabyConfig): MemoryPluginSt
   if (normalizeOptionalLowercaseString(raw) === "none") {
     return { enabled: false, slot: null, reason: 'plugins.slots.memory="none"' };
   }
-  return { enabled: true, slot: raw || "memory-core" };
+  return { enabled: false, slot: null, reason: "memory disabled in minimal build" };
 }
 
 export async function resolveGatewayProbeSnapshot(params: {
@@ -155,11 +154,8 @@ export async function resolveGatewayProbeSnapshot(params: {
 export function buildTailscaleHttpsUrl(params: {
   tailscaleMode: string;
   tailscaleDns: string | null;
-  controlUiBasePath?: string;
 }): string | null {
-  return params.tailscaleMode !== "off" && params.tailscaleDns
-    ? `https://${params.tailscaleDns}${normalizeControlUiBasePath(params.controlUiBasePath)}`
-    : null;
+  return params.tailscaleMode !== "off" && params.tailscaleDns ? `https://${params.tailscaleDns}` : null;
 }
 
 export async function resolveSharedMemoryStatusSnapshot(params: {

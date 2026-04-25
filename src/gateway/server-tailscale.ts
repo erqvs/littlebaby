@@ -11,7 +11,6 @@ export async function startGatewayTailscaleExposure(params: {
   tailscaleMode: "off" | "serve" | "funnel";
   resetOnExit?: boolean;
   port: number;
-  controlUiBasePath?: string;
   logTailscale: { info: (msg: string) => void; warn: (msg: string) => void };
 }): Promise<(() => Promise<void>) | null> {
   if (params.tailscaleMode === "off") {
@@ -26,10 +25,7 @@ export async function startGatewayTailscaleExposure(params: {
     }
     const host = await getTailnetHostname().catch(() => null);
     if (host) {
-      const uiPath = params.controlUiBasePath ? `${params.controlUiBasePath}/` : "/";
-      params.logTailscale.info(
-        `${params.tailscaleMode} enabled: https://${host}${uiPath} (WS via wss://${host})`,
-      );
+      params.logTailscale.info(`${params.tailscaleMode} enabled: wss://${host}`);
     } else {
       params.logTailscale.info(`${params.tailscaleMode} enabled`);
     }

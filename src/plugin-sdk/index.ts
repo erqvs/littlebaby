@@ -78,8 +78,6 @@ export type {
   TaskRunView,
 } from "../plugins/runtime/task-domain-types.js";
 export type { LittleBabyConfig } from "../config/config.js";
-/** @deprecated Use LittleBabyConfig instead */
-export type { LittleBabyConfig as ClawdbotConfig } from "../config/config.js";
 export type {
   MemoryPluginCapability,
   MemoryPluginPublicArtifact,

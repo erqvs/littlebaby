@@ -4,45 +4,25 @@ import { theme } from "../../terminal/theme.js";
 import { formatHelpExamples } from "../help-format.js";
 import type { ProgramContext } from "./context.js";
 import { createMessageCliHelpers } from "./message/helpers.js";
-import { registerMessageBroadcastCommand } from "./message/register.broadcast.js";
-import { registerMessageDiscordAdminCommands } from "./message/register.discord-admin.js";
-import {
-  registerMessageEmojiCommands,
-  registerMessageStickerCommands,
-} from "./message/register.emoji-sticker.js";
-import {
-  registerMessagePermissionsCommand,
-  registerMessageSearchCommand,
-} from "./message/register.permissions-search.js";
-import { registerMessagePinCommands } from "./message/register.pins.js";
-import { registerMessagePollCommand } from "./message/register.poll.js";
-import { registerMessageReactionsCommands } from "./message/register.reactions.js";
-import { registerMessageReadEditDeleteCommands } from "./message/register.read-edit-delete.js";
 import { registerMessageSendCommand } from "./message/register.send.js";
-import { registerMessageThreadCommands } from "./message/register.thread.js";
 
 export function registerMessageCommands(program: Command, ctx: ProgramContext) {
   const message = program
     .command("message")
-    .description("Send, read, and manage messages and channel actions")
+    .description("Send Feishu messages")
     .addHelpText(
       "after",
       () =>
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['littlebaby message send --target +15555550123 --message "Hi"', "Send a text message."],
   [
-    'littlebaby message send --target +15555550123 --message "Hi" --media photo.jpg',
-    "Send a message with media.",
+    'littlebaby message send --channel feishu --target <feishu-target> --message "Hi"',
+    "Send a Feishu text message.",
   ],
   [
-    'littlebaby message poll --channel discord --target channel:123 --poll-question "Snack?" --poll-option Pizza --poll-option Sushi',
-    "Create a Discord poll.",
-  ],
-  [
-    'littlebaby message react --channel discord --target 123 --message-id 456 --emoji "✅"',
-    "React to a message.",
+    'littlebaby message send --channel feishu --target <feishu-target> --message "Hi" --media photo.jpg',
+    "Send a Feishu message with media.",
   ],
 ])}
 
@@ -54,15 +34,4 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "docs.littlebaby.ai/cli
 
   const helpers = createMessageCliHelpers(message, ctx.messageChannelOptions);
   registerMessageSendCommand(message, helpers);
-  registerMessageBroadcastCommand(message, helpers);
-  registerMessagePollCommand(message, helpers);
-  registerMessageReactionsCommands(message, helpers);
-  registerMessageReadEditDeleteCommands(message, helpers);
-  registerMessagePinCommands(message, helpers);
-  registerMessagePermissionsCommand(message, helpers);
-  registerMessageSearchCommand(message, helpers);
-  registerMessageThreadCommands(message, helpers);
-  registerMessageEmojiCommands(message, helpers);
-  registerMessageStickerCommands(message, helpers);
-  registerMessageDiscordAdminCommands(message, helpers);
 }

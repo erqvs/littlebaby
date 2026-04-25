@@ -47,25 +47,6 @@ function isCurrentLittleBabyClient(clientId: string | undefined): boolean {
   return normalized.startsWith("littlebaby-");
 }
 
-function isLegacyClawdbotClient(clientId: string | undefined): boolean {
-  const normalized = normalizeOptionalLowercaseString(clientId) ?? "";
-  return normalized.startsWith("clawdbot-") || normalized.startsWith("moldbot-");
-}
-
-function pickPreferredLegacyMigrationMatch(
-  matches: NodeMatchCandidate[],
-): NodeMatchCandidate | undefined {
-  const current = matches.filter((match) => isCurrentLittleBabyClient(match.clientId));
-  if (current.length !== 1) {
-    return undefined;
-  }
-  const legacyCount = matches.filter((match) => isLegacyClawdbotClient(match.clientId)).length;
-  if (legacyCount === 0 || current.length + legacyCount !== matches.length) {
-    return undefined;
-  }
-  return current[0];
-}
-
 function resolveMatchScore(
   node: NodeMatchCandidate,
   query: string,
@@ -94,8 +75,6 @@ function scoreNodeCandidate(node: NodeMatchCandidate, matchScore: number): numbe
   }
   if (isCurrentLittleBabyClient(node.clientId)) {
     score += 10;
-  } else if (isLegacyClawdbotClient(node.clientId)) {
-    score -= 10;
   }
   return score;
 }
@@ -153,11 +132,6 @@ export function resolveNodeIdFromCandidates(nodes: NodeMatchCandidate[], query: 
   const matches = strongestMatches.filter((match) => match.selectionScore === topSelectionScore);
   if (matches.length === 1) {
     return matches[0]?.node.nodeId ?? "";
-  }
-
-  const preferred = pickPreferredLegacyMigrationMatch(matches.map((match) => match.node));
-  if (preferred) {
-    return preferred.nodeId;
   }
 
   throw new Error(

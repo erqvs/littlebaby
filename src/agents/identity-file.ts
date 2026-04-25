@@ -24,7 +24,7 @@ const RICH_IDENTITY_LABELS = new Set(["name", "creature", "vibe", "theme", "emoj
 const IDENTITY_PLACEHOLDER_VALUES = new Set([
   "pick something you like",
   "ai? robot? familiar? ghost in the machine? something weirder?",
-  "how do you come across? sharp? warm? chaotic? calm?",
+  "how do you come across? precise? warm? chaotic? calm?",
   "your signature - pick one that feels right",
   "workspace-relative path, http(s) url, or data uri",
 ]);

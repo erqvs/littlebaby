@@ -1,5 +1,5 @@
 import { normalizeOptionalLowercaseString } from "littlebaby/plugin-sdk/text-runtime";
-import type { ClawdbotConfig, RuntimeEnv } from "../runtime-api.js";
+import type { LittleBabyConfig, RuntimeEnv } from "../runtime-api.js";
 import { createFeishuCardInteractionEnvelope } from "./card-interaction.js";
 import { FEISHU_APPROVAL_REQUEST_ACTION } from "./card-ux-approval.js";
 import { buildFeishuCardButton, buildFeishuCardInteractionContext } from "./card-ux-shared.js";
@@ -85,7 +85,7 @@ export function createQuickActionLauncherCard(params: {
 }
 
 export async function maybeHandleFeishuQuickActionMenu(params: {
-  cfg: ClawdbotConfig;
+  cfg: LittleBabyConfig;
   eventKey: string;
   operatorOpenId: string;
   runtime?: RuntimeEnv;

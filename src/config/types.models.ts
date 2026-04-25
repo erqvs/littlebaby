@@ -10,7 +10,6 @@ export const MODEL_APIS = [
   "google-generative-ai",
   "github-copilot",
   "bedrock-converse-stream",
-  "ollama",
   "azure-openai-responses",
 ] as const;
 
@@ -107,5 +106,4 @@ export type ModelsConfig = {
   bedrockDiscovery?: BedrockDiscoveryConfig;
   copilotDiscovery?: DiscoveryToggleConfig;
   huggingfaceDiscovery?: DiscoveryToggleConfig;
-  ollamaDiscovery?: DiscoveryToggleConfig;
 };

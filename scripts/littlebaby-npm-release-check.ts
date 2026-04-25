@@ -270,17 +270,6 @@ export function collectReleasePackageMetadataErrors(pkg: PackageJson): string[] 
       `package.json bin.littlebaby must be "littlebaby.mjs"; found "${pkg.bin?.littlebaby ?? ""}".`,
     );
   }
-  if (pkg.peerDependencies?.["node-llama-cpp"] !== "3.18.1") {
-    errors.push(
-      `package.json peerDependencies["node-llama-cpp"] must be "3.18.1"; found "${
-        pkg.peerDependencies?.["node-llama-cpp"] ?? ""
-      }".`,
-    );
-  }
-  if (pkg.peerDependenciesMeta?.["node-llama-cpp"]?.optional !== true) {
-    errors.push('package.json peerDependenciesMeta["node-llama-cpp"].optional must be true.');
-  }
-
   return errors;
 }
 

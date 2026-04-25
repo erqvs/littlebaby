@@ -5,7 +5,6 @@ import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import type { CronServiceContract } from "../../cron/service-contract.js";
 import type { PluginApprovalRequestPayload } from "../../infra/plugin-approvals.js";
 import type { createSubsystemLogger } from "../../logging/subsystem.js";
-import type { WizardSession } from "../../wizard/session.js";
 import type { ChatAbortControllerEntry } from "../chat-abort.js";
 import type { ExecApprovalManager } from "../exec-approval-manager.js";
 import type { NodeRegistry } from "../node-registry.js";
@@ -20,9 +19,6 @@ export type GatewayClient = {
   connect: ConnectParams;
   connId?: string;
   clientIp?: string;
-  canvasHostUrl?: string;
-  canvasCapability?: string;
-  canvasCapabilityExpiresAtMs?: number;
   internal?: {
     allowModelOverride?: boolean;
   };
@@ -81,9 +77,6 @@ export type GatewayRequestContext = {
   getSessionEventSubscriberConnIds: () => ReadonlySet<string>;
   registerToolEventRecipient: (runId: string, connId: string) => void;
   dedupe: Map<string, DedupeEntry>;
-  wizardSessions: Map<string, WizardSession>;
-  findRunningWizard: () => string | null;
-  purgeWizardSession: (id: string) => void;
   getRuntimeSnapshot: () => ChannelRuntimeSnapshot;
   startChannel: (
     channel: import("../../channels/plugins/types.public.js").ChannelId,
@@ -98,11 +91,6 @@ export type GatewayRequestContext = {
     cleared: boolean,
     accountId?: string,
   ) => void;
-  wizardRunner: (
-    opts: import("../../commands/onboard-types.js").OnboardOptions,
-    runtime: import("../../runtime.js").RuntimeEnv,
-    prompter: import("../../wizard/prompts.js").WizardPrompter,
-  ) => Promise<void>;
   broadcastVoiceWakeChanged: (triggers: string[]) => void;
   unavailableGatewayMethods?: ReadonlySet<string>;
 };

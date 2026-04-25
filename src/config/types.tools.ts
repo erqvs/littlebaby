@@ -186,7 +186,7 @@ export type ToolPolicyConfig = {
   /**
    * Additional allowlist entries merged into the effective allowlist.
    *
-   * Intended for additive configuration (e.g., "also allow lobster") without forcing
+   * Intended for additive configuration (e.g., "also allow web_fetch") without forcing
    * users to replace/duplicate an existing allowlist or profile.
    */
   alsoAllow?: string[];
@@ -387,7 +387,7 @@ export type MemorySearchConfig = {
    * Supported values today are 768, 1536, and 3072.
    */
   outputDimensionality?: number;
-  /** Local embedding settings (node-llama-cpp). */
+  /** Local embedding settings. */
   local?: {
     /** GGUF model path or hf: URI. */
     modelPath?: string;
@@ -403,9 +403,9 @@ export type MemorySearchConfig = {
       tokenizer?: "unicode61" | "trigram";
     };
     vector?: {
-      /** Enable sqlite-vec extension for vector search (default: true). */
+      /** Enable vector search extension (default: true). */
       enabled?: boolean;
-      /** Optional override path to sqlite-vec extension (.dylib/.so/.dll). */
+      /** Optional override path to vector extension (.dylib/.so/.dll). */
       extensionPath?: string;
     };
     cache?: {

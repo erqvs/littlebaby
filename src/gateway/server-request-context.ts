@@ -47,14 +47,10 @@ export type GatewayRequestContextParams = {
   getSessionEventSubscriberConnIds: GatewayRequestContext["getSessionEventSubscriberConnIds"];
   registerToolEventRecipient: GatewayRequestContext["registerToolEventRecipient"];
   dedupe: GatewayRequestContext["dedupe"];
-  wizardSessions: GatewayRequestContext["wizardSessions"];
-  findRunningWizard: GatewayRequestContext["findRunningWizard"];
-  purgeWizardSession: GatewayRequestContext["purgeWizardSession"];
   getRuntimeSnapshot: GatewayRequestContext["getRuntimeSnapshot"];
   startChannel: GatewayRequestContext["startChannel"];
   stopChannel: GatewayRequestContext["stopChannel"];
   markChannelLoggedOut: GatewayRequestContext["markChannelLoggedOut"];
-  wizardRunner: GatewayRequestContext["wizardRunner"];
   broadcastVoiceWakeChanged: GatewayRequestContext["broadcastVoiceWakeChanged"];
   unavailableGatewayMethods: ReadonlySet<string>;
 };
@@ -140,14 +136,10 @@ export function createGatewayRequestContext(
     getSessionEventSubscriberConnIds: params.getSessionEventSubscriberConnIds,
     registerToolEventRecipient: params.registerToolEventRecipient,
     dedupe: params.dedupe,
-    wizardSessions: params.wizardSessions,
-    findRunningWizard: params.findRunningWizard,
-    purgeWizardSession: params.purgeWizardSession,
     getRuntimeSnapshot: params.getRuntimeSnapshot,
     startChannel: params.startChannel,
     stopChannel: params.stopChannel,
     markChannelLoggedOut: params.markChannelLoggedOut,
-    wizardRunner: params.wizardRunner,
     broadcastVoiceWakeChanged: params.broadcastVoiceWakeChanged,
     unavailableGatewayMethods: params.unavailableGatewayMethods,
   };

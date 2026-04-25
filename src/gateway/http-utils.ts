@@ -56,14 +56,12 @@ export type AuthorizedGatewayHttpRequest = {
 
 export function resolveHttpBrowserOriginPolicy(
   req: IncomingMessage,
-  cfg = loadConfig(),
 ): NonNullable<Parameters<typeof authorizeHttpGatewayConnect>[0]["browserOriginPolicy"]> {
   return {
     requestHost: getHeader(req, "host"),
     origin: getHeader(req, "origin"),
-    allowedOrigins: cfg.gateway?.controlUi?.allowedOrigins,
-    allowHostHeaderOriginFallback:
-      cfg.gateway?.controlUi?.dangerouslyAllowHostHeaderOriginFallback === true,
+    allowedOrigins: undefined,
+    allowHostHeaderOriginFallback: false,
   };
 }
 

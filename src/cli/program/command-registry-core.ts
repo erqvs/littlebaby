@@ -52,21 +52,6 @@ const coreEntrySpecs: readonly CommandGroupDescriptorSpec<
   ...withProgramOnlySpecs(
     defineImportedProgramCommandGroupSpecs([
       {
-        commandNames: ["setup"],
-        loadModule: () => import("./register.setup.js"),
-        exportName: "registerSetupCommand",
-      },
-      {
-        commandNames: ["onboard"],
-        loadModule: () => import("./register.onboard.js"),
-        exportName: "registerOnboardCommand",
-      },
-      {
-        commandNames: ["configure"],
-        loadModule: () => import("./register.configure.js"),
-        exportName: "registerConfigureCommand",
-      },
-      {
         commandNames: ["config"],
         loadModule: () => import("../config-cli.js"),
         exportName: "registerConfigCli",
@@ -75,11 +60,6 @@ const coreEntrySpecs: readonly CommandGroupDescriptorSpec<
         commandNames: ["backup"],
         loadModule: () => import("./register.backup.js"),
         exportName: "registerBackupCommand",
-      },
-      {
-        commandNames: ["doctor", "dashboard", "reset", "uninstall"],
-        loadModule: () => import("./register.maintenance.js"),
-        exportName: "registerMaintenanceCommands",
       },
     ]),
   ),

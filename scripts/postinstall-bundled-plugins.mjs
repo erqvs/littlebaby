@@ -117,6 +117,9 @@ const BAILEYS_MEDIA_DISPATCHER_HEADER_REPLACEMENT = [
 const BAILEYS_MEDIA_ONCE_IMPORT_RE = /import\s+\{\s*once\s*\}\s+from\s+['"]events['"]/u;
 const BAILEYS_MEDIA_ASYNC_CONTEXT_RE =
   /async\s+function\s+encryptedStream|encryptedStream\s*=\s*async/u;
+const THIRD_PARTY_DOC_PACKAGE_SCOPE = "@mariozechner";
+const THIRD_PARTY_DOC_PACKAGE_NAME = "pi-coding-agent";
+const THIRD_PARTY_DOC_FILE = "README.md";
 
 function readJson(filePath) {
   return JSON.parse(readFileSync(filePath, "utf8"));
@@ -663,6 +666,70 @@ function shouldRunBundledPluginPostinstall(params) {
   return true;
 }
 
+function listThirdPartyDocCandidates(params = {}) {
+  const packageRoot = params.packageRoot ?? DEFAULT_PACKAGE_ROOT;
+  const readDir = params.readdirSync ?? readdirSync;
+  const candidates = [
+    join(
+      packageRoot,
+      "node_modules",
+      THIRD_PARTY_DOC_PACKAGE_SCOPE,
+      THIRD_PARTY_DOC_PACKAGE_NAME,
+      THIRD_PARTY_DOC_FILE,
+    ),
+    join(
+      packageRoot,
+      "node_modules",
+      ".ignored",
+      THIRD_PARTY_DOC_PACKAGE_SCOPE,
+      THIRD_PARTY_DOC_PACKAGE_NAME,
+      THIRD_PARTY_DOC_FILE,
+    ),
+  ];
+  const pnpmDir = join(packageRoot, "node_modules", ".pnpm");
+  try {
+    for (const entry of readDir(pnpmDir, { withFileTypes: true })) {
+      if (
+        !entry.isDirectory() ||
+        !entry.name.startsWith(`${THIRD_PARTY_DOC_PACKAGE_SCOPE}+${THIRD_PARTY_DOC_PACKAGE_NAME}@`)
+      ) {
+        continue;
+      }
+      candidates.push(
+        join(
+          pnpmDir,
+          entry.name,
+          "node_modules",
+          THIRD_PARTY_DOC_PACKAGE_SCOPE,
+          THIRD_PARTY_DOC_PACKAGE_NAME,
+          THIRD_PARTY_DOC_FILE,
+        ),
+      );
+    }
+  } catch {
+    // No pnpm virtual store in this install layout.
+  }
+  return candidates;
+}
+
+export function pruneThirdPartyPackageDocs(params = {}) {
+  const pathExists = params.existsSync ?? existsSync;
+  const removePath = params.rmSync ?? rmSync;
+  const log = params.log ?? console;
+  let removed = 0;
+  for (const candidate of new Set(listThirdPartyDocCandidates(params))) {
+    if (!pathExists(candidate)) {
+      continue;
+    }
+    removePath(candidate, { force: true });
+    removed += 1;
+  }
+  if (removed > 0) {
+    log.log?.(`[postinstall] removed third-party package docs: ${removed}`);
+  }
+  return removed;
+}
+
 export function runBundledPluginPostinstall(params = {}) {
   const env = params.env ?? process.env;
   const packageRoot = params.packageRoot ?? DEFAULT_PACKAGE_ROOT;
@@ -673,6 +740,13 @@ export function runBundledPluginPostinstall(params = {}) {
   if (env?.[DISABLE_POSTINSTALL_ENV]?.trim()) {
     return;
   }
+  pruneThirdPartyPackageDocs({
+    packageRoot,
+    existsSync: pathExists,
+    readdirSync: params.readdirSync,
+    rmSync: params.rmSync,
+    log,
+  });
   if (isSourceCheckoutRoot({ packageRoot, existsSync: pathExists })) {
     try {
       pruneBundledPluginSourceNodeModules({

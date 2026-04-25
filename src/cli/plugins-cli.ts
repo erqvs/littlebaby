@@ -564,7 +564,7 @@ export function registerPluginsCli(program: Command) {
         preview.push("load path");
       }
       if (cfg.plugins?.slots?.memory === pluginId) {
-        preview.push(`memory slot (will reset to "memory-core")`);
+        preview.push('memory slot (will reset to "none")');
       }
       const channelIds = plugin?.status === "loaded" ? plugin.channelIds : undefined;
       const channels = cfg.channels as Record<string, unknown> | undefined;
@@ -659,7 +659,7 @@ export function registerPluginsCli(program: Command) {
   plugins
     .command("install")
     .description(
-      "Install a plugin or hook pack (path, archive, npm spec, clawhub:package, or marketplace entry)",
+      "Install a plugin or hook pack (path, archive, npm spec, or marketplace entry)",
     )
     .argument(
       "<path-or-spec-or-plugin>",

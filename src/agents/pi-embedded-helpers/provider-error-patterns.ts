@@ -29,9 +29,6 @@ export const PROVIDER_CONTEXT_OVERFLOW_PATTERNS: readonly RegExp[] = [
   // Google Vertex / Gemini REST surfaces this wording.
   /\binput exceeds the maximum number of tokens\b/i,
 
-  // Ollama may append a provider prefix and extra token wording.
-  /\bollama error:\s*context length exceeded(?:,\s*too many tokens)?\b/i,
-
   // Cohere does not currently ship a bundled provider hook.
   /\btotal tokens?.*exceeds? (?:the )?(?:model(?:'s)? )?(?:max|maximum|limit)/i,
 

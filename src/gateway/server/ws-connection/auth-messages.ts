@@ -1,8 +1,4 @@
-import {
-  isGatewayCliClient,
-  isOperatorUiClient,
-  isWebchatClient,
-} from "../../../utils/message-channel.js";
+import { isGatewayCliClient } from "../../../utils/message-channel.js";
 import type { ResolvedGatewayAuth } from "../../auth.js";
 
 export type AuthProvidedKind = "token" | "bootstrap-token" | "device-token" | "password" | "none";
@@ -15,19 +11,12 @@ export function formatGatewayAuthFailureMessage(params: {
 }): string {
   const { authMode, authProvided, reason, client } = params;
   const isCli = isGatewayCliClient(client);
-  const isControlUi = isOperatorUiClient(client);
-  const isWebchat = isWebchatClient(client);
-  const uiHint = "open the dashboard URL and paste the token in Control UI settings";
   const tokenHint = isCli
     ? "set gateway.remote.token to match gateway.auth.token"
-    : isControlUi || isWebchat
-      ? uiHint
-      : "provide gateway auth token";
+    : "provide gateway auth token";
   const passwordHint = isCli
     ? "set gateway.remote.password to match gateway.auth.password"
-    : isControlUi || isWebchat
-      ? "enter the password in Control UI settings"
-      : "provide gateway auth password";
+    : "provide gateway auth password";
   switch (reason) {
     case "token_missing":
       return `unauthorized: gateway token missing (${tokenHint})`;

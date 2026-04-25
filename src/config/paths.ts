@@ -17,11 +17,11 @@ export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean 
 
 export const isNixMode = resolveIsNixMode();
 
-// Support the remaining legacy pre-rebrand state dir.
-const LEGACY_STATE_DIRNAMES = [".clawdbot"] as const;
+// Legacy state directories are intentionally disabled for this deployment.
+const LEGACY_STATE_DIRNAMES = [] as const;
 const NEW_STATE_DIRNAME = ".littlebaby";
 const CONFIG_FILENAME = "littlebaby.json";
-const LEGACY_CONFIG_FILENAMES = ["littlebaby.json", "clawdbot.json"] as const;
+const LEGACY_CONFIG_FILENAMES = [] as const;
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);

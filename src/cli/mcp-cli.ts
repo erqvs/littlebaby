@@ -23,6 +23,33 @@ function printJson(value: unknown): void {
   defaultRuntime.writeJson(value);
 }
 
+const SENSITIVE_KEY_PATTERN = /(?:authorization|api[_-]?key|password|secret|token)$/i;
+
+function redactMcpString(value: string): string {
+  return value
+    .replace(/(Authorization(?:=|:\s*Bearer\s+))[^"'\s]+/gi, "$1<redacted>")
+    .replace(/([?&]Authorization=)[^"&\s]+/gi, "$1<redacted>")
+    .replace(/(Bearer\s+)[^"'\s]+/gi, "$1<redacted>");
+}
+
+function redactMcpConfig(value: unknown, key = ""): unknown {
+  if (typeof value === "string") {
+    return SENSITIVE_KEY_PATTERN.test(key) ? "<redacted>" : redactMcpString(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map((entry) => redactMcpConfig(entry));
+  }
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).map(([entryKey, entryValue]) => [
+      entryKey,
+      redactMcpConfig(entryValue, entryKey),
+    ]),
+  );
+}
+
 export function registerMcpCli(program: Command) {
   const mcp = program.command("mcp").description("Manage LittleBaby MCP config and channel bridge");
 
@@ -76,7 +103,7 @@ export function registerMcpCli(program: Command) {
         fail(loaded.error);
       }
       if (opts.json) {
-        printJson(loaded.mcpServers);
+        printJson(redactMcpConfig(loaded.mcpServers));
         return;
       }
       const names = Object.keys(loaded.mcpServers).toSorted();
@@ -105,7 +132,7 @@ export function registerMcpCli(program: Command) {
         fail(`No MCP server named "${name}" in ${loaded.path}.`);
       }
       if (opts.json) {
-        printJson(value ?? {});
+        printJson(redactMcpConfig(value ?? {}));
         return;
       }
       if (name) {
@@ -113,7 +140,7 @@ export function registerMcpCli(program: Command) {
       } else {
         defaultRuntime.log(`MCP servers (${loaded.path}):`);
       }
-      printJson(value ?? {});
+      printJson(redactMcpConfig(value ?? {}));
     });
 
   mcp

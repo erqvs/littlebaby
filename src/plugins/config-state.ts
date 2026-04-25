@@ -91,7 +91,10 @@ const hasExplicitMemorySlot = (plugins?: LittleBabyConfig["plugins"]) =>
   Boolean(plugins?.slots && Object.prototype.hasOwnProperty.call(plugins.slots, "memory"));
 
 const hasExplicitMemoryEntry = (plugins?: LittleBabyConfig["plugins"]) =>
-  Boolean(plugins?.entries && Object.prototype.hasOwnProperty.call(plugins.entries, "memory-core"));
+  Boolean(
+    plugins?.entries &&
+      Object.keys(plugins.entries).some((entryId) => entryId.toLowerCase().includes("memory")),
+  );
 
 export const hasExplicitPluginConfig = (plugins?: LittleBabyConfig["plugins"]) =>
   hasExplicitPluginConfigShared(plugins);

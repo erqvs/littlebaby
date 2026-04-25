@@ -27,6 +27,14 @@ export function formatGeneratedModule(source, { repoRoot, outputPath, errorLabel
       ...(process.platform === "win32" ? { shell: true } : {}),
     });
     if (formatter.status !== 0) {
+      const missingFormatter =
+        !useDirectFormatter &&
+        (formatter.stderr?.includes('Command "oxfmt" not found') ||
+          formatter.stdout?.includes('Command "oxfmt" not found') ||
+          formatter.error?.code === "ENOENT");
+      if (missingFormatter) {
+        return fs.readFileSync(tempOutputPath, "utf8");
+      }
       const details =
         formatter.stderr?.trim() ||
         formatter.stdout?.trim() ||

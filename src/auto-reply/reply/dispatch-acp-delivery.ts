@@ -83,7 +83,7 @@ async function shouldTreatDeliveredTextAsVisible(params: {
     });
   }
   if (!params.routed) {
-    return channelId === "telegram";
+    return false;
   }
   return false;
 }

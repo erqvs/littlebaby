@@ -61,8 +61,8 @@ export const CONFIGURE_SECTION_OPTIONS: Array<{
   },
   {
     value: "channels",
-    label: "Channels",
-    hint: "Link WhatsApp/Telegram/etc and defaults",
+    label: "Feishu",
+    hint: "Configure Feishu account and defaults",
   },
   { value: "plugins", label: "Plugins", hint: "Configure plugin settings (sandbox, tools, etc.)" },
   { value: "skills", label: "Skills", hint: "Install/enable workspace skills" },

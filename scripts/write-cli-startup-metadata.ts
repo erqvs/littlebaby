@@ -26,16 +26,7 @@ const distDir = path.join(rootDir, "dist");
 const outputPath = path.join(distDir, "cli-startup-metadata.json");
 const extensionsDir = path.join(rootDir, "extensions");
 const ROOT_HELP_RENDER_TIMEOUT_MS = 120_000;
-const CORE_CHANNEL_ORDER = [
-  "telegram",
-  "whatsapp",
-  "discord",
-  "irc",
-  "googlechat",
-  "slack",
-  "signal",
-  "imessage",
-] as const;
+const CORE_CHANNEL_ORDER = [] as const;
 
 type ExtensionChannelEntry = {
   id: string;

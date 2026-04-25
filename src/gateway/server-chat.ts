@@ -587,7 +587,7 @@ export function createAgentEventHandler({
     const chatLink = chatRunState.registry.peek(evt.runId);
     const eventSessionKey =
       typeof evt.sessionKey === "string" && evt.sessionKey.trim() ? evt.sessionKey : undefined;
-    const isControlUiVisible = getAgentRunContext(evt.runId)?.isControlUiVisible ?? true;
+    const isChatStreamVisible = getAgentRunContext(evt.runId)?.isChatStreamVisible ?? true;
     const sessionKey =
       chatLink?.sessionKey ?? eventSessionKey ?? resolveSessionKeyForRun(evt.runId);
     const clientRunId = chatLink?.clientRunId ?? evt.runId;
@@ -595,7 +595,7 @@ export function createAgentEventHandler({
     const isAborted =
       chatRunState.abortedRuns.has(clientRunId) || chatRunState.abortedRuns.has(evt.runId);
 
-    if (isControlUiVisible && sessionKey) {
+    if (isChatStreamVisible && sessionKey) {
       if (!isAborted) {
         const evtStopReason =
           typeof evt.data?.stopReason === "string" ? evt.data.stopReason : undefined;
@@ -887,7 +887,7 @@ export function createAgentEventHandler({
     const chatLink = chatRunState.registry.peek(evt.runId);
     const eventSessionKey =
       typeof evt.sessionKey === "string" && evt.sessionKey.trim() ? evt.sessionKey : undefined;
-    const isControlUiVisible = getAgentRunContext(evt.runId)?.isControlUiVisible ?? true;
+    const isChatStreamVisible = getAgentRunContext(evt.runId)?.isChatStreamVisible ?? true;
     const sessionKey =
       chatLink?.sessionKey ?? eventSessionKey ?? resolveSessionKeyForRun(evt.runId);
     const clientRunId = chatLink?.clientRunId ?? evt.runId;
@@ -931,7 +931,7 @@ export function createAgentEventHandler({
       const toolPhase = typeof evt.data?.phase === "string" ? evt.data.phase : "";
       // Flush pending assistant text before tool-start events so clients can
       // render complete pre-tool text above tool cards (not truncated by delta throttle).
-      if (toolPhase === "start" && isControlUiVisible && sessionKey && !isAborted) {
+      if (toolPhase === "start" && isChatStreamVisible && sessionKey && !isAborted) {
         flushBufferedChatDeltaIfNeeded(sessionKey, clientRunId, evt.runId, evt.seq);
       }
       // Always broadcast tool events to registered WS recipients with
@@ -964,13 +964,13 @@ export function createAgentEventHandler({
       }
     } else {
       const itemPhase = isItemEvent && typeof evt.data?.phase === "string" ? evt.data.phase : "";
-      if (itemPhase === "start" && isControlUiVisible && sessionKey && !isAborted) {
+      if (itemPhase === "start" && isChatStreamVisible && sessionKey && !isAborted) {
         flushBufferedChatDeltaIfNeeded(sessionKey, clientRunId, evt.runId, evt.seq);
       }
       broadcast("agent", agentPayload);
     }
 
-    if (isControlUiVisible && sessionKey) {
+    if (isChatStreamVisible && sessionKey) {
       // Send tool events to node/channel subscribers only when verbose is enabled;
       // WS clients already received the event above via broadcastToConnIds.
       if (!isToolEvent || toolVerbose !== "off") {

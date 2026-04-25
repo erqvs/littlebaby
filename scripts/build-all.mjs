@@ -8,94 +8,11 @@ import { pathToFileURL } from "node:url";
 import { resolvePnpmRunner } from "./pnpm-runner.mjs";
 
 const nodeBin = process.execPath;
-const WINDOWS_BUILD_MAX_OLD_SPACE_MB = 4096;
 const BUILD_CACHE_VERSION = 2;
 export const BUILD_ALL_STEPS = [
-  { label: "canvas:a2ui:bundle", kind: "pnpm", pnpmArgs: ["canvas:a2ui:bundle"] },
   { label: "tsdown", kind: "node", args: ["scripts/tsdown-build.mjs"] },
   { label: "runtime-postbuild", kind: "node", args: ["scripts/runtime-postbuild.mjs"] },
-  {
-    label: "write-npm-update-compat-sidecars",
-    kind: "node",
-    args: ["--import", "tsx", "scripts/write-npm-update-compat-sidecars.ts"],
-    cache: {
-      inputs: [
-        "scripts/write-npm-update-compat-sidecars.ts",
-        "src/infra/npm-update-compat-sidecars.ts",
-      ],
-      outputs: [
-        "dist/extensions/qa-channel/runtime-api.js",
-        "dist/extensions/qa-lab/runtime-api.js",
-      ],
-    },
-  },
   { label: "build-stamp", kind: "node", args: ["scripts/build-stamp.mjs"] },
-  {
-    label: "build:plugin-sdk:dts",
-    kind: "pnpm",
-    pnpmArgs: ["build:plugin-sdk:dts"],
-    windowsNodeOptions: `--max-old-space-size=${WINDOWS_BUILD_MAX_OLD_SPACE_MB}`,
-    cache: {
-      inputs: [
-        "tsconfig.json",
-        "tsconfig.plugin-sdk.dts.json",
-        "src/plugin-sdk",
-        "src/types",
-        "src/video-generation/dashscope-compatible.ts",
-        "src/video-generation/types.ts",
-      ],
-      outputs: ["dist/plugin-sdk/.tsbuildinfo", "dist/plugin-sdk/src"],
-    },
-  },
-  {
-    label: "write-plugin-sdk-entry-dts",
-    kind: "node",
-    args: ["--import", "tsx", "scripts/write-plugin-sdk-entry-dts.ts"],
-    cache: {
-      inputs: [
-        "scripts/write-plugin-sdk-entry-dts.ts",
-        "scripts/lib/plugin-sdk-entrypoints.json",
-        "dist/plugin-sdk/src/plugin-sdk",
-      ],
-      outputs: ["dist/plugin-sdk", "packages/plugin-sdk/dist/src/plugin-sdk"],
-    },
-  },
-  {
-    label: "check-plugin-sdk-exports",
-    kind: "node",
-    args: ["scripts/check-plugin-sdk-exports.mjs"],
-  },
-  {
-    label: "canvas-a2ui-copy",
-    kind: "node",
-    args: ["--import", "tsx", "scripts/canvas-a2ui-copy.ts"],
-    cache: {
-      inputs: ["scripts/canvas-a2ui-copy.ts", "src/canvas-host/a2ui"],
-      outputs: ["dist/canvas-host/a2ui/index.html", "dist/canvas-host/a2ui/a2ui.bundle.js"],
-    },
-  },
-  {
-    label: "copy-hook-metadata",
-    kind: "node",
-    args: ["--import", "tsx", "scripts/copy-hook-metadata.ts"],
-    cache: {
-      inputs: ["scripts/copy-hook-metadata.ts", "scripts/lib/copy-assets.ts", "src/hooks/bundled"],
-      outputs: ["dist/bundled"],
-    },
-  },
-  {
-    label: "copy-export-html-templates",
-    kind: "node",
-    args: ["--import", "tsx", "scripts/copy-export-html-templates.ts"],
-    cache: {
-      inputs: [
-        "scripts/copy-export-html-templates.ts",
-        "scripts/lib/copy-assets.ts",
-        "src/auto-reply/reply/export-html",
-      ],
-      outputs: ["dist/export-html"],
-    },
-  },
   {
     label: "write-build-info",
     kind: "node",
@@ -106,27 +23,16 @@ export const BUILD_ALL_STEPS = [
     kind: "node",
     args: ["--experimental-strip-types", "scripts/write-cli-startup-metadata.ts"],
   },
-  {
-    label: "write-cli-compat",
-    kind: "node",
-    args: ["--import", "tsx", "scripts/write-cli-compat.ts"],
-  },
 ];
 
 export const BUILD_ALL_PROFILES = {
   full: BUILD_ALL_STEPS.map((step) => step.label),
   ciArtifacts: [
-    "canvas:a2ui:bundle",
     "tsdown",
     "runtime-postbuild",
-    "write-npm-update-compat-sidecars",
     "build-stamp",
-    "canvas-a2ui-copy",
-    "copy-hook-metadata",
-    "copy-export-html-templates",
     "write-build-info",
     "write-cli-startup-metadata",
-    "write-cli-compat",
   ],
 };
 

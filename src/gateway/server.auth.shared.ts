@@ -114,7 +114,7 @@ const TEST_OPERATOR_CLIENT = {
 };
 
 const CONTROL_UI_CLIENT = {
-  id: GATEWAY_CLIENT_NAMES.CONTROL_UI,
+  id: GATEWAY_CLIENT_NAMES.WEBCHAT_UI,
   version: "1.0.0",
   platform: "web",
   mode: GATEWAY_CLIENT_MODES.WEBCHAT,

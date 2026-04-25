@@ -71,19 +71,19 @@ function printDirectoryList(params: {
 export function registerDirectoryCli(program: Command) {
   const directory = program
     .command("directory")
-    .description("Lookup contact and group IDs (self, peers, groups) for supported chat channels")
+    .description("Lookup Feishu contact and group IDs")
     .addHelpText(
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["littlebaby directory self --channel slack", "Show the connected account identity."],
+          ["littlebaby directory self --channel feishu", "Show the connected account identity."],
           [
-            'littlebaby directory peers list --channel slack --query "alice"',
-            "Search contact/user IDs by name.",
+            'littlebaby directory peers list --channel feishu --query "alice"',
+            "Search Feishu contact/user IDs by name.",
           ],
-          ["littlebaby directory groups list --channel discord", "List available groups/channels."],
+          ["littlebaby directory groups list --channel feishu", "List available Feishu groups."],
           [
-            "littlebaby directory groups members --channel discord --group-id <id>",
+            "littlebaby directory groups members --channel feishu --group-id <id>",
             "List members for a specific group.",
           ],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink(

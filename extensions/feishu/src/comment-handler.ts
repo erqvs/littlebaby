@@ -4,7 +4,7 @@ import { createFeishuClient } from "./client.js";
 import { createFeishuCommentReplyDispatcher } from "./comment-dispatcher.js";
 import {
   createChannelPairingController,
-  type ClawdbotConfig,
+  type LittleBabyConfig,
   type RuntimeEnv,
 } from "./comment-handler-runtime-api.js";
 import { buildFeishuCommentTarget } from "./comment-target.js";
@@ -19,7 +19,7 @@ import { getFeishuRuntime } from "./runtime.js";
 import type { DynamicAgentCreationConfig } from "./types.js";
 
 type HandleFeishuCommentEventParams = {
-  cfg: ClawdbotConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   runtime?: RuntimeEnv;
   event: FeishuDriveCommentNoticeEvent;

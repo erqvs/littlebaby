@@ -219,7 +219,7 @@ function loadMonolithicSdk() {
     return monolithicSdk;
   }
 
-  const distCandidate = path.resolve(__dirname, "..", "..", "dist", "plugin-sdk", "compat.js");
+  const distCandidate = path.resolve(__dirname, "..", "..", "dist", "plugin-sdk", "index.js");
   if (!shouldPreferSourceGraph && fs.existsSync(distCandidate)) {
     try {
       monolithicSdk = getJiti(true)(distCandidate);
@@ -229,7 +229,7 @@ function loadMonolithicSdk() {
     }
   }
 
-  monolithicSdk = getJiti(false)(path.join(getPackageRoot(), "src", "plugin-sdk", "compat.ts"));
+  monolithicSdk = getJiti(false)(path.join(getPackageRoot(), "src", "plugin-sdk", "index.ts"));
   return monolithicSdk;
 }
 

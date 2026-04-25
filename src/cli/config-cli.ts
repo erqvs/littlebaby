@@ -79,7 +79,7 @@ const CONFIG_SET_EXAMPLE_VALUE = formatCliCommand(
   "littlebaby config set gateway.port 19001 --strict-json",
 );
 const CONFIG_SET_EXAMPLE_REF = formatCliCommand(
-  "littlebaby config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN",
+  "littlebaby config set channels.feishu.appSecret --ref-provider default --ref-source env --ref-id FEISHU_APP_SECRET",
 );
 const CONFIG_SET_EXAMPLE_PROVIDER = formatCliCommand(
   "littlebaby config set secrets.providers.vault --provider-source file --provider-path /etc/littlebaby/secrets.json --provider-mode json",
@@ -1326,23 +1326,14 @@ export async function runConfigValidate(opts: { json?: boolean; runtime?: Runtim
 export function registerConfigCli(program: Command) {
   const cmd = program
     .command("config")
-    .description(
-      "Non-interactive config helpers (get/set/unset/file/schema/validate). Run without subcommand for guided setup.",
-    )
+    .description("Non-interactive config helpers (get/set/unset/file/schema/validate).")
     .addHelpText(
       "after",
       () =>
         `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/config", "docs.littlebaby.ai/cli/config")}\n`,
     )
-    .option(
-      "--section <section>",
-      "Configuration sections for guided setup (repeatable). Use with no subcommand.",
-      (value: string, previous: string[]) => [...previous, value],
-      [] as string[],
-    )
-    .action(async (opts) => {
-      const { configureCommandFromSectionsArg } = await import("../commands/configure.js");
-      await configureCommandFromSectionsArg(opts.section, defaultRuntime);
+    .action(() => {
+      cmd.outputHelp();
     });
 
   cmd

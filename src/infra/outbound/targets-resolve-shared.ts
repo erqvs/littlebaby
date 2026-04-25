@@ -20,7 +20,7 @@ export type ResolveOutboundTargetParams = {
 
 function buildWebChatDeliveryError(): Error {
   return new Error(
-    `Delivering to WebChat is not supported via \`${formatCliCommand("littlebaby agent")}\`; use WhatsApp/Telegram or run with --deliver=false.`,
+    `Delivering to WebChat is not supported via \`${formatCliCommand("littlebaby agent")}\`; use Feishu or run with --deliver=false.`,
   );
 }
 

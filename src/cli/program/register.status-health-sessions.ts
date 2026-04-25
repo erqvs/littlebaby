@@ -56,7 +56,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .option("--json", "Output JSON instead of text", false)
     .option("--all", "Full diagnosis (read-only, pasteable)", false)
     .option("--usage", "Show model provider usage/quota snapshots", false)
-    .option("--deep", "Probe channels (WhatsApp Web + Telegram + Discord + Slack + Signal)", false)
+    .option("--deep", "Probe configured Feishu channel and gateway health", false)
     .option("--timeout <ms>", "Probe timeout in milliseconds", "10000")
     .option("--verbose", "Verbose logging", false)
     .option("--debug", "Alias for --verbose", false)
@@ -68,10 +68,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
           ["littlebaby status --all", "Full diagnosis (read-only)."],
           ["littlebaby status --json", "Machine-readable output."],
           ["littlebaby status --usage", "Show model provider usage/quota snapshots."],
-          [
-            "littlebaby status --deep",
-            "Run channel probes (WA + Telegram + Discord + Slack + Signal).",
-          ],
+          ["littlebaby status --deep", "Run configured Feishu channel probes."],
           ["littlebaby status --deep --timeout 5000", "Tighten probe timeout."],
         ])}`,
     )

@@ -19,9 +19,6 @@ function resolveImplicitGroupSurface(params: {
   from: string;
   normalizedChatType?: "group" | "channel";
 }): { provider: string; chatType: "group" | "channel" } | null {
-  if (params.from.endsWith("@g.us")) {
-    return { provider: "whatsapp", chatType: "group" };
-  }
   if (params.normalizedChatType) {
     return null;
   }

@@ -1,6 +1,6 @@
 /**
  * Standalone MCP server that exposes LittleBaby plugin-registered tools
- * (e.g. memory-lancedb's memory_recall, memory_store, memory_forget)
+ * (e.g. channel/plugin tools registered by enabled extensions)
  * so ACP sessions running Claude Code can use them.
  *
  * Run via: node --import tsx src/mcp/plugin-tools-serve.ts

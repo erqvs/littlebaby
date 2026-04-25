@@ -167,7 +167,6 @@ export function buildBroadcastSessionKey(
 
 /**
  * Build media payload for inbound context.
- * Similar to Discord's buildDiscordMediaPayload().
  */
 export function parseFeishuMessageEvent(
   event: FeishuMessageEvent,

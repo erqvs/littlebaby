@@ -272,30 +272,6 @@ function buildAssistantOutputDirectivesSection(isMinimal: boolean) {
   ];
 }
 
-function buildWebchatCanvasSection(params: {
-  isMinimal: boolean;
-  runtimeChannel?: string;
-  canvasRootDir?: string;
-}) {
-  if (params.isMinimal || params.runtimeChannel !== "webchat") {
-    return [];
-  }
-  return [
-    "## Control UI Embed",
-    "Use `[embed ...]` only in Control UI/webchat sessions for inline rich rendering inside the assistant bubble.",
-    "- Do not use `[embed ...]` for non-web channels.",
-    "- `[embed ...]` is separate from `MEDIA:`. Use `MEDIA:` for attachments; use `[embed ...]` for web-only rich rendering.",
-    '- Use self-closing form for hosted embed documents: `[embed ref="cv_123" title="Status" height="320" /]`.',
-    '- You may also use an explicit hosted URL: `[embed url="/__littlebaby__/canvas/documents/cv_123/index.html" title="Status" height="320" /]`.',
-    '- Never use local filesystem paths or `file://...` URLs in `[embed ...]`. Hosted embeds must point at `/__littlebaby__/canvas/...` URLs or use `ref="..."`.',
-    params.canvasRootDir
-      ? `- The active hosted embed root for this session is: \`${sanitizeForPromptLiteral(params.canvasRootDir)}\`. If you manually stage a hosted embed file, write it there, not in the workspace.`
-      : "- The active hosted embed root is profile-scoped, not workspace-scoped. If you manually stage a hosted embed file, write it under the active profile embed root, not in the workspace.",
-    "- Quote all attribute values. Prefer `ref` for hosted documents unless you already have the full `/__littlebaby__/canvas/documents/<id>/index.html` URL.",
-    "",
-  ];
-}
-
 function buildExecutionBiasSection(params: { isMinimal: boolean }) {
   if (params.isMinimal) {
     return [];
@@ -342,7 +318,7 @@ function buildMessagingSection(params: {
   }
   return [
     "## Messaging",
-    "- Reply in current session → automatically routes to the source channel (Signal, Telegram, etc.)",
+    "- Reply in current session -> automatically routes to the source channel.",
     "- Cross-session messaging → use sessions_send(sessionKey, message)",
     "- Sub-agent orchestration → use subagents(action=list|steer|kill)",
     `- Runtime-generated completion events may ask for a user update. Rewrite those in your normal assistant voice and send the update (do not forward raw internal metadata or default to ${SILENT_REPLY_TOKEN}).`,
@@ -390,8 +366,6 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
     `LittleBaby docs: ${docsPath}`,
     "Mirror: https://docs.littlebaby.ai",
     "Source: https://github.com/littlebaby/littlebaby",
-    "Community: https://discord.com/invite/clawd",
-    "Find new skills: https://clawhub.ai",
     "For LittleBaby behavior, commands, config, or architecture: consult local docs first.",
     "When diagnosing issues, run `littlebaby status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
     "",
@@ -447,7 +421,6 @@ export function buildAgentSystemPrompt(params: {
     channel?: string;
     capabilities?: string[];
     repoRoot?: string;
-    canvasRootDir?: string;
   };
   messageToolHints?: string[];
   sandboxInfo?: EmbeddedSandboxInfo;
@@ -693,7 +666,7 @@ export function buildAgentSystemPrompt(params: {
     ...(acpHarnessSpawnAllowed
       ? [
           'For requests like "do this in codex/claude code/cursor/gemini" or similar ACP harnesses, treat it as ACP harness intent and call `sessions_spawn` with `runtime: "acp"`.',
-          'On Discord, default ACP harness requests to thread-bound persistent sessions (`thread: true`, `mode: "session"`) unless the user asks otherwise.',
+          'For ACP harness requests, default to thread-bound persistent sessions (`thread: true`, `mode: "session"`) unless the user asks otherwise.',
           "Set `agentId` explicitly unless `acp.defaultAgent` is configured, and do not route ACP harness requests through `subagents`/`agents_list` or local PTY exec flows.",
           'For ACP harness thread spawns, do not call `message` with `action=thread-create`; use `sessions_spawn` (`runtime: "acp"`, `thread: true`) as the single thread creation path.',
         ]
@@ -849,11 +822,6 @@ export function buildAgentSystemPrompt(params: {
     "These user-editable files are loaded by LittleBaby and included below in Project Context.",
     "",
     ...buildAssistantOutputDirectivesSection(isMinimal),
-    ...buildWebchatCanvasSection({
-      isMinimal,
-      runtimeChannel,
-      canvasRootDir: params.runtimeInfo?.canvasRootDir,
-    }),
     ...buildMessagingSection({
       isMinimal,
       availableTools,
