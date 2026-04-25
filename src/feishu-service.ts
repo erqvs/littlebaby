@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -11,6 +12,7 @@ import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
+import mysql, { type Pool, type ResultSetHeader, type RowDataPacket } from "mysql2/promise";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -31,6 +33,26 @@ type ServiceConfig = {
   mcp?: {
     servers?: Record<string, McpServerConfig>;
   };
+  memory?: {
+    mysql?: MysqlMemoryConfig;
+  };
+  database?: {
+    mysql?: MysqlMemoryConfig;
+  };
+  mysql?: MysqlMemoryConfig;
+};
+
+type MysqlMemoryConfig = {
+  enabled?: boolean;
+  disabled?: boolean;
+  host?: string;
+  port?: number | string;
+  user?: string;
+  password?: string;
+  database?: string;
+  connectionLimit?: number | string;
+  restoreRecentLimit?: number | string;
+  saveRawEvent?: boolean;
 };
 
 type FeishuConfig = {
@@ -67,6 +89,8 @@ type McpServerConfig = {
   url?: string;
   transport?: "stdio" | "sse" | "http" | "streamable-http" | string;
   headers?: Record<string, string>;
+  toolTimeoutMs?: number | string;
+  toolAttempts?: number | string;
   disabled?: boolean;
   enabled?: boolean;
 };
@@ -86,6 +110,7 @@ type FeishuMessageEvent = {
     chat_type: "p2p" | "group" | "private";
     message_type: string;
     content: string;
+    create_time?: string;
     root_id?: string;
     parent_id?: string;
     thread_id?: string;
@@ -141,15 +166,43 @@ type ConversationEntry = {
   ts: number;
 };
 
+type DbMessageRef = {
+  sessionId: number;
+  messageId: number;
+};
+
+type GenerateReplyResult = {
+  text: string;
+  toolRounds: number;
+};
+
+type ToolCallTrace = {
+  memory?: MysqlMemoryStore | null;
+  aiTurnId?: number;
+  toolCallId?: string;
+};
+
+type ContextDocument = {
+  name: string;
+  docType: string;
+  title?: string;
+  content: string;
+};
+
 const DEFAULT_CONFIG_FILE = "littlebaby.json";
 const DEFAULT_STATE_DIR = ".littlebaby";
 const DEFAULT_CHUNK_LIMIT = 3800;
-const DEFAULT_HISTORY_LIMIT = 18;
+const DEFAULT_MYSQL_RESTORE_LIMIT = 200;
+const CONTEXT_DOCUMENT_REFRESH_MS = 60_000;
+const CONTEXT_DOCUMENT_MAX_CHARS = 12_000;
+const CONTEXT_DOCUMENT_TOTAL_MAX_CHARS = 36_000;
 const MCP_CONNECT_TIMEOUT_MS = 45_000;
 const MCP_TOOL_TIMEOUT_MS = 120_000;
+const MCP_TOOL_MAX_ATTEMPTS = 4;
+const MCP_TOOL_RETRY_BASE_DELAY_MS = 750;
 const MODEL_TIMEOUT_MS = 180_000;
-const MAX_TOOL_ROUNDS = 8;
-const MAX_TOOL_RESULT_CHARS = 24_000;
+const MAX_TOOL_ROUNDS = 4;
+const DB_RESULT_PREVIEW_CHARS = 8_000;
 
 const serviceStart = new Date();
 const conversations = new Map<string, ConversationEntry[]>();
@@ -190,6 +243,96 @@ function readStringArray(value: unknown): string[] {
   return value
     .map((item) => (typeof item === "string" || typeof item === "number" ? String(item).trim() : ""))
     .filter(Boolean);
+}
+
+function readPositiveInteger(value: unknown): number | undefined {
+  const number = typeof value === "number" ? value : typeof value === "string" ? Number(value.trim()) : NaN;
+  if (!Number.isFinite(number) || number <= 0) {
+    return undefined;
+  }
+  return Math.floor(number);
+}
+
+function readBoolean(value: unknown): boolean | undefined {
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (["1", "true", "yes", "on"].includes(normalized)) {
+      return true;
+    }
+    if (["0", "false", "no", "off"].includes(normalized)) {
+      return false;
+    }
+  }
+  return undefined;
+}
+
+function truncateForDb(value: string, limit = DB_RESULT_PREVIEW_CHARS): string {
+  return value.length > limit ? `${value.slice(0, limit)}\n...[truncated for database]` : value;
+}
+
+function jsonForDb(value: unknown): string | null {
+  if (value === undefined) {
+    return null;
+  }
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return JSON.stringify({ error: "unserializable value" });
+  }
+}
+
+function sha256Hex(value: string): string {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function truncateForPrompt(value: string, limit: number): string {
+  if (value.length <= limit) {
+    return value;
+  }
+  const headChars = Math.max(1, Math.floor(limit * 0.75));
+  const tailChars = Math.max(1, Math.floor(limit * 0.15));
+  return [
+    value.slice(0, headChars),
+    "",
+    `...[truncated ${value.length - headChars - tailChars} chars]...`,
+    "",
+    value.slice(-tailChars),
+  ].join("\n");
+}
+
+function buildContextDocumentsPrompt(documents: ContextDocument[]): string {
+  if (documents.length === 0) {
+    return "";
+  }
+  const sections: string[] = [
+    "## MySQL 上下文文档",
+    "以下内容来自 LittleBaby 的长期上下文文档库，用来约束人格、用户识别、长期记忆和工具偏好。",
+    "这些文档优先级低于本 system prompt 前面的安全规则、当前飞书消息和用户明确要求。",
+    "不要向用户泄露文档中的原始飞书 ID、内部路径或隐私内容；只把它们用于识别和生成更合适的回复。",
+    "旧 AGENTS/TOOLS 里的非 Feishu 平台规则只作为背景，不要把 Discord/WhatsApp/Heartbeat 协议直接照搬到飞书回复。",
+    "",
+  ];
+  let usedChars = sections.join("\n").length;
+  for (const doc of documents) {
+    const content = truncateForPrompt(doc.content.trim(), CONTEXT_DOCUMENT_MAX_CHARS);
+    const title = doc.title ? ` - ${doc.title}` : "";
+    const block = [`### ${doc.name}${title}`, `type: ${doc.docType}`, "", content, ""].join("\n");
+    const remaining = CONTEXT_DOCUMENT_TOTAL_MAX_CHARS - usedChars;
+    if (remaining <= 0) {
+      sections.push("...[additional context documents truncated]...");
+      break;
+    }
+    if (block.length > remaining) {
+      sections.push(truncateForPrompt(block, remaining));
+      break;
+    }
+    sections.push(block);
+    usedChars += block.length;
+  }
+  return sections.join("\n").trim();
 }
 
 function redactError(value: unknown): string {
@@ -305,7 +448,7 @@ function loadStateFiles(): void {
           }))
           .filter((entry) => entry.content.trim());
         if (entries.length > 0) {
-          conversations.set(key, entries.slice(-DEFAULT_HISTORY_LIMIT));
+          conversations.set(key, entries);
         }
       }
     }
@@ -344,7 +487,7 @@ function saveStateFiles(): void {
     fs.mkdirSync(resolveStateDir(), { recursive: true });
     const historyObject: Record<string, ConversationEntry[]> = {};
     for (const [key, entries] of conversations) {
-      historyObject[key] = entries.slice(-DEFAULT_HISTORY_LIMIT);
+      historyObject[key] = entries;
     }
     fs.writeFileSync(historyPath(), JSON.stringify(historyObject, null, 2));
 
@@ -356,6 +499,532 @@ function saveStateFiles(): void {
     fs.writeFileSync(dedupePath(), JSON.stringify(dedupe, null, 2));
   } catch (err) {
     warn(`state save failed: ${redactError(err)}`);
+  }
+}
+
+type ResolvedMysqlMemoryConfig = {
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  database: string;
+  connectionLimit: number;
+  restoreRecentLimit: number;
+  saveRawEvent: boolean;
+};
+
+function resolveMysqlMemoryConfig(config: ServiceConfig): ResolvedMysqlMemoryConfig | null {
+  const raw = config.memory?.mysql ?? config.database?.mysql ?? config.mysql;
+  const hasEnv =
+    readString(process.env.LITTLEBABY_MYSQL_USER) !== undefined ||
+    readString(process.env.LITTLEBABY_MYSQL_PASSWORD) !== undefined ||
+    readString(process.env.LITTLEBABY_MYSQL_DATABASE) !== undefined;
+  if (!raw && !hasEnv) {
+    return null;
+  }
+  if (raw?.disabled || raw?.enabled === false) {
+    return null;
+  }
+  const user = readString(process.env.LITTLEBABY_MYSQL_USER) ?? readString(raw?.user);
+  const password = readString(process.env.LITTLEBABY_MYSQL_PASSWORD) ?? readString(raw?.password);
+  if (!user || !password) {
+    warn("memory mysql config is present but user/password is missing; database memory disabled");
+    return null;
+  }
+  return {
+    host: readString(process.env.LITTLEBABY_MYSQL_HOST) ?? readString(raw?.host) ?? "127.0.0.1",
+    port: readPositiveInteger(process.env.LITTLEBABY_MYSQL_PORT ?? raw?.port) ?? 3306,
+    user,
+    password,
+    database: readString(process.env.LITTLEBABY_MYSQL_DATABASE) ?? readString(raw?.database) ?? "littlebaby",
+    connectionLimit: readPositiveInteger(process.env.LITTLEBABY_MYSQL_CONNECTION_LIMIT ?? raw?.connectionLimit) ?? 5,
+    restoreRecentLimit:
+      readPositiveInteger(process.env.LITTLEBABY_MYSQL_RESTORE_RECENT_LIMIT ?? raw?.restoreRecentLimit) ??
+      DEFAULT_MYSQL_RESTORE_LIMIT,
+    saveRawEvent: readBoolean(process.env.LITTLEBABY_MYSQL_SAVE_RAW_EVENT) ?? readBoolean(raw?.saveRawEvent) ?? false,
+  };
+}
+
+function feishuMessageDate(event: FeishuMessageEvent): Date | null {
+  const raw = readString(event.message.create_time);
+  if (!raw) {
+    return null;
+  }
+  const numeric = Number(raw);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return null;
+  }
+  return new Date(numeric < 1_000_000_000_000 ? numeric * 1000 : numeric);
+}
+
+function senderIdFor(event: FeishuMessageEvent): string | null {
+  return (
+    event.sender.sender_id.open_id ||
+    event.sender.sender_id.user_id ||
+    event.sender.sender_id.union_id ||
+    null
+  );
+}
+
+function sessionTypeFor(event: FeishuMessageEvent): string {
+  if (event.message.chat_type !== "group") {
+    return "dm";
+  }
+  return event.message.root_id || event.message.thread_id ? "group_thread" : "group";
+}
+
+function rowDateToMillis(value: unknown): number {
+  if (value instanceof Date) {
+    return value.getTime();
+  }
+  const millis = Date.parse(String(value));
+  return Number.isFinite(millis) ? millis : Date.now();
+}
+
+class MysqlMemoryStore {
+  private pool: Pool | null = null;
+  private readonly sessionIds = new Map<string, number>();
+  private contextDocumentsPrompt = "";
+  private contextDocumentsLoadedAt = 0;
+
+  constructor(private readonly config: ResolvedMysqlMemoryConfig) {}
+
+  async initialize(): Promise<void> {
+    this.pool = mysql.createPool({
+      host: this.config.host,
+      port: this.config.port,
+      user: this.config.user,
+      password: this.config.password,
+      database: this.config.database,
+      charset: "utf8mb4",
+      connectionLimit: this.config.connectionLimit,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 10_000,
+    });
+    await this.pool.query("SELECT 1");
+    log(`memory mysql: connected to ${this.config.host}:${this.config.port}/${this.config.database}`);
+    await this.refreshContextDocuments();
+  }
+
+  async close(): Promise<void> {
+    if (!this.pool) {
+      return;
+    }
+    await this.pool.end();
+    this.pool = null;
+  }
+
+  async restoreRecentConversations(): Promise<void> {
+    const pool = this.requirePool();
+    const limit = this.config.restoreRecentLimit;
+    if (limit <= 0) {
+      return;
+    }
+    const [rows] = await pool.execute<RowDataPacket[]>(
+      `
+        SELECT session_key, role, sender_name, content, created_at
+        FROM (
+          SELECT
+            s.session_key,
+            m.role,
+            m.sender_name,
+            m.content,
+            m.created_at,
+            m.id,
+            ROW_NUMBER() OVER (PARTITION BY m.session_id ORDER BY m.created_at DESC, m.id DESC) AS rn
+          FROM lb_chat_messages m
+          JOIN lb_chat_sessions s ON s.id = m.session_id
+          WHERE m.role IN ('user', 'assistant')
+        ) recent
+        WHERE rn <= ?
+        ORDER BY session_key ASC, created_at ASC, id ASC
+      `,
+      [limit],
+    );
+    const restored = new Map<string, ConversationEntry[]>();
+    for (const row of rows) {
+      const sessionKey = readString(row.session_key);
+      const content = typeof row.content === "string" ? row.content : "";
+      if (!sessionKey || !content.trim()) {
+        continue;
+      }
+      const entries = restored.get(sessionKey) ?? [];
+      entries.push({
+        role: row.role === "assistant" ? "assistant" : "user",
+        name: readString(row.sender_name),
+        content,
+        ts: rowDateToMillis(row.created_at),
+      });
+      restored.set(sessionKey, entries);
+    }
+    for (const [sessionKey, entries] of restored) {
+      conversations.set(sessionKey, entries);
+    }
+    if (restored.size > 0) {
+      log(`memory mysql: restored recent history for ${restored.size} session(s)`);
+    }
+  }
+
+  async getContextDocumentsPrompt(): Promise<string> {
+    if (Date.now() - this.contextDocumentsLoadedAt > CONTEXT_DOCUMENT_REFRESH_MS) {
+      await this.refreshContextDocuments();
+    }
+    return this.contextDocumentsPrompt;
+  }
+
+  async recordUserMessage(params: {
+    accountId: string;
+    event: FeishuMessageEvent;
+    sessionKey: string;
+    content: string;
+    senderName: string;
+    mentionedBot: boolean;
+    shouldReply: boolean;
+  }): Promise<DbMessageRef | null> {
+    try {
+      const createdAt = feishuMessageDate(params.event) ?? new Date();
+      const sessionId = await this.upsertSession({
+        accountId: params.accountId,
+        sessionKey: params.sessionKey,
+        event: params.event,
+        lastMessageAt: createdAt,
+      });
+      const pool = this.requirePool();
+      const rawEvent = this.config.saveRawEvent ? jsonForDb(params.event) : null;
+      const [result] = await pool.execute<ResultSetHeader>(
+        `
+          INSERT INTO lb_chat_messages (
+            session_id, channel, account_id, external_message_id, reply_to_external_message_id,
+            root_external_message_id, parent_external_message_id, role, message_type, sender_id,
+            sender_name, content, content_sha256, mentioned_bot, should_reply, raw_event,
+            metadata, external_created_at
+          ) VALUES (?, 'feishu', ?, ?, NULL, ?, ?, 'user', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE
+            id = LAST_INSERT_ID(id),
+            content = VALUES(content),
+            content_sha256 = VALUES(content_sha256),
+            mentioned_bot = VALUES(mentioned_bot),
+            should_reply = VALUES(should_reply),
+            raw_event = COALESCE(VALUES(raw_event), raw_event),
+            metadata = VALUES(metadata),
+            updated_at = CURRENT_TIMESTAMP(3)
+        `,
+        [
+          sessionId,
+          params.accountId,
+          params.event.message.message_id,
+          params.event.message.root_id ?? null,
+          params.event.message.parent_id ?? null,
+          params.event.message.message_type,
+          senderIdFor(params.event),
+          params.senderName,
+          params.content,
+          sha256Hex(params.content),
+          params.mentionedBot ? 1 : 0,
+          params.shouldReply ? 1 : 0,
+          rawEvent,
+          jsonForDb({
+            chatType: params.event.message.chat_type,
+            senderType: params.event.sender.sender_type,
+            threadId: params.event.message.thread_id ?? null,
+          }),
+          createdAt,
+        ],
+      );
+      const messageId = Number(result.insertId);
+      await pool.execute(
+        `
+          UPDATE lb_chat_sessions
+          SET last_message_id = ?, last_message_at = ?, updated_at = CURRENT_TIMESTAMP(3)
+          WHERE id = ?
+        `,
+        [messageId || null, createdAt, sessionId],
+      );
+      return messageId ? { sessionId, messageId } : { sessionId, messageId: 0 };
+    } catch (err) {
+      warn(`memory mysql: failed to record user message: ${redactError(err)}`);
+      return null;
+    }
+  }
+
+  async recordAssistantMessage(params: {
+    accountId: string;
+    event: FeishuMessageEvent;
+    sessionKey: string;
+    content: string;
+    aiTurnId?: number;
+    chunkCount: number;
+  }): Promise<DbMessageRef | null> {
+    try {
+      const createdAt = new Date();
+      const sessionId =
+        params.aiTurnId !== undefined
+          ? await this.upsertSession({
+              accountId: params.accountId,
+              sessionKey: params.sessionKey,
+              event: params.event,
+              lastMessageAt: createdAt,
+            })
+          : await this.upsertSession({
+              accountId: params.accountId,
+              sessionKey: params.sessionKey,
+              event: params.event,
+              lastMessageAt: createdAt,
+            });
+      const pool = this.requirePool();
+      const [result] = await pool.execute<ResultSetHeader>(
+        `
+          INSERT INTO lb_chat_messages (
+            session_id, channel, account_id, external_message_id, reply_to_external_message_id,
+            root_external_message_id, parent_external_message_id, role, message_type, sender_id,
+            sender_name, content, content_sha256, mentioned_bot, should_reply, ai_turn_id,
+            metadata, external_created_at
+          ) VALUES (?, 'feishu', ?, NULL, ?, ?, ?, 'assistant', 'post', NULL, '小橘', ?, ?, 0, NULL, ?, ?, ?)
+        `,
+        [
+          sessionId,
+          params.accountId,
+          params.event.message.message_id,
+          params.event.message.root_id ?? null,
+          params.event.message.parent_id ?? null,
+          params.content,
+          sha256Hex(params.content),
+          params.aiTurnId ?? null,
+          jsonForDb({ chunkCount: params.chunkCount }),
+          createdAt,
+        ],
+      );
+      const messageId = Number(result.insertId);
+      await pool.execute(
+        `
+          UPDATE lb_chat_sessions
+          SET last_message_id = ?, last_message_at = ?, last_assistant_message_at = ?, updated_at = CURRENT_TIMESTAMP(3)
+          WHERE id = ?
+        `,
+        [messageId || null, createdAt, createdAt, sessionId],
+      );
+      return messageId ? { sessionId, messageId } : { sessionId, messageId: 0 };
+    } catch (err) {
+      warn(`memory mysql: failed to record assistant message: ${redactError(err)}`);
+      return null;
+    }
+  }
+
+  async startAiTurn(params: {
+    sessionId: number;
+    triggerMessageId?: number;
+    model: string;
+    fallbackModel?: string;
+    inputMessageCount: number;
+  }): Promise<number | undefined> {
+    try {
+      const [result] = await this.requirePool().execute<ResultSetHeader>(
+        `
+          INSERT INTO lb_ai_turns (
+            session_id, trigger_message_id, status, model, fallback_model, input_message_count, started_at
+          ) VALUES (?, ?, 'running', ?, ?, ?, CURRENT_TIMESTAMP(3))
+        `,
+        [
+          params.sessionId,
+          params.triggerMessageId && params.triggerMessageId > 0 ? params.triggerMessageId : null,
+          params.model,
+          params.fallbackModel ?? null,
+          params.inputMessageCount,
+        ],
+      );
+      return Number(result.insertId) || undefined;
+    } catch (err) {
+      warn(`memory mysql: failed to start ai turn: ${redactError(err)}`);
+      return undefined;
+    }
+  }
+
+  async finishAiTurn(params: {
+    aiTurnId?: number;
+    status: "success" | "failed";
+    toolRounds: number;
+    errorMessage?: string;
+  }): Promise<void> {
+    if (!params.aiTurnId) {
+      return;
+    }
+    try {
+      await this.requirePool().execute(
+        `
+          UPDATE lb_ai_turns
+          SET status = ?, tool_rounds = ?, finished_at = CURRENT_TIMESTAMP(3), error_message = ?
+          WHERE id = ?
+        `,
+        [
+          params.status,
+          params.toolRounds,
+          params.errorMessage ? truncateForDb(params.errorMessage, 4_000) : null,
+          params.aiTurnId,
+        ],
+      );
+    } catch (err) {
+      warn(`memory mysql: failed to finish ai turn: ${redactError(err)}`);
+    }
+  }
+
+  async recordToolCall(params: {
+    aiTurnId?: number;
+    toolCallId?: string;
+    serverName: string;
+    toolName: string;
+    openAiToolName: string;
+    args: JsonRecord;
+    status: "success" | "failed";
+    attempts: number;
+    timeoutMs: number;
+    startedAt: Date;
+    durationMs: number;
+    resultPreview?: string;
+    errorMessage?: string;
+  }): Promise<void> {
+    if (!params.aiTurnId) {
+      return;
+    }
+    try {
+      await this.requirePool().execute(
+        `
+          INSERT INTO lb_tool_calls (
+            ai_turn_id, tool_call_id, server_name, tool_name, openai_tool_name,
+            arguments_json, result_preview, status, attempts, timeout_ms, started_at,
+            finished_at, duration_ms, error_message
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(3), ?, ?)
+        `,
+        [
+          params.aiTurnId,
+          params.toolCallId ?? null,
+          params.serverName,
+          params.toolName,
+          params.openAiToolName,
+          jsonForDb(params.args),
+          params.resultPreview ? truncateForDb(params.resultPreview) : null,
+          params.status,
+          params.attempts,
+          params.timeoutMs,
+          params.startedAt,
+          params.durationMs,
+          params.errorMessage ? truncateForDb(params.errorMessage, 4_000) : null,
+        ],
+      );
+    } catch (err) {
+      warn(`memory mysql: failed to record tool call: ${redactError(err)}`);
+    }
+  }
+
+  private async refreshContextDocuments(): Promise<void> {
+    try {
+      const [rows] = await this.requirePool().execute<RowDataPacket[]>(
+        `
+          SELECT name, doc_type, title, content
+          FROM lb_context_documents
+          WHERE status = 'active'
+            AND injection_mode IN ('always', 'feishu')
+          ORDER BY priority ASC, updated_at DESC, id ASC
+        `,
+      );
+      const documents = rows
+        .map((row): ContextDocument | null => {
+          const name = readString(row.name);
+          const content = typeof row.content === "string" ? row.content : "";
+          if (!name || !content.trim()) {
+            return null;
+          }
+          return {
+            name,
+            docType: readString(row.doc_type) ?? "note",
+            title: readString(row.title),
+            content,
+          };
+        })
+        .filter((doc): doc is ContextDocument => doc !== null);
+      this.contextDocumentsPrompt = buildContextDocumentsPrompt(documents);
+      this.contextDocumentsLoadedAt = Date.now();
+      if (documents.length > 0) {
+        log(`memory mysql: loaded ${documents.length} context document(s)`);
+      }
+    } catch (err) {
+      this.contextDocumentsPrompt = "";
+      this.contextDocumentsLoadedAt = Date.now();
+      warn(`memory mysql: failed to load context documents: ${redactError(err)}`);
+    }
+  }
+
+  private requirePool(): Pool {
+    if (!this.pool) {
+      throw new Error("mysql memory pool is not initialized");
+    }
+    return this.pool;
+  }
+
+  private async upsertSession(params: {
+    accountId: string;
+    sessionKey: string;
+    event: FeishuMessageEvent;
+    lastMessageAt?: Date;
+  }): Promise<number> {
+    const cached = this.sessionIds.get(params.sessionKey);
+    if (cached) {
+      return cached;
+    }
+    const threadId = params.event.message.root_id || params.event.message.thread_id || null;
+    const [result] = await this.requirePool().execute<ResultSetHeader>(
+      `
+        INSERT INTO lb_chat_sessions (
+          session_key, channel, account_id, session_type, chat_id, thread_id,
+          sender_scope_id, title, last_message_at
+        ) VALUES (?, 'feishu', ?, ?, ?, ?, NULL, NULL, ?)
+        ON DUPLICATE KEY UPDATE
+          id = LAST_INSERT_ID(id),
+          account_id = VALUES(account_id),
+          session_type = VALUES(session_type),
+          chat_id = VALUES(chat_id),
+          thread_id = VALUES(thread_id),
+          last_message_at = COALESCE(VALUES(last_message_at), last_message_at),
+          updated_at = CURRENT_TIMESTAMP(3)
+      `,
+      [
+        params.sessionKey,
+        params.accountId,
+        sessionTypeFor(params.event),
+        params.event.message.chat_id,
+        threadId,
+        params.lastMessageAt ?? null,
+      ],
+    );
+    let sessionId = Number(result.insertId);
+    if (!sessionId) {
+      const [rows] = await this.requirePool().execute<RowDataPacket[]>(
+        "SELECT id FROM lb_chat_sessions WHERE session_key = ? LIMIT 1",
+        [params.sessionKey],
+      );
+      sessionId = Number(rows[0]?.id);
+    }
+    if (!sessionId) {
+      throw new Error(`failed to resolve mysql session id for ${params.sessionKey}`);
+    }
+    this.sessionIds.set(params.sessionKey, sessionId);
+    return sessionId;
+  }
+}
+
+async function initializeMemoryStore(config: ServiceConfig): Promise<MysqlMemoryStore | null> {
+  const mysqlConfig = resolveMysqlMemoryConfig(config);
+  if (!mysqlConfig) {
+    return null;
+  }
+  const store = new MysqlMemoryStore(mysqlConfig);
+  try {
+    await store.initialize();
+    await store.restoreRecentConversations();
+    return store;
+  } catch (err) {
+    warn(`memory mysql: unavailable, continuing with file state: ${redactError(err)}`);
+    await store.close().catch(() => undefined);
+    return null;
   }
 }
 
@@ -617,7 +1286,7 @@ function senderLabel(event: FeishuMessageEvent): string {
 function addHistory(key: string, entry: ConversationEntry): void {
   const entries = conversations.get(key) ?? [];
   entries.push(entry);
-  conversations.set(key, entries.slice(-DEFAULT_HISTORY_LIMIT));
+  conversations.set(key, entries);
   scheduleStateSave();
 }
 
@@ -658,7 +1327,7 @@ function resolveModelId(config: ServiceConfig, fallbackIndex = 0): string {
   return (raw ?? "zai/glm-5-turbo").replace(/^zai\//, "");
 }
 
-function buildSystemPrompt(config: ServiceConfig): string {
+function buildSystemPrompt(config: ServiceConfig, contextDocumentsPrompt = ""): string {
   const timezone = readString(config.agents?.defaults?.userTimezone) ?? "Asia/Shanghai";
   const now = new Intl.DateTimeFormat("zh-CN", {
     timeZone: timezone,
@@ -672,6 +1341,7 @@ function buildSystemPrompt(config: ServiceConfig): string {
     "不要暴露密钥、Token、内部配置路径或系统实现细节。",
     "如果工具调用失败，直接说明失败原因并给出可执行的下一步。",
     `当前用户时区时间：${now}（${timezone}）。`,
+    contextDocumentsPrompt,
   ].join("\n");
 }
 
@@ -690,7 +1360,6 @@ async function shouldReplyToGroup(params: {
   }
   const history = conversations.get(params.sessionKey) ?? [];
   const recent = history
-    .slice(-8)
     .map((entry) => `${entry.role === "assistant" ? "小橘" : entry.name ?? "用户"}: ${entry.content}`)
     .join("\n");
   const prompt = [
@@ -711,7 +1380,6 @@ async function shouldReplyToGroup(params: {
       messages: [{ role: "user", content: prompt }],
       tools: [],
       timeoutMs: 45_000,
-      maxTokens: 16,
       temperature: 0,
     });
     return result.content.trim().toUpperCase().startsWith("YES");
@@ -727,23 +1395,34 @@ async function generateReply(params: {
   sessionKey: string;
   text: string;
   sender: string;
-}): Promise<string> {
+  memory?: MysqlMemoryStore | null;
+  aiTurnId?: number;
+}): Promise<GenerateReplyResult> {
   const apiKey = resolveZaiApiKey(params.config);
   if (!apiKey) {
-    return "ZAI API Key 没有配置，暂时无法回复。";
+    return { text: "ZAI API Key 没有配置，暂时无法回复。", toolRounds: 0 };
   }
   const tools = await params.mcp.openAiTools();
+  const contextDocumentsPrompt = (await params.memory?.getContextDocumentsPrompt()) ?? "";
   const history = conversations.get(params.sessionKey) ?? [];
+  const lastHistoryEntry = history.at(-1);
+  const historyAlreadyIncludesCurrent =
+    lastHistoryEntry?.role === "user" &&
+    lastHistoryEntry.name === params.sender &&
+    lastHistoryEntry.content === params.text;
   const messages: ChatMessage[] = [
-    { role: "system", content: buildSystemPrompt(params.config) },
-    ...history.slice(-12).map((entry): ChatMessage => ({
+    { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt) },
+    ...history.map((entry): ChatMessage => ({
       role: entry.role,
       content: `${entry.name ? `${entry.name}: ` : ""}${entry.content}`,
     })),
-    { role: "user", content: `${params.sender}: ${params.text}` },
+    ...(historyAlreadyIncludesCurrent
+      ? []
+      : [{ role: "user" as const, content: `${params.sender}: ${params.text}` }]),
   ];
 
-  for (let round = 0; round <= MAX_TOOL_ROUNDS; round += 1) {
+  let toolRounds = 0;
+  for (;;) {
     const response = await callZaiChat({
       config: params.config,
       apiKey,
@@ -752,8 +1431,12 @@ async function generateReply(params: {
       timeoutMs: MODEL_TIMEOUT_MS,
     });
     if (response.toolCalls.length === 0) {
-      return response.content.trim() || "我这边没有生成有效回复。";
+      return { text: response.content.trim() || "我这边没有生成有效回复。", toolRounds };
     }
+    if (toolRounds >= MAX_TOOL_ROUNDS) {
+      return { text: `MCP 工具调用超过 ${MAX_TOOL_ROUNDS} 轮，我先停在这里。`, toolRounds };
+    }
+    toolRounds += 1;
     messages.push({
       role: "assistant",
       content: response.content || null,
@@ -762,7 +1445,11 @@ async function generateReply(params: {
     for (const toolCall of response.toolCalls) {
       const name = toolCall.function?.name ?? "";
       const argsText = toolCall.function?.arguments ?? "{}";
-      const result = await params.mcp.callOpenAiTool(name, safeJsonParse(argsText));
+      const result = await params.mcp.callOpenAiTool(name, safeJsonParse(argsText), {
+        memory: params.memory,
+        aiTurnId: params.aiTurnId,
+        toolCallId: toolCall.id,
+      });
       messages.push({
         role: "tool",
         tool_call_id: toolCall.id ?? name,
@@ -770,7 +1457,6 @@ async function generateReply(params: {
       });
     }
   }
-  return "工具调用轮次过多，我先停在这里。";
 }
 
 async function callZaiChat(params: {
@@ -786,8 +1472,10 @@ async function callZaiChat(params: {
     model: resolveModelId(params.config),
     messages: params.messages,
     temperature: params.temperature ?? 0.4,
-    max_tokens: params.maxTokens ?? 4096,
   };
+  if (typeof params.maxTokens === "number") {
+    body.max_tokens = params.maxTokens;
+  }
   if (params.tools.length > 0) {
     body.tools = params.tools;
     body.tool_choice = "auto";
@@ -865,7 +1553,7 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: s
 
 class McpHub {
   private readonly config: ServiceConfig;
-  private readonly clients = new Map<string, { client: McpClient; transport: Transport }>();
+  private readonly clients = new Map<string, { client: McpClient; transport: Transport; config: McpServerConfig }>();
   private readonly bindings = new Map<string, McpToolBinding>();
   private initPromise: Promise<void> | null = null;
 
@@ -885,7 +1573,7 @@ class McpHub {
     }));
   }
 
-  async callOpenAiTool(openAiName: string, args: JsonRecord): Promise<string> {
+  async callOpenAiTool(openAiName: string, args: JsonRecord, trace?: ToolCallTrace): Promise<string> {
     await this.ensureInitialized();
     const binding = this.bindings.get(openAiName);
     if (!binding) {
@@ -895,16 +1583,66 @@ class McpHub {
     if (!entry) {
       return `MCP server ${binding.serverName} is not connected.`;
     }
-    try {
-      const result = await withTimeout(
-        entry.client.callTool({ name: binding.toolName, arguments: args }),
-        MCP_TOOL_TIMEOUT_MS,
-        `MCP tool ${openAiName} timed out`,
-      );
-      return formatMcpToolResult(result);
-    } catch (err) {
-      return `MCP tool ${openAiName} failed: ${redactError(err)}`;
+    const timeoutMs = readPositiveInteger(entry.config.toolTimeoutMs) ?? MCP_TOOL_TIMEOUT_MS;
+    const maxAttempts = readPositiveInteger(entry.config.toolAttempts) ?? MCP_TOOL_MAX_ATTEMPTS;
+    const startedAt = new Date();
+    let lastError: unknown;
+    let attemptsUsed = 0;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      attemptsUsed = attempt;
+      try {
+        const result = await entry.client.callTool(
+          { name: binding.toolName, arguments: args },
+          undefined,
+          {
+            timeout: timeoutMs,
+            resetTimeoutOnProgress: true,
+            maxTotalTimeout: timeoutMs,
+          },
+        );
+        const text = formatMcpToolResult(result);
+        await trace?.memory?.recordToolCall({
+          aiTurnId: trace.aiTurnId,
+          toolCallId: trace.toolCallId,
+          serverName: binding.serverName,
+          toolName: binding.toolName,
+          openAiToolName: openAiName,
+          args,
+          status: "success",
+          attempts: attemptsUsed,
+          timeoutMs,
+          startedAt,
+          durationMs: Date.now() - startedAt.getTime(),
+          resultPreview: text,
+        });
+        return text;
+      } catch (err) {
+        lastError = err;
+        if (attempt >= maxAttempts) {
+          break;
+        }
+        warn(
+          `mcp tool ${openAiName} attempt ${attempt}/${maxAttempts} failed: ${redactError(err)}; retrying`,
+        );
+        await sleep(Math.min(MCP_TOOL_RETRY_BASE_DELAY_MS * attempt, 3_000));
+      }
     }
+    const failure = `MCP tool ${openAiName} failed after ${maxAttempts} attempt(s): ${redactError(lastError)}`;
+    await trace?.memory?.recordToolCall({
+      aiTurnId: trace.aiTurnId,
+      toolCallId: trace.toolCallId,
+      serverName: binding.serverName,
+      toolName: binding.toolName,
+      openAiToolName: openAiName,
+      args,
+      status: "failed",
+      attempts: attemptsUsed || maxAttempts,
+      timeoutMs,
+      startedAt,
+      durationMs: Date.now() - startedAt.getTime(),
+      errorMessage: failure,
+    });
+    return failure;
   }
 
   async close(): Promise<void> {
@@ -939,8 +1677,8 @@ class McpHub {
           MCP_CONNECT_TIMEOUT_MS,
           `MCP server ${serverName} connect timed out`,
         );
-        this.clients.set(serverName, { client, transport });
-        const listed = await client.listTools();
+        this.clients.set(serverName, { client, transport, config: serverConfig });
+        const listed = await client.listTools(undefined, { timeout: MCP_CONNECT_TIMEOUT_MS });
         for (const tool of listed.tools ?? []) {
           const openAiName = uniqueToolName(this.bindings, serverName, tool.name);
           this.bindings.set(openAiName, {
@@ -1020,7 +1758,8 @@ function sanitizeToolName(value: string): string {
 
 function formatMcpToolResult(result: unknown): string {
   if (!isRecord(result)) {
-    return summarizeUnknown(result).slice(0, MAX_TOOL_RESULT_CHARS);
+    const serialized = typeof result === "string" ? result : JSON.stringify(result);
+    return typeof serialized === "string" ? serialized : String(result);
   }
   const parts: string[] = [];
   const content = result.content;
@@ -1046,13 +1785,14 @@ function formatMcpToolResult(result: unknown): string {
     parts.push(JSON.stringify(result.structuredContent, null, 2));
   }
   const text = parts.join("\n\n").trim() || JSON.stringify(result);
-  return text.length > MAX_TOOL_RESULT_CHARS ? `${text.slice(0, MAX_TOOL_RESULT_CHARS)}\n...[truncated]` : text;
+  return text;
 }
 
 async function handleMessage(params: {
   config: ServiceConfig;
   account: ResolvedFeishuAccount;
   mcp: McpHub;
+  memory?: MysqlMemoryStore | null;
   client: Lark.Client;
   event: FeishuMessageEvent;
   botOpenId?: string;
@@ -1080,13 +1820,25 @@ async function handleMessage(params: {
     }
     const key = sessionKeyFor(event, account.accountId);
     const mentioned = isBotMentioned(event, params.botOpenId, params.botName);
+    let shouldReply = true;
     if (event.message.chat_type === "group") {
-      const shouldReply = await shouldReplyToGroup({
+      shouldReply = await shouldReplyToGroup({
         config,
         text,
         sessionKey: key,
         mentioned,
       });
+    }
+    const userMessageRef = await params.memory?.recordUserMessage({
+      accountId: account.accountId,
+      event,
+      sessionKey: key,
+      content: text,
+      senderName: senderLabel(event),
+      mentionedBot: mentioned,
+      shouldReply,
+    });
+    if (event.message.chat_type === "group") {
       if (!shouldReply) {
         addHistory(key, { role: "user", name: senderLabel(event), content: text, ts: Date.now() });
         processedMessages.add(messageId);
@@ -1095,13 +1847,41 @@ async function handleMessage(params: {
     }
 
     addHistory(key, { role: "user", name: senderLabel(event), content: text, ts: Date.now() });
-    const reply = await generateReply({
-      config,
-      mcp: params.mcp,
-      sessionKey: key,
-      text,
-      sender: senderLabel(event),
-    });
+    const aiTurnId = userMessageRef
+      ? await params.memory?.startAiTurn({
+          sessionId: userMessageRef.sessionId,
+          triggerMessageId: userMessageRef.messageId,
+          model: resolveModelId(config),
+          fallbackModel: resolveModelId(config, 1),
+          inputMessageCount: conversations.get(key)?.length ?? 0,
+        })
+      : undefined;
+    let replyResult: GenerateReplyResult;
+    try {
+      replyResult = await generateReply({
+        config,
+        mcp: params.mcp,
+        sessionKey: key,
+        text,
+        sender: senderLabel(event),
+        memory: params.memory,
+        aiTurnId,
+      });
+      await params.memory?.finishAiTurn({
+        aiTurnId,
+        status: "success",
+        toolRounds: replyResult.toolRounds,
+      });
+    } catch (err) {
+      await params.memory?.finishAiTurn({
+        aiTurnId,
+        status: "failed",
+        toolRounds: 0,
+        errorMessage: redactError(err),
+      });
+      throw err;
+    }
+    const reply = replyResult.text;
     const chunks = chunkReply(reply, account.config);
     for (const chunk of chunks) {
       await sendFeishuReply({
@@ -1112,6 +1892,14 @@ async function handleMessage(params: {
       });
       await sleep(250);
     }
+    await params.memory?.recordAssistantMessage({
+      accountId: account.accountId,
+      event,
+      sessionKey: key,
+      content: reply,
+      aiTurnId,
+      chunkCount: chunks.length,
+    });
     addHistory(key, { role: "assistant", content: reply, ts: Date.now() });
     processedMessages.add(messageId);
   } finally {
@@ -1209,7 +1997,11 @@ async function sendFeishuReply(params: {
   }
 }
 
-async function runFeishuService(config: ServiceConfig, abortSignal: AbortSignal): Promise<void> {
+async function runFeishuService(
+  config: ServiceConfig,
+  abortSignal: AbortSignal,
+  memory: MysqlMemoryStore | null,
+): Promise<void> {
   const account = resolveAccountConfig(config);
   const client = createFeishuClient(account);
   const identity = await fetchBotIdentity(account).catch((err) => {
@@ -1231,6 +2023,7 @@ async function runFeishuService(config: ServiceConfig, abortSignal: AbortSignal)
         config,
         account,
         mcp,
+        memory,
         client,
         event,
         botOpenId: identity.botOpenId,
@@ -1252,6 +2045,7 @@ async function runFeishuService(config: ServiceConfig, abortSignal: AbortSignal)
       // Ignore close races.
     }
     await mcp.close();
+    await memory?.close();
     saveStateFiles();
   };
   abortSignal.addEventListener(
@@ -1295,9 +2089,10 @@ async function main(argv: string[]): Promise<void> {
   parseServiceOptions(argv);
   loadStateFiles();
   const config = loadConfig();
+  const memory = await initializeMemoryStore(config);
   log(`starting minimal Feishu service, booted at ${serviceStart.toISOString()}`);
   const abortSignal = createAbortSignal();
-  await runFeishuService(config, abortSignal);
+  await runFeishuService(config, abortSignal, memory);
   if (shutdownRequested || abortSignal.aborted) {
     process.exit(0);
   }
