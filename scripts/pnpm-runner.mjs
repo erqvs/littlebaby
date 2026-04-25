@@ -1,7 +1,6 @@
 import { spawn } from "node:child_process";
 import { closeSync, openSync, readSync } from "node:fs";
 import path from "node:path";
-import { buildCmdExeCommandLine } from "./windows-cmd-helpers.mjs";
 
 function isPnpmExecPath(value) {
   return /^pnpm(?:-cli)?(?:\.(?:[cm]?js|cmd|exe))?$/.test(path.basename(value).toLowerCase());
@@ -45,8 +44,6 @@ export function resolvePnpmRunner(params = {}) {
   const nodeArgs = params.nodeArgs ?? [];
   const npmExecPath = params.npmExecPath ?? process.env.npm_execpath;
   const nodeExecPath = params.nodeExecPath ?? process.execPath;
-  const platform = params.platform ?? process.platform;
-  const comSpec = params.comSpec ?? process.env.ComSpec ?? "cmd.exe";
 
   if (
     typeof npmExecPath === "string" &&
@@ -57,15 +54,6 @@ export function resolvePnpmRunner(params = {}) {
       command: nodeExecPath,
       args: [...nodeArgs, npmExecPath, ...pnpmArgs],
       shell: false,
-    };
-  }
-
-  if (platform === "win32") {
-    return {
-      command: comSpec,
-      args: ["/d", "/s", "/c", buildCmdExeCommandLine("pnpm.cmd", pnpmArgs)],
-      shell: false,
-      windowsVerbatimArguments: true,
     };
   }
 

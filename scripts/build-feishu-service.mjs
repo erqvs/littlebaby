@@ -24,8 +24,7 @@ const runner = resolvePnpmRunner({
     "--format",
     "esm",
     "--clean",
-    "--config-loader",
-    "unrun",
+    "--no-config",
     "--logLevel",
     logLevel,
   ],
@@ -43,6 +42,13 @@ const result = spawnSync(runner.command, runner.args, {
 });
 
 if (typeof result.status === "number") {
+  if (result.status === 0) {
+    const mjsEntry = path.join(rootDir, "dist-service", "feishu-service.mjs");
+    const jsEntry = path.join(rootDir, "dist-service", "feishu-service.js");
+    if (fs.existsSync(mjsEntry)) {
+      fs.renameSync(mjsEntry, jsEntry);
+    }
+  }
   process.exit(result.status);
 }
 
