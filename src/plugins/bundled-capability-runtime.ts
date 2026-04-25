@@ -41,10 +41,6 @@ const CAPABILITY_VITEST_SHIM_ALIASES = [
     subpath: "provider-onboard",
     target: new URL("../plugin-sdk/provider-onboard.ts", import.meta.url),
   },
-  {
-    subpath: "speech-core",
-    target: new URL("./capability-runtime-vitest-shims/speech-core.ts", import.meta.url),
-  },
 ] as const;
 
 export function buildVitestCapabilityShimAliasMap(): Record<string, string> {

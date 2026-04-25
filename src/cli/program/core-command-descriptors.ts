@@ -5,24 +5,8 @@ export type CoreCliCommandDescriptor = NamedCommandDescriptor;
 
 const coreCliCommandCatalog = defineCommandDescriptorCatalog([
   {
-    name: "setup",
-    description: "Initialize local config and agent workspace",
-    hasSubcommands: false,
-  },
-  {
-    name: "onboard",
-    description: "Interactive onboarding for gateway, workspace, and skills",
-    hasSubcommands: false,
-  },
-  {
-    name: "configure",
-    description: "Interactive configuration for credentials, channels, gateway, and agent defaults",
-    hasSubcommands: false,
-  },
-  {
     name: "config",
-    description:
-      "Non-interactive config helpers (get/set/unset/file/validate). Default: starts guided setup.",
+    description: "Non-interactive config helpers (get/set/unset/file/validate).",
     hasSubcommands: true,
   },
   {
@@ -31,28 +15,8 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     hasSubcommands: true,
   },
   {
-    name: "doctor",
-    description: "Health checks + quick fixes for the gateway and channels",
-    hasSubcommands: false,
-  },
-  {
-    name: "dashboard",
-    description: "Open the Control UI with your current token",
-    hasSubcommands: false,
-  },
-  {
-    name: "reset",
-    description: "Reset local config/state (keeps the CLI installed)",
-    hasSubcommands: false,
-  },
-  {
-    name: "uninstall",
-    description: "Uninstall the gateway service + local data (CLI remains)",
-    hasSubcommands: false,
-  },
-  {
     name: "message",
-    description: "Send, read, and manage messages",
+    description: "Send Feishu messages",
     hasSubcommands: true,
   },
   {
@@ -72,7 +36,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
   },
   {
     name: "status",
-    description: "Show channel health and recent session recipients",
+    description: "Show Feishu/gateway health and recent session recipients",
     hasSubcommands: false,
   },
   {

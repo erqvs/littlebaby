@@ -66,8 +66,6 @@ import { collectRuntimeConfigAssignments, secretTargetRegistryEntries } from "./
 import { collectFeishuSecurityAuditFindings } from "./security-audit.js";
 import { resolveFeishuSessionConversation } from "./session-conversation.js";
 import { resolveFeishuOutboundSessionRoute } from "./session-route.js";
-import { feishuSetupAdapter } from "./setup-core.js";
-import { feishuSetupWizard, runFeishuLogin } from "./setup-surface.js";
 import { looksLikeFeishuId, normalizeFeishuTarget } from "./targets.js";
 import type { FeishuConfig, FeishuProbeResult, ResolvedFeishuAccount } from "./types.js";
 
@@ -1091,19 +1089,6 @@ export const feishuPlugin: ChannelPlugin<ResolvedFeishuAccount, FeishuProbeResul
             fallbackTo,
           }),
       },
-      auth: {
-        login: async ({ cfg }) => {
-          const { createClackPrompter } = await import("littlebaby/plugin-sdk/setup-runtime");
-          const { writeConfigFile } = await import("littlebaby/plugin-sdk/config-runtime");
-          const prompter = createClackPrompter();
-          const nextCfg = await runFeishuLogin({ cfg, prompter });
-          if (nextCfg !== cfg) {
-            await writeConfigFile(nextCfg);
-          }
-        },
-      },
-      setup: feishuSetupAdapter,
-      setupWizard: feishuSetupWizard,
       messaging: {
         normalizeTarget: (raw) => normalizeFeishuTarget(raw) ?? undefined,
         resolveSessionConversation: ({ kind, rawId }) =>

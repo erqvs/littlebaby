@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { expect, vi, type Mock } from "vitest";
 import { createPluginRuntimeMock } from "../../../../test/helpers/plugins/plugin-runtime-mock.js";
-import type { ClawdbotConfig, PluginRuntime, RuntimeEnv } from "../../runtime-api.js";
+import type { LittleBabyConfig, PluginRuntime, RuntimeEnv } from "../../runtime-api.js";
 import { setFeishuRuntime } from "../runtime.js";
 import type { ResolvedFeishuAccount } from "../types.js";
 
@@ -190,7 +190,7 @@ export function createFeishuLifecycleConfig(params: {
   channelConfig?: Record<string, unknown>;
   accountConfig?: Record<string, unknown>;
   extraConfig?: Record<string, unknown>;
-}): ClawdbotConfig {
+}): LittleBabyConfig {
   const extraConfig = params.extraConfig ?? {};
   return {
     ...extraConfig,
@@ -222,7 +222,7 @@ export function createFeishuLifecycleConfig(params: {
         },
       },
     },
-  } as ClawdbotConfig;
+  } as LittleBabyConfig;
 }
 
 export function createFeishuLifecycleFixture(params: {
@@ -420,7 +420,7 @@ export async function setupFeishuLifecycleHandler(params: {
   };
   onRegister: (registered: Record<string, (data: unknown) => Promise<void>>) => void;
   runtime: RuntimeEnv;
-  cfg: ClawdbotConfig;
+  cfg: LittleBabyConfig;
   account: ResolvedFeishuAccount;
   handlerKey: string;
   missingHandlerMessage: string;

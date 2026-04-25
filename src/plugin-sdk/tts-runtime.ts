@@ -14,13 +14,12 @@ import type {
   TtsTelephonyResult,
 } from "./tts-runtime.types.js";
 
-// Manual facade. Keep loader boundary explicit and avoid typing this public SDK
-// seam through the bundled speech-core runtime surface.
+// Manual facade. TTS is disabled in the minimal build; calls fail lazily.
 type FacadeModule = TtsRuntimeFacade;
 
 function loadFacadeModule(): FacadeModule {
   return loadActivatedBundledPluginPublicSurfaceModuleSync<FacadeModule>({
-    dirName: "speech-core",
+    dirName: "disabled-tts",
     artifactBasename: "runtime-api.js",
   });
 }

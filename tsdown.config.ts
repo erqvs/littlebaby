@@ -34,6 +34,7 @@ const SUPPRESSED_EVAL_WARNING_PATHS = [
   "bottleneck/lib/IORedisConnection.js",
   "bottleneck/lib/RedisConnection.js",
 ] as const;
+const SUPPRESSED_OPTIONAL_UNRESOLVED_IMPORTS = [] as const;
 
 function normalizedLogHaystack(log: { message?: string; id?: string; importer?: string }): string {
   return [log.message, log.id, log.importer].filter(Boolean).join("\n").replaceAll("\\", "/");
@@ -56,7 +57,13 @@ function buildInputOptions(options: InputOptionsArg): InputOptionsReturn {
       return true;
     }
     if (log.code === "UNRESOLVED_IMPORT") {
-      return normalizedLogHaystack(log).includes("extensions/");
+      const haystack = normalizedLogHaystack(log);
+      return (
+        haystack.includes("extensions/") ||
+        SUPPRESSED_OPTIONAL_UNRESOLVED_IMPORTS.some((moduleName) =>
+          haystack.includes(`Could not resolve '${moduleName}'`),
+        )
+      );
     }
     if (log.code !== "EVAL") {
       return false;
@@ -120,7 +127,7 @@ function buildBundledHookEntries(): Record<string, string> {
   return entries;
 }
 
-const bundledHookEntries = buildBundledHookEntries();
+const bundledHookEntries = {};
 const bundledPluginRoot = (pluginId: string) => ["extensions", pluginId].join("/");
 const bundledPluginFile = (pluginId: string, relativePath: string) =>
   `${bundledPluginRoot(pluginId)}/${relativePath}`;
@@ -205,6 +212,7 @@ function buildCoreDistEntries(): Record<string, string> {
   return {
     index: "src/index.ts",
     entry: "src/entry.ts",
+    "feishu-service": "src/feishu-service.ts",
     // Ensure this module is bundled as an entry so legacy CLI shims can resolve its exports.
     "cli/daemon-cli": "src/cli/daemon-cli.ts",
     // Keep long-lived lazy runtime boundaries on stable filenames so rebuilt
@@ -244,8 +252,6 @@ const rootBundledPluginBuildEntries = bundledPluginBuildEntries.filter(
 function buildUnifiedDistEntries(): Record<string, string> {
   return {
     ...coreDistEntries,
-    // Internal compat artifact for the root-alias.cjs lazy loader.
-    "plugin-sdk/compat": "src/plugin-sdk/compat.ts",
     ...Object.fromEntries(
       Object.entries(buildPluginSdkEntrySources()).map(([entry, source]) => [
         `plugin-sdk/${entry}`,

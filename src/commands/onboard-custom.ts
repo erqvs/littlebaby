@@ -329,7 +329,7 @@ export async function promptCustomApiConfig(params: {
   });
   const aliasInput = await prompter.text({
     message: "Model alias (optional)",
-    placeholder: "e.g. local, ollama",
+    placeholder: "e.g. local",
     initialValue: "",
     validate: (value) => {
       const resolvedProvider = resolveCustomProviderId({

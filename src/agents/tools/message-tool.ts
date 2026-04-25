@@ -115,19 +115,19 @@ function buildSendSchema(options: { includeInteractive: boolean }) {
     asVoice: Type.Optional(Type.Boolean()),
     silent: Type.Optional(Type.Boolean()),
     quoteText: Type.Optional(
-      Type.String({ description: "Quote text for Telegram reply_parameters" }),
+      Type.String({ description: "Quote text for supported reply metadata" }),
     ),
     bestEffort: Type.Optional(Type.Boolean()),
     gifPlayback: Type.Optional(Type.Boolean()),
     forceDocument: Type.Optional(
       Type.Boolean({
-        description: "Send image/GIF as document to avoid Telegram compression (Telegram only).",
+        description: "Send image/GIF as a document-style attachment when supported.",
       }),
     ),
     asDocument: Type.Optional(
       Type.Boolean({
         description:
-          "Send image/GIF as document to avoid Telegram compression. Alias for forceDocument (Telegram only).",
+          "Send image/GIF as a document-style attachment. Alias for forceDocument.",
       }),
     ),
     interactive: Type.Optional(interactiveMessageSchema),

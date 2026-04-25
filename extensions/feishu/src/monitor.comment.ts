@@ -1,5 +1,5 @@
 import { formatErrorMessage } from "littlebaby/plugin-sdk/error-runtime";
-import type { ClawdbotConfig } from "../runtime-api.js";
+import type { LittleBabyConfig } from "../runtime-api.js";
 import { resolveFeishuAccount } from "./accounts.js";
 import { raceWithTimeoutAndAbort } from "./async.js";
 import { createFeishuClient } from "./client.js";
@@ -50,7 +50,7 @@ export type FeishuDriveCommentNoticeEvent = {
 };
 
 type ResolveDriveCommentEventParams = {
-  cfg: ClawdbotConfig;
+  cfg: LittleBabyConfig;
   accountId: string;
   event: FeishuDriveCommentNoticeEvent;
   botOpenId?: string;

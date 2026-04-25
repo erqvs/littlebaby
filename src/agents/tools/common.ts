@@ -1,10 +1,8 @@
 import fs from "node:fs/promises";
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import type { TSchema } from "@sinclair/typebox";
-import { detectMime } from "../../media/mime.js";
 import { readSnakeCaseParamRaw } from "../../param-key.js";
 import type { ImageSanitizationLimits } from "../image-sanitization.js";
-import { sanitizeToolResultImages } from "../tool-images.js";
 
 export type AgentToolWithMeta<TParameters extends TSchema, TResult> = AgentTool<
   TParameters,
@@ -316,7 +314,9 @@ export async function imageResult(params: {
       },
     },
   };
-  return await sanitizeToolResultImages(result, params.label, params.imageSanitization);
+  void params.label;
+  void params.imageSanitization;
+  return result;
 }
 
 export async function imageResultFromFile(params: {
@@ -327,12 +327,11 @@ export async function imageResultFromFile(params: {
   imageSanitization?: ImageSanitizationLimits;
 }): Promise<AgentToolResult<unknown>> {
   const buf = await fs.readFile(params.path);
-  const mimeType = (await detectMime({ buffer: buf.slice(0, 256) })) ?? "image/png";
   return await imageResult({
     label: params.label,
     path: params.path,
     base64: buf.toString("base64"),
-    mimeType,
+    mimeType: "image/png",
     extraText: params.extraText,
     details: params.details,
     imageSanitization: params.imageSanitization,

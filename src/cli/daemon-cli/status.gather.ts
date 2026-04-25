@@ -8,7 +8,6 @@ import type {
   LittleBabyConfig,
   ConfigFileSnapshot,
   GatewayBindMode,
-  GatewayControlUiConfig,
 } from "../../config/types.js";
 import { readLastGatewayErrorLine } from "../../daemon/diagnostics.js";
 import type { FindExtraGatewayServicesOptions } from "../../daemon/inspect.js";
@@ -36,7 +35,6 @@ type ConfigSummary = {
   exists: boolean;
   valid: boolean;
   issues?: Array<{ path: string; message: string }>;
-  controlUi?: GatewayControlUiConfig;
 };
 
 type GatewayStatusSummary = {
@@ -235,14 +233,12 @@ async function loadDaemonConfigContext(
     exists: cliSnapshot?.exists ?? false,
     valid: cliSnapshot?.valid ?? true,
     ...(cliSnapshot?.issues?.length ? { issues: cliSnapshot.issues } : {}),
-    controlUi: cliCfg.gateway?.controlUi,
   };
   const daemonConfigSummary: ConfigSummary = {
     path: daemonSnapshot?.path ?? daemonConfigPath,
     exists: daemonSnapshot?.exists ?? false,
     valid: daemonSnapshot?.valid ?? true,
     ...(daemonSnapshot?.issues?.length ? { issues: daemonSnapshot.issues } : {}),
-    controlUi: daemonCfg.gateway?.controlUi,
   };
 
   return {

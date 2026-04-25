@@ -21,11 +21,7 @@ import {
   normalizeBundledPluginArtifactSubpath,
 } from "../plugins/public-surface-runtime.js";
 
-const ALWAYS_ALLOWED_RUNTIME_DIR_NAMES = new Set([
-  "image-generation-core",
-  "media-understanding-core",
-  "speech-core",
-]);
+const ALWAYS_ALLOWED_RUNTIME_DIR_NAMES = new Set<string>();
 const EMPTY_FACADE_BOUNDARY_CONFIG: LittleBabyConfig = {};
 
 let cachedBoundaryRawConfig: LittleBabyConfig | undefined;

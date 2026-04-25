@@ -7,7 +7,7 @@ import {
 } from "../../auth-rate-limit.js";
 import {
   authorizeHttpGatewayConnect,
-  authorizeWsControlUiGatewayConnect,
+  authorizeWsGatewayConnect,
   type GatewayAuthResult,
   type ResolvedGatewayAuth,
 } from "../../auth.js";
@@ -85,7 +85,7 @@ export async function resolveConnectAuthState(params: {
   const { token: deviceTokenCandidate, source: deviceTokenCandidateSource } =
     params.hasDeviceIdentity ? resolveDeviceTokenCandidate(params.connectAuth) : {};
 
-  let authResult: GatewayAuthResult = await authorizeWsControlUiGatewayConnect({
+  let authResult: GatewayAuthResult = await authorizeWsGatewayConnect({
     auth: params.resolvedAuth,
     connectAuth: sharedConnectAuth,
     req: params.req,

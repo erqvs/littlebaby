@@ -1,16 +1,10 @@
 import { collectConfiguredAgentHarnessRuntimes } from "../agents/harness-runtimes.js";
 import { listPotentialConfiguredChannelIds } from "../channels/config-presence.js";
 import type { LittleBabyConfig } from "../config/types.littlebaby.js";
-import {
-  resolveMemoryDreamingConfig,
-  resolveMemoryDreamingPluginConfig,
-  resolveMemoryDreamingPluginId,
-} from "../memory-host-sdk/dreaming.js";
 import { normalizeOptionalLowercaseString } from "../shared/string-coerce.js";
 import { resolveManifestActivationPluginIds } from "./activation-planner.js";
 import {
   createPluginActivationSource,
-  normalizePluginId,
   normalizePluginsConfig,
   resolveEffectivePluginActivationState,
 } from "./config-state.js";
@@ -166,22 +160,13 @@ export function resolveDiscoverableScopedChannelPluginIds(params: {
 }
 
 function resolveGatewayStartupDreamingPluginIds(config: LittleBabyConfig): Set<string> {
-  const dreamingConfig = resolveMemoryDreamingConfig({
-    pluginConfig: resolveMemoryDreamingPluginConfig(config),
-    cfg: config,
-  });
-  if (!dreamingConfig.enabled) {
-    return new Set();
-  }
-  return new Set(["memory-core", resolveMemoryDreamingPluginId(config)]);
+  void config;
+  return new Set();
 }
 
 function resolveExplicitMemorySlotStartupPluginId(config: LittleBabyConfig): string | undefined {
-  const configuredSlot = config.plugins?.slots?.memory?.trim();
-  if (!configuredSlot || configuredSlot.toLowerCase() === "none") {
-    return undefined;
-  }
-  return normalizePluginId(configuredSlot);
+  void config;
+  return undefined;
 }
 
 function shouldConsiderForGatewayStartup(params: {

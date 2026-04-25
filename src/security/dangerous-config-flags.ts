@@ -12,15 +12,6 @@ function formatDangerousConfigFlagValue(value: string | number | boolean | null)
 
 export function collectEnabledInsecureOrDangerousFlags(cfg: LittleBabyConfig): string[] {
   const enabledFlags: string[] = [];
-  if (cfg.gateway?.controlUi?.allowInsecureAuth === true) {
-    enabledFlags.push("gateway.controlUi.allowInsecureAuth=true");
-  }
-  if (cfg.gateway?.controlUi?.dangerouslyAllowHostHeaderOriginFallback === true) {
-    enabledFlags.push("gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true");
-  }
-  if (cfg.gateway?.controlUi?.dangerouslyDisableDeviceAuth === true) {
-    enabledFlags.push("gateway.controlUi.dangerouslyDisableDeviceAuth=true");
-  }
   if (cfg.hooks?.gmail?.allowUnsafeExternalContent === true) {
     enabledFlags.push("hooks.gmail.allowUnsafeExternalContent=true");
   }

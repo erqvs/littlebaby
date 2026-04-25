@@ -21,27 +21,17 @@ const ROOT_COMMANDS_HINT =
   "Hint: commands suffixed with * have subcommands. Run <command> --help for details.";
 
 const EXAMPLES = [
-  ["littlebaby models --help", "Show detailed help for the models command."],
+  ["littlebaby gateway --port 18789", "Run the Feishu Gateway locally."],
   [
-    "littlebaby channels login --verbose",
-    "Link personal WhatsApp Web and show QR + connection logs.",
+    'littlebaby message send --channel feishu --target <feishu-target> --message "Hi" --json',
+    "Send a Feishu message and print JSON result.",
   ],
   [
-    'littlebaby message send --target +15555550123 --message "Hi" --json',
-    "Send via your web session and print JSON result.",
+    'littlebaby agent --channel feishu --to <feishu-target> --message "Run summary" --deliver',
+    "Run one agent turn and deliver the reply through Feishu.",
   ],
-  ["littlebaby gateway --port 18789", "Run the WebSocket Gateway locally."],
-  ["littlebaby --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["littlebaby gateway --force", "Kill anything bound to the default gateway port, then start it."],
-  ["littlebaby gateway ...", "Gateway control via WebSocket."],
-  [
-    'littlebaby agent --to +15555550123 --message "Run summary" --deliver',
-    "Talk directly to the agent using the Gateway; optionally send the WhatsApp reply.",
-  ],
-  [
-    'littlebaby message send --channel telegram --target @mychat --message "Hi"',
-    "Send via your Telegram bot.",
-  ],
+  ["littlebaby mcp list", "Inspect configured MCP servers."],
+  ["littlebaby models --help", "Inspect model configuration commands."],
 ] as const;
 
 export function configureProgramHelp(program: Command, ctx: ProgramContext) {
@@ -55,7 +45,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     )
     .option(
       "--dev",
-      "Dev profile: isolate state under ~/.littlebaby-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      "Dev profile: isolate state under ~/.littlebaby-dev and use default gateway port 19001",
     )
     .option(
       "--profile <name>",

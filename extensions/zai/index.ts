@@ -25,7 +25,6 @@ import { defaultToolStreamExtraParams } from "littlebaby/plugin-sdk/provider-str
 import { fetchZaiUsage, resolveLegacyPiAgentAccessToken } from "littlebaby/plugin-sdk/provider-usage";
 import { normalizeLowercaseStringOrEmpty } from "littlebaby/plugin-sdk/text-runtime";
 import { detectZaiEndpoint, type ZaiEndpointId } from "./detect.js";
-import { zaiMediaUnderstandingProvider } from "./media-understanding-provider.js";
 import { buildZaiModelDefinition } from "./model-definitions.js";
 import { applyZaiConfig, applyZaiProviderConfig, ZAI_DEFAULT_MODEL_REF } from "./onboard.js";
 
@@ -304,6 +303,5 @@ export default definePluginEntry({
       fetchUsageSnapshot: async (ctx) => await fetchZaiUsage(ctx.token, ctx.timeoutMs, ctx.fetchFn),
       isCacheTtlEligible: () => true,
     });
-    api.registerMediaUnderstandingProvider(zaiMediaUnderstandingProvider);
   },
 });

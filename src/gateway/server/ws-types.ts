@@ -9,7 +9,4 @@ export type GatewayWsClient = {
   sharedGatewaySessionGeneration?: string;
   presenceKey?: string;
   clientIp?: string;
-  canvasHostUrl?: string;
-  canvasCapability?: string;
-  canvasCapabilityExpiresAtMs?: number;
 };

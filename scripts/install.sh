@@ -858,7 +858,7 @@ TAGLINES+=("Hot reload for config, cold sweat for deploys.")
 TAGLINES+=("I'm the assistant your terminal demanded, not the one your sleep schedule requested.")
 TAGLINES+=("I keep secrets like a vault... unless you print them in debug logs again.")
 TAGLINES+=("Automation with claws: minimal fuss, maximal pinch.")
-TAGLINES+=("I'm basically a Swiss Army knife, but with more opinions and fewer sharp edges.")
+TAGLINES+=("I'm basically a compact toolkit, but with more opinions and fewer rough edges.")
 TAGLINES+=("If you're lost, run doctor; if you're brave, run prod; if you're wise, run tests.")
 TAGLINES+=("Your task has been queued; your dignity has been deprecated.")
 TAGLINES+=("I can't fix your code taste, but I can fix your build and your backlog.")
@@ -1012,7 +1012,6 @@ Environment variables:
   LITTLEBABY_NO_ONBOARD=1
   LITTLEBABY_VERBOSE=1
   LITTLEBABY_NPM_LOGLEVEL=error|warn|notice  Default: error (hide npm deprecation noise)
-  SHARP_IGNORE_GLOBAL_LIBVIPS=0|1    Default: 1 (avoid sharp building against global libvips)
 
 Examples:
   curl -fsSL --proto '=https' --tlsv1.2 https://littlebaby.ai/install.sh | bash
@@ -2083,7 +2082,7 @@ run_bootstrap_onboarding_if_needed() {
     fi
 
     local config_path="${LITTLEBABY_CONFIG_PATH:-$HOME/.littlebaby/littlebaby.json}"
-    if [[ -f "${config_path}" || -f "$HOME/.clawdbot/clawdbot.json" ]]; then
+    if [[ -f "${config_path}" ]]; then
         return
     fi
 
@@ -2421,7 +2420,7 @@ main() {
             "I've evolved. Try to keep up. 🦞"
             "New version, who dis? Oh right, still me but shinier."
             "Patched, polished, and ready to pinch. Let's go."
-            "The lobster has molted. Harder shell, sharper claws."
+            "A new version is ready with a cleaner shell."
             "Update done! Check the changelog or just trust me, it's good."
             "Reborn from the boiling waters of npm. Stronger now."
             "I went away and came back smarter. You should try it sometime."
@@ -2499,7 +2498,7 @@ main() {
             ui_info "Skipping onboard (requested); run littlebaby onboard later"
         else
             local config_path="${LITTLEBABY_CONFIG_PATH:-$HOME/.littlebaby/littlebaby.json}"
-            if [[ -f "${config_path}" || -f "$HOME/.clawdbot/clawdbot.json" ]]; then
+            if [[ -f "${config_path}" ]]; then
                 ui_info "Config already present; running doctor"
                 run_doctor
                 should_open_dashboard=true

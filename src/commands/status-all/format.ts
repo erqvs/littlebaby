@@ -1,13 +1,10 @@
-import { resolveGatewayPort } from "../../config/config.js";
 import type { LittleBabyConfig } from "../../config/types.js";
-import { resolveControlUiLinks } from "../../gateway/control-ui-links.js";
 import { formatDurationPrecise } from "../../infra/format-time/format-duration.ts";
 import {
   normalizeUpdateChannel,
   resolveUpdateChannelDisplay,
 } from "../../infra/update-channels.js";
 import { formatGitInstallLabel, type UpdateCheckResult } from "../../infra/update-check.js";
-import { normalizeOptionalString } from "../../shared/string-coerce.js";
 import { formatUpdateOneLiner, resolveUpdateAvailability } from "../status.update.js";
 
 export { formatDurationPrecise } from "../../infra/format-time/format-duration.ts";
@@ -92,11 +89,6 @@ export function buildStatusUpdateSurface(params: {
   };
 }
 
-export function formatStatusDashboardValue(value: string | null | undefined): string {
-  const trimmed = normalizeOptionalString(value);
-  return trimmed && trimmed.length > 0 ? trimmed : "disabled";
-}
-
 export function formatStatusTailscaleValue(params: {
   tailscaleMode: string;
   dnsName?: string | null;
@@ -158,23 +150,8 @@ export function formatStatusServiceValue(params: {
   return `${params.label} ${installedPrefix}${params.loadedText}${runtimeSuffix}`;
 }
 
-export function resolveStatusDashboardUrl(params: {
-  cfg: Pick<LittleBabyConfig, "gateway">;
-}): string | null {
-  if (!(params.cfg.gateway?.controlUi?.enabled ?? true)) {
-    return null;
-  }
-  return resolveControlUiLinks({
-    port: resolveGatewayPort(params.cfg),
-    bind: params.cfg.gateway?.bind,
-    customBindHost: params.cfg.gateway?.customBindHost,
-    basePath: params.cfg.gateway?.controlUi?.basePath,
-  }).httpUrl;
-}
-
 export function buildStatusOverviewRows(params: {
   prefixRows?: StatusOverviewRow[];
-  dashboardValue: string;
   tailscaleValue: string;
   channelLabel: string;
   gitLabel?: string | null;
@@ -190,7 +167,6 @@ export function buildStatusOverviewRows(params: {
 }): StatusOverviewRow[] {
   const rows: StatusOverviewRow[] = [...(params.prefixRows ?? [])];
   rows.push(
-    { Item: "Dashboard", Value: params.dashboardValue },
     { Item: "Tailscale", Value: params.tailscaleValue },
     { Item: "Channel", Value: params.channelLabel },
   );
@@ -259,7 +235,7 @@ export function buildStatusOverviewSurfaceRows(params: {
     updateConfigChannel: params.cfg.update?.channel,
     update: params.update,
   });
-  const { dashboardUrl, gatewayValue, gatewaySelfValue, gatewayServiceValue, nodeServiceValue } =
+  const { gatewayValue, gatewaySelfValue, gatewayServiceValue, nodeServiceValue } =
     buildStatusGatewaySurfaceValues({
       cfg: params.cfg,
       gatewayMode: params.gatewayMode,
@@ -277,7 +253,6 @@ export function buildStatusOverviewSurfaceRows(params: {
     });
   return buildStatusOverviewRows({
     prefixRows: params.prefixRows,
-    dashboardValue: formatStatusDashboardValue(dashboardUrl),
     tailscaleValue: formatStatusTailscaleValue({
       tailscaleMode: params.tailscaleMode,
       dnsName: params.tailscaleDns,
@@ -424,7 +399,6 @@ export function buildStatusGatewaySurfaceValues(params: {
         : ""
     }${gatewaySelfValue ? ` · ${gatewaySelfValue}` : ""}`;
   return {
-    dashboardUrl: resolveStatusDashboardUrl({ cfg: params.cfg }),
     gatewayValue,
     gatewaySelfValue,
     gatewayServiceValue: formatStatusServiceValue({

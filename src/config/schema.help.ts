@@ -15,13 +15,13 @@ export const FIELD_HELP: Record<string, string> = {
   "env.vars":
     "Explicit key/value environment variable overrides merged into runtime process environment for LittleBaby. Use this for deterministic env configuration instead of relying only on shell profile side effects.",
   wizard:
-    "Setup wizard state tracking fields that record the most recent guided setup run details. Keep these fields for observability and troubleshooting of setup flows across upgrades.",
+    "Legacy guided setup state fields retained only for observability across upgrades.",
   "wizard.lastRunAt":
-    "ISO timestamp for when the setup wizard most recently completed on this host. Use this to confirm setup recency during support and operational audits.",
+    "ISO timestamp for when guided setup most recently completed on this host.",
   "wizard.lastRunVersion":
-    "LittleBaby version recorded at the time of the most recent wizard run on this config. Use this when diagnosing behavior differences across version-to-version setup changes.",
+    "LittleBaby version recorded at the time of the most recent guided setup run on this config.",
   "wizard.lastRunCommit":
-    "Source commit identifier recorded for the last wizard execution in development builds. Use this to correlate setup behavior with exact source state during debugging.",
+    "Source commit identifier recorded for the last guided setup run in development builds.",
   "wizard.lastRunCommand":
     "Command invocation recorded for the latest wizard run to preserve execution context. Use this to reproduce setup steps when verifying setup regressions.",
   "wizard.lastRunMode":
@@ -71,10 +71,6 @@ export const FIELD_HELP: Record<string, string> = {
     'Network bind profile: "auto", "lan", "loopback", "custom", or "tailnet" to control interface exposure. Keep "loopback" or "auto" for safest local operation unless external clients must connect.',
   "gateway.customBindHost":
     "Explicit bind host/IP used when gateway.bind is set to custom for manual interface targeting. Use a precise address and avoid wildcard binds unless external exposure is required.",
-  "gateway.controlUi":
-    "Control UI hosting settings including enablement, pathing, and browser-origin/auth hardening behavior. Keep UI exposure minimal and pair with strong auth controls before internet-facing deployments.",
-  "gateway.controlUi.enabled":
-    "Enables serving the gateway Control UI from the gateway HTTP process when true. Keep enabled for local administration, and disable when an external control surface replaces it.",
   "gateway.auth":
     "Authentication policy for gateway HTTP/WebSocket access including mode, credentials, trusted-proxy behavior, and rate limiting. Keep auth enabled for every non-loopback deployment.",
   "gateway.auth.mode":
@@ -375,16 +371,6 @@ export const FIELD_HELP: Record<string, string> = {
     "Randomization factor (0-1) applied to reconnect delays to desynchronize clients after outage events. Keep non-zero jitter in multi-client deployments to reduce synchronized spikes.",
   "web.reconnect.maxAttempts":
     "Maximum reconnect attempts before giving up for the current failure sequence (0 means no retries). Use finite caps for controlled failure handling in automation-sensitive environments.",
-  canvasHost:
-    "Canvas host settings for serving canvas assets and local live-reload behavior used by canvas-enabled workflows. Keep disabled unless canvas-hosted assets are actively used.",
-  "canvasHost.enabled":
-    "Enables the canvas host server process and routes for serving canvas files. Keep disabled when canvas workflows are inactive to reduce exposed local services.",
-  "canvasHost.root":
-    "Filesystem root directory served by canvas host for canvas content and static assets. Use a dedicated directory and avoid broad repo roots for least-privilege file exposure.",
-  "canvasHost.port":
-    "TCP port used by the canvas host HTTP server when canvas hosting is enabled. Choose a non-conflicting port and align firewall/proxy policy accordingly.",
-  "canvasHost.liveReload":
-    "Enables automatic live-reload behavior for canvas assets during development workflows. Keep disabled in production-like environments where deterministic output is preferred.",
   talk: "Talk-mode voice synthesis settings for voice identity, model selection, output format, and interruption behavior. Use this section to tune human-facing voice UX while controlling latency and cost.",
   "gateway.auth.token":
     "Required by default for gateway access (unless using Tailscale Serve identity); required for non-loopback binds.",
@@ -400,22 +386,6 @@ export const FIELD_HELP: Record<string, string> = {
     "Optional CIDR allowlist for container-edge CDP ingress (for example 172.21.0.1/32).",
   "agents.list[].sandbox.browser.cdpSourceRange":
     "Per-agent override for CDP source CIDR allowlist.",
-  "gateway.controlUi.basePath":
-    "Optional URL prefix where the Control UI is served (e.g. /littlebaby).",
-  "gateway.controlUi.root":
-    "Optional filesystem root for Control UI assets (defaults to dist/control-ui).",
-  "gateway.controlUi.embedSandbox":
-    'Iframe sandbox policy for hosted Control UI embeds. "strict" disables scripts, "scripts" allows interactive embeds while keeping origin isolation (default), and "trusted" adds `allow-same-origin` for same-site documents that intentionally need stronger privileges.',
-  "gateway.controlUi.allowExternalEmbedUrls":
-    "DANGEROUS toggle that allows hosted embeds to load absolute external http(s) URLs. Keep this off unless your Control UI intentionally embeds trusted third-party pages; hosted /__littlebaby__/canvas and /__littlebaby__/a2ui documents do not need it.",
-  "gateway.controlUi.allowedOrigins":
-    'Allowed browser origins for Control UI/WebChat websocket connections (full origins only, e.g. https://control.example.com). Required for non-loopback Control UI deployments unless dangerous Host-header fallback is explicitly enabled. Setting ["*"] means allow any browser origin and should be avoided outside tightly controlled local testing.',
-  "gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback":
-    "DANGEROUS toggle that enables Host-header based origin fallback for Control UI/WebChat websocket checks. This mode is supported when your deployment intentionally relies on Host-header origin policy; explicit gateway.controlUi.allowedOrigins remains the recommended hardened default.",
-  "gateway.controlUi.allowInsecureAuth":
-    "Loosens strict browser auth checks for Control UI when you must run a non-standard setup. Keep this off unless you trust your network and proxy path, because impersonation risk is higher.",
-  "gateway.controlUi.dangerouslyDisableDeviceAuth":
-    "Disables Control UI device identity checks and relies on token/password only. Use only for short-lived debugging on trusted networks, then turn it off immediately.",
   "gateway.push":
     "Push-delivery settings used by the gateway when it needs to wake or notify paired devices. Configure relay-backed APNs here for official iOS builds; direct APNs auth remains env-based for local/manual builds.",
   "gateway.push.apns":
@@ -493,7 +463,7 @@ export const FIELD_HELP: Record<string, string> = {
   "bindings[].match":
     "Match rule object for deciding when a binding applies, including channel and optional account/peer constraints. Keep rules narrow to avoid accidental agent takeover across contexts.",
   "bindings[].match.channel":
-    "Channel/provider identifier this binding applies to, such as `telegram`, `discord`, or a plugin channel ID. Use the configured channel key exactly so binding evaluation works reliably.",
+    "Channel/provider identifier this binding applies to, such as `feishu` or a plugin channel ID. Use the configured channel key exactly so binding evaluation works reliably.",
   "bindings[].match.accountId":
     "Optional account selector for multi-account channel setups so the binding applies only to one identity. Use this when account scoping is required for the route and leave unset otherwise.",
   "bindings[].match.peer":
@@ -503,7 +473,7 @@ export const FIELD_HELP: Record<string, string> = {
   "bindings[].match.peer.id":
     "Conversation identifier used with peer matching, such as a chat ID, channel ID, or group ID from the provider. Keep this exact to avoid silent non-matches.",
   "bindings[].match.guildId":
-    "Optional Discord-style guild/server ID constraint for binding evaluation in multi-server deployments. Use this when the same peer identifiers can appear across different guilds.",
+    "Optional server/workspace ID constraint for binding evaluation in multi-workspace deployments. Use this when the same peer identifiers can appear across different workspaces.",
   "bindings[].match.teamId":
     "Optional team/workspace ID constraint used by providers that scope chats under teams. Add this when you need bindings isolated to one workspace context.",
   "bindings[].match.roles":
@@ -523,7 +493,7 @@ export const FIELD_HELP: Record<string, string> = {
   "broadcast.*":
     "Per-source broadcast destination list where each key is a source peer ID and the value is an array of destination peer IDs. Keep lists intentional to avoid accidental message amplification.",
   "diagnostics.flags":
-    'Enable targeted diagnostics logs by flag (e.g. ["telegram.http"]). Supports wildcards like "telegram.*" or "*".',
+    'Enable targeted diagnostics logs by flag (e.g. ["feishu.http"]). Supports wildcards like "feishu.*" or "*".',
   "diagnostics.enabled":
     "Master toggle for diagnostics instrumentation output in logs and telemetry wiring paths. Keep enabled for normal observability, and disable only in tightly constrained environments.",
   "diagnostics.stuckSessionWarnMs":
@@ -669,11 +639,11 @@ export const FIELD_HELP: Record<string, string> = {
   "approvals.exec.agentFilter":
     'Optional allowlist of agent IDs eligible for forwarded approvals, for example `["primary", "ops-agent"]`. Use this to limit forwarding blast radius and avoid notifying channels for unrelated agents.',
   "approvals.exec.sessionFilter":
-    'Optional session-key filters matched as substring or regex-style patterns, for example `["discord:", "^agent:ops:"]`. Use narrow patterns so only intended approval contexts are forwarded to shared destinations.',
+    'Optional session-key filters matched as substring or regex-style patterns, for example `["feishu:", "^agent:ops:"]`. Use narrow patterns so only intended approval contexts are forwarded to shared destinations.',
   "approvals.exec.targets":
     "Explicit delivery targets used when forwarding mode includes targets, each with channel and destination details. Keep target lists least-privilege and validate each destination before enabling broad forwarding.",
   "approvals.exec.targets[].channel":
-    "Channel/provider ID used for forwarded approval delivery, such as discord, slack, or a plugin channel id. Use valid channel IDs only so approvals do not silently fail due to unknown routes.",
+    "Channel/provider ID used for forwarded approval delivery, such as feishu or a plugin channel id. Use valid channel IDs only so approvals do not silently fail due to unknown routes.",
   "approvals.exec.targets[].to":
     "Destination identifier inside the target channel (channel ID, user ID, or thread root depending on provider). Verify semantics per provider because destination format differs across channel integrations.",
   "approvals.exec.targets[].accountId":
@@ -689,11 +659,11 @@ export const FIELD_HELP: Record<string, string> = {
   "approvals.plugin.agentFilter":
     'Optional allowlist of agent IDs eligible for forwarded plugin approvals, for example `["primary", "ops-agent"]`. Use this to limit forwarding blast radius.',
   "approvals.plugin.sessionFilter":
-    'Optional session-key filters matched as substring or regex-style patterns, for example `["discord:", "^agent:ops:"]`. Use narrow patterns so only intended approval contexts are forwarded.',
+    'Optional session-key filters matched as substring or regex-style patterns, for example `["feishu:", "^agent:ops:"]`. Use narrow patterns so only intended approval contexts are forwarded.',
   "approvals.plugin.targets":
     "Explicit delivery targets used when plugin approval forwarding mode includes targets, each with channel and destination details.",
   "approvals.plugin.targets[].channel":
-    "Channel/provider ID used for forwarded plugin approval delivery, such as discord, slack, or a plugin channel id.",
+    "Channel/provider ID used for forwarded plugin approval delivery, such as feishu or a plugin channel id.",
   "approvals.plugin.targets[].to":
     "Destination identifier inside the target channel (channel ID, user ID, or thread root depending on provider).",
   "approvals.plugin.targets[].accountId":
@@ -773,7 +743,7 @@ export const FIELD_HELP: Record<string, string> = {
   "models.providers.*.api":
     "Provider API adapter selection controlling request/response compatibility handling for model calls. Use the adapter that matches your upstream provider protocol to avoid feature mismatch.",
   "models.providers.*.injectNumCtxForOpenAICompat":
-    "Controls whether LittleBaby injects `options.num_ctx` for Ollama providers configured with the OpenAI-compatible adapter (`openai-completions`). Default is true. Set false only if your proxy/upstream rejects unknown `options` payload fields.",
+    "Controls whether LittleBaby injects `options.num_ctx` for local OpenAI-compatible providers. Default is true. Set false only if your proxy/upstream rejects unknown `options` payload fields.",
   "models.providers.*.headers":
     "Static HTTP headers merged into provider requests for tenant routing, proxy auth, or custom gateway requirements. Use this sparingly and keep sensitive header values in secrets.",
   "models.providers.*.authHeader":
@@ -929,7 +899,7 @@ export const FIELD_HELP: Record<string, string> = {
   "agents.defaults.memorySearch.experimental.sessionMemory":
     "Indexes session transcripts into memory search so responses can reference prior chat turns. Keep this off unless transcript recall is needed, because indexing cost and storage usage both increase.",
   "agents.defaults.memorySearch.provider":
-    'Selects the embedding backend used to build/query memory vectors: "openai", "gemini", "voyage", "mistral", "bedrock", "lmstudio", "ollama", or "local". Keep your most reliable provider here and configure fallback for resilience.',
+    'Selects the embedding backend used to build/query memory vectors: "openai", "gemini", "voyage", "mistral", "bedrock", "lmstudio", or "local". Keep your most reliable provider here and configure fallback for resilience.',
   "agents.defaults.memorySearch.model":
     "Embedding model override used by the selected memory provider when a non-default model is required. Set this only when you need explicit recall quality/cost tuning beyond provider defaults.",
   "agents.defaults.memorySearch.outputDimensionality":
@@ -953,13 +923,13 @@ export const FIELD_HELP: Record<string, string> = {
   "agents.defaults.memorySearch.local.modelPath":
     "Specifies the local embedding model source for local memory search, such as a GGUF file path or `hf:` URI. Use this only when provider is `local`, and verify model compatibility before large index rebuilds.",
   "agents.defaults.memorySearch.fallback":
-    'Backup provider used when primary embeddings fail: "openai", "gemini", "voyage", "mistral", "bedrock", "lmstudio", "ollama", "local", or "none". Set a real fallback for production reliability; use "none" only if you prefer explicit failures.',
+    'Backup provider used when primary embeddings fail: "openai", "gemini", "voyage", "mistral", "bedrock", "lmstudio", "local", or "none". Set a real fallback for production reliability; use "none" only if you prefer explicit failures.',
   "agents.defaults.memorySearch.store.path":
     "Sets where the SQLite memory index is stored on disk for each agent. Keep the default `~/.littlebaby/memory/{agentId}.sqlite` unless you need custom storage placement or backup policy alignment.",
   "agents.defaults.memorySearch.store.vector.enabled":
-    "Enables the sqlite-vec extension used for vector similarity queries in memory search (default: true). Keep this enabled for normal semantic recall; disable only for debugging or fallback-only operation.",
+    "Enables vector similarity queries in memory search (default: true). Keep this enabled for normal semantic recall; disable only for debugging or fallback-only operation.",
   "agents.defaults.memorySearch.store.vector.extensionPath":
-    "Overrides the auto-discovered sqlite-vec extension library path (`.dylib`, `.so`, or `.dll`). Use this when your runtime cannot find sqlite-vec automatically or you pin a known-good build.",
+    "Overrides the auto-discovered vector extension library path (`.dylib`, `.so`, or `.dll`). Use this when your runtime cannot find the extension automatically or you pin a known-good build.",
   "agents.defaults.memorySearch.chunking.tokens":
     "Chunk size in tokens used when splitting memory sources before embedding/indexing. Increase for broader context per chunk, or lower to improve precision on pinpoint lookups.",
   "agents.defaults.memorySearch.chunking.overlap":
@@ -1263,7 +1233,7 @@ export const FIELD_HELP: Record<string, string> = {
   "commands.restart": "Allow /restart and gateway restart tool actions (default: true).",
   "commands.useAccessGroups": "Enforce access-group allowlists/policies for commands.",
   "commands.ownerAllowFrom":
-    "Explicit owner allowlist for owner-only tools/commands. Use channel-native IDs (optionally prefixed like \"whatsapp:+15551234567\"). '*' is ignored.",
+    "Explicit owner allowlist for owner-only tools/commands. Use channel-native IDs (optionally prefixed like \"feishu:ou_xxx\"). '*' is ignored.",
   "commands.ownerDisplay":
     "Controls how owner IDs are rendered in the system prompt. Allowed values: raw, hash. Default: raw.",
   "commands.ownerDisplaySecret":
@@ -1280,7 +1250,7 @@ export const FIELD_HELP: Record<string, string> = {
   "session.dmScope":
     'DM session scoping: "main" keeps continuity, while "per-peer", "per-channel-peer", and "per-account-channel-peer" increase isolation. Use isolated modes for shared inboxes or multi-account deployments.',
   "session.identityLinks":
-    "Maps canonical identities to provider-prefixed peer IDs so equivalent users resolve to one DM thread (example: telegram:123456). Use this when the same human appears across multiple channels or accounts.",
+    "Maps canonical identities to provider-prefixed peer IDs so equivalent users resolve to one DM thread (example: feishu:ou_xxx). Use this when the same human appears across multiple channels or accounts.",
   "session.resetTriggers":
     "Lists message triggers that force a session reset when matched in inbound content. Use sparingly for explicit reset phrases so context is not dropped unexpectedly during normal conversation.",
   "session.idleMinutes":
@@ -1320,13 +1290,13 @@ export const FIELD_HELP: Record<string, string> = {
   "session.sendPolicy.default":
     'Sets fallback action when no sendPolicy rule matches: "allow" or "deny". Keep "allow" for simpler setups, or choose "deny" when you require explicit allow rules for every destination.',
   "session.sendPolicy.rules":
-    'Ordered allow/deny rules evaluated before the default action, for example `{ action: "deny", match: { channel: "discord" } }`. Put most specific rules first so broad rules do not shadow exceptions.',
+    'Ordered allow/deny rules evaluated before the default action, for example `{ action: "deny", match: { channel: "feishu" } }`. Put most specific rules first so broad rules do not shadow exceptions.',
   "session.sendPolicy.rules[].action":
     'Defines rule decision as "allow" or "deny" when the corresponding match criteria are satisfied. Use deny-first ordering when enforcing strict boundaries with explicit allow exceptions.',
   "session.sendPolicy.rules[].match":
     "Defines optional rule match conditions that can combine channel, chatType, and key-prefix constraints. Keep matches narrow so policy intent stays readable and debugging remains straightforward.",
   "session.sendPolicy.rules[].match.channel":
-    "Matches rule application to a specific channel/provider id (for example discord, telegram, slack). Use this when one channel should permit or deny delivery independently of others.",
+    "Matches rule application to a specific channel/provider id (for example feishu). Use this when one channel should permit or deny delivery independently of others.",
   "session.sendPolicy.rules[].match.chatType":
     "Matches rule application to chat type (direct, group, thread) so behavior varies by conversation form. Use this when DM and group destinations require different safety boundaries.",
   "session.sendPolicy.rules[].match.keyPrefix":
@@ -1441,7 +1411,7 @@ export const FIELD_HELP: Record<string, string> = {
   "hooks.mappings[].allowUnsafeExternalContent":
     "When true, mapping content may include less-sanitized external payload data in generated messages. Keep false by default and enable only for trusted sources with reviewed transform logic.",
   "hooks.mappings[].channel":
-    'Delivery channel override for mapping outputs (for example "last", "telegram", "discord", "slack", "signal", "imessage", or "msteams"). Keep channel overrides explicit to avoid accidental cross-channel sends.',
+    'Delivery channel override for mapping outputs (for example "last" or "feishu"). Keep channel overrides explicit to avoid accidental cross-channel sends.',
   "hooks.mappings[].to":
     "Destination identifier inside the selected channel when mapping replies should route to a fixed target. Verify provider-specific destination formats before enabling production mappings.",
   "hooks.mappings[].model":
@@ -1527,7 +1497,7 @@ export const FIELD_HELP: Record<string, string> = {
   "messages.queue.mode":
     'Queue behavior mode: "steer", "followup", "collect", "steer-backlog", "steer+backlog", "queue", or "interrupt". Keep conservative modes unless you intentionally need aggressive interruption/backlog semantics.',
   "messages.queue.byChannel":
-    "Per-channel queue mode overrides keyed by provider id (for example telegram, discord, slack). Use this when one channel’s traffic pattern needs different queue behavior than global defaults.",
+    "Per-channel queue mode overrides keyed by provider id (for example feishu). Use this when one channel’s traffic pattern needs different queue behavior than global defaults.",
   "messages.queue.debounceMs":
     "Global queue debounce window in milliseconds before processing buffered inbound messages. Use higher values to coalesce rapid bursts, or lower values for reduced response latency.",
   "messages.queue.debounceMsByChannel":

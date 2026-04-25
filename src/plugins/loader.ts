@@ -14,11 +14,6 @@ import type { GatewayRequestHandler } from "../gateway/server-methods/types.js";
 import { openBoundaryFileSync } from "../infra/boundary-file-read.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
-  DEFAULT_MEMORY_DREAMING_PLUGIN_ID,
-  resolveMemoryDreamingConfig,
-  resolveMemoryDreamingPluginConfig,
-} from "../memory-host-sdk/dreaming.js";
-import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "../shared/string-coerce.js";
@@ -149,19 +144,8 @@ function resolveDreamingSidecarEngineId(params: {
   cfg: LittleBabyConfig;
   memorySlot: string | null | undefined;
 }): string | null {
-  const normalizedMemorySlot = normalizeLowercaseStringOrEmpty(params.memorySlot);
-  if (
-    !normalizedMemorySlot ||
-    normalizedMemorySlot === "none" ||
-    normalizedMemorySlot === DEFAULT_MEMORY_DREAMING_PLUGIN_ID
-  ) {
-    return null;
-  }
-  const dreamingConfig = resolveMemoryDreamingConfig({
-    pluginConfig: resolveMemoryDreamingPluginConfig(params.cfg),
-    cfg: params.cfg,
-  });
-  return dreamingConfig.enabled ? DEFAULT_MEMORY_DREAMING_PLUGIN_ID : null;
+  void params;
+  return null;
 }
 
 export class PluginLoadFailureError extends Error {
@@ -1827,9 +1811,7 @@ export function loadLittleBabyPlugins(options: PluginLoadOptions = {}): PluginRe
         continue;
       }
       // Fast-path bundled memory plugins that are guaranteed disabled by slot policy.
-      // This avoids opening/importing heavy memory plugin modules that will never register.
-      // Exception: the dreaming engine (memory-core by default) must load alongside the
-      // selected memory slot plugin so dreaming can run even when lancedb holds the slot.
+      // This minimal build does not load a background memory engine alongside plugins.
       if (
         registrationMode === "full" &&
         candidate.origin === "bundled" &&

@@ -626,7 +626,7 @@ async function finalizeCronRun(params: {
     payloads,
     runLevelError: finalRunResult.meta?.error,
     finalAssistantVisibleText: finalRunResult.meta?.finalAssistantVisibleText,
-    preferFinalAssistantVisibleText: prepared.resolvedDelivery.channel === "telegram",
+    preferFinalAssistantVisibleText: false,
   });
   const resolveRunOutcome = (result?: { delivered?: boolean; deliveryAttempted?: boolean }) =>
     prepared.withRunSession({

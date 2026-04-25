@@ -54,20 +54,18 @@ export function registerAgentCommands(program: Command, args: { agentChannelOpti
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['littlebaby agent --to +15555550123 --message "status update"', "Start a new session."],
+  [
+    'littlebaby agent --channel feishu --to <feishu-target> --message "status update"',
+    "Start a new session.",
+  ],
   ['littlebaby agent --agent ops --message "Summarize logs"', "Use a specific agent."],
   [
     'littlebaby agent --session-id 1234 --message "Summarize inbox" --thinking medium',
     "Target a session with explicit thinking level.",
   ],
   [
-    'littlebaby agent --to +15555550123 --message "Trace logs" --verbose on --json',
-    "Enable verbose logging and JSON output.",
-  ],
-  ['littlebaby agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
-  [
-    'littlebaby agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
-    "Send reply to a different channel/target.",
+    'littlebaby agent --channel feishu --to <feishu-target> --message "Summon reply" --deliver',
+    "Deliver reply through Feishu.",
   ],
 ])}
 
@@ -221,7 +219,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.littlebaby.ai/cli/a
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['littlebaby agents set-identity --agent main --name "LittleBaby" --emoji "🦞"', "Set name + emoji."],
+  ['littlebaby agents set-identity --agent main --name "LittleBaby"', "Set the display name."],
   ["littlebaby agents set-identity --agent main --avatar avatars/littlebaby.png", "Set avatar path."],
   [
     "littlebaby agents set-identity --workspace ~/.littlebaby/workspace --from-identity",

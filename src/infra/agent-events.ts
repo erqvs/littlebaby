@@ -109,8 +109,8 @@ export type AgentRunContext = {
   sessionKey?: string;
   verboseLevel?: VerboseLevel;
   isHeartbeat?: boolean;
-  /** Whether control UI clients should receive chat/agent updates for this run. */
-  isControlUiVisible?: boolean;
+  /** Whether session-scoped chat clients should receive updates for this run. */
+  isChatStreamVisible?: boolean;
   /** Timestamp when this context was first registered (for TTL-based cleanup). */
   registeredAt?: number;
   /** Timestamp of last activity (updated on every emitAgentEvent). */
@@ -152,8 +152,8 @@ export function registerAgentRunContext(runId: string, context: AgentRunContext)
   if (context.verboseLevel && existing.verboseLevel !== context.verboseLevel) {
     existing.verboseLevel = context.verboseLevel;
   }
-  if (context.isControlUiVisible !== undefined) {
-    existing.isControlUiVisible = context.isControlUiVisible;
+  if (context.isChatStreamVisible !== undefined) {
+    existing.isChatStreamVisible = context.isChatStreamVisible;
   }
   if (context.isHeartbeat !== undefined && existing.isHeartbeat !== context.isHeartbeat) {
     existing.isHeartbeat = context.isHeartbeat;
@@ -205,10 +205,10 @@ export function emitAgentEvent(event: Omit<AgentEventPayload, "seq" | "ts">) {
   if (context) {
     context.lastActiveAt = Date.now();
   }
-  const isControlUiVisible = context?.isControlUiVisible ?? true;
+  const isChatStreamVisible = context?.isChatStreamVisible ?? true;
   const eventSessionKey =
     typeof event.sessionKey === "string" && event.sessionKey.trim() ? event.sessionKey : undefined;
-  const sessionKey = isControlUiVisible ? (eventSessionKey ?? context?.sessionKey) : undefined;
+  const sessionKey = isChatStreamVisible ? (eventSessionKey ?? context?.sessionKey) : undefined;
   const enriched: AgentEventPayload = {
     ...event,
     sessionKey,

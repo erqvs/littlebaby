@@ -220,15 +220,7 @@ export function resolveHeartbeatDeliveryTarget(params: {
     }
   }
 
-  const inheritedHeartbeatThreadId = shouldReuseHeartbeatTelegramTopicThread({
-    target,
-    heartbeat,
-    turnSource: params.turnSource,
-    entry,
-    resolvedTarget,
-  })
-    ? resolvedTarget.lastThreadId
-    : undefined;
+  const inheritedHeartbeatThreadId = undefined;
 
   return {
     channel: resolvedTarget.channel,
@@ -297,27 +289,6 @@ function resolveHeartbeatDeliveryChatType(params: {
     channel: params.channel,
     to: params.to,
   });
-}
-
-function shouldReuseHeartbeatTelegramTopicThread(params: {
-  target: HeartbeatTarget;
-  heartbeat?: AgentDefaultsConfig["heartbeat"];
-  turnSource?: DeliveryContext;
-  entry?: SessionEntry;
-  resolvedTarget: SessionDeliveryTarget;
-}): boolean {
-  return (
-    params.resolvedTarget.threadId == null &&
-    params.target === "last" &&
-    !params.heartbeat?.to &&
-    params.turnSource?.threadId == null &&
-    params.resolvedTarget.channel === "telegram" &&
-    params.resolvedTarget.lastChannel === "telegram" &&
-    Boolean(params.resolvedTarget.to) &&
-    Boolean(params.resolvedTarget.lastTo) &&
-    params.resolvedTarget.to === params.resolvedTarget.lastTo &&
-    normalizeChatType(params.entry?.chatType) === "group"
-  );
 }
 
 function resolveHeartbeatSenderId(params: {

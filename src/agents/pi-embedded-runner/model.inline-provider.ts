@@ -33,7 +33,6 @@ export function normalizeResolvedTransportApi(
     case "bedrock-converse-stream":
     case "github-copilot":
     case "google-generative-ai":
-    case "ollama":
     case "openai-codex-responses":
     case "openai-completions":
     case "openai-responses":

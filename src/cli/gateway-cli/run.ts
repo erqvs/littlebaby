@@ -14,14 +14,12 @@ import {
   resolveStateDir,
   resolveGatewayPort,
 } from "../../config/config.js";
-import type { LittleBabyConfig } from "../../config/types.littlebaby.js";
 import { hasConfiguredSecretInput } from "../../config/types.secrets.js";
 import { resolveGatewayAuth } from "../../gateway/auth.js";
 import { defaultGatewayBindMode, isContainerEnvironment } from "../../gateway/net.js";
 import type { GatewayWsLogStyle } from "../../gateway/ws-logging.js";
 import { setGatewayWsLogStyle } from "../../gateway/ws-logging.js";
 import { setVerbose } from "../../globals.js";
-import { resolveControlUiRootSync } from "../../infra/control-ui-assets.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { GatewayLockError } from "../../infra/gateway-lock.js";
 import { formatPortDiagnostics, inspectPortUsage } from "../../infra/ports.js";
@@ -159,27 +157,6 @@ function formatModeErrorList(modes: readonly string[]): string {
   return `${quoted.slice(0, -1).join(", ")}, or ${quoted[quoted.length - 1]}`;
 }
 
-function maybeLogPendingControlUiBuild(cfg: LittleBabyConfig): void {
-  if (cfg.gateway?.controlUi?.enabled === false) {
-    return;
-  }
-  if (toOptionString(cfg.gateway?.controlUi?.root)) {
-    return;
-  }
-  if (
-    resolveControlUiRootSync({
-      moduleUrl: import.meta.url,
-      argv1: process.argv[1],
-      cwd: process.cwd(),
-    })
-  ) {
-    return;
-  }
-  gatewayLog.info(
-    "Control UI assets are missing; first startup may spend a few seconds building them before the gateway binds. `pnpm gateway:watch` does not rebuild Control UI assets, so rerun `pnpm ui:build` after UI changes or use `pnpm ui:dev` while developing the Control UI. For a full local dist, run `pnpm build && pnpm ui:build`.",
-  );
-}
-
 function getGatewayStartGuardErrors(params: {
   allowUnconfigured?: boolean;
   configExists: boolean;
@@ -191,7 +168,7 @@ function getGatewayStartGuardErrors(params: {
   }
   if (!params.configExists) {
     return [
-      `Missing config. Run \`${formatCliCommand("littlebaby setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
+      `Missing config. Set gateway.mode=local or pass --allow-unconfigured.`,
     ];
   }
   if (params.mode === undefined) {
@@ -199,7 +176,7 @@ function getGatewayStartGuardErrors(params: {
       [
         "Gateway start blocked: existing config is missing gateway.mode.",
         "Treat this as suspicious or clobbered config.",
-        `Re-run \`${formatCliCommand("littlebaby onboard --mode local")}\` or \`${formatCliCommand("littlebaby setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
+        "Set gateway.mode=local manually, or pass --allow-unconfigured.",
       ].join(" "),
       `Config write audit: ${params.configAuditPath}`,
     ];
@@ -300,7 +277,6 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
 
   gatewayLog.info("loading configuration…");
   const cfg = loadConfig();
-  maybeLogPendingControlUiBuild(cfg);
   const portOverride = parsePort(opts.port);
   if (opts.port !== undefined && portOverride === null) {
     defaultRuntime.error("Invalid port");

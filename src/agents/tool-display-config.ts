@@ -160,11 +160,11 @@ export const TOOL_DISPLAY_CONFIG: ToolDisplayConfig = {
           detailKeys: ["format", "node", "nodeId"],
         },
         a2ui_push: {
-          label: "A2UI push",
+          label: "push",
           detailKeys: ["jsonlPath", "node", "nodeId"],
         },
         a2ui_reset: {
-          label: "A2UI reset",
+          label: "reset",
           detailKeys: ["node", "nodeId"],
         },
       },
@@ -261,140 +261,6 @@ export const TOOL_DISPLAY_CONFIG: ToolDisplayConfig = {
         restart: {
           label: "restart",
           detailKeys: ["reason", "delayMs"],
-        },
-      },
-    },
-    whatsapp_login: {
-      emoji: "🟢",
-      title: "WhatsApp Login",
-      actions: {
-        start: {
-          label: "start",
-        },
-        wait: {
-          label: "wait",
-        },
-      },
-    },
-    discord: {
-      emoji: "💬",
-      title: "Discord",
-      actions: {
-        react: {
-          label: "react",
-          detailKeys: ["channelId", "messageId", "emoji"],
-        },
-        reactions: {
-          label: "reactions",
-          detailKeys: ["channelId", "messageId"],
-        },
-        sticker: {
-          label: "sticker",
-          detailKeys: ["to", "stickerIds"],
-        },
-        poll: {
-          label: "poll",
-          detailKeys: ["question", "to"],
-        },
-        permissions: {
-          label: "permissions",
-          detailKeys: ["channelId"],
-        },
-        readMessages: {
-          label: "read messages",
-          detailKeys: ["channelId", "limit"],
-        },
-        sendMessage: {
-          label: "send",
-          detailKeys: ["to", "content"],
-        },
-        editMessage: {
-          label: "edit",
-          detailKeys: ["channelId", "messageId"],
-        },
-        deleteMessage: {
-          label: "delete",
-          detailKeys: ["channelId", "messageId"],
-        },
-        threadCreate: {
-          label: "thread create",
-          detailKeys: ["channelId", "name"],
-        },
-        threadList: {
-          label: "thread list",
-          detailKeys: ["guildId", "channelId"],
-        },
-        threadReply: {
-          label: "thread reply",
-          detailKeys: ["channelId", "content"],
-        },
-        pinMessage: {
-          label: "pin",
-          detailKeys: ["channelId", "messageId"],
-        },
-        unpinMessage: {
-          label: "unpin",
-          detailKeys: ["channelId", "messageId"],
-        },
-        listPins: {
-          label: "list pins",
-          detailKeys: ["channelId"],
-        },
-        searchMessages: {
-          label: "search",
-          detailKeys: ["guildId", "content"],
-        },
-        memberInfo: {
-          label: "member",
-          detailKeys: ["guildId", "userId"],
-        },
-        roleInfo: {
-          label: "roles",
-          detailKeys: ["guildId"],
-        },
-        emojiList: {
-          label: "emoji list",
-          detailKeys: ["guildId"],
-        },
-        roleAdd: {
-          label: "role add",
-          detailKeys: ["guildId", "userId", "roleId"],
-        },
-        roleRemove: {
-          label: "role remove",
-          detailKeys: ["guildId", "userId", "roleId"],
-        },
-        channelInfo: {
-          label: "channel",
-          detailKeys: ["channelId"],
-        },
-        channelList: {
-          label: "channels",
-          detailKeys: ["guildId"],
-        },
-        voiceStatus: {
-          label: "voice",
-          detailKeys: ["guildId", "userId"],
-        },
-        eventList: {
-          label: "events",
-          detailKeys: ["guildId"],
-        },
-        eventCreate: {
-          label: "event create",
-          detailKeys: ["guildId", "name"],
-        },
-        timeout: {
-          label: "timeout",
-          detailKeys: ["guildId", "userId"],
-        },
-        kick: {
-          label: "kick",
-          detailKeys: ["guildId", "userId"],
-        },
-        ban: {
-          label: "ban",
-          detailKeys: ["guildId", "userId"],
         },
       },
     },

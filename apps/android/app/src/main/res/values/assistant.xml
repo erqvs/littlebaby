@@ -1,7 +1,0 @@
-<resources>
-    <string-array name="ask_littlebaby_query_patterns">
-        <item>ask LittleBaby $prompt</item>
-        <item>tell LittleBaby to $prompt</item>
-        <item>open LittleBaby and ask $prompt</item>
-    </string-array>
-</resources>

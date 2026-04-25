@@ -11,10 +11,7 @@ export {
   handleFeishuSubagentSpawning,
 } from "./src/subagent-hooks.js";
 export * from "./src/conversation-id.js";
-export * from "./src/setup-core.js";
-export * from "./src/setup-surface.js";
 export * from "./src/thread-bindings.js";
 export { __testing as feishuThreadBindingTesting } from "./src/thread-bindings.js";
-export { createClackPrompter } from "littlebaby/plugin-sdk/setup-runtime";
 
 export const feishuSessionBindingAdapterChannels = ["feishu"] as const;

@@ -5,8 +5,6 @@ import type { GatewayAuthResult } from "../../auth.js";
 import { buildDeviceAuthPayload, buildDeviceAuthPayloadV3 } from "../../device-auth.js";
 import {
   isLoopbackAddress,
-  isLoopbackHost,
-  isPrivateOrLoopbackAddress,
   isPrivateOrLoopbackHost,
   resolveHostName,
 } from "../../net.js";
@@ -74,13 +72,13 @@ export function resolveHandshakeBrowserSecurityContext(params: {
 export function shouldAllowSilentLocalPairing(params: {
   locality: PairingLocalityKind;
   hasBrowserOriginHeader: boolean;
-  isControlUi: boolean;
+  isOperatorClient: boolean;
   isWebchat: boolean;
   reason: "not-paired" | "role-upgrade" | "scope-upgrade" | "metadata-upgrade";
 }): boolean {
   return (
     params.locality !== "remote" &&
-    (!params.hasBrowserOriginHeader || params.isControlUi || params.isWebchat) &&
+    (!params.hasBrowserOriginHeader || params.isOperatorClient || params.isWebchat) &&
     (params.reason === "not-paired" ||
       params.reason === "scope-upgrade" ||
       params.reason === "role-upgrade")
@@ -111,19 +109,7 @@ function isCliContainerLocalEquivalent(params: {
   );
 }
 
-function resolveOriginHost(origin?: string): string {
-  const trimmed = origin?.trim();
-  if (!trimmed) {
-    return "";
-  }
-  try {
-    return new URL(trimmed).hostname;
-  } catch {
-    return "";
-  }
-}
-
-function isControlUiBrowserContainerLocalEquivalent(params: {
+function isOperatorBrowserContainerLocalEquivalent(params: {
   connectParams: ConnectParams;
   requestHost?: string;
   requestOrigin?: string;
@@ -133,20 +119,8 @@ function isControlUiBrowserContainerLocalEquivalent(params: {
   sharedAuthOk: boolean;
   authMethod: GatewayAuthResult["method"];
 }): boolean {
-  const isControlUiBrowser =
-    params.connectParams.client.id === GATEWAY_CLIENT_IDS.CONTROL_UI &&
-    params.connectParams.client.mode === GATEWAY_CLIENT_MODES.WEBCHAT;
-  const usesSharedSecretAuth = params.authMethod === "token" || params.authMethod === "password";
-  return (
-    isControlUiBrowser &&
-    params.sharedAuthOk &&
-    usesSharedSecretAuth &&
-    !params.hasProxyHeaders &&
-    params.hasBrowserOriginHeader &&
-    isPrivateOrLoopbackAddress(params.remoteAddress) &&
-    isLoopbackHost(resolveHostName(params.requestHost)) &&
-    isLoopbackHost(resolveOriginHost(params.requestOrigin))
-  );
+  void params;
+  return false;
 }
 
 export function resolvePairingLocality(params: {
@@ -164,7 +138,7 @@ export function resolvePairingLocality(params: {
     return "direct_local";
   }
   if (
-    isControlUiBrowserContainerLocalEquivalent({
+    isOperatorBrowserContainerLocalEquivalent({
       connectParams: params.connectParams,
       requestHost: params.requestHost,
       requestOrigin: params.requestOrigin,

@@ -271,7 +271,6 @@ export async function startGatewayPostAttachRuntime(
     broadcast: (event: string, payload: unknown, opts?: { dropIfSlow?: boolean }) => void;
     tailscaleMode: GatewayTailscaleMode;
     resetOnExit: boolean;
-    controlUiBasePath: string;
     logTailscale: {
       info: (msg: string) => void;
       warn: (msg: string) => void;
@@ -325,7 +324,6 @@ export async function startGatewayPostAttachRuntime(
         tailscaleMode: params.tailscaleMode,
         resetOnExit: params.resetOnExit,
         port: params.port,
-        controlUiBasePath: params.controlUiBasePath,
         logTailscale: params.logTailscale,
       });
 

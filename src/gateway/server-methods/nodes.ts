@@ -23,11 +23,6 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "../../shared/string-coerce.js";
-import {
-  buildCanvasScopedHostUrl,
-  CANVAS_CAPABILITY_TTL_MS,
-  mintCanvasCapabilityToken,
-} from "../canvas-capability.js";
 import { createKnownNodeCatalog, getKnownNode, listKnownNodes } from "../node-catalog.js";
 import { isNodeCommandAllowed, resolveNodeCommandAllowlist } from "../node-command-policy.js";
 import { sanitizeNodeInvokeParamsForForwarding } from "../node-invoke-sanitize.js";
@@ -750,7 +745,7 @@ export const nodeHandlers: GatewayRequestHandlers = {
       respond(true, { ts: Date.now(), ...node }, undefined);
     });
   },
-  "node.canvas.capability.refresh": async ({ params, respond, client }) => {
+  "node.canvas.capability.refresh": async ({ params, respond }) => {
     if (!validateNodeListParams(params)) {
       respondInvalidParams({
         respond,
@@ -759,40 +754,10 @@ export const nodeHandlers: GatewayRequestHandlers = {
       });
       return;
     }
-    const baseCanvasHostUrl = normalizeOptionalString(client?.canvasHostUrl) ?? "";
-    if (!baseCanvasHostUrl) {
-      respond(
-        false,
-        undefined,
-        errorShape(ErrorCodes.UNAVAILABLE, "canvas host unavailable for this node session"),
-      );
-      return;
-    }
-
-    const canvasCapability = mintCanvasCapabilityToken();
-    const canvasCapabilityExpiresAtMs = Date.now() + CANVAS_CAPABILITY_TTL_MS;
-    const scopedCanvasHostUrl = buildCanvasScopedHostUrl(baseCanvasHostUrl, canvasCapability);
-    if (!scopedCanvasHostUrl) {
-      respond(
-        false,
-        undefined,
-        errorShape(ErrorCodes.UNAVAILABLE, "failed to mint scoped canvas host URL"),
-      );
-      return;
-    }
-
-    if (client) {
-      client.canvasCapability = canvasCapability;
-      client.canvasCapabilityExpiresAtMs = canvasCapabilityExpiresAtMs;
-    }
     respond(
-      true,
-      {
-        canvasCapability,
-        canvasCapabilityExpiresAtMs,
-        canvasHostUrl: scopedCanvasHostUrl,
-      },
+      false,
       undefined,
+      errorShape(ErrorCodes.UNAVAILABLE, "node canvas capability is unavailable"),
     );
   },
   "node.pending.pull": async ({ params, respond, client }) => {

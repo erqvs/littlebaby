@@ -112,7 +112,7 @@ async function requireRiskAcknowledgement(params: {
     [
       "Security warning — please read.",
       "",
-      "LittleBaby is a hobby project and still in beta. Expect sharp edges.",
+      "LittleBaby is a hobby project and still in beta. Expect rough edges.",
       "By default, LittleBaby is a personal agent: one trusted operator boundary.",
       "This bot can read files and run actions if tools are enabled.",
       "A bad prompt can trick it into doing unsafe things.",
