@@ -196,10 +196,6 @@ importers:
 
   extensions/zai: {}
 
-  packages/plugin-package-contract: {}
-
-  packages/plugin-sdk: {}
-
 packages:
 
   '@agentclientprotocol/sdk@0.19.0':
