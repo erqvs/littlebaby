@@ -1,0 +1,7 @@
+{
+  "name": "@littlebaby/media-understanding-core",
+  "version": "2026.4.20",
+  "private": true,
+  "description": "LittleBaby media understanding runtime package",
+  "type": "module"
+}

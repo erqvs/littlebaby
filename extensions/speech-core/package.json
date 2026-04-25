@@ -1,0 +1,10 @@
+{
+  "name": "@littlebaby/speech-core",
+  "version": "2026.4.20",
+  "private": true,
+  "description": "LittleBaby speech runtime package",
+  "type": "module",
+  "devDependencies": {
+    "@littlebaby/plugin-sdk": "workspace:*"
+  }
+}

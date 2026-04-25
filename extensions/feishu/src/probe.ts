@@ -18,19 +18,18 @@ export type ProbeFeishuOptions = {
   abortSignal?: AbortSignal;
 };
 
-type FeishuPingResponse = {
+type FeishuBotInfoResponse = {
   code: number;
   msg?: string;
-  data?: { pingBotInfo?: { botID?: string; botName?: string } };
+  bot?: { open_id?: string; app_name?: string };
 };
 
 type FeishuRequestClient = ReturnType<typeof createFeishuClient> & {
   request(params: {
-    method: "POST";
+    method: "GET";
     url: string;
-    data: Record<string, unknown>;
     timeout: number;
-  }): Promise<FeishuPingResponse>;
+  }): Promise<FeishuBotInfoResponse>;
 };
 
 function setCachedProbeResult(
@@ -80,14 +79,10 @@ export async function probeFeishu(
 
   try {
     const client = createFeishuClient(creds) as FeishuRequestClient;
-    // Feishu-provided endpoint for LittleBaby, supported on both Feishu (CN)
-    // and Lark (international). No OAuth scopes required. Validates
-    // credentials and registers the app as an AI agent (智能体).
-    const responseResult = await raceWithTimeoutAndAbort<FeishuPingResponse>(
+    const responseResult = await raceWithTimeoutAndAbort<FeishuBotInfoResponse>(
       client.request({
-        method: "POST",
-        url: "/open-apis/bot/v1/littlebaby_bot/ping",
-        data: { needBotInfo: true },
+        method: "GET",
+        url: "/open-apis/bot/v3/info",
         timeout: timeoutMs,
       }),
       {
@@ -136,14 +131,14 @@ export async function probeFeishu(
       );
     }
 
-    const botInfo = response.data?.pingBotInfo;
+    const botInfo = response.bot;
     return setCachedProbeResult(
       cacheKey,
       {
         ok: true,
         appId: creds.appId,
-        botName: botInfo?.botName,
-        botOpenId: botInfo?.botID,
+        botName: botInfo?.app_name,
+        botOpenId: botInfo?.open_id,
       },
       PROBE_SUCCESS_TTL_MS,
     );

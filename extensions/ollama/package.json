@@ -4,6 +4,9 @@
   "private": true,
   "description": "LittleBaby Ollama provider plugin",
   "type": "module",
+  "devDependencies": {
+    "@littlebaby/plugin-sdk": "workspace:*"
+  },
   "littlebaby": {
     "extensions": [
       "./index.ts"

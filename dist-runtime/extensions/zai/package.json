@@ -1,0 +1,12 @@
+{
+  "name": "@littlebaby/zai-provider",
+  "version": "2026.4.20",
+  "private": true,
+  "description": "LittleBaby Z.AI provider plugin",
+  "type": "module",
+  "littlebaby": {
+    "extensions": [
+      "./index.js"
+    ]
+  }
+}

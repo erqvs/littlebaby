@@ -1,0 +1,12 @@
+{
+  "name": "@littlebaby/memory-core",
+  "version": "2026.4.20",
+  "private": true,
+  "description": "LittleBaby core memory search plugin",
+  "type": "module",
+  "littlebaby": {
+    "extensions": [
+      "./index.js"
+    ]
+  }
+}
