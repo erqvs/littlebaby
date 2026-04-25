@@ -28,6 +28,6 @@
       "@littlebaby/*": ["./extensions/*"]
     }
   },
-  "include": ["src/**/*", "extensions/**/*", "packages/**/*"],
+  "include": ["src/**/*", "extensions/**/*"],
   "exclude": ["node_modules", "dist", "**/dist/**"]
 }
