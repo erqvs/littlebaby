@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-service/
 package-lock.json
 .env
 .env.*
@@ -7,3 +8,6 @@ package-lock.json
 .DS_Store
 coverage/
 *.tsbuildinfo
+PROJECT.md
+docs/mysql-memory-schema.md
+scripts/sql/
