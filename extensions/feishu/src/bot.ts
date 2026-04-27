@@ -62,7 +62,7 @@ import * as fs from "fs";
 
 export { toMessageResourceType } from "./bot-content.js";
 
-const __zaiApiKey = "REDACTED_ZAI_API_KEY";
+const __zaiApiKey = process.env.Z_AI_API_KEY ?? process.env.BIGMODEL_API_KEY ?? "";
 
 async function shouldAutoReply(
   senderName: string,
@@ -1397,7 +1397,7 @@ export async function handleFeishuMessage(params: {
         // Capture bot's last reply from session jsonl and write to history
         let botReply: string | null = null;
         try {
-          const sessDir = "/home/user/.littlebaby/agents/main/sessions/";
+          const sessDir = path.join(os.homedir(), ".littlebaby/agents/main/sessions/");
           const sessFiles = fs
             .readdirSync(sessDir)
             .filter((f) => f.endsWith(".jsonl"))

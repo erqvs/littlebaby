@@ -2011,6 +2011,7 @@ async function runFeishuService(
   log(`feishu[${account.accountId}]: bot open_id resolved: ${identity.botOpenId ? "[ok]" : "unknown"}`);
 
   const mcp = new McpHub(config);
+  await mcp.openAiTools();
   const dispatcher = createEventDispatcher(account);
   dispatcher.register({
     "im.message.receive_v1": async (data: unknown) => {

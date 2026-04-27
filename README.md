@@ -63,14 +63,14 @@ littlebaby/
 生产配置位于运行用户家目录：
 
 ```text
-/home/user/.littlebaby/littlebaby.json
+$HOME/.littlebaby/littlebaby.json
 ```
 
 常用环境变量：
 
 | 变量 | 说明 |
 | --- | --- |
-| `HOME` | 服务用户家目录，生产中通常是 `/home/user` |
+| `HOME` | 服务用户家目录 |
 | `LITTLEBABY_STATE_DIR` | 状态目录，默认 `$HOME/.littlebaby` |
 | `LITTLEBABY_CONFIG_PATH` | 显式指定配置文件路径 |
 | `NODE_ENV` | 运行环境 |
@@ -110,13 +110,13 @@ pnpm build
 迁移记忆数据库：
 
 ```bash
-HOME=/home/user LITTLEBABY_STATE_DIR=/home/user/.littlebaby pnpm db:migrate
+HOME=$HOME LITTLEBABY_STATE_DIR=$HOME/.littlebaby pnpm db:migrate
 ```
 
 导入长期上下文文档：
 
 ```bash
-HOME=/home/user LITTLEBABY_STATE_DIR=/home/user/.littlebaby pnpm context:import
+HOME=$HOME LITTLEBABY_STATE_DIR=$HOME/.littlebaby pnpm context:import
 ```
 
 查看入口帮助：
@@ -162,7 +162,7 @@ sudo journalctl -u littlebaby.service -f
 典型更新流程：
 
 ```bash
-cd /path/to/project
+cd /path/to/littlebaby
 pnpm install --frozen-lockfile
 pnpm build
 node dist-service/feishu-service.js --help
@@ -202,10 +202,10 @@ MCP 命令输出和错误日志需要避免暴露 key、token、secret、Authori
 
 | 位置 | 说明 |
 | --- | --- |
-| MySQL `littlebaby.lb_chat_messages` | 原始聊天流水 |
-| MySQL `littlebaby.lb_ai_turns` | AI 回复回合 |
-| MySQL `littlebaby.lb_tool_calls` | MCP 工具调用追踪 |
-| MySQL `littlebaby.lb_context_documents` | 小橘人格、身份、用户偏好、长期记忆和工具约定 |
+| MySQL | 原始聊天流水 |
+| MySQL | AI 回复回合 |
+| MySQL | MCP 工具调用追踪 |
+| MySQL | 上下文文档 |
 | `lite-history.json` | 最近会话历史 |
 | `lite-dedupe.json` | 已处理消息 ID 去重集合 |
 
