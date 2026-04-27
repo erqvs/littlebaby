@@ -1414,7 +1414,7 @@ async function generateReply(params: {
     { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt) },
     ...history.map((entry): ChatMessage => ({
       role: entry.role,
-      content: `${entry.name ? `${entry.name}: ` : ""}${entry.content}`,
+      content: entry.role === "assistant" ? entry.content : `${entry.name ? `${entry.name}: ` : ""}${entry.content}`,
     })),
     ...(historyAlreadyIncludesCurrent
       ? []
@@ -1423,6 +1423,7 @@ async function generateReply(params: {
 
   let toolRounds = 0;
   for (;;) {
+    log(`generateReply: calling callZaiChat (round ${toolRounds + 1})`);
     const response = await callZaiChat({
       config: params.config,
       apiKey,
@@ -1431,8 +1432,10 @@ async function generateReply(params: {
       timeoutMs: MODEL_TIMEOUT_MS,
     });
     if (response.toolCalls.length === 0) {
+      log(`generateReply: ZAI responded without tool calls (${response.content.length} chars)`);
       return { text: response.content.trim() || "我这边没有生成有效回复。", toolRounds };
     }
+    log(`generateReply: ZAI requested ${response.toolCalls.length} tool call(s)`);
     if (toolRounds >= MAX_TOOL_ROUNDS) {
       return { text: `MCP 工具调用超过 ${MAX_TOOL_ROUNDS} 轮，我先停在这里。`, toolRounds };
     }
@@ -1445,11 +1448,13 @@ async function generateReply(params: {
     for (const toolCall of response.toolCalls) {
       const name = toolCall.function?.name ?? "";
       const argsText = toolCall.function?.arguments ?? "{}";
+      log(`generateReply: calling MCP tool ${name} with args: ${argsText.slice(0, 200)}`);
       const result = await params.mcp.callOpenAiTool(name, safeJsonParse(argsText), {
         memory: params.memory,
         aiTurnId: params.aiTurnId,
         toolCallId: toolCall.id,
       });
+      log(`generateReply: MCP tool ${name} returned (${result.length} chars): ${result.slice(0, 300)}`);
       messages.push({
         role: "tool",
         tool_call_id: toolCall.id ?? name,
@@ -1822,12 +1827,14 @@ async function handleMessage(params: {
     const mentioned = isBotMentioned(event, params.botOpenId, params.botName);
     let shouldReply = true;
     if (event.message.chat_type === "group") {
+      log(`feishu[${account.accountId}]: group message, mentioned=${mentioned}, checking shouldReply`);
       shouldReply = await shouldReplyToGroup({
         config,
         text,
         sessionKey: key,
         mentioned,
       });
+      log(`feishu[${account.accountId}]: shouldReply=${shouldReply}`);
     }
     const userMessageRef = await params.memory?.recordUserMessage({
       accountId: account.accountId,
@@ -1857,8 +1864,8 @@ async function handleMessage(params: {
         })
       : undefined;
     let replyResult: GenerateReplyResult;
-    try {
-      replyResult = await generateReply({
+  try {
+    replyResult = await generateReply({
         config,
         mcp: params.mcp,
         sessionKey: key,
@@ -1883,12 +1890,13 @@ async function handleMessage(params: {
     }
     const reply = replyResult.text;
     const chunks = chunkReply(reply, account.config);
-    for (const chunk of chunks) {
+    for (let i = 0; i < chunks.length; i++) {
       await sendFeishuReply({
         account,
         client: params.client,
         event,
-        text: chunk,
+        text: chunks[i],
+        useReply: i === 0,
       });
       await sleep(250);
     }
@@ -1917,32 +1925,23 @@ function chunkReply(text: string, config: FeishuConfig): string[] {
   if (!source) {
     return [];
   }
-  if (source.length <= limit) {
-    return [source];
-  }
   const chunks: string[] = [];
-  const paragraphs = source.split(/\n{2,}/);
-  let current = "";
-  for (const paragraph of paragraphs) {
-    const candidate = current ? `${current}\n\n${paragraph}` : paragraph;
-    if (candidate.length <= limit) {
-      current = candidate;
+  const lines = source.split(/\n/);
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
       continue;
     }
-    if (current) {
-      chunks.push(current);
-      current = "";
-    }
-    if (paragraph.length <= limit) {
-      current = paragraph;
-      continue;
-    }
-    for (let index = 0; index < paragraph.length; index += limit) {
-      chunks.push(paragraph.slice(index, index + limit));
+    if (trimmed.length <= limit) {
+      chunks.push(trimmed);
+    } else {
+      for (let index = 0; index < trimmed.length; index += limit) {
+        chunks.push(trimmed.slice(index, index + limit));
+      }
     }
   }
-  if (current) {
-    chunks.push(current);
+  if (chunks.length === 0) {
+    chunks.push(source);
   }
   return chunks;
 }
@@ -1967,22 +1966,25 @@ async function sendFeishuReply(params: {
   client: Lark.Client;
   event: FeishuMessageEvent;
   text: string;
+  useReply?: boolean;
 }): Promise<void> {
   const content = buildPostContent(params.text);
   const data = { content, msg_type: "post" };
   const messageId = params.event.message.message_id;
   const receiveId = params.event.message.chat_id;
-  try {
-    const response = (await params.client.im.message.reply({
-      path: { message_id: messageId },
-      data,
-    })) as { code?: number; msg?: string };
-    if (response.code === 0 || response.code === undefined) {
-      return;
+  if (params.useReply !== false) {
+    try {
+      const response = (await params.client.im.message.reply({
+        path: { message_id: messageId },
+        data,
+      })) as { code?: number; msg?: string };
+      if (response.code === 0 || response.code === undefined) {
+        return;
+      }
+      warn(`Feishu reply failed, falling back to direct send: ${response.msg ?? response.code}`);
+    } catch (err) {
+      warn(`Feishu reply failed, falling back to direct send: ${redactError(err)}`);
     }
-    warn(`Feishu reply failed, falling back to direct send: ${response.msg ?? response.code}`);
-  } catch (err) {
-    warn(`Feishu reply failed, falling back to direct send: ${redactError(err)}`);
   }
   const response = (await params.client.im.message.create({
     params: { receive_id_type: "chat_id" },
@@ -2015,11 +2017,13 @@ async function runFeishuService(
   const dispatcher = createEventDispatcher(account);
   dispatcher.register({
     "im.message.receive_v1": async (data: unknown) => {
+      log(`feishu[${account.accountId}]: received im.message.receive_v1 event`);
       const event = parseMessagePayload(data);
       if (!event) {
         warn(`feishu[${account.accountId}]: malformed message event ignored`);
         return;
       }
+      log(`feishu[${account.accountId}]: message from ${senderLabel(event)} in ${event.message.chat_type} chat ${event.message.chat_id}`);
       void handleMessage({
         config,
         account,
