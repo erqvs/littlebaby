@@ -271,7 +271,7 @@ const AGGREGATE_WINDOW_MS = 3_000;
 const AGGREGATE_IMAGE_EXTRA_WINDOW_MS = 2_000;
 const AGGREGATE_MAX_MESSAGES = 5;
 const AGGREGATE_MAX_WINDOW_MS = 10_000;
-const AGENT_D_TIMEOUT_MS = 5_000;
+const AGENT_D_TIMEOUT_MS = 20_000;
 const AGENT_A_TIMEOUT_MS = 8_000;
 const AGENT_B_TIMEOUT_MS = 55_000;
 const PIPELINE_TIMEOUT_MS = 60_000;
@@ -1532,6 +1532,11 @@ function senderLabel(event: FeishuMessageEvent): string {
   );
 }
 
+function senderDisplayName(openId: string): string {
+  if (!openId.startsWith("ou_")) return openId;
+  return `用户${openId.slice(-4)}`;
+}
+
 function addHistory(key: string, entry: ConversationEntry): void {
   const entries = conversations.get(key) ?? [];
   entries.push(entry);
@@ -1796,10 +1801,10 @@ async function agentD(params: {
 
   const history = conversations.get(params.sessionKey) ?? [];
   const recentHistory = history
-    .slice(-10)
+    .slice(-5)
     .map((entry) => {
       const name = entry.role === "assistant" ? "小橘" : entry.name ?? "用户";
-      const text = entry.content.length > 50 ? entry.content.slice(0, 50) + "..." : entry.content;
+      const text = entry.content.length > 30 ? entry.content.slice(0, 30) + "..." : entry.content;
       return `${name}: ${text}`;
     })
     .join("\n");
@@ -1813,43 +1818,12 @@ async function agentD(params: {
     .join("\n");
 
   const systemPrompt = [
-    '你是飞书群聊 AI 助手"小橘"的消息分类器。',
-    "分析当前消息并输出 JSON 格式的分类结果。",
-    "",
-    "输出格式：",
-    '{"shouldReply": boolean, "intent": "chat"|"tool"|"question"|"vision", "tone": "concise"|"casual"|"detailed"}',
-    "",
-    "intent 分类：",
-    "- chat: 闲聊/寒暄/打招呼/简单的日常对话",
-    "- tool: 需要调用工具（记账、查天气、搜索、读网页等）",
-    "- question: 提问/解释/分析/翻译等需要思考的问题",
-    "- vision: 涉及图片/截图/照片需要分析",
-    "",
-    "tone 分类：",
-    "- concise: 查询/记账/简单操作，简洁回复",
-    "- casual: 闲聊/日常对话，轻松自然",
-    "- detailed: 分析/长文/复杂问题，详细回复",
-    "",
-    "判断规则：",
-    '- 用户直接 @小橘 或叫"小橘"并明确要她做事 → shouldReply=true',
-    "- 用户发图片并提问 → shouldReply=true, intent=vision",
-    "- 纯闲聊/打招呼提到小橘 → shouldReply=true, intent=chat",
-    '- 第三人称讨论小橘（"小橘今天又偷懒了""小橘好用吗"）→ shouldReply=false',
-    "- 与小橘完全无关的普通群聊 → shouldReply=false",
-    "- 宁可漏回也不要误回，误回会打断正常聊天",
-    "",
-    "示例：",
-    '1. 用户: "小橘早上好呀" → {"shouldReply": true, "intent": "chat", "tone": "casual"}',
-    '2. 用户: "@小橘 帮我记一笔午饭35" → {"shouldReply": true, "intent": "tool", "tone": "concise"}',
-    '3. 用户: "小橘今天又偷懒了" → {"shouldReply": false, "intent": "chat", "tone": "casual"}',
-    '4. 用户: "帮我看看这个截图" [图片] → {"shouldReply": true, "intent": "vision", "tone": "detailed"}',
-    '5. 用户: "今天天气真好" → {"shouldReply": false, "intent": "chat", "tone": "casual"}',
-    '6. 用户: "@小橘" → {"shouldReply": true, "intent": "chat", "tone": "casual"}',
-    '7. 用户: "小橘好用吗？" → {"shouldReply": false, "intent": "question", "tone": "concise"}',
-    '8. 用户: "@小橘 这个错误怎么解决？" → {"shouldReply": true, "intent": "question", "tone": "detailed"}',
+    '你是"小橘"的消息分类器。输出JSON：{"shouldReply":boolean,"intent":"chat"|"tool"|"question"|"vision","tone":"concise"|"casual"|"detailed"}',
+    "chat=闲聊 tool=需工具 question=提问 vision=图片",
+    "第三人称讨论小橘→shouldReply:false。宁漏勿误。",
   ].join("\n");
 
-  const userPrompt = [`最近聊天：\n${recentHistory || "(无)"}`, "", `当前消息：`, currentMessages].join("\n");
+  const userPrompt = `最近：${recentHistory || "(无)"}\n当前：${currentMessages}`;
 
   try {
     const result = await callZaiChat({
@@ -1987,11 +1961,6 @@ async function generateReply(params: {
   const tools = await params.mcp.openAiTools();
   const contextDocumentsPrompt = (await params.memory?.getContextDocumentsPrompt()) ?? "";
   const history = conversations.get(params.sessionKey) ?? [];
-  const lastHistoryEntry = history.at(-1);
-  const historyAlreadyIncludesCurrent =
-    lastHistoryEntry?.role === "user" &&
-    lastHistoryEntry.name === params.sender &&
-    lastHistoryEntry.content === params.text;
   const modelSupportsImage = false;
   const effectiveImagePaths = params.imagePaths ?? [];
   let imagePromptSuffix = "";
@@ -1999,8 +1968,15 @@ async function generateReply(params: {
     imagePromptSuffix = `\n\n[系统提示：用户发送了 ${effectiveImagePaths.length} 张图片，图片已保存到 ${effectiveImagePaths.join(", ")}。请使用 zai-mcp-server 的视觉工具（如 analyze_image）来查看图片内容，不要说自己看不到。]`;
   }
   log(`generateReply: images=${params.images?.length ?? 0}, imagePaths=${effectiveImagePaths.join(",")}, suffixLen=${imagePromptSuffix.length}`);
-  const userContent: string | ContentPart[] =
-    params.images && params.images.length > 0 && modelSupportsImage
+
+  const historyMessages = history.map((entry): ChatMessage => ({
+    role: entry.role,
+    content: entry.role === "assistant" ? entry.content : `${entry.name ? `${senderDisplayName(entry.name)}: ` : ""}${entry.content}`,
+  }));
+
+  const currentUserMessage: ChatMessage = {
+    role: "user",
+    content: params.images && params.images.length > 0 && modelSupportsImage
       ? [
           ...params.images.map(
             (img): ContentPart => ({
@@ -2010,15 +1986,13 @@ async function generateReply(params: {
           ),
           { type: "text", text: `${params.sender}: ${params.text}` },
         ]
-      : `${params.sender}: ${params.text}${imagePromptSuffix}`;
-  log(`generateReply: userContent=${userContent.toString().substring(0, 300)}`);
+      : `${params.sender}: ${params.text}${imagePromptSuffix}`,
+  };
+
   const messages: ChatMessage[] = [
     { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt, params.tone ?? "casual") },
-    ...history.map((entry): ChatMessage => ({
-      role: entry.role,
-      content: entry.role === "assistant" ? entry.content : `${entry.name ? `${entry.name}: ` : ""}${entry.content}`,
-    })),
-    ...(historyAlreadyIncludesCurrent ? [] : [{ role: "user" as const, content: userContent }]),
+    ...historyMessages,
+    currentUserMessage,
   ];
   if (params.extraContext) {
     messages.push({ role: "user", content: params.extraContext });
@@ -2488,7 +2462,7 @@ async function processAggregatedMessage(aggregated: AggregatedMessage): Promise<
         mcp,
         sessionKey: aggregated.sessionKey,
         text: combinedText,
-        sender: aggregated.senderName,
+        sender: senderDisplayName(aggregated.senderId),
         memory,
         aiTurnId,
         images: allImages,
@@ -2521,7 +2495,7 @@ async function processAggregatedMessage(aggregated: AggregatedMessage): Promise<
           mcp,
           sessionKey: aggregated.sessionKey,
           text: combinedText,
-          sender: aggregated.senderName,
+          sender: senderDisplayName(aggregated.senderId),
           memory,
           aiTurnId,
           images: allImages,
@@ -2562,16 +2536,20 @@ async function processAggregatedMessage(aggregated: AggregatedMessage): Promise<
     await withTimeout(pipelinePromise, PIPELINE_TIMEOUT_MS, `pipeline[${session.requestId}] timed out after ${PIPELINE_TIMEOUT_MS}ms`);
   } catch (err) {
     error(`pipeline[${aggregated.requestId}]: failed: ${redactError(err)}`);
-    try {
-      await sendFeishuReply({
-        account,
-        client,
-        event: firstItem.event,
-        text: "哎呀出了点小状况，你再说一次？",
-        useReply: true,
-      });
-    } catch {
-      // Give up
+    if (err instanceof Error && !err.message.includes("timed out")) {
+      try {
+        await sendFeishuReply({
+          account,
+          client,
+          event: firstItem.event,
+          text: "出了点问题，稍后再试一下？",
+          useReply: true,
+        });
+      } catch {
+        // Give up
+      }
+    } else {
+      log(`pipeline[${aggregated.requestId}]: timed out, silent degradation`);
     }
     sessionManager.transition(aggregated.senderId, "DEGRADED");
     sessionManager.clear(aggregated.senderId);
