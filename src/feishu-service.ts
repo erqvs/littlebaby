@@ -191,6 +191,68 @@ type ContextDocument = {
   content: string;
 };
 
+type SessionState =
+  | "IDLE"
+  | "AGGREGATING"
+  | "ROUTING"
+  | "ACKING"
+  | "PROCESSING"
+  | "VALIDATING"
+  | "SENDING"
+  | "CHATTING"
+  | "DEGRADED";
+
+type AggregatedMessageItem = {
+  event: FeishuMessageEvent;
+  text: string;
+  images: ImageData[];
+  imagePaths: string[];
+  ts: number;
+  mentioned: boolean;
+  dbRef?: DbMessageRef | null;
+};
+
+type AggregatedMessage = {
+  requestId: string;
+  items: AggregatedMessageItem[];
+  sessionKey: string;
+  senderId: string;
+  senderName: string;
+  chatId: string;
+  chatType: string;
+  accountId: string;
+};
+
+type RoutingDecision = {
+  shouldReply: boolean;
+  intent: "chat" | "tool" | "question" | "vision";
+  tone: "concise" | "casual" | "detailed";
+};
+
+type AgentAResult = {
+  text: string;
+};
+
+type SessionContext = {
+  state: SessionState;
+  senderId: string;
+  senderName: string;
+  sessionKey: string;
+  chatId: string;
+  chatType: string;
+  accountId: string;
+  requestId: string;
+  triggerMessageId: string;
+  triggerEvent: FeishuMessageEvent;
+  retryCount: number;
+  pendingItems: AggregatedMessageItem[];
+  ackSent: boolean;
+  lastActivityAt: number;
+  tone: "concise" | "casual" | "detailed";
+};
+
+type PreFilterResult = "aggregate" | "store_only";
+
 const DEFAULT_CONFIG_FILE = "littlebaby.json";
 const DEFAULT_STATE_DIR = ".littlebaby";
 const DEFAULT_CHUNK_LIMIT = 3800;
@@ -205,14 +267,39 @@ const MCP_TOOL_RETRY_BASE_DELAY_MS = 750;
 const MODEL_TIMEOUT_MS = 180_000;
 const MAX_TOOL_ROUNDS = 4;
 const DB_RESULT_PREVIEW_CHARS = 8_000;
+const AGGREGATE_WINDOW_MS = 3_000;
+const AGGREGATE_IMAGE_EXTRA_WINDOW_MS = 2_000;
+const AGGREGATE_MAX_MESSAGES = 5;
+const AGGREGATE_MAX_WINDOW_MS = 10_000;
+const AGENT_D_TIMEOUT_MS = 5_000;
+const AGENT_A_TIMEOUT_MS = 8_000;
+const AGENT_B_TIMEOUT_MS = 55_000;
+const PIPELINE_TIMEOUT_MS = 60_000;
+const DEDUP_TTL_MS = 300_000;
+const ACK_DELAY_MIN_MS = 500;
+const ACK_DELAY_MAX_MS = 2_000;
+const TRIGGER_WORDS = ["小橘", "小金橘", "小桔"];
+const ACK_TEMPLATES = ["我看看呀~", "好嘞~", "来啦~", "嗯嗯~", "收到~", "我找找哈~"];
 
 const serviceStart = new Date();
 const conversations = new Map<string, ConversationEntry[]>();
 const processingMessages = new Set<string>();
 const processedMessages = new Set<string>();
+const botMessageIds = new Map<string, number>();
+const dedupeTimestamps = new Map<string, number>();
 
 let shutdownRequested = false;
 let historySaveTimer: NodeJS.Timeout | null = null;
+let globalSessionManager: SessionManager | null = null;
+let globalAggregator: MessageAggregator | null = null;
+let globalMcp: McpHub | null = null;
+let globalMemory: MysqlMemoryStore | null = null;
+let globalAccount: ResolvedFeishuAccount | null = null;
+let globalClient: Lark.Client | null = null;
+let globalConfig: ServiceConfig | null = null;
+let globalBotOpenId: string | undefined;
+let globalBotName: string | undefined;
+let inFlightRequests = 0;
 
 function timestamp(): string {
   return new Date().toISOString();
@@ -343,6 +430,46 @@ function redactError(value: unknown): string {
     .replace(/Bearer\s+[A-Za-z0-9._-]+/g, "Bearer [redacted]")
     .replace(/([A-Za-z0-9_-]{16,})\.[A-Za-z0-9._-]{8,}/g, "[redacted-token]")
     .replace(/(api[_-]?key|token|secret)(["':= ]+)[^"',\s]+/gi, "$1$2[redacted]");
+}
+
+function generateRequestId(): string {
+  return `req_${Date.now().toString(36)}_${crypto.randomBytes(4).toString("hex")}`;
+}
+
+function randomAckTemplate(): string {
+  return ACK_TEMPLATES[Math.floor(Math.random() * ACK_TEMPLATES.length)];
+}
+
+function randomAckDelay(): number {
+  return ACK_DELAY_MIN_MS + Math.random() * (ACK_DELAY_MAX_MS - ACK_DELAY_MIN_MS);
+}
+
+function cleanupDedupeSet(): void {
+  const now = Date.now();
+  for (const [id, ts] of dedupeTimestamps) {
+    if (now - ts > DEDUP_TTL_MS) {
+      processedMessages.delete(id);
+      dedupeTimestamps.delete(id);
+    }
+  }
+}
+
+function recordBotMessageId(messageId: string): void {
+  botMessageIds.set(messageId, Date.now());
+  if (botMessageIds.size > 500) {
+    const now = Date.now();
+    for (const [id, ts] of botMessageIds) {
+      if (now - ts > DEDUP_TTL_MS) {
+        botMessageIds.delete(id);
+      }
+    }
+  }
+}
+
+function isReplyToBotMessage(event: FeishuMessageEvent): boolean {
+  const parentId = event.message.parent_id?.trim();
+  if (!parentId) return false;
+  return botMessageIds.has(parentId);
 }
 
 function printHelp(): void {
@@ -1412,6 +1539,189 @@ function addHistory(key: string, entry: ConversationEntry): void {
   scheduleStateSave();
 }
 
+function rulePreFilter(params: {
+  text: string;
+  mentioned: boolean;
+  event: FeishuMessageEvent;
+  botOpenId?: string;
+  botName?: string;
+}): PreFilterResult {
+  if (params.mentioned) return "aggregate";
+  if (params.event.message.chat_type !== "group") return "aggregate";
+  if (isReplyToBotMessage(params.event)) return "aggregate";
+  const text = params.text.toLowerCase();
+  for (const word of TRIGGER_WORDS) {
+    if (text.includes(word.toLowerCase())) return "aggregate";
+  }
+  return "store_only";
+}
+
+class MessageAggregator {
+  private timers = new Map<string, NodeJS.Timeout>();
+  private buffers = new Map<string, AggregatedMessage>();
+  private windowStarts = new Map<string, number>();
+  private readonly windowMs: number;
+  private readonly maxMessages: number;
+  private readonly maxWindowMs: number;
+  private readonly onSubmit: (aggregated: AggregatedMessage) => void;
+
+  constructor(options: {
+    windowMs?: number;
+    maxMessages?: number;
+    maxWindowMs?: number;
+    onSubmit: (aggregated: AggregatedMessage) => void;
+  }) {
+    this.windowMs = options.windowMs ?? AGGREGATE_WINDOW_MS;
+    this.maxMessages = options.maxMessages ?? AGGREGATE_MAX_MESSAGES;
+    this.maxWindowMs = options.maxWindowMs ?? AGGREGATE_MAX_WINDOW_MS;
+    this.onSubmit = options.onSubmit;
+  }
+
+  push(params: {
+    item: AggregatedMessageItem;
+    senderId: string;
+    senderName: string;
+    sessionKey: string;
+    chatId: string;
+    chatType: string;
+    accountId: string;
+    immediate?: boolean;
+  }): void {
+    const key = params.senderId;
+    const existing = this.buffers.get(key);
+    if (existing) {
+      existing.items.push(params.item);
+      const windowStart = this.windowStarts.get(key) ?? Date.now();
+      const elapsed = Date.now() - windowStart;
+      if (params.immediate || existing.items.length >= this.maxMessages || elapsed >= this.maxWindowMs) {
+        this.flush(key);
+        return;
+      }
+      this.resetTimer(key, params.item.images.length > 0 ? AGGREGATE_IMAGE_EXTRA_WINDOW_MS : 0);
+    } else {
+      const aggregated: AggregatedMessage = {
+        requestId: generateRequestId(),
+        items: [params.item],
+        sessionKey: params.sessionKey,
+        senderId: params.senderId,
+        senderName: params.senderName,
+        chatId: params.chatId,
+        chatType: params.chatType,
+        accountId: params.accountId,
+      };
+      this.buffers.set(key, aggregated);
+      this.windowStarts.set(key, Date.now());
+      if (params.immediate) {
+        this.flush(key);
+        return;
+      }
+      this.resetTimer(key, params.item.images.length > 0 ? AGGREGATE_IMAGE_EXTRA_WINDOW_MS : 0);
+    }
+  }
+
+  flushAll(): void {
+    for (const key of Array.from(this.buffers.keys())) {
+      this.flush(key);
+    }
+  }
+
+  private flush(key: string): void {
+    const timer = this.timers.get(key);
+    if (timer) {
+      clearTimeout(timer);
+      this.timers.delete(key);
+    }
+    const aggregated = this.buffers.get(key);
+    this.buffers.delete(key);
+    this.windowStarts.delete(key);
+    if (aggregated && aggregated.items.length > 0) {
+      this.onSubmit(aggregated);
+    }
+  }
+
+  private resetTimer(key: string, extraMs: number = 0): void {
+    const existing = this.timers.get(key);
+    if (existing) clearTimeout(existing);
+    const timer = setTimeout(() => this.flush(key), this.windowMs + extraMs);
+    timer.unref?.();
+    this.timers.set(key, timer);
+  }
+}
+
+class SessionManager {
+  private sessions = new Map<string, SessionContext>();
+
+  get(senderId: string): SessionContext | undefined {
+    return this.sessions.get(senderId);
+  }
+
+  getOrCreate(params: {
+    senderId: string;
+    senderName: string;
+    sessionKey: string;
+    chatId: string;
+    chatType: string;
+    accountId: string;
+    triggerMessageId: string;
+    triggerEvent: FeishuMessageEvent;
+  }): SessionContext {
+    const existing = this.sessions.get(params.senderId);
+    if (existing) return existing;
+    const ctx: SessionContext = {
+      state: "IDLE",
+      senderId: params.senderId,
+      senderName: params.senderName,
+      sessionKey: params.sessionKey,
+      chatId: params.chatId,
+      chatType: params.chatType,
+      accountId: params.accountId,
+      requestId: generateRequestId(),
+      triggerMessageId: params.triggerMessageId,
+      triggerEvent: params.triggerEvent,
+      retryCount: 0,
+      pendingItems: [],
+      ackSent: false,
+      lastActivityAt: Date.now(),
+      tone: "casual",
+    };
+    this.sessions.set(params.senderId, ctx);
+    return ctx;
+  }
+
+  transition(senderId: string, newState: SessionState): void {
+    const ctx = this.sessions.get(senderId);
+    if (!ctx) return;
+    ctx.state = newState;
+    ctx.lastActivityAt = Date.now();
+  }
+
+  isActive(senderId: string): boolean {
+    const ctx = this.sessions.get(senderId);
+    if (!ctx) return false;
+    return ["ROUTING", "ACKING", "PROCESSING", "VALIDATING", "SENDING", "CHATTING"].includes(ctx.state);
+  }
+
+  appendItem(senderId: string, item: AggregatedMessageItem): void {
+    const ctx = this.sessions.get(senderId);
+    if (!ctx) return;
+    ctx.pendingItems.push(item);
+    ctx.lastActivityAt = Date.now();
+  }
+
+  clear(senderId: string): void {
+    this.sessions.delete(senderId);
+  }
+
+  cleanupIdle(): void {
+    const now = Date.now();
+    for (const [key, ctx] of this.sessions) {
+      if (ctx.state === "IDLE" && now - ctx.lastActivityAt > 120_000) {
+        this.sessions.delete(key);
+      }
+    }
+  }
+}
+
 function resolveZaiBaseUrl(config: ServiceConfig): string {
   return (
     readString(config.models?.providers?.zai?.baseUrl) ??
@@ -1449,16 +1759,22 @@ function resolveModelId(config: ServiceConfig, fallbackIndex = 0): string {
   return (raw ?? "zai/glm-5-turbo").replace(/^zai\//, "");
 }
 
-function buildSystemPrompt(config: ServiceConfig, contextDocumentsPrompt = ""): string {
+function buildSystemPrompt(config: ServiceConfig, contextDocumentsPrompt = "", tone: "concise" | "casual" | "detailed" = "casual"): string {
   const timezone = readString(config.agents?.defaults?.userTimezone) ?? "Asia/Shanghai";
   const now = new Intl.DateTimeFormat("zh-CN", {
     timeZone: timezone,
     dateStyle: "full",
     timeStyle: "medium",
   }).format(new Date());
+  const toneGuide = tone === "concise"
+    ? "回复简洁明了，直接给答案，不要啰嗦。"
+    : tone === "detailed"
+    ? "回复详细完整，包含分析和说明。"
+    : "回复自然随意，像朋友聊天。";
   return [
     "你是小橘，运行在 LittleBaby 飞书群聊助手里。",
     "你只在飞书里和用户互动，回复要自然、简洁、中文优先。",
+    toneGuide,
     "需要查课程、记账、查资料、读网页或使用外部能力时，优先调用可用 MCP 工具。",
     "不要暴露密钥、Token、内部配置路径或系统实现细节。",
     "如果用户发送了图片，你必须使用 zai-mcp-server 的视觉工具（如 analyze_image）来查看图片，传入本地文件路径。不要说自己看不到图片。",
@@ -1468,51 +1784,186 @@ function buildSystemPrompt(config: ServiceConfig, contextDocumentsPrompt = ""): 
   ].join("\n");
 }
 
-async function shouldReplyToGroup(params: {
+async function agentD(params: {
   config: ServiceConfig;
-  text: string;
-  images: ImageData[];
+  aggregated: AggregatedMessage;
   sessionKey: string;
-  mentioned: boolean;
-}): Promise<boolean> {
-  if (params.mentioned) {
-    return true;
-  }
-  if (params.images.length > 0) {
-    return true;
-  }
+}): Promise<RoutingDecision> {
   const apiKey = resolveZaiApiKey(params.config);
   if (!apiKey) {
-    return false;
+    return { shouldReply: true, intent: "question", tone: "casual" };
   }
+
   const history = conversations.get(params.sessionKey) ?? [];
-  const recent = history
-    .map((entry) => `${entry.role === "assistant" ? "小橘" : entry.name ?? "用户"}: ${entry.content}`)
+  const recentHistory = history
+    .slice(-10)
+    .map((entry) => {
+      const name = entry.role === "assistant" ? "小橘" : entry.name ?? "用户";
+      const text = entry.content.length > 50 ? entry.content.slice(0, 50) + "..." : entry.content;
+      return `${name}: ${text}`;
+    })
     .join("\n");
-  const prompt = [
-    "判断飞书群聊里的 AI 助手“小橘”是否需要回复当前消息。",
-    "只输出 YES 或 NO。",
+
+  const currentMessages = params.aggregated.items
+    .map((item) => {
+      const hasImages = item.images.length > 0 || item.imagePaths.length > 0;
+      const prefix = item.mentioned ? "@小橘 " : "";
+      return `${prefix}${item.text}${hasImages ? " [图片]" : ""}`;
+    })
+    .join("\n");
+
+  const systemPrompt = [
+    '你是飞书群聊 AI 助手"小橘"的消息分类器。',
+    "分析当前消息并输出 JSON 格式的分类结果。",
     "",
-    "需要回复：直接提到小橘、向 AI 求助、需要搜索/记账/查课程/总结/解释、接着小橘上一轮继续问。",
-    "不需要回复：两个人普通闲聊、纯表情/感叹/无明确请求、与小橘无关。",
+    "输出格式：",
+    '{"shouldReply": boolean, "intent": "chat"|"tool"|"question"|"vision", "tone": "concise"|"casual"|"detailed"}',
     "",
-    `最近聊天：\n${recent || "(无)"}`,
+    "intent 分类：",
+    "- chat: 闲聊/寒暄/打招呼/简单的日常对话",
+    "- tool: 需要调用工具（记账、查天气、搜索、读网页等）",
+    "- question: 提问/解释/分析/翻译等需要思考的问题",
+    "- vision: 涉及图片/截图/照片需要分析",
     "",
-    `当前消息：${params.text}`,
+    "tone 分类：",
+    "- concise: 查询/记账/简单操作，简洁回复",
+    "- casual: 闲聊/日常对话，轻松自然",
+    "- detailed: 分析/长文/复杂问题，详细回复",
+    "",
+    "判断规则：",
+    '- 用户直接 @小橘 或叫"小橘"并明确要她做事 → shouldReply=true',
+    "- 用户发图片并提问 → shouldReply=true, intent=vision",
+    "- 纯闲聊/打招呼提到小橘 → shouldReply=true, intent=chat",
+    '- 第三人称讨论小橘（"小橘今天又偷懒了""小橘好用吗"）→ shouldReply=false',
+    "- 与小橘完全无关的普通群聊 → shouldReply=false",
+    "- 宁可漏回也不要误回，误回会打断正常聊天",
+    "",
+    "示例：",
+    '1. 用户: "小橘早上好呀" → {"shouldReply": true, "intent": "chat", "tone": "casual"}',
+    '2. 用户: "@小橘 帮我记一笔午饭35" → {"shouldReply": true, "intent": "tool", "tone": "concise"}',
+    '3. 用户: "小橘今天又偷懒了" → {"shouldReply": false, "intent": "chat", "tone": "casual"}',
+    '4. 用户: "帮我看看这个截图" [图片] → {"shouldReply": true, "intent": "vision", "tone": "detailed"}',
+    '5. 用户: "今天天气真好" → {"shouldReply": false, "intent": "chat", "tone": "casual"}',
+    '6. 用户: "@小橘" → {"shouldReply": true, "intent": "chat", "tone": "casual"}',
+    '7. 用户: "小橘好用吗？" → {"shouldReply": false, "intent": "question", "tone": "concise"}',
+    '8. 用户: "@小橘 这个错误怎么解决？" → {"shouldReply": true, "intent": "question", "tone": "detailed"}',
   ].join("\n");
+
+  const userPrompt = [`最近聊天：\n${recentHistory || "(无)"}`, "", `当前消息：`, currentMessages].join("\n");
+
   try {
     const result = await callZaiChat({
       config: params.config,
       apiKey,
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
       tools: [],
-      timeoutMs: 45_000,
+      timeoutMs: AGENT_D_TIMEOUT_MS,
       temperature: 0,
+      thinkingEnabled: false,
     });
-    return result.content.trim().toUpperCase().startsWith("YES");
+
+    const content = result.content.trim();
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      warn(`agentD: no JSON found in response: ${content.slice(0, 200)}`);
+      return { shouldReply: true, intent: "question", tone: "casual" };
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]) as RoutingDecision;
+    return {
+      shouldReply: !!parsed.shouldReply,
+      intent: ["chat", "tool", "question", "vision"].includes(parsed.intent) ? parsed.intent : "question",
+      tone: ["concise", "casual", "detailed"].includes(parsed.tone) ? parsed.tone : "casual",
+    };
   } catch (err) {
-    warn(`auto-reply classifier failed: ${redactError(err)}`);
-    return false;
+    warn(`agentD: failed: ${redactError(err)}`);
+    return { shouldReply: true, intent: "question", tone: "casual" };
+  }
+}
+
+async function agentA(params: {
+  config: ServiceConfig;
+  mode: "ack" | "chat";
+  aggregated: AggregatedMessage;
+  sessionKey: string;
+}): Promise<AgentAResult> {
+  const apiKey = resolveZaiApiKey(params.config);
+  if (!apiKey) {
+    return { text: randomAckTemplate() };
+  }
+
+  const timezone = readString(params.config.agents?.defaults?.userTimezone) ?? "Asia/Shanghai";
+  const now = new Intl.DateTimeFormat("zh-CN", {
+    timeZone: timezone,
+    dateStyle: "full",
+    timeStyle: "medium",
+  }).format(new Date());
+
+  let systemPrompt: string;
+  if (params.mode === "ack") {
+    systemPrompt = [
+      "你是小橘，一个活泼可爱的飞书群聊 AI 助手。",
+      "用户刚发了一条需要处理的消息，你在准备详细回答之前先给一个简短自然的应答。",
+      "",
+      "要求：",
+      "- 1-2句话，简短自然",
+      "- 语气俏皮，像真人朋友",
+      "- 不要暴露你是 AI",
+      "- 不要重复用户说的话",
+      "- 不要给具体答案，只是应答一下",
+    ].join("\n");
+  } else {
+    systemPrompt = [
+      "你是小橘，一个活泼可爱的飞书群聊 AI 助手。",
+      "用户在闲聊或打招呼，你直接回复完整内容。",
+      "",
+      "要求：",
+      "- 语气俏皮自然，像真人朋友",
+      "- 2-3句话，简短回复",
+      "- 可以反问或引导对话",
+      "- 不要暴露你是 AI",
+      "- 不要调用任何工具",
+      `当前时间：${now}（${timezone}）`,
+    ].join("\n");
+  }
+
+  const currentMessages = params.aggregated.items.map((item) => item.text).join("\n");
+  const history = conversations.get(params.sessionKey) ?? [];
+  const recentHistory = history
+    .slice(-5)
+    .map((entry) => {
+      const name = entry.role === "assistant" ? "小橘" : entry.name ?? "用户";
+      return `${name}: ${entry.content}`;
+    })
+    .join("\n");
+
+  try {
+    const messages: ChatMessage[] = [{ role: "system", content: systemPrompt }];
+    if (recentHistory) {
+      messages.push({ role: "user", content: recentHistory });
+    }
+    messages.push({ role: "user", content: currentMessages });
+    const result = await callZaiChat({
+      config: params.config,
+      apiKey,
+      messages,
+      tools: [],
+      timeoutMs: AGENT_A_TIMEOUT_MS,
+      temperature: 0.7,
+      thinkingEnabled: false,
+    });
+
+    const text = result.content.trim();
+    return { text: text || randomAckTemplate() };
+  } catch (err) {
+    warn(`agentA: failed: ${redactError(err)}`);
+    if (params.mode === "ack") {
+      return { text: randomAckTemplate() };
+    }
+    return { text: "在呢~有什么事呀？" };
   }
 }
 
@@ -1526,6 +1977,8 @@ async function generateReply(params: {
   aiTurnId?: number;
   images?: ImageData[];
   imagePaths?: string[];
+  tone?: "concise" | "casual" | "detailed";
+  extraContext?: string;
 }): Promise<GenerateReplyResult> {
   const apiKey = resolveZaiApiKey(params.config);
   if (!apiKey) {
@@ -1560,13 +2013,16 @@ async function generateReply(params: {
       : `${params.sender}: ${params.text}${imagePromptSuffix}`;
   log(`generateReply: userContent=${userContent.toString().substring(0, 300)}`);
   const messages: ChatMessage[] = [
-    { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt) },
+    { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt, params.tone ?? "casual") },
     ...history.map((entry): ChatMessage => ({
       role: entry.role,
       content: entry.role === "assistant" ? entry.content : `${entry.name ? `${entry.name}: ` : ""}${entry.content}`,
     })),
     ...(historyAlreadyIncludesCurrent ? [] : [{ role: "user" as const, content: userContent }]),
   ];
+  if (params.extraContext) {
+    messages.push({ role: "user", content: params.extraContext });
+  }
 
   let toolRounds = 0;
   for (;;) {
@@ -1576,7 +2032,7 @@ async function generateReply(params: {
       apiKey,
       messages,
       tools,
-      timeoutMs: MODEL_TIMEOUT_MS,
+      timeoutMs: AGENT_B_TIMEOUT_MS,
     });
     if (response.toolCalls.length === 0) {
       log(`generateReply: ZAI responded without tool calls (${response.content.length} chars)`);
@@ -1619,12 +2075,16 @@ async function callZaiChat(params: {
   timeoutMs: number;
   maxTokens?: number;
   temperature?: number;
+  thinkingEnabled?: boolean;
 }): Promise<{ content: string; toolCalls: ToolCall[] }> {
   const body: JsonRecord = {
     model: resolveModelId(params.config),
     messages: params.messages,
     temperature: params.temperature ?? 0.4,
   };
+  if (params.thinkingEnabled !== false) {
+    body.thinking = { type: "enabled", budget_tokens: 131072 };
+  }
   if (typeof params.maxTokens === "number") {
     body.max_tokens = params.maxTokens;
   }
@@ -1940,6 +2400,186 @@ function formatMcpToolResult(result: unknown): string {
   return text;
 }
 
+async function processAggregatedMessage(aggregated: AggregatedMessage): Promise<void> {
+  const config = globalConfig;
+  const account = globalAccount;
+  const mcp = globalMcp;
+  const memory = globalMemory;
+  const client = globalClient;
+  const sessionManager = globalSessionManager;
+  if (!config || !account || !mcp || !client || !sessionManager) {
+    warn("processAggregatedMessage: global state not initialized");
+    return;
+  }
+
+  const firstItem = aggregated.items[0];
+  if (!firstItem) return;
+
+  const session = sessionManager.getOrCreate({
+    senderId: aggregated.senderId,
+    senderName: aggregated.senderName,
+    sessionKey: aggregated.sessionKey,
+    chatId: aggregated.chatId,
+    chatType: aggregated.chatType,
+    accountId: aggregated.accountId,
+    triggerMessageId: firstItem.event.message.message_id,
+    triggerEvent: firstItem.event,
+  });
+  sessionManager.transition(aggregated.senderId, "ROUTING");
+  session.requestId = aggregated.requestId;
+  session.triggerMessageId = firstItem.event.message.message_id;
+  session.triggerEvent = firstItem.event;
+  session.lastActivityAt = Date.now();
+
+  inFlightRequests++;
+  try {
+    log(`pipeline[${session.requestId}]: starting with ${aggregated.items.length} message(s) from ${aggregated.senderName}`);
+
+    const pipelinePromise = (async (): Promise<void> => {
+    const decision = await agentD({ config, aggregated, sessionKey: aggregated.sessionKey });
+    log(`pipeline[${session.requestId}]: D → shouldReply=${decision.shouldReply}, intent=${decision.intent}, tone=${decision.tone}`);
+
+    if (!decision.shouldReply) {
+      log(`pipeline[${session.requestId}]: D decided no reply`);
+      sessionManager.transition(aggregated.senderId, "IDLE");
+      sessionManager.clear(aggregated.senderId);
+      return;
+    }
+
+    session.tone = decision.tone;
+
+    if (decision.intent === "chat") {
+      sessionManager.transition(aggregated.senderId, "CHATTING");
+      const aResult = await agentA({ config, mode: "chat", aggregated, sessionKey: aggregated.sessionKey });
+      log(`pipeline[${session.requestId}]: A(chat) → ${aResult.text.slice(0, 60)}`);
+      const chunks = chunkReply(aResult.text, account.config);
+      for (let i = 0; i < chunks.length; i++) {
+        await sendFeishuReply({ account, client, event: firstItem.event, text: chunks[i], useReply: i === 0 });
+        await sleep(250);
+      }
+      addHistory(aggregated.sessionKey, { role: "assistant", content: aResult.text, ts: Date.now() });
+      sessionManager.transition(aggregated.senderId, "IDLE");
+      sessionManager.clear(aggregated.senderId);
+      return;
+    }
+
+    // Agent B (deep answer)
+    sessionManager.transition(aggregated.senderId, "PROCESSING");
+
+    const combinedText = aggregated.items.map((item) => item.text).join("\n");
+    const allImagePaths = aggregated.items.flatMap((item) => item.imagePaths);
+    const allImages = aggregated.items.flatMap((item) => item.images);
+    const firstDbRef = firstItem.dbRef;
+
+    const aiTurnId = firstDbRef
+      ? await memory?.startAiTurn({
+          sessionId: firstDbRef.sessionId,
+          triggerMessageId: firstDbRef.messageId,
+          model: resolveModelId(config),
+          fallbackModel: resolveModelId(config, 1),
+          inputMessageCount: conversations.get(aggregated.sessionKey)?.length ?? 0,
+        })
+      : undefined;
+
+    let replyResult: GenerateReplyResult;
+    try {
+      replyResult = await generateReply({
+        config,
+        mcp,
+        sessionKey: aggregated.sessionKey,
+        text: combinedText,
+        sender: aggregated.senderName,
+        memory,
+        aiTurnId,
+        images: allImages,
+        imagePaths: allImagePaths,
+        tone: decision.tone,
+      });
+      await memory?.finishAiTurn({ aiTurnId, status: "success", toolRounds: replyResult.toolRounds });
+    } catch (err) {
+      await memory?.finishAiTurn({ aiTurnId, status: "failed", toolRounds: 0, errorMessage: redactError(err) });
+      throw err;
+    }
+    log(`pipeline[${session.requestId}]: B → ${replyResult.text.length} chars, ${replyResult.toolRounds} tool rounds`);
+
+    // Validation: check for pending items from same user
+    sessionManager.transition(aggregated.senderId, "VALIDATING");
+    if (session.pendingItems.length > 0 && session.retryCount < 1) {
+      session.retryCount++;
+      const extraMessages = session.pendingItems.splice(0);
+
+      log(`pipeline[${session.requestId}]: validation retry #${session.retryCount} with ${extraMessages.length} pending message(s)`);
+      sessionManager.transition(aggregated.senderId, "PROCESSING");
+      const extraContext = [
+        `[用户在你生成回答期间追加了新消息：]`,
+        ...extraMessages.map((item) => `${aggregated.senderName}: ${item.text}`),
+        `[请结合你之前的回答和这些追加消息，给出完整的最终回复。]`,
+      ].join("\n");
+      try {
+        replyResult = await generateReply({
+          config,
+          mcp,
+          sessionKey: aggregated.sessionKey,
+          text: combinedText,
+          sender: aggregated.senderName,
+          memory,
+          aiTurnId,
+          images: allImages,
+          imagePaths: allImagePaths,
+          tone: decision.tone,
+          extraContext,
+        });
+        await memory?.finishAiTurn({ aiTurnId, status: "success", toolRounds: replyResult.toolRounds });
+      } catch (err) {
+        await memory?.finishAiTurn({ aiTurnId, status: "failed", toolRounds: 0, errorMessage: redactError(err) });
+      }
+    }
+
+    // Send final reply
+    sessionManager.transition(aggregated.senderId, "SENDING");
+    const reply = replyResult.text;
+    const chunks = chunkReply(reply, account.config);
+    for (let i = 0; i < chunks.length; i++) {
+      await sendFeishuReply({ account, client, event: firstItem.event, text: chunks[i], useReply: i === 0 });
+      await sleep(250);
+    }
+
+    await memory?.recordAssistantMessage({
+      accountId: aggregated.accountId,
+      event: firstItem.event,
+      sessionKey: aggregated.sessionKey,
+      content: reply,
+      aiTurnId,
+      chunkCount: chunks.length,
+    });
+    addHistory(aggregated.sessionKey, { role: "assistant", content: reply, ts: Date.now() });
+    log(`pipeline[${session.requestId}]: complete`);
+
+    sessionManager.transition(aggregated.senderId, "IDLE");
+    sessionManager.clear(aggregated.senderId);
+    })();
+
+    await withTimeout(pipelinePromise, PIPELINE_TIMEOUT_MS, `pipeline[${session.requestId}] timed out after ${PIPELINE_TIMEOUT_MS}ms`);
+  } catch (err) {
+    error(`pipeline[${aggregated.requestId}]: failed: ${redactError(err)}`);
+    try {
+      await sendFeishuReply({
+        account,
+        client,
+        event: firstItem.event,
+        text: "哎呀出了点小状况，你再说一次？",
+        useReply: true,
+      });
+    } catch {
+      // Give up
+    }
+    sessionManager.transition(aggregated.senderId, "DEGRADED");
+    sessionManager.clear(aggregated.senderId);
+  } finally {
+    inFlightRequests--;
+  }
+}
+
 async function handleMessage(params: {
   config: ServiceConfig;
   account: ResolvedFeishuAccount;
@@ -1956,6 +2596,9 @@ async function handleMessage(params: {
     return;
   }
   processingMessages.add(messageId);
+  dedupeTimestamps.set(messageId, Date.now());
+  cleanupDedupeSet();
+
   try {
     if (event.sender.sender_type === "app" || event.sender.sender_id.open_id === params.botOpenId) {
       processedMessages.add(messageId);
@@ -1965,103 +2608,115 @@ async function handleMessage(params: {
       processedMessages.add(messageId);
       return;
     }
+
     const { text, images, imagePaths } = await parseMessageWithImages(event, params.client);
     if (!text.trim() && images.length === 0) {
       processedMessages.add(messageId);
       return;
     }
+
     const key = sessionKeyFor(event, account.accountId);
     const mentioned = isBotMentioned(event, params.botOpenId, params.botName);
-    let shouldReply = true;
-    if (event.message.chat_type === "group") {
-      log(`feishu[${account.accountId}]: group message, mentioned=${mentioned}, checking shouldReply`);
-      shouldReply = await shouldReplyToGroup({
-        config,
+    const senderId = senderIdFor(event) ?? "unknown";
+    const senderName = senderLabel(event);
+    const historyContent = imagePaths.length > 0
+      ? `${text}\n[图片文件: ${imagePaths.join(", ")}]`
+      : text;
+
+    const sessionManager = globalSessionManager;
+    const aggregator = globalAggregator;
+
+    // Active session: append message to existing pipeline
+    if (sessionManager && sessionManager.isActive(senderId)) {
+      log(`handleMessage[${messageId}]: appending to active session for ${senderName}`);
+      const userMessageRef = await params.memory?.recordUserMessage({
+        accountId: account.accountId,
+        event,
+        sessionKey: key,
+        content: text,
+        senderName,
+        mentionedBot: mentioned,
+        shouldReply: true,
+      });
+      addHistory(key, { role: "user", name: senderName, content: historyContent, ts: Date.now() });
+      sessionManager.appendItem(senderId, {
+        event,
         text,
         images,
-        sessionKey: key,
+        imagePaths,
+        ts: Date.now(),
         mentioned,
+        dbRef: userMessageRef,
       });
-      log(`feishu[${account.accountId}]: shouldReply=${shouldReply}`);
+      processedMessages.add(messageId);
+      return;
     }
+
+    // Group messages: rule pre-filter
+    let shouldReply = true;
+    if (event.message.chat_type === "group") {
+      const filterResult = rulePreFilter({
+        text,
+        mentioned,
+        event,
+        botOpenId: params.botOpenId,
+        botName: params.botName,
+      });
+
+      if (filterResult === "store_only") {
+        shouldReply = false;
+      }
+    }
+
+    // Record user message to DB
     const userMessageRef = await params.memory?.recordUserMessage({
       accountId: account.accountId,
       event,
       sessionKey: key,
       content: text,
-      senderName: senderLabel(event),
+      senderName,
       mentionedBot: mentioned,
       shouldReply,
     });
-    const historyContent = imagePaths.length > 0
-      ? `${text}\n[图片文件: ${imagePaths.join(", ")}]`
-      : text;
-    if (event.message.chat_type === "group") {
-      if (!shouldReply) {
-        addHistory(key, { role: "user", name: senderLabel(event), content: historyContent, ts: Date.now() });
-        processedMessages.add(messageId);
-        return;
-      }
+
+    if (!shouldReply) {
+      log(`handleMessage[${messageId}]: pre-filtered (store_only) for ${senderName}`);
+      addHistory(key, { role: "user", name: senderName, content: historyContent, ts: Date.now() });
+      processedMessages.add(messageId);
+      return;
     }
 
-    addHistory(key, { role: "user", name: senderLabel(event), content: historyContent, ts: Date.now() });
-    const aiTurnId = userMessageRef
-      ? await params.memory?.startAiTurn({
-          sessionId: userMessageRef.sessionId,
-          triggerMessageId: userMessageRef.messageId,
-          model: resolveModelId(config),
-          fallbackModel: resolveModelId(config, 1),
-          inputMessageCount: conversations.get(key)?.length ?? 0,
-        })
-      : undefined;
-    let replyResult: GenerateReplyResult;
-  try {
-      replyResult = await generateReply({
-        config,
-        mcp: params.mcp,
+    addHistory(key, { role: "user", name: senderName, content: historyContent, ts: Date.now() });
+
+    if (aggregator) {
+      log(`handleMessage[${messageId}]: pushing to aggregator for ${senderName} (immediate=${mentioned})`);
+      aggregator.push({
+        item: { event, text, images, imagePaths, ts: Date.now(), mentioned, dbRef: userMessageRef },
+        senderId,
+        senderName,
         sessionKey: key,
-        text,
-        sender: senderLabel(event),
-        memory: params.memory,
-        aiTurnId,
-        images,
-        imagePaths,
+        chatId: event.message.chat_id,
+        chatType: event.message.chat_type,
+        accountId: account.accountId,
+        immediate: mentioned,
       });
-      await params.memory?.finishAiTurn({
-        aiTurnId,
-        status: "success",
-        toolRounds: replyResult.toolRounds,
+    } else {
+      // Fallback: direct pipeline without aggregator
+      const aggregated: AggregatedMessage = {
+        requestId: generateRequestId(),
+        items: [{ event, text, images, imagePaths, ts: Date.now(), mentioned, dbRef: userMessageRef }],
+        sessionKey: key,
+        senderId,
+        senderName,
+        chatId: event.message.chat_id,
+        chatType: event.message.chat_type,
+        accountId: account.accountId,
+      };
+      void processAggregatedMessage(aggregated).catch((err) => {
+        error(`direct pipeline failed: ${redactError(err)}`);
       });
-    } catch (err) {
-      await params.memory?.finishAiTurn({
-        aiTurnId,
-        status: "failed",
-        toolRounds: 0,
-        errorMessage: redactError(err),
-      });
-      throw err;
     }
-    const reply = replyResult.text;
-    const chunks = chunkReply(reply, account.config);
-    for (let i = 0; i < chunks.length; i++) {
-      await sendFeishuReply({
-        account,
-        client: params.client,
-        event,
-        text: chunks[i],
-        useReply: i === 0,
-      });
-      await sleep(250);
-    }
-    await params.memory?.recordAssistantMessage({
-      accountId: account.accountId,
-      event,
-      sessionKey: key,
-      content: reply,
-      aiTurnId,
-      chunkCount: chunks.length,
-    });
-    addHistory(key, { role: "assistant", content: reply, ts: Date.now() });
+
     processedMessages.add(messageId);
   } finally {
     processingMessages.delete(messageId);
@@ -2167,10 +2822,34 @@ async function runFeishuService(
 
   const mcp = new McpHub(config);
   await mcp.openAiTools();
+
+  globalConfig = config;
+  globalAccount = account;
+  globalMcp = mcp;
+  globalMemory = memory;
+  globalClient = client;
+  globalBotOpenId = identity.botOpenId;
+  globalBotName = identity.botName;
+
+  const sessionManager = new SessionManager();
+  globalSessionManager = sessionManager;
+
+  const aggregator = new MessageAggregator({
+    onSubmit: (aggregated) => {
+      void processAggregatedMessage(aggregated).catch((err) => {
+        error(`pipeline[${aggregated.requestId}]: unhandled error: ${redactError(err)}`);
+      });
+    },
+  });
+  globalAggregator = aggregator;
+
+  const idleCleanupTimer = setInterval(() => sessionManager.cleanupIdle(), 60_000);
+  idleCleanupTimer.unref?.();
+
   const dispatcher = createEventDispatcher(account);
   dispatcher.register({
     "im.message.receive_v1": async (data: unknown) => {
-      log(`feishu[${account.accountId}]: received im.message.receive_v1 event`);
+      if (shutdownRequested) return;
       const event = parseMessagePayload(data);
       if (!event) {
         warn(`feishu[${account.accountId}]: malformed message event ignored`);
@@ -2197,6 +2876,17 @@ async function runFeishuService(
 
   const wsClient = createFeishuWsClient(account);
   const close = async () => {
+    log("graceful shutdown: flushing aggregator");
+    aggregator.flushAll();
+    log(`graceful shutdown: waiting for ${inFlightRequests} in-flight request(s)`);
+    const shutdownDeadline = Date.now() + 30_000;
+    while (inFlightRequests > 0 && Date.now() < shutdownDeadline) {
+      await sleep(500);
+    }
+    if (inFlightRequests > 0) {
+      warn(`graceful shutdown: ${inFlightRequests} request(s) still in-flight after 30s, forcing exit`);
+    }
+    clearInterval(idleCleanupTimer);
     try {
       wsClient.close();
     } catch {
@@ -2205,6 +2895,7 @@ async function runFeishuService(
     await mcp.close();
     await memory?.close();
     saveStateFiles();
+    log("graceful shutdown: complete");
   };
   abortSignal.addEventListener(
     "abort",
@@ -2234,7 +2925,7 @@ function createAbortSignal(): AbortSignal {
     shutdownRequested = true;
     log("shutdown signal received; stopping Feishu service");
     controller.abort();
-    const forceExitTimer = setTimeout(() => process.exit(0), 5000);
+    const forceExitTimer = setTimeout(() => process.exit(0), 35_000);
     forceExitTimer.unref?.();
   };
   process.once("SIGINT", abort);
