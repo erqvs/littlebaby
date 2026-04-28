@@ -58,6 +58,8 @@ export type { FeishuBotAddedEvent, FeishuMessageEvent } from "./event-types.js";
 import type { FeishuMessageEvent } from "./event-types.js";
 import type { FeishuMessageContext, FeishuMessageInfo } from "./types.js";
 import type { DynamicAgentCreationConfig } from "./types.js";
+import * as os from "os";
+import * as path from "path";
 import * as fs from "fs";
 
 export { toMessageResourceType } from "./bot-content.js";
@@ -75,7 +77,13 @@ async function shouldAutoReply(
       .slice(-10)
       .map((e) => e.body || "")
       .join("\n");
-    const groupContext = process.env.LITTLEBABY_GROUP_CONTEXT || "若干真实用户和AI助手小橘";
+    const stateDir = process.env.LITTLEBABY_STATE_DIR?.trim() || path.join(os.homedir(), ".littlebaby");
+    const groupContextFile = path.join(stateDir, "auto-reply-group-context.txt");
+    let groupContext = "若干真实用户和AI助手小橘";
+    try {
+      const raw = fs.readFileSync(groupContextFile, "utf-8").trim();
+      if (raw) groupContext = raw;
+    } catch {}
     const prompt = `群里有${groupContext}。判断小橘是否需要回复。
 
 规则（按优先级）：
