@@ -1185,35 +1185,50 @@ function parseMessageText(event: FeishuMessageEvent): string {
   return `[${event.message.message_type} message]`;
 }
 
-type ImageData = { base64: string; mimeType: string };
+type ImageData = { base64: string; mimeType: string; filePath?: string };
 
-async function downloadFeishuImage(client: Lark.Client, imageKey: string): Promise<Buffer | null> {
+async function downloadFeishuImage(client: Lark.Client, messageId: string, fileKey: string): Promise<Buffer | null> {
   try {
-    const response = await client.im.image.get({ path: { image_key: imageKey } });
-    const stream = response as unknown as NodeJS.ReadableStream;
-    if (!stream || typeof stream === "string") {
-      warn(`downloadFeishuImage: unexpected response type for image_key=${imageKey}`);
-      return null;
-    }
+    log(`downloadFeishuImage: requesting message_id=${messageId} file_key=${fileKey}`);
+    const response = await client.im.messageResource.get({
+      path: { message_id: messageId, file_key: fileKey },
+      params: { type: "image" },
+    });
+    const stream = response.getReadableStream();
     const chunks: Buffer[] = [];
-    for await (const chunk of stream as AsyncIterable<Buffer>) {
+    for await (const chunk of stream) {
       chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
     }
     if (chunks.length === 0) {
-      warn(`downloadFeishuImage: empty response for image_key=${imageKey}`);
+      warn(`downloadFeishuImage: empty response for message_id=${messageId} file_key=${fileKey}`);
       return null;
     }
+    const totalSize = Buffer.concat(chunks).length;
+    log(`downloadFeishuImage: downloaded ${totalSize} bytes for file_key=${fileKey}`);
     return Buffer.concat(chunks);
   } catch (err) {
-    warn(`downloadFeishuImage: failed to download image_key=${imageKey}: ${redactError(err)}`);
+    warn(`downloadFeishuImage: failed to download message_id=${messageId} file_key=${fileKey}: ${redactError(err)}`);
     return null;
   }
+}
+
+function saveImageData(img: ImageData, index: number): string {
+  const tmpDir = `/tmp/littlebaby-images/${Date.now()}`;
+  fs.mkdirSync(tmpDir, { recursive: true });
+  const ext = img.mimeType.includes("png") ? "png" : "jpg";
+  const filePath = `${tmpDir}/image_${index}.${ext}`;
+  fs.writeFileSync(filePath, Buffer.from(img.base64, "base64"));
+  img.filePath = filePath;
+  return filePath;
 }
 
 async function parseMessageWithImages(
   event: FeishuMessageEvent,
   client: Lark.Client,
-): Promise<{ text: string; images: ImageData[] }> {
+): Promise<{ text: string; images: ImageData[]; imagePaths: string[] }> {
+  const messageId = readString(event.message?.message_id) ?? "";
+  log(`parseMessageWithImages: message_type=${event.message.message_type}, message_id=${messageId}`);
+  const imagePaths: string[] = [];
   if (event.message.message_type === "image") {
     const raw = event.message.content;
     let imageKey = "";
@@ -1226,26 +1241,34 @@ async function parseMessageWithImages(
       // fall through
     }
     if (imageKey) {
-      const buffer = await downloadFeishuImage(client, imageKey);
+      const buffer = await downloadFeishuImage(client, messageId, imageKey);
       if (buffer) {
-        return {
-          text: "[用户发送了一张图片]",
-          images: [{ base64: buffer.toString("base64"), mimeType: "image/jpeg" }],
-        };
+        const img: ImageData = { base64: buffer.toString("base64"), mimeType: "image/jpeg" };
+        const path = saveImageData(img, 0);
+        imagePaths.push(path);
+        return { text: "[用户发送了一张图片]", images: [img], imagePaths };
       }
     }
-    return { text: "[用户发送了一张图片]", images: [] };
+    return { text: "[用户发送了一张图片]", images: [], imagePaths };
   }
   const text = parseMessageText(event);
   const images: ImageData[] = [];
   if (event.message.message_type === "post") {
-    const postImages = await extractPostImages(event, client);
+    const postImages = await extractPostImages(event, client, messageId);
     images.push(...postImages);
   }
-  return { text, images };
+  for (let i = 0; i < images.length; i++) {
+    if (!images[i].filePath) {
+      const path = saveImageData(images[i], i);
+      imagePaths.push(path);
+    } else {
+      imagePaths.push(images[i].filePath!);
+    }
+  }
+  return { text, images, imagePaths };
 }
 
-async function extractPostImages(event: FeishuMessageEvent, client: Lark.Client): Promise<ImageData[]> {
+async function extractPostImages(event: FeishuMessageEvent, client: Lark.Client, messageId: string): Promise<ImageData[]> {
   const raw = event.message.content;
   if (!raw) {
     return [];
@@ -1270,7 +1293,7 @@ async function extractPostImages(event: FeishuMessageEvent, client: Lark.Client)
         if (!imageKey) {
           continue;
         }
-        const buffer = await downloadFeishuImage(client, imageKey);
+        const buffer = await downloadFeishuImage(client, messageId, imageKey);
         if (buffer) {
           images.push({ base64: buffer.toString("base64"), mimeType: "image/jpeg" });
         }
@@ -1438,6 +1461,7 @@ function buildSystemPrompt(config: ServiceConfig, contextDocumentsPrompt = ""): 
     "你只在飞书里和用户互动，回复要自然、简洁、中文优先。",
     "需要查课程、记账、查资料、读网页或使用外部能力时，优先调用可用 MCP 工具。",
     "不要暴露密钥、Token、内部配置路径或系统实现细节。",
+    "如果用户发送了图片，你必须使用 zai-mcp-server 的视觉工具（如 analyze_image）来查看图片，传入本地文件路径。不要说自己看不到图片。",
     "如果工具调用失败，直接说明失败原因并给出可执行的下一步。",
     `当前用户时区时间：${now}（${timezone}）。`,
     contextDocumentsPrompt,
@@ -1447,10 +1471,14 @@ function buildSystemPrompt(config: ServiceConfig, contextDocumentsPrompt = ""): 
 async function shouldReplyToGroup(params: {
   config: ServiceConfig;
   text: string;
+  images: ImageData[];
   sessionKey: string;
   mentioned: boolean;
 }): Promise<boolean> {
   if (params.mentioned) {
+    return true;
+  }
+  if (params.images.length > 0) {
     return true;
   }
   const apiKey = resolveZaiApiKey(params.config);
@@ -1497,6 +1525,7 @@ async function generateReply(params: {
   memory?: MysqlMemoryStore | null;
   aiTurnId?: number;
   images?: ImageData[];
+  imagePaths?: string[];
 }): Promise<GenerateReplyResult> {
   const apiKey = resolveZaiApiKey(params.config);
   if (!apiKey) {
@@ -1510,8 +1539,15 @@ async function generateReply(params: {
     lastHistoryEntry?.role === "user" &&
     lastHistoryEntry.name === params.sender &&
     lastHistoryEntry.content === params.text;
+  const modelSupportsImage = false;
+  const effectiveImagePaths = params.imagePaths ?? [];
+  let imagePromptSuffix = "";
+  if (effectiveImagePaths.length > 0 && !modelSupportsImage) {
+    imagePromptSuffix = `\n\n[系统提示：用户发送了 ${effectiveImagePaths.length} 张图片，图片已保存到 ${effectiveImagePaths.join(", ")}。请使用 zai-mcp-server 的视觉工具（如 analyze_image）来查看图片内容，不要说自己看不到。]`;
+  }
+  log(`generateReply: images=${params.images?.length ?? 0}, imagePaths=${effectiveImagePaths.join(",")}, suffixLen=${imagePromptSuffix.length}`);
   const userContent: string | ContentPart[] =
-    params.images && params.images.length > 0
+    params.images && params.images.length > 0 && modelSupportsImage
       ? [
           ...params.images.map(
             (img): ContentPart => ({
@@ -1521,7 +1557,8 @@ async function generateReply(params: {
           ),
           { type: "text", text: `${params.sender}: ${params.text}` },
         ]
-      : `${params.sender}: ${params.text}`;
+      : `${params.sender}: ${params.text}${imagePromptSuffix}`;
+  log(`generateReply: userContent=${userContent.toString().substring(0, 300)}`);
   const messages: ChatMessage[] = [
     { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt) },
     ...history.map((entry): ChatMessage => ({
@@ -1928,7 +1965,7 @@ async function handleMessage(params: {
       processedMessages.add(messageId);
       return;
     }
-    const { text, images } = await parseMessageWithImages(event, params.client);
+    const { text, images, imagePaths } = await parseMessageWithImages(event, params.client);
     if (!text.trim() && images.length === 0) {
       processedMessages.add(messageId);
       return;
@@ -1941,6 +1978,7 @@ async function handleMessage(params: {
       shouldReply = await shouldReplyToGroup({
         config,
         text,
+        images,
         sessionKey: key,
         mentioned,
       });
@@ -1955,15 +1993,18 @@ async function handleMessage(params: {
       mentionedBot: mentioned,
       shouldReply,
     });
+    const historyContent = imagePaths.length > 0
+      ? `${text}\n[图片文件: ${imagePaths.join(", ")}]`
+      : text;
     if (event.message.chat_type === "group") {
       if (!shouldReply) {
-        addHistory(key, { role: "user", name: senderLabel(event), content: text, ts: Date.now() });
+        addHistory(key, { role: "user", name: senderLabel(event), content: historyContent, ts: Date.now() });
         processedMessages.add(messageId);
         return;
       }
     }
 
-    addHistory(key, { role: "user", name: senderLabel(event), content: text, ts: Date.now() });
+    addHistory(key, { role: "user", name: senderLabel(event), content: historyContent, ts: Date.now() });
     const aiTurnId = userMessageRef
       ? await params.memory?.startAiTurn({
           sessionId: userMessageRef.sessionId,
@@ -1984,6 +2025,7 @@ async function handleMessage(params: {
         memory: params.memory,
         aiTurnId,
         images,
+        imagePaths,
       });
       await params.memory?.finishAiTurn({
         aiTurnId,
