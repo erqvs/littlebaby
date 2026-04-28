@@ -126,9 +126,11 @@ type FeishuMessageEvent = {
   };
 };
 
+type ContentPart = { type: "text"; text: string } | { type: "image_url"; image_url: { url: string } };
+
 type ChatMessage = {
   role: "system" | "user" | "assistant" | "tool";
-  content?: string | null;
+  content?: string | ContentPart[] | null;
   tool_call_id?: string;
   tool_calls?: ToolCall[];
 };
@@ -1183,6 +1185,103 @@ function parseMessageText(event: FeishuMessageEvent): string {
   return `[${event.message.message_type} message]`;
 }
 
+type ImageData = { base64: string; mimeType: string };
+
+async function downloadFeishuImage(client: Lark.Client, imageKey: string): Promise<Buffer | null> {
+  try {
+    const response = await client.im.image.get({ path: { image_key: imageKey } });
+    const stream = response as unknown as NodeJS.ReadableStream;
+    if (!stream || typeof stream === "string") {
+      warn(`downloadFeishuImage: unexpected response type for image_key=${imageKey}`);
+      return null;
+    }
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream as AsyncIterable<Buffer>) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    if (chunks.length === 0) {
+      warn(`downloadFeishuImage: empty response for image_key=${imageKey}`);
+      return null;
+    }
+    return Buffer.concat(chunks);
+  } catch (err) {
+    warn(`downloadFeishuImage: failed to download image_key=${imageKey}: ${redactError(err)}`);
+    return null;
+  }
+}
+
+async function parseMessageWithImages(
+  event: FeishuMessageEvent,
+  client: Lark.Client,
+): Promise<{ text: string; images: ImageData[] }> {
+  if (event.message.message_type === "image") {
+    const raw = event.message.content;
+    let imageKey = "";
+    try {
+      const parsed = JSON.parse(raw ?? "{}") as unknown;
+      if (isRecord(parsed)) {
+        imageKey = readString(parsed.image_key) ?? "";
+      }
+    } catch {
+      // fall through
+    }
+    if (imageKey) {
+      const buffer = await downloadFeishuImage(client, imageKey);
+      if (buffer) {
+        return {
+          text: "[用户发送了一张图片]",
+          images: [{ base64: buffer.toString("base64"), mimeType: "image/jpeg" }],
+        };
+      }
+    }
+    return { text: "[用户发送了一张图片]", images: [] };
+  }
+  const text = parseMessageText(event);
+  const images: ImageData[] = [];
+  if (event.message.message_type === "post") {
+    const postImages = await extractPostImages(event, client);
+    images.push(...postImages);
+  }
+  return { text, images };
+}
+
+async function extractPostImages(event: FeishuMessageEvent, client: Lark.Client): Promise<ImageData[]> {
+  const raw = event.message.content;
+  if (!raw) {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isRecord(parsed)) {
+      return [];
+    }
+    const zh = isRecord(parsed.zh_cn) ? parsed.zh_cn : undefined;
+    const content = Array.isArray(zh?.content) ? zh?.content : [];
+    const images: ImageData[] = [];
+    for (const line of content) {
+      if (!Array.isArray(line)) {
+        continue;
+      }
+      for (const item of line) {
+        if (!isRecord(item) || item.tag !== "img") {
+          continue;
+        }
+        const imageKey = readString(item.image_key);
+        if (!imageKey) {
+          continue;
+        }
+        const buffer = await downloadFeishuImage(client, imageKey);
+        if (buffer) {
+          images.push({ base64: buffer.toString("base64"), mimeType: "image/jpeg" });
+        }
+      }
+    }
+    return images;
+  } catch {
+    return [];
+  }
+}
+
 function parsePostText(value: JsonRecord): string {
   const parts: string[] = [];
   const zh = isRecord(value.zh_cn) ? value.zh_cn : undefined;
@@ -1397,6 +1496,7 @@ async function generateReply(params: {
   sender: string;
   memory?: MysqlMemoryStore | null;
   aiTurnId?: number;
+  images?: ImageData[];
 }): Promise<GenerateReplyResult> {
   const apiKey = resolveZaiApiKey(params.config);
   if (!apiKey) {
@@ -1410,15 +1510,25 @@ async function generateReply(params: {
     lastHistoryEntry?.role === "user" &&
     lastHistoryEntry.name === params.sender &&
     lastHistoryEntry.content === params.text;
+  const userContent: string | ContentPart[] =
+    params.images && params.images.length > 0
+      ? [
+          ...params.images.map(
+            (img): ContentPart => ({
+              type: "image_url",
+              image_url: { url: `data:${img.mimeType};base64,${img.base64}` },
+            }),
+          ),
+          { type: "text", text: `${params.sender}: ${params.text}` },
+        ]
+      : `${params.sender}: ${params.text}`;
   const messages: ChatMessage[] = [
     { role: "system", content: buildSystemPrompt(params.config, contextDocumentsPrompt) },
     ...history.map((entry): ChatMessage => ({
       role: entry.role,
       content: entry.role === "assistant" ? entry.content : `${entry.name ? `${entry.name}: ` : ""}${entry.content}`,
     })),
-    ...(historyAlreadyIncludesCurrent
-      ? []
-      : [{ role: "user" as const, content: `${params.sender}: ${params.text}` }]),
+    ...(historyAlreadyIncludesCurrent ? [] : [{ role: "user" as const, content: userContent }]),
   ];
 
   let toolRounds = 0;
@@ -1818,8 +1928,8 @@ async function handleMessage(params: {
       processedMessages.add(messageId);
       return;
     }
-    const text = parseMessageText(event);
-    if (!text.trim()) {
+    const { text, images } = await parseMessageWithImages(event, params.client);
+    if (!text.trim() && images.length === 0) {
       processedMessages.add(messageId);
       return;
     }
@@ -1865,7 +1975,7 @@ async function handleMessage(params: {
       : undefined;
     let replyResult: GenerateReplyResult;
   try {
-    replyResult = await generateReply({
+      replyResult = await generateReply({
         config,
         mcp: params.mcp,
         sessionKey: key,
@@ -1873,6 +1983,7 @@ async function handleMessage(params: {
         sender: senderLabel(event),
         memory: params.memory,
         aiTurnId,
+        images,
       });
       await params.memory?.finishAiTurn({
         aiTurnId,
