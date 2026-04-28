@@ -4,6 +4,7 @@ dist-service/
 package-lock.json
 .env
 .env.*
+!.env.example
 *.log
 .DS_Store
 coverage/

@@ -75,7 +75,8 @@ async function shouldAutoReply(
       .slice(-10)
       .map((e) => e.body || "")
       .join("\n");
-    const prompt = `群里有若干真实用户和AI助手小橘。判断小橘是否需要回复。
+    const groupContext = process.env.LITTLEBABY_GROUP_CONTEXT || "若干真实用户和AI助手小橘";
+    const prompt = `群里有${groupContext}。判断小橘是否需要回复。
 
 规则（按优先级）：
 1. 对小橘最近发言的直接回应（回答问题、确认、附和、接话）→ YES
